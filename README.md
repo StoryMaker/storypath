@@ -1,2 +1,2 @@
-zonkey-prototype
+liger-prototype
 ================
