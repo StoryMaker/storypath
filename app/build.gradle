@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "scal.io.liger"
-        minSdkVersion 19
+        minSdkVersion 20
         targetSdkVersion 20
         versionCode 1
         versionName "1.0"
@@ -21,4 +21,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:cardview-v7:21.+'
+    compile 'com.android.support:recyclerview-v7:21.+'
 }
