@@ -1,0 +1,41 @@
+{
+  "id": "story_path_1",
+  "title": "Story Path 1",
+  "cards": [
+      { 
+        "class": "Quiz",
+        "id": "quiz_1",
+        "title": "Quiz your Colors",
+        "description": "What color is the sky?",
+        "options": [
+          "red",
+          "blue",
+          "green"
+          ],
+        "value": { "selected": "red" }
+      },
+      { 
+        "class": "Quiz",
+        "id": "quiz_2",
+        "title": "Quiz your smartphone brands",
+        "description": "Who makes the Galaxy line?",
+        "options": [
+          "HTC",
+          "Sumsang",
+          "Samsung",
+          "Nokla",
+          "Nokia"
+          ]
+      },
+      {
+        "class": "ClipType",
+        "id": "cliptype_1",
+        "title": "Pick a clip type",
+        "clip_types": [
+          "closeup",
+          "medium",
+          "long"
+          ]
+      },
+  ]
+}
