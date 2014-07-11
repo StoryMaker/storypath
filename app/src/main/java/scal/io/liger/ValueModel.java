@@ -5,6 +5,7 @@ package scal.io.liger;
  */
 public class ValueModel {
     public Object selected;
+    public Object parent_path;
 
     public Object getSelected() {
         return selected;
@@ -12,5 +13,13 @@ public class ValueModel {
 
     public void setSelected(Object selected) {
         this.selected = selected;
+    }
+
+    public Object getParent_path() {
+        return parent_path;
+    }
+
+    public void setParent_path(Object parent_path) {
+        this.parent_path = parent_path;
     }
 }
