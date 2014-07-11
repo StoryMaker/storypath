@@ -35,6 +35,33 @@
           "medium",
           "long"
           ]
+      },
+      {
+        "type": "scal.io.liger.VideoCaptureTypeCardModel",
+        "id": "videocapture_1",
+        "title": "Capture a Video",
+        "body": [ 
+            { 
+                "type": "MarkdownWidget",
+                "Some markdown text here" 
+            },
+            { 
+                "type": "ImageWidget",
+                "path": "file:///sdcard/foo.jpg"
+            },
+            { 
+                "type": "MarkdownWidget",
+                "Some more markdown" 
+            },
+            { 
+                "type": "VideoCaptureWidget",
+                "camera_type": "front"
+            },
+            { 
+                "type": "MarkdownWidget",
+                "Final markdown markdown" 
+            }
+        ]
       }
   ]
 }
