@@ -1,0 +1,19 @@
+{
+  "id": "story_path_1",
+  "title": "Story Path 1",
+  "cards": [
+      { 
+        "type": "scal.io.liger.QuizReportCardModel",
+        "id": "quiz_report_1",
+        "title": "Quiz Summary",
+        "description": "How have you done on all your quizes?",
+        "results": [
+          "story_path_1::quiz_1",
+          "story_path_1::quiz_2"
+        ],
+        "value": { 
+            "parent_path": "story_path_1_saved_1"
+        }
+      }
+  ]
+}
