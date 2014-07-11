@@ -31,7 +31,7 @@
         "type": "scal.io.liger.ClipTypeCardModel",
         "id": "cliptype_1",
         "title": "Pick a clip type",
-        "clipTypes": [
+        "clip_types": [
           "closeup",
           "medium",
           "long"
