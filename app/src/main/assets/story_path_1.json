@@ -42,24 +42,24 @@
         "title": "Capture a Video",
         "body": [ 
             { 
-                "type": "MarkdownWidget",
-                "Some markdown text here" 
+                "type": "scal.io.liger.widget.MarkdownWidget",
+                "text": "Some markdown text here"
             },
             { 
-                "type": "ImageWidget",
+                "type": "scal.io.liger.widget.ImageWidget",
                 "path": "file:///sdcard/foo.jpg"
             },
             { 
-                "type": "MarkdownWidget",
-                "Some more markdown" 
+                "type": "scal.io.liger.widget.MarkdownWidget",
+                "text": "Some more markdown"
             },
             { 
-                "type": "VideoCaptureWidget",
+                "type": "scal.io.liger.widget.VideoCaptureWidget",
                 "camera_type": "front"
             },
             { 
-                "type": "MarkdownWidget",
-                "Final markdown markdown" 
+                "type": "scal.io.liger.widget.MarkdownWidget",
+                "text": "Final markdown markdown"
             }
         ]
       }
