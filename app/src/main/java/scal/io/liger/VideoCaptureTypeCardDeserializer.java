@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 /**
  * Created by mnbogner on 7/11/14.
  */
-public class VideoCaptureTypeCardDeserializer implements JsonDeserializer<VideoCaptureTypeCardModel> {
+public class VideoCaptureTypeCardDeserializer extends BaseDeserializer implements JsonDeserializer<VideoCaptureTypeCardModel> {
     @Override
     public VideoCaptureTypeCardModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         VideoCaptureTypeCardModel vctcm = new VideoCaptureTypeCardModel();
@@ -31,6 +31,7 @@ public class VideoCaptureTypeCardDeserializer implements JsonDeserializer<VideoC
         GsonBuilder gBuild = new GsonBuilder();
         Gson g = gBuild.create();
 
+        /*
         JsonArray jArr = jObj.get("body").getAsJsonArray();
         for (int i = 0; i < jArr.size(); i++){
             JsonObject arrObj = jArr.get(i).getAsJsonObject();
@@ -45,8 +46,10 @@ public class VideoCaptureTypeCardDeserializer implements JsonDeserializer<VideoC
             } catch (ClassNotFoundException e) {
                 System.err.println("CLASS NOT FOUND: " + widgetType);
             }
-
         }
+        */
+
+        vctcm.setBody(processArray(g, jObj, "body"));
 
         System.out.println("DONE!");
         return vctcm;

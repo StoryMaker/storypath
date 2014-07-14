@@ -27,7 +27,7 @@ import java.lang.reflect.Type;
  *
  * System.out.println("TEST: " + gson.toJson(spm1));
  */
-public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
+public class StoryPathDeserializer extends BaseDeserializer implements JsonDeserializer<StoryPathModel>{
 
     @Override
     public StoryPathModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -46,6 +46,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
         gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
         Gson g = gBuild.create();
 
+        /*
         JsonArray jArr = jObj.get("cards").getAsJsonArray();
         for (int i = 0; i < jArr.size(); i++){
             JsonObject arrObj = jArr.get(i).getAsJsonObject();
@@ -60,8 +61,10 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
             } catch (ClassNotFoundException e) {
                 System.err.println("CLASS NOT FOUND: " + cardType);
             }
-
         }
+        */
+
+        spm.setCards(processArray(g, jObj, "cards"));
 
         System.out.println("DONE!");
         return spm;
