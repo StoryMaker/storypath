@@ -33,13 +33,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v2 = View.inflate(R.layout.fragment_placeholder, parent);
+        //View v2 = View.inflate(R.layout.fragment_placeholder, parent);
 
         //create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_placeholder, parent, false);
 
         AudioFragment audioFragment = new AudioFragment();
-        mFragTransaction.add(v, audioFragment).commit();
+        //mFragTransaction.add(v, audioFragment).commit();
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
