@@ -46,25 +46,36 @@ public class StoryPathDeserializer extends BaseDeserializer implements JsonDeser
         gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
         Gson g = gBuild.create();
 
-        /*
-        JsonArray jArr = jObj.get("cards").getAsJsonArray();
-        for (int i = 0; i < jArr.size(); i++){
-            JsonObject arrObj = jArr.get(i).getAsJsonObject();
-            String cardType = arrObj.get("type").getAsString();
-            System.out.println("FOUND CARD: " + cardType);
+        JsonElement jEle = jObj.get("dependencies");
+        if (jEle != null) {
+            JsonArray jArr = jEle.getAsJsonArray();
+            for (int i = 0; i < jArr.size(); i++) {
+                JsonObject arrObj = jArr.get(i).getAsJsonObject();
 
-            try {
-                Class cardClass = Class.forName(cardType);
-                Object card = g.fromJson(arrObj, cardClass);
-                spm.addCard(card);
-                System.out.println("CARD COUNT: " + spm.getCards().size());
-            } catch (ClassNotFoundException e) {
-                System.err.println("CLASS NOT FOUND: " + cardType);
+                DependencyModel dm = (g.fromJson(arrObj, DependencyModel.class));
+                spm.addDependency(dm);
+                System.out.println("DEPENDENCY COUNT: " + spm.getDependencies().size());
             }
         }
-        */
 
-        spm.setCards(processArray(g, jObj, "cards"));
+        jEle = jObj.get("cards");
+        if (jEle != null) {
+            JsonArray jArr = jEle.getAsJsonArray();
+            for (int i = 0; i < jArr.size(); i++) {
+                JsonObject arrObj = jArr.get(i).getAsJsonObject();
+                String cardType = arrObj.get("type").getAsString();
+                System.out.println("FOUND CARD: " + cardType);
+
+                try {
+                    Class cardClass = Class.forName(cardType);
+                    CardModel card = (CardModel) (g.fromJson(arrObj, cardClass));
+                    spm.addCard(card);
+                    System.out.println("CARD COUNT: " + spm.getCards().size());
+                } catch (ClassNotFoundException e) {
+                    System.err.println("CLASS NOT FOUND: " + cardType);
+                }
+            }
+        }
 
         System.out.println("DONE!");
         return spm;

@@ -1,0 +1,35 @@
+{
+  "id": "quiz_check",
+  "title": "QUIZ CHECK",
+  "dependencies": [
+      {
+        "dependencyType": "scal.io.liger.StoryPathModel",
+        "dependencyId": "completed_quiz",
+        "dependencyFile": "completed_quiz.json"
+      }
+  ],
+  "cards": [
+      {
+        "type": "scal.io.liger.QuizReportCardModel",
+        "id": "quiz_report_1",
+        "title": "QUIZ REPORT 1",
+        "description": "I WANT RED...",
+        "references": [
+            {
+              "reference": "completed_quiz::color_quiz::selected::red"
+            }
+        ]
+      },
+      {
+        "type": "scal.io.liger.QuizReportCardModel",
+        "id": "quiz_report_2",
+        "title": "QUIZ REPORT 2",
+        "description": "I WANT BLUE...",
+        "references": [
+            {
+              "reference": "completed_quiz::color_quiz::selected::blue"
+            }
+        ]
+      }
+  ]
+}

@@ -31,7 +31,7 @@ public class VideoCaptureTypeCardDeserializer extends BaseDeserializer implement
         GsonBuilder gBuild = new GsonBuilder();
         Gson g = gBuild.create();
 
-        /*
+
         JsonArray jArr = jObj.get("body").getAsJsonArray();
         for (int i = 0; i < jArr.size(); i++){
             JsonObject arrObj = jArr.get(i).getAsJsonObject();
@@ -47,9 +47,6 @@ public class VideoCaptureTypeCardDeserializer extends BaseDeserializer implement
                 System.err.println("CLASS NOT FOUND: " + widgetType);
             }
         }
-        */
-
-        vctcm.setBody(processArray(g, jObj, "body"));
 
         System.out.println("DONE!");
         return vctcm;

@@ -11,9 +11,9 @@
           "story_path_1::quiz_1",
           "story_path_1::quiz_2"
         ],
-        "value": { 
-            "parent_path": "story_path_1_saved_1"
-        }
+        "values": [
+            "parent_path::story_path_1_saved_1"
+        ]
       }
   ]
 }

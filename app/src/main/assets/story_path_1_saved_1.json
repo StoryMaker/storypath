@@ -12,7 +12,9 @@
           "blue",
           "green"
           ],
-        "value": { "selected": "red" }
+        "values": [
+          "selected::red"
+        ]
       },
       { 
         "type": "scal.io.liger.QuizCardModel",

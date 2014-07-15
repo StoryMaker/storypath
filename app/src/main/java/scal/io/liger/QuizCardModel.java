@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class QuizCardModel extends CardModel {
     public String description;
     public ArrayList<Object> options;
-    public ValueModel value;
 
     public QuizCardModel() {
         this.type = this.getClass().getName();
@@ -35,13 +34,5 @@ public class QuizCardModel extends CardModel {
             this.options = new ArrayList<Object>();
 
         this.options.add(option);
-    }
-
-    public ValueModel getValue() {
-        return value;
-    }
-
-    public void setValue(ValueModel value) {
-        this.value = value;
     }
 }

@@ -1,0 +1,20 @@
+{
+  "id": "completed_quiz",
+  "title": "COMPLETED QUIZ",
+  "cards": [
+      {
+        "type": "scal.io.liger.QuizCardModel",
+        "id": "color_quiz",
+        "title": "COLOR QUIZ",
+        "description": "What color is the sky?",
+        "options": [
+          "red",
+          "blue",
+          "green"
+          ],
+        "values": [
+          "selected::red"
+        ]
+      }
+  ]
+}
