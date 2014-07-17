@@ -1,10 +1,8 @@
 package scal.io.liger;
 
 import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -15,10 +13,12 @@ public class StoryPathModel {
     public String id;
     public String title;
     public ArrayList<CardModel> cards;
-
     public ArrayList<DependencyModel> dependencies;
 
-    public Context c; // probably should remove this
+    // this is used by the JsonHelper class to load json assets
+    // if there is an alternate way to load them, this should be removed
+    // also must be cleared before serializing story path
+    public Context context;
 
     public String getId() {
         return id;
@@ -51,32 +51,36 @@ public class StoryPathModel {
         this.cards.add(card);
     }
 
-    public ArrayList<CardModel> getVisibleCards() {
-        return null;
-    }
-
     public CardModel getCardById(String fullPath) {
+        // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
 
         // sanity check
-        if (!this.id.equals(pathParts[0]))
-        {
-            System.out.println("WRONG CARD ID " + this.id + " vs. " + pathParts[0]);
+        if (!this.id.equals(pathParts[0])) {
+            System.err.println("STORY PATH ID " + pathParts[0] + " DOES NOT MATCH");
             return null;
         }
 
-        // assumes the format story::card::field::value
-        for (CardModel card : cards)
-        {
-            if (card.getId().equals(pathParts[1]))
-                {
-                    System.out.println("FOUND CARD " + card.getId());
-                    return card;
-                }
+        for (CardModel card : cards) {
+            if (card.getId().equals(pathParts[1])) {
+                return card;
             }
+        }
 
-            System.out.println("CARD NOT FOUND FOR " + pathParts[1]);
-            return null;
+        System.err.println("CARD ID " + pathParts[1] + " WAS NOT FOUND");
+        return null;
+    }
+
+    public ArrayList<CardModel> getValidCards() {
+        ArrayList<CardModel> validCards = new ArrayList<CardModel>();
+
+        for (CardModel card : cards) {
+            if (card.checkReferencedValues()) {
+                validCards.add(card);
+            }
+        }
+
+        return validCards;
     }
 
     public ArrayList<DependencyModel> getDependencies() {
@@ -113,85 +117,44 @@ public class StoryPathModel {
     }
 
     public String getReferencedValue(String fullPath) {
-        System.out.println("PATH: " + fullPath);
+        // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
 
-        StoryPathModel spm = null;
+        StoryPathModel story = null;
         if (this.getId().equals(pathParts[0])) {
-            System.out.println("INTERNAL DEPENDENCY");
-            spm = this;
+            // reference targets this story path
+            story = this;
         } else {
-            System.out.println("EXTERNAL DEPENDENCY");
-            for (DependencyModel dm : dependencies) {
-                System.out.println("LOOKING FOR " + pathParts[0] + " -> " + dm.getDependencyId());
-                if (dm.getDependencyId().equals(pathParts[0])) {
-                    System.out.println("FOUND");
+            // reference targets a serialized story path
+            for (DependencyModel dependency : dependencies) {
+                if (dependency.getDependencyId().equals(pathParts[0])) {
                     GsonBuilder gBuild = new GsonBuilder();
                     gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
                     Gson gson = gBuild.create();
 
-                    String json = JsonHelper.loadJSON(c, dm.getDependencyFile());
-                    spm = gson.fromJson(json, StoryPathModel.class);
+                    String json = JsonHelper.loadJSON(context, dependency.getDependencyFile());
+                    story = gson.fromJson(json, StoryPathModel.class);
                 }
             }
         }
 
-        for (CardModel cm : spm.getCards()) {
-            if (cm.getId().equals(pathParts[1])) {
-                ArrayList<String> values = cm.getValues();
+        if (story == null) {
+            System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
+            return null;
+        }
 
-                for (String value : values) {
-                    String[] valueParts = value.split("::");
-                    if (valueParts[0].equals(pathParts[2]))
-                    {
-                        System.out.println("FOUND VALUE " + valueParts[0] + " -> " + valueParts[1]);
-                        return valueParts[1];
-                    }
-                }
+        CardModel card = story.getCardById(fullPath);
 
-                // nothing found
+        if (card == null) {
+            return null;
+        } else {
+            String value = card.getValueById(fullPath);
+
+            if (value == null) {
                 return null;
-
-                // unnecessary if only saved values are retrieved
-                // saved values now stored in "values" collection
-                /*
-                Class c = cm.getClass();
-                Field f = null;
-                try {
-                    f = c.getField(pathParts[2]);
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                    System.err.println("FIELD " + pathParts[2] + " NOT FOUND IN CLASS " + c.getName());
-                    return null;
-                }
-
-                try {
-                    return (String)(f.get(cm));
-                } catch (IllegalAccessException e) {
-                    System.err.println("COULD NOT GET VALUE FOR FIELD " + pathParts[2] + " IN CLASS " + c.getName());
-                    e.printStackTrace();
-                    return null;
-                }
-                */
-            }
-        }
-
-        System.err.println("NO CARDS?");
-        return null;
-    }
-
-    public ArrayList<CardModel> getValidCards() {
-        ArrayList<CardModel> validCards = new ArrayList<CardModel>();
-
-        for (CardModel cm : cards) {
-            if (cm.checkReferencedValues()) {
-                System.err.println("VALID CARD: " + cm.getId());
-                validCards.add(cm);
             } else {
-                System.err.println("INVALID CARD: " + cm.getId());
+                return value;
             }
         }
-
-        return validCards;
     }
 }

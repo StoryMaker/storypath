@@ -15,9 +15,7 @@
         "title": "QUIZ REPORT 1",
         "description": "I WANT RED...",
         "references": [
-            {
-              "reference": "completed_quiz::color_quiz::selected::red"
-            }
+            "completed_quiz::color_quiz::selected::red"
         ]
       },
       {
@@ -26,9 +24,7 @@
         "title": "QUIZ REPORT 2",
         "description": "I WANT BLUE...",
         "references": [
-            {
-              "reference": "completed_quiz::color_quiz::selected::blue"
-            }
+            "completed_quiz::color_quiz::selected::blue"
         ]
       }
   ]

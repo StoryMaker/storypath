@@ -13,8 +13,14 @@ import java.lang.reflect.Type;
 
 /**
  * Created by mnbogner on 7/11/14.
+ *
+ * USAGE:
+ *
+ * GsonBuilder gBuild = new GsonBuilder();
+ * gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
+ * Gson gson = gBuild.create();
  */
-public class VideoCaptureTypeCardDeserializer extends BaseDeserializer implements JsonDeserializer<VideoCaptureTypeCardModel> {
+public class VideoCaptureTypeCardDeserializer implements JsonDeserializer<VideoCaptureTypeCardModel> {
     @Override
     public VideoCaptureTypeCardModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         VideoCaptureTypeCardModel vctcm = new VideoCaptureTypeCardModel();
@@ -23,33 +29,29 @@ public class VideoCaptureTypeCardDeserializer extends BaseDeserializer implement
 
         String id = jObj.get("id").getAsString();
         String title = jObj.get("title").getAsString();
-        System.out.println("GOT VALUES: "  + id + ", " + title);
 
         vctcm.setId(id);
         vctcm.setTitle(title);
 
         GsonBuilder gBuild = new GsonBuilder();
-        Gson g = gBuild.create();
+        Gson gson = gBuild.create();
 
-
-        JsonArray jArr = jObj.get("body").getAsJsonArray();
-        for (int i = 0; i < jArr.size(); i++){
-            JsonObject arrObj = jArr.get(i).getAsJsonObject();
-            String widgetType = arrObj.get("type").getAsString();
-            System.out.println("FOUND WIDGET: " + widgetType);
-
-            try {
-                Class widgetClass = Class.forName(widgetType);
-                Object widget = g.fromJson(arrObj, widgetClass);
-                vctcm.addBody(widget);
-                System.out.println("WIDGET COUNT: " + vctcm.getBody().size());
-            } catch (ClassNotFoundException e) {
-                System.err.println("CLASS NOT FOUND: " + widgetType);
+        JsonElement jEle = jObj.get("body");
+        if (jEle != null) {
+            JsonArray jArr = jEle.getAsJsonArray();
+            for (int i = 0; i < jArr.size(); i++) {
+                JsonObject arrObj = jArr.get(i).getAsJsonObject();
+                String widgetType = arrObj.get("type").getAsString();
+                try {
+                    Class widgetClass = Class.forName(widgetType);
+                    Object widget = gson.fromJson(arrObj, widgetClass);
+                    vctcm.addBody(widget);
+                } catch (ClassNotFoundException e) {
+                    System.err.println("MODEL CLASS NOT FOUND FOR WIDGET TYPE: " + widgetType);
+                }
             }
         }
 
-        System.out.println("DONE!");
         return vctcm;
-
     }
 }

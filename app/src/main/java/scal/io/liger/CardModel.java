@@ -2,6 +2,7 @@ package scal.io.liger;
 
 import android.content.Context;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 /**
@@ -11,15 +12,9 @@ public class CardModel {
     public String type;
     public String id;
     public String title;
-
     public StoryPathModel storyPathReference;
-    public ArrayList<ReferenceModel> references;
-
+    public ArrayList<String> references;
     public ArrayList<String> values;
-
-    public CardModel(){
-
-    }
 
     public String getType() {
         return type;
@@ -45,21 +40,6 @@ public class CardModel {
         this.title = title;
     }
 
-    public ArrayList<ReferenceModel> getReferences() {
-        return references;
-    }
-
-    public void setReferences(ArrayList<ReferenceModel> references) {
-        this.references = references;
-    }
-
-    public void addReference(ReferenceModel reference) {
-        if (this.references == null)
-            this.references = new ArrayList<ReferenceModel>();
-
-        this.references.add(reference);
-    }
-
     public StoryPathModel getStoryPathReference() {
         return storyPathReference;
     }
@@ -68,20 +48,34 @@ public class CardModel {
         this.storyPathReference = storyPathReference;
     }
 
+    public ArrayList<String> getReferences() {
+        return references;
+    }
+
+    public void setReferences(ArrayList<String> references) {
+        this.references = references;
+    }
+
+    public void addReference(String reference) {
+        if (this.references == null)
+            this.references = new ArrayList<String>();
+
+        this.references.add(reference);
+    }
+
     public boolean checkReferencedValues() {
         boolean result = true;
 
-        for (ReferenceModel rm : references) {
-            String[] pathParts = rm.getReference().split("::");
-            if (storyPathReference.getReferencedValue(rm.getReference()).equals(pathParts[3])) {
-                System.out.println(rm.getReference() + " MATCHES " + storyPathReference.getReferencedValue(rm.getReference()));
-            } else {
-                System.out.println(rm.getReference() + " DOESN'T MATCH " + storyPathReference.getReferencedValue(rm.getReference()));
+        for (String reference : references) {
+            // assumes the format story::card::field::value
+            String[] pathParts = reference.split("::");
+            String referencedValue = storyPathReference.getReferencedValue(reference);
+
+            if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
                 result = false;
             }
         }
 
-        // what status should be returned if a value is specified and no value is found?
         return result;
     }
 
@@ -101,27 +95,34 @@ public class CardModel {
     }
 
     public String getValueById (String fullPath) {
+        // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
 
         // sanity check
-        if (!this.id.equals(pathParts[1]))
-        {
-            System.out.println("WRONG CARD ID " + this.id + " vs. " + pathParts[1]);
+        if (!this.id.equals(pathParts[1])) {
+            System.err.println("CARD ID " + pathParts[1] + " DOES NOT MATCH");
             return null;
         }
 
-        // assumes the format story::card::field::value
-        for (String value : values)
-        {
+        for (String value : values) {
             String[] valueParts = value.split("::");
-            if (valueParts[0].equals(pathParts[2]))
-            {
-                System.out.println("FOUND VALUE " + valueParts[0] + " -> " + valueParts[1]);
+            if (valueParts[0].equals(pathParts[2])) {
                 return valueParts[1];
             }
         }
 
-        System.out.println("VALUE NOT FOUND FOR " + pathParts[2]);
+        // check class properties if no saved value was found
+        Class c = null;
+        Field f = null;
+        try {
+            c = this.getClass();
+            f = c.getField(pathParts[2]);
+            return f.get(this).toString(); // not the best solution, but somehow int fields come back with Integer values
+        } catch (Exception e) {
+            System.err.println("EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
+        }
+
+        System.err.println("VALUE " + pathParts[2] + " WAS NOT FOUND");
         return null;
     }
 }
