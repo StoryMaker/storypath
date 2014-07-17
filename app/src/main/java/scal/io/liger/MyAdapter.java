@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> mDataset;
+    private FragmentTransaction mFragTransaction;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
@@ -20,18 +23,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    //provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<String> myDataset) {
+    //provide a suitable constructor (depends on the dataset type)
+    public MyAdapter(FragmentTransaction fragTransaction, List<String> myDataset) {
+        mFragTransaction = fragTransaction;
         mDataset = myDataset;
     }
 
     //create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        //View v2 = View.inflate(R.layout.fragment_placeholder, parent);
+
         //create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_text_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_placeholder, parent, false);
+
+        AudioFragment audioFragment = new AudioFragment();
+        //mFragTransaction.add(v, audioFragment).commit();
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -43,7 +51,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mTextView.setText(mDataset.get(position));
-
     }
 
     //return the size of your dataset (invoked by the layout manager)
