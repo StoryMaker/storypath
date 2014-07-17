@@ -1,0 +1,61 @@
+{
+  "id": "story_path_1",
+  "title": "Story Path 1",
+  "cards": [
+      {
+        "type": "scal.io.liger.IntroCardModel",
+        "id": "intro_card",
+        "title": "INTRO CARD",
+        "headline": "Headline that creates interest for what's coming",
+        "level": "Basic 1",
+        "time": "20 minutes"
+      },
+      {
+        "type": "scal.io.liger.ClipInstructionListCardModel",
+        "id": "instruction_list_card",
+        "title": "INSTRUCTION LIST CARD",
+        "media_path": "/path/to/media.file",
+        "header": "Character",
+        "bullet_list": [
+            "Bullet point structure of qualities & tips",
+            "Another quality",
+            "Another quality"
+        ]
+      },
+      {
+        "type": "scal.io.liger.ClipInstructionTypeCardModel",
+        "id": "instruction_type_card",
+        "title": "INSTRUCTION TYPE CARD",
+        "media_path": "/path/to/media.file",
+        "header": "This card tells the maker which clip to capture.",
+        "clip_types": [
+            "Photo",
+            "Video",
+            "Import"
+        ]
+      },
+      {
+        "type": "scal.io.liger.SelfEvalCardModel",
+        "id": "eval_card",
+        "title": "EVAL CARD",
+        "header": "How did it go?",
+        "checklist": [
+            "Checklist item",
+            "Checklist item",
+            "Checklist item"
+        ]
+      },
+      {
+        "type": "scal.io.liger.CongratsCardModel",
+        "id": "congrats_card",
+        "title": "CONGRATS CARD",
+        "headline": "Congratulations!",
+        "text": "NEXT UP Create a Compelling Narrative",
+        "story_paths": [
+            "Recording stable shots",
+            "Photo Stories",
+            "Replay this path with a new story"
+        ]
+      }
+  ]
+}
