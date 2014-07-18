@@ -1,6 +1,12 @@
 package scal.io.liger;
 
+import android.content.Context;
+
+import com.fima.cardsui.objects.Card;
+
 import java.util.ArrayList;
+
+import scal.io.liger.view.IntroCardView;
 
 /**
  * Created by mnbogner on 7/17/14.
@@ -12,6 +18,11 @@ public class ClipInstructionTypeCardModel extends CardModel {
 
     public ClipInstructionTypeCardModel() {
         this.type = this.getClass().getName();
+    }
+
+    @Override
+    public Card getCardView(Context context) {
+        return new IntroCardView(context, this); //TODO
     }
 
     public String getMedia_path() {

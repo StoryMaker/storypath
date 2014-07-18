@@ -12,7 +12,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp" >
         
          <ImageView
             android:id="@+id/cardImage"
@@ -24,7 +24,7 @@
             android:src="@drawable/snoopy"/>
 
         <TextView
-            android:id="@+id/tv_headline"
+            android:id="@+id/tv_header"
             style="@style/CardTitleMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -45,30 +45,11 @@
         android:gravity="center_horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_level"/>
-
-        <TextView
-            android:id="@+id/tv_level"
+            android:id="@+id/tv_bullet_list"
             style="@style/CardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_time"
-            android:layout_marginLeft="16dp"/>
-
-        <TextView
-            android:id="@+id/tv_time"
-            style="@style/CardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:text="3 minutes"/>
+            android:layout_marginLeft="8dp"/>
 
     </LinearLayout>
 

@@ -1,14 +1,16 @@
 package scal.io.liger;
 
+import android.content.Context;
+
+import com.fima.cardsui.objects.Card;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-
-import scal.io.liger.view.CardView;
 
 /**
  * Created by mnbogner on 7/10/14.
  */
-public class CardModel {
+public abstract class CardModel {
     public String type;
     public String id;
     public String title;
@@ -42,7 +44,8 @@ public class CardModel {
         return storyPathReference;
     }
 
-    public CardView getCardView() { return null; }
+
+    public abstract Card getCardView(Context context);
 
     public void setStoryPathReference(StoryPathModel storyPathReference) {
         this.storyPathReference = storyPathReference;

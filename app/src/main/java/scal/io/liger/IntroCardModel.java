@@ -1,8 +1,10 @@
 package scal.io.liger;
 
+import android.content.Context;
+
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.view.CardView;
+import scal.io.liger.view.IntroCardView;
 
 /**
  * Created by mnbogner on 7/17/14.
@@ -16,7 +18,10 @@ public class IntroCardModel extends CardModel {
         this.type = this.getClass().getName();
     }
 
-    public CardView getCardView() { return null; }
+    @Override
+    public Card getCardView(Context context) {
+        return new IntroCardView(context, this); //TODO
+    }
 
     public String getHeadline() {
         return headline;

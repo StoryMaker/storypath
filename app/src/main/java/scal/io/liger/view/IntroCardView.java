@@ -4,26 +4,23 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
+import scal.io.liger.CardModel;
 import scal.io.liger.IntroCardModel;
 import scal.io.liger.R;
 
 
 public class IntroCardView extends Card {
 
-    private View.OnClickListener mListener;
     private IntroCardModel mCardModel;
+    private Context mContext;
 
-    public IntroCardView(IntroCardModel cardModel) {
-        mCardModel = cardModel;
-    }
-
-    @Override
-    public void setOnClickListener(View.OnClickListener listener) {
-        mListener = listener;
-        super.setOnClickListener(mListener);
+    public IntroCardView(Context context, CardModel cardModel) {
+        mContext = context;
+        mCardModel = (IntroCardModel) cardModel;
     }
 
     @Override
@@ -41,7 +38,12 @@ public class IntroCardView extends Card {
         tvLevel.setText(mCardModel.getLevel());
         tvTime.setText(mCardModel.getTime());
 
-        view.setOnClickListener(mListener);
+        super.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "Intro Card click", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

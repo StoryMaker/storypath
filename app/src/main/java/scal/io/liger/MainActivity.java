@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 import com.fima.cardsui.views.CardUI;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +22,6 @@ import scal.io.liger.view.IntroCardView;
 public class MainActivity extends Activity {
 
     Context mContext = this;
-    ArrayList<Card> mListCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,43 +31,33 @@ public class MainActivity extends Activity {
         initCardList();
     }
 
-    private void initCardList()
-    {
+    private void initCardList() {
         CardUI mCardView = (CardUI) findViewById(R.id.cardsview);
-        mListCards = new ArrayList<Card>();
-
         if (mCardView == null)
             return;
 
         mCardView.clearCards();
         mCardView.setSwipeable(false);
 
-        addIntroCard();
-
+        ArrayList<CardModel> cardModels = getCardModels();
 
         //add cardlist to view
-        for (Card card : mListCards)
-            mCardView.addCard(card);
+        for (CardModel model : cardModels) {
+            mCardView.addCard(model.getCardView(mContext));
+        }
 
         //draw cards
         mCardView.refresh();
     }
 
-    private void addIntroCard() {
-        IntroCardModel introCardModel = new IntroCardModel();
-        introCardModel.setHeadline("Welcome to an Intro Card!");
-        introCardModel.setLevel("Basic 1");
-        introCardModel.setTime("2 hours");
+    private ArrayList<CardModel> getCardModels() {
+        GsonBuilder gBuild = new GsonBuilder();
+        gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
+        Gson gson = gBuild.create();
 
-        IntroCardView introCardView = new IntroCardView(introCardModel);
-        introCardView.setOnClickListener(new View.OnClickListener() {
+        String json = JsonHelper.loadJSON(this, "intro_card_test.json");
+        StoryPathModel spm = gson.fromJson(json, StoryPathModel.class);
 
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "Intro Card click", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mListCards.add(introCardView);
+        return spm.getCards();
     }
 }
