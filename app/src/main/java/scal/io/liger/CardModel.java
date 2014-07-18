@@ -1,9 +1,9 @@
 package scal.io.liger;
 
-import android.content.Context;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import scal.io.liger.view.CardView;
 
 /**
  * Created by mnbogner on 7/10/14.
@@ -32,9 +32,7 @@ public class CardModel {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title;}
 
     public void setTitle(String title) {
         this.title = title;
@@ -43,6 +41,8 @@ public class CardModel {
     public StoryPathModel getStoryPathReference() {
         return storyPathReference;
     }
+
+    public CardView getCardView() { return null; }
 
     public void setStoryPathReference(StoryPathModel storyPathReference) {
         this.storyPathReference = storyPathReference;
