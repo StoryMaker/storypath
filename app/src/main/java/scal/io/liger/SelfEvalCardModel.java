@@ -6,7 +6,7 @@ import com.fima.cardsui.objects.Card;
 
 import java.util.ArrayList;
 
-import scal.io.liger.view.IntroCardView;
+import scal.io.liger.view.SelfEvalCardView;
 
 /**
  * Created by mnbogner on 7/17/14.
@@ -21,7 +21,15 @@ public class SelfEvalCardModel extends CardModel {
 
     @Override
     public Card getCardView(Context context) {
-        return new IntroCardView(context, this); //TODO
+        return new SelfEvalCardView(context, this);
+    }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     public ArrayList<String> getChecklist() {

@@ -3,25 +3,19 @@ package scal.io.liger;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
-import com.fima.cardsui.objects.Card;
 import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-
-import scal.io.liger.view.CardView;
-import scal.io.liger.view.IntroCardView;
 
 
 public class MainActivity extends Activity {
 
     Context mContext = this;
+    CardUI mCardView;
+    ArrayList<CardModel> cardModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +26,15 @@ public class MainActivity extends Activity {
     }
 
     private void initCardList() {
-        CardUI mCardView = (CardUI) findViewById(R.id.cardsview);
+        mCardView = (CardUI) findViewById(R.id.cardsview);
         if (mCardView == null)
             return;
 
-        mCardView.clearCards();
         mCardView.setSwipeable(false);
 
-        ArrayList<CardModel> cardModels = getCardModels();
+        cardModels = getCardModels();
 
-        //add cardlist to view
-        for (CardModel model : cardModels) {
-            mCardView.addCard(model.getCardView(mContext));
-        }
-
-        //draw cards
-        mCardView.refresh();
+        refreshCardView();
     }
 
     private ArrayList<CardModel> getCardModels() {
@@ -55,9 +42,25 @@ public class MainActivity extends Activity {
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
 
-        String json = JsonHelper.loadJSON(this, "intro_card_test.json");
+        String json = JsonHelper.loadJSON(this, "misc_card_test.json");
         StoryPathModel spm = gson.fromJson(json, StoryPathModel.class);
 
         return spm.getCards();
+    }
+
+    public void addCardModel(CardModel model) {
+        cardModels.add(model);
+        refreshCardView();
+    }
+
+    public void refreshCardView () {
+        mCardView.clearCards();
+
+        //add cardlist to view
+        for (CardModel model : cardModels) {
+            mCardView.addCard(model.getCardView(mContext));
+        }
+
+        mCardView.refresh();
     }
 }

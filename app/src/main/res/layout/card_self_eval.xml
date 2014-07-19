@@ -13,15 +13,6 @@
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp" >
-        
-         <ImageView
-            android:id="@+id/cardImage"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:adjustViewBounds="true"
-            android:baselineAlignBottom="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/snoopy2"/>
 
         <TextView
             android:id="@+id/tv_header"
@@ -42,14 +33,34 @@
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_cardbank"
         android:padding="4dp"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_bullet_list"
-            style="@style/CardText"
+        <CheckBox
+            android:id="@+id/cb_add_intro_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"/>
+            android:text="@string/add_intro_card" />
+
+        <CheckBox
+            android:id="@+id/cb_add_clip_instuction_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_instruction_card" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selectable_background_cardbank"
+        android:padding="4dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_continue" />
 
     </LinearLayout>
 

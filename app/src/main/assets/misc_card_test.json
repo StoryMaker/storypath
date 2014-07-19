@@ -1,0 +1,37 @@
+{
+  "id": "story_path_1",
+  "title": "Story Path 1",
+  "cards": [
+      {
+        "type": "scal.io.liger.IntroCardModel",
+        "id": "intro_card0",
+        "title": "INTRO CARD 0",
+        "headline": "Headline that creates interest for what's coming",
+        "level": "Basic 1",
+        "time": "20 minutes"
+      },
+    {
+        "type": "scal.io.liger.ClipInstructionListCardModel",
+        "id": "instruction_list_card",
+        "title": "INSTRUCTION LIST CARD",
+        "media_path": "/path/to/media.file",
+        "header": "Character",
+        "bullet_list": [
+            "Bullet point structure of qualities & tips",
+            "Another quality",
+            "Another quality"
+        ]
+  },
+    {
+      "type": "scal.io.liger.SelfEvalCardModel",
+      "id": "eval_card",
+      "title": "EVAL CARD",
+      "header": "What's next?",
+      "checklist": [
+          "Checklist item",
+          "Checklist item",
+          "Checklist item"
+      ]
+    }
+  ]
+}

@@ -6,5 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="lbl_level">Level:</string>
     <string name="lbl_time">Time:</string>
+    <string name="add_intro_card">Add Intro Card</string>
+    <string name="add_instruction_card">Add Instruction Card</string>
+    <string name="lbl_continue">Continue</string>
 
 </resources>
