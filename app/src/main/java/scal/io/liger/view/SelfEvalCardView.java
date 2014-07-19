@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
@@ -69,6 +70,8 @@ public class SelfEvalCardView extends Card {
 
                     mainActivity.addCardModel(clipInstructionListCardModel);
                 }
+
+                Toast.makeText(mContext, "Action Complete", Toast.LENGTH_SHORT).show();
             }
         });
 
