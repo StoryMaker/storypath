@@ -29,23 +29,12 @@
         android:background="@color/stroke" />
 
     <LinearLayout
+        android:id="@+id/ll_self_eval_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_cardbank"
         android:padding="4dp"
         android:orientation="vertical">
-
-        <CheckBox
-            android:id="@+id/cb_add_intro_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_intro_card" />
-
-        <CheckBox
-            android:id="@+id/cb_add_clip_instuction_card"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_instruction_card" />
 
     </LinearLayout>
 
