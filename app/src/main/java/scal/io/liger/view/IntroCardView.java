@@ -3,6 +3,7 @@ package scal.io.liger.view;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +31,12 @@ public class IntroCardView extends Card {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_intro, null);
+        ImageView ivCardImage = ((ImageView) view.findViewById(R.id.cardImage));
         TextView tvHeadline = ((TextView) view.findViewById(R.id.tv_headline));
         TextView tvLevel = ((TextView) view.findViewById(R.id.tv_level));
         TextView tvTime = ((TextView) view.findViewById(R.id.tv_time));
+
+        //TODO set ivCardImage from model.getMediaPath()
 
         tvHeadline.setText(mCardModel.getHeadline());
         tvLevel.setText(mCardModel.getLevel());
