@@ -116,10 +116,12 @@ public abstract class CardModel {
             return null;
         }
 
-        for (String value : values) {
-            String[] valueParts = value.split("::");
-            if (valueParts[0].equals(pathParts[2])) {
-                return valueParts[1];
+        if (values != null) {
+            for (String value : values) {
+                String[] valueParts = value.split("::");
+                if (valueParts[0].equals(pathParts[2])) {
+                    return valueParts[1];
+                }
             }
         }
 
