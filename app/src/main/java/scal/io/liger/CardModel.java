@@ -95,6 +95,13 @@ public abstract class CardModel {
             this.values = new ArrayList<String>();
 
         this.values.add(value);
+
+        // send notification that a value has been saved so that cards can re-check references
+        if (storyPathReference != null) {
+            storyPathReference.notifyActivity();
+        } else {
+            System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+        }
     }
 
     public String getValueById (String fullPath) {

@@ -157,4 +157,13 @@ public class StoryPathModel {
             }
         }
     }
+
+    public void notifyActivity() {
+        if (context != null) {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.refreshCardView();
+        } else {
+            System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+        }
+    }
 }
