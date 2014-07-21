@@ -69,13 +69,15 @@ public abstract class CardModel {
     public boolean checkReferencedValues() {
         boolean result = true;
 
-        for (String reference : references) {
-            // assumes the format story::card::field::value
-            String[] pathParts = reference.split("::");
-            String referencedValue = storyPathReference.getReferencedValue(reference);
+        if (references != null) {
+            for (String reference : references) {
+                // assumes the format story::card::field::value
+                String[] pathParts = reference.split("::");
+                String referencedValue = storyPathReference.getReferencedValue(reference);
 
-            if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
-                result = false;
+                if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
+                    result = false;
+                }
             }
         }
 

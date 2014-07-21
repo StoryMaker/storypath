@@ -1,0 +1,64 @@
+{
+  "id": "eval_check",
+  "title": "EVAL CHECK",
+  "cards": [
+      {
+        "type": "scal.io.liger.IntroCardModel",
+        "id": "intro_card0",
+        "title": "INTRO CARD 0",
+        "headline": "Headline that creates interest for what's coming",
+        "level": "Basic 1",
+        "time": "20 minutes"
+      },
+    {
+        "type": "scal.io.liger.ClipInstructionListCardModel",
+        "id": "instruction_list_card",
+        "title": "INSTRUCTION LIST CARD",
+        "media_path": "/path/to/media.file",
+        "header": "Character",
+        "bullet_list": [
+            "Bullet point structure of qualities & tips",
+            "Another quality",
+            "Another quality"
+        ]
+  },
+    {
+      "type": "scal.io.liger.SelfEvalCardModel",
+      "id": "eval_card",
+      "title": "EVAL CARD",
+      "header": "What's next?",
+      "checklist": [
+          "Option 1",
+          "Option 2",
+          "Option 3"
+      ]
+    },
+      {
+        "type": "scal.io.liger.QuizReportCardModel",
+        "id": "eval_report_1",
+        "title": "EVAL REPORT 1",
+        "description": "YOU CHECKED THE FIRST BOX",
+        "references": [
+            "eval_check::eval_card::value_1::true"
+        ]
+      },
+      {
+        "type": "scal.io.liger.QuizReportCardModel",
+        "id": "eval_report_2",
+        "title": "EVAL REPORT 2",
+        "description": "YOU CHECKED THE SECOND BOX",
+        "references": [
+            "eval_check::eval_card::value_2::true"
+        ]
+      },
+      {
+        "type": "scal.io.liger.QuizReportCardModel",
+        "id": "eval_report_3",
+        "title": "EVAL REPORT 3",
+        "description": "YOU CHECKED THE THIRD BOX",
+        "references": [
+            "eval_check::eval_card::value_3::true"
+        ]
+      }
+  ]
+}
