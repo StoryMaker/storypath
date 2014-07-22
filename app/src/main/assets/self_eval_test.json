@@ -28,16 +28,25 @@
       "title": "EVAL CARD",
       "header": "What's next?",
       "checklist": [
+          "Option 0",
           "Option 1",
-          "Option 2",
-          "Option 3"
+          "Option 2"
       ]
     },
       {
         "type": "scal.io.liger.IntroCardModel",
+        "id": "eval_report_0",
+        "title": "EVAL REPORT 0",
+        "headline": "YOU CHECKED THE FIRST BOX",
+        "references": [
+            "eval_check::eval_card::value_0::true"
+        ]
+      },
+      {
+        "type": "scal.io.liger.IntroCardModel",
         "id": "eval_report_1",
         "title": "EVAL REPORT 1",
-        "headline": "YOU CHECKED THE FIRST BOX",
+        "headline": "YOU CHECKED THE SECOND BOX",
         "references": [
             "eval_check::eval_card::value_1::true"
         ]
@@ -46,18 +55,9 @@
         "type": "scal.io.liger.IntroCardModel",
         "id": "eval_report_2",
         "title": "EVAL REPORT 2",
-        "headline": "YOU CHECKED THE SECOND BOX",
-        "references": [
-            "eval_check::eval_card::value_2::true"
-        ]
-      },
-      {
-        "type": "scal.io.liger.IntroCardModel",
-        "id": "eval_report_3",
-        "title": "EVAL REPORT 3",
         "headline": "YOU CHECKED THE THIRD BOX",
         "references": [
-            "eval_check::eval_card::value_3::true"
+            "eval_check::eval_card::value_2::true"
         ]
       }
   ]
