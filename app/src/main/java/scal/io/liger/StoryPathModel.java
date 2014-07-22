@@ -101,7 +101,7 @@ public class StoryPathModel {
     // set a reference to this story path in each card
     // must be done before cards attempt to reference
     // values from previous story paths or cards
-    public void setCardReferences(StoryPathModel spm) {
+    public void setCardReferences() {
         for (CardModel card : cards) {
             card.setStoryPathReference(this);
         }

@@ -1,6 +1,8 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import scal.io.liger.CardModel;
 import scal.io.liger.ClipInstructionListCardModel;
@@ -43,7 +48,13 @@ public class ClipInstructionListCardView extends Card {
         tvHeader.setText(mCardModel.getHeader());
         tvBulletList.setText(bulletList);
 
-        //TODO set ivCardImage from model.getMediaPath()
+        //TODO find better way of checking file is valid
+        File mediaFile = new File(mCardModel.getMedia_path());
+        if(mediaFile.exists() && !mediaFile.isDirectory()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMedia_path());
+            ivCardImage.setImageBitmap(bitmap);
+        }
+
 
         super.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -8,14 +8,12 @@ import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-
 
 public class MainActivity extends Activity {
 
     Context mContext = this;
     CardUI mCardView;
-    ArrayList<CardModel> cardModels;
+    StoryPathModel mStoryPathModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,32 +30,29 @@ public class MainActivity extends Activity {
 
         mCardView.setSwipeable(false);
 
-        cardModels = getCardModels();
-
+        initStoryPathModel();
         refreshCardView();
     }
 
-    private ArrayList<CardModel> getCardModels() {
+    private void initStoryPathModel() {
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
 
-        String json = JsonHelper.loadJSON(this, "misc_card_test.json");
-        StoryPathModel spm = gson.fromJson(json, StoryPathModel.class);
-
-        return spm.getCards();
-    }
-
-    public void addCardModel(CardModel model) {
-        cardModels.add(model);
-        refreshCardView();
+        String json = JsonHelper.loadJSON(this, "card_test.json");
+        mStoryPathModel = gson.fromJson(json, StoryPathModel.class);
+        mStoryPathModel.context = this.mContext;
+        mStoryPathModel.setCardReferences();
     }
 
     public void refreshCardView () {
+        if (mCardView == null)
+            return;
+
         mCardView.clearCards();
 
         //add cardlist to view
-        for (CardModel model : cardModels) {
+        for (CardModel model : mStoryPathModel.getValidCards()) {
             mCardView.addCard(model.getCardView(mContext));
         }
 
