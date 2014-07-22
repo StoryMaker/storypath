@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
 
-        String json = JsonHelper.loadJSON(this, "self_eval_test.json");
+        String json = JsonHelper.loadJSON(this, "card_test.json");
         mStoryPathModel = gson.fromJson(json, StoryPathModel.class);
         mStoryPathModel.context = this.mContext;
         mStoryPathModel.setCardReferences();
