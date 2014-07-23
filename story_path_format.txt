@@ -156,3 +156,84 @@ Sample JSON:
     }
   ]
 }
+
+Additional card types
+
+These were created to support aspects of the prototype, and don't necessarily correspond to any of the card types described in the design documents.
+
+Clip type card fields:
+
+type - string value, must equal scal.io.liger.ClipTypeCardModel
+clip_types - array of string values, a list of supported media types
+
+Quiz card fields:
+
+type - string value, must equal scal.io.liger.QuizCardModel
+description - string value, text to display on the card, most likely a question
+options - array of string values, a list of possible answers to a question
+
+Quiz report card fields:
+
+type - string value, must equal scal.io.liger.QuizReportCardModel
+description - string value, text to display on the card, most likely feedback on the quiz results
+results - array of string values, references to options selected in previous quiz cards
+  this field is obsolete now that the "references" field has been added to the base class
+
+Video capture type card fields:
+
+type - string value, must equal scal.io.liger.VideoCaptureTypeCardModel
+body - array of widget structures, see possible formats below
+  these widgets will be objects with functionality such as media capture or image display
+
+Video capture widget fields:
+
+type - string value, must equal scal.io.liger.widget.VideoCaptureWidget
+camera_type - string value, the camera type to use for the capture, most likely front/back
+
+Markdown widget fields:
+
+type - string value, must equal scal.io.liger.widget.MarkdownWidget
+text - string value, markdown text to display on the card
+
+Image widget fields:
+
+type - string value, must equal scal.io.liger.widget.ImageWidget
+path - string value, the path of an image file to display on the card
+
+Sample JSON:
+
+(this covers the video capture type card only, the other card types are generally similar to those covered in the previous example)
+
+{
+  "id": "story_path",
+  "title": "Story Path",
+  "cards": [
+    {
+      "type": "scal.io.liger.VideoCaptureTypeCardModel",
+      "id": "video_capture",
+      "title": "Video Capture",
+      "body": [ 
+        { 
+          "type": "scal.io.liger.widget.MarkdownWidget",
+          "text": "Some markdown text here"
+        },
+        { 
+          "type": "scal.io.liger.widget.ImageWidget",
+          "path": "file:///sdcard/foo.jpg"
+        },
+        { 
+          "type": "scal.io.liger.widget.MarkdownWidget",
+          "text": "Some more markdown"
+        },
+        { 
+          "type": "scal.io.liger.widget.VideoCaptureWidget",
+          "camera_type": "front"
+        },
+        { 
+          "type": "scal.io.liger.widget.MarkdownWidget",
+          "text": "Final markdown"
+        }
+      ]
+    }
+  ]
+}
