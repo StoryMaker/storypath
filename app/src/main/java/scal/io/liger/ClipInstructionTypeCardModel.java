@@ -6,6 +6,7 @@ import com.fima.cardsui.objects.Card;
 
 import java.util.ArrayList;
 
+import scal.io.liger.view.ClipInstructionTypeCardView;
 import scal.io.liger.view.IntroCardView;
 
 /**
@@ -22,7 +23,7 @@ public class ClipInstructionTypeCardModel extends CardModel {
 
     @Override
     public Card getCardView(Context context) {
-        return new IntroCardView(context, this); //TODO
+        return new ClipInstructionTypeCardView(context, this);
     }
 
     public String getMedia_path() {

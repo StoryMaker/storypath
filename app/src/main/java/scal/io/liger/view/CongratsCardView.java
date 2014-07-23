@@ -43,7 +43,7 @@ public class CongratsCardView extends Card {
         tvHeadline.setText(mCardModel.getHeadline());
         tvText.setText(mCardModel.getText());
 
-        //add checkbox options
+        //add options
         for(final String txtOption : mCardModel.getStory_paths()) {
             final TextView tvOption = new TextView(mContext);
             tvOption.setText(txtOption);
@@ -52,7 +52,7 @@ public class CongratsCardView extends Card {
             tvOption.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tvOption.setBackgroundColor(mContext.getResources().getColor(android.R.color.holo_blue_bright));
+                    Toast.makeText(mContext, txtOption + "click", Toast.LENGTH_SHORT).show();
                     mCardModel.addValue(txtOption);
                 }
             });
