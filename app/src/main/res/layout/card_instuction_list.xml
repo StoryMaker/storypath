@@ -15,7 +15,7 @@
         android:paddingRight="8dp" >
         
          <ImageView
-            android:id="@+id/cardImage"
+            android:id="@+id/iv_card_image"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:adjustViewBounds="true"

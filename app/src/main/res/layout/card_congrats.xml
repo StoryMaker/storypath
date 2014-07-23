@@ -13,19 +13,25 @@
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
-        
-         <ImageView
-            android:id="@+id/iv_card_image"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:adjustViewBounds="true"
-            android:baselineAlignBottom="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/snoopy"/>
 
         <TextView
             android:id="@+id/tv_headline"
             style="@style/CardTitleMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:text="@string/lbl_next_up"
+            style="@style/CardTitleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -41,35 +47,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_cardbank"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/tv_text"
+            style="@style/CardTitleMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            style="@style/CardText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/lbl_congrats_or" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_next_up_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selectable_background_cardbank"
         android:padding="4dp"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_level"/>
-
-        <TextView
-            android:id="@+id/tv_level"
-            style="@style/CardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_time"
-            android:layout_marginLeft="16dp"/>
-
-        <TextView
-            android:id="@+id/tv_time"
-            style="@style/CardText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:text="3 minutes"/>
-
+        android:orientation="vertical">
     </LinearLayout>
 
 </LinearLayout>

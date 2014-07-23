@@ -31,7 +31,7 @@ public class IntroCardView extends Card {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_intro, null);
-        ImageView ivCardImage = ((ImageView) view.findViewById(R.id.cardImage));
+        ImageView ivCardImage = ((ImageView) view.findViewById(R.id.iv_card_image));
         TextView tvHeadline = ((TextView) view.findViewById(R.id.tv_headline));
         TextView tvLevel = ((TextView) view.findViewById(R.id.tv_level));
         TextView tvTime = ((TextView) view.findViewById(R.id.tv_time));

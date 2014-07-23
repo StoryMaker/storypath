@@ -18,6 +18,7 @@ import scal.io.liger.CardModel;
 import scal.io.liger.ClipInstructionListCardModel;
 import scal.io.liger.R;
 
+
 public class ClipInstructionListCardView extends Card {
 
     private ClipInstructionListCardModel mCardModel;
@@ -37,7 +38,7 @@ public class ClipInstructionListCardView extends Card {
         View view = LayoutInflater.from(context).inflate(R.layout.card_instuction_list, null);
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         TextView tvBulletList = ((TextView) view.findViewById(R.id.tv_bullet_list));
-        ImageView ivCardImage = ((ImageView) view.findViewById(R.id.cardImage));
+        ImageView ivCardImage = ((ImageView) view.findViewById(R.id.iv_card_image));
 
         //build out bullet list spaces
         String bulletList = "";

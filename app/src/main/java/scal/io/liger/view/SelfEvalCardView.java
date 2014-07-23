@@ -16,6 +16,7 @@ import scal.io.liger.CardModel;
 import scal.io.liger.R;
 import scal.io.liger.SelfEvalCardModel;
 
+
 public class SelfEvalCardView extends Card {
 
     private SelfEvalCardModel mCardModel;
