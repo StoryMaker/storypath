@@ -132,7 +132,7 @@ public class StoryPathModel {
                     gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
                     Gson gson = gBuild.create();
 
-                    String json = JsonHelper.loadJSON(context, dependency.getDependencyFile());
+                    String json = JsonHelper.loadJSONFromPath(dependency.getDependencyFile());
                     story = gson.fromJson(json, StoryPathModel.class);
                 }
             }

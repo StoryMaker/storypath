@@ -1,8 +1,12 @@
 package scal.io.liger;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
@@ -20,7 +24,49 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initCardList();
+        initApp();
+    }
+
+    private void initApp() {
+        SharedPreferences sp = getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
+        boolean isFirstStart = sp.getBoolean("isFirstStartFlag", true);
+
+        // if it was the first app start
+        if(isFirstStart) {
+            //save our flag
+            SharedPreferences.Editor e = sp.edit();
+            e.putBoolean("isFirstStartFlag", false);
+            e.commit();
+        }
+
+        JsonHelper.setupFileStructure(this, isFirstStart);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] jsonFiles = JsonHelper.getJSONFileList();
+
+        //should never happen
+        if(jsonFiles.length == 0) {
+            jsonFiles = new String[1];
+            jsonFiles[0] = "Please add JSON files to the 'Liger' Folder and restart app\n(Located on root of SD card)";
+
+            builder.setTitle("No JSON files found")
+                .setItems(jsonFiles, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int index) {
+                    }
+                });
+        }
+        else {
+            builder.setTitle("Choose Story File(SdCard/Liger/)")
+                .setItems(jsonFiles, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int index) {
+                        JsonHelper.setSelectedJSONFile(index);
+                        initCardList();
+                    }
+                });
+        }
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void initCardList() {
@@ -39,7 +85,7 @@ public class MainActivity extends Activity {
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
 
-        String json = JsonHelper.loadJSON(this, "misc_card_test.json");
+        String json = JsonHelper.loadJSON();
         mStoryPathModel = gson.fromJson(json, StoryPathModel.class);
         mStoryPathModel.context = this.mContext;
         mStoryPathModel.setCardReferences();
