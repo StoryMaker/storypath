@@ -10,4 +10,8 @@
     <string name="lbl_next_up">NEXT UP</string>
     <string name="lbl_congrats_or">--- or ---</string>
 
+    <string name="lbl_video">Video</string>
+    <string name="lbl_audio">Audio</string>
+    <string name="lbl_photo">Photo</string>
+
 </resources>

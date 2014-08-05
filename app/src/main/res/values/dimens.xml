@@ -3,7 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-
     <dimen name="sticky_height">120dp</dimen>
     <dimen name="card_grid_font_size">14.0sp</dimen>
     <dimen name="card_temperature_size">90.0dip</dimen>
@@ -13,8 +12,13 @@
     <dimen name="card_small_text">14.0sp</dimen>
     <dimen name="card_action_small_text">12.0sp</dimen>
     <dimen name="card_action_text">16.0sp</dimen>
-    <dimen name="card_padding">16.0dip</dimen>
-    <dimen name="card_small_padding">12.0dip</dimen>
-    <dimen name="card_spacer_margin">8.0dip</dimen>
+
+    <dimen name="padding_xxsmall">2.0dip</dimen>
+    <dimen name="padding_xsmall">4.0dip</dimen>
+    <dimen name="padding_small">8.0dip</dimen>
+    <dimen name="padding_medium">12.0dip</dimen>
+    <dimen name="padding_large">16.0dip</dimen>
+    <dimen name="padding_xlarge">20.0dip</dimen>
+    <dimen name="padding_xxlarge">24.0dip</dimen>
 
 </resources>
