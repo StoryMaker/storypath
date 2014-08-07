@@ -8,17 +8,17 @@ import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.ButtonCardModel;
+import scal.io.liger.ProgressButtonCardModel;
 import scal.io.liger.CardModel;
 import scal.io.liger.R;
 
-public class ButtonCardView extends Card {
-    private ButtonCardModel mCardModel;
+public class ProgressButtonCardView extends Card {
+    private ProgressButtonCardModel mCardModel;
     private Context mContext;
 
-    public ButtonCardView(Context context, CardModel cardModel) {
+    public ProgressButtonCardView(Context context, CardModel cardModel) {
         mContext = context;
-        mCardModel = (ButtonCardModel) cardModel;
+        mCardModel = (ProgressButtonCardModel) cardModel;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ButtonCardView extends Card {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_button, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_progress_button, null);
         TextView btnCardButton = ((TextView) view.findViewById(R.id.btn_card_button));
 
         String btnText = mCardModel.getText();

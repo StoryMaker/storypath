@@ -10,18 +10,18 @@ import android.widget.Toast;
 import com.fima.cardsui.objects.Card;
 
 import scal.io.liger.CardModel;
-import scal.io.liger.ChooseMediaCardModel;
+import scal.io.liger.ChooseMediumCardModel;
 import scal.io.liger.R;
 
 
-public class ChooseMediaCardView extends Card {
+public class ChooseMediumCardView extends Card {
 
-    private ChooseMediaCardModel mCardModel;
+    private ChooseMediumCardModel mCardModel;
     private Context mContext;
 
-    public ChooseMediaCardView(Context context, CardModel cardModel) {
+    public ChooseMediumCardView(Context context, CardModel cardModel) {
         mContext = context;
-        mCardModel = (ChooseMediaCardModel) cardModel;
+        mCardModel = (ChooseMediumCardModel) cardModel;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ChooseMediaCardView extends Card {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_media_type, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_choose_medium, null);
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         Button btnMediumVideo = ((Button) view.findViewById(R.id.btn_medium_video));
         Button btnMediumAudio = ((Button) view.findViewById(R.id.btn_medium_audio));

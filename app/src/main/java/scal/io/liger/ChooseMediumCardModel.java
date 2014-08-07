@@ -4,21 +4,19 @@ import android.content.Context;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.view.ChooseMediaCardView;
+import scal.io.liger.view.ChooseMediumCardView;
 
-/**
- * Created by micahlucas on 8/4/14.
- */
-public class ChooseMediaCardModel extends CardModel {
+
+public class ChooseMediumCardModel extends CardModel {
     private String header;
 
-    public ChooseMediaCardModel() {
+    public ChooseMediumCardModel() {
         this.type = this.getClass().getName();
     }
 
     @Override
     public Card getCardView(Context context) {
-        return new ChooseMediaCardView(context, this);
+        return new ChooseMediumCardView(context, this);
     }
 
     public String getHeader() {

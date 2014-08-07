@@ -7,7 +7,6 @@
 
     <style name="CardText">
         <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">2</item>
     </style>
 
     <style name="CardLightText" parent="@style/CardText">

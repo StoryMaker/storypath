@@ -13,5 +13,6 @@
     <string name="lbl_video">Video</string>
     <string name="lbl_audio">Audio</string>
     <string name="lbl_photo">Photo</string>
+    <string name="lbl_order_media_desc">Now put your clips in order to present clear beginning, middle, and end.</string>
 
 </resources>
