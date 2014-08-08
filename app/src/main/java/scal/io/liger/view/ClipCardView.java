@@ -10,7 +10,6 @@ import com.fima.cardsui.objects.Card;
 import scal.io.liger.CardModel;
 import scal.io.liger.ClipCardModel;
 import scal.io.liger.R;
-import scal.io.liger.widget.BasicTextCardModel;
 
 
 public class ClipCardView extends Card {

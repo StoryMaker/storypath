@@ -3,16 +3,13 @@ package scal.io.liger.view;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
 import scal.io.liger.CardModel;
-import scal.io.liger.ChooseMediumCardModel;
 import scal.io.liger.R;
-import scal.io.liger.widget.BasicTextCardModel;
+import scal.io.liger.BasicTextCardModel;
 
 
 public class BasicTextCardView extends Card {

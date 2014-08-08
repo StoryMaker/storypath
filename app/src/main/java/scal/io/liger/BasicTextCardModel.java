@@ -1,4 +1,4 @@
-package scal.io.liger.widget;
+package scal.io.liger;
 
 import android.content.Context;
 
