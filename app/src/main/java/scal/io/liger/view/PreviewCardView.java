@@ -38,15 +38,14 @@ public class PreviewCardView extends Card {
         TextView tvText= ((TextView) view.findViewById(R.id.tv_text));
 
         //TODO find better way of checking file is valid
-        File mediaFile = new File(mCardModel.getMediaPath());
-        if(true) {//mediaFile.exists() && !mediaFile.isDirectory()) {
+        File mediaFile = new File(mCardModel.getMedia_path());
+        if(mediaFile.exists() && !mediaFile.isDirectory()) {
             MediaController mediaController = new MediaController(mContext);
             mediaController.setAnchorView(vvCardMedia);
 
-            Uri video = Uri.parse(mCardModel.getMediaPath());
+            Uri video = Uri.parse(mCardModel.getMedia_path());
             vvCardMedia.setMediaController(mediaController);
-            //TODO dont hardcode video file
-            vvCardMedia.setVideoPath("file:///android_asset/videosample1.mp4");
+            vvCardMedia.setVideoURI(video);
             vvCardMedia.start();
         }
 

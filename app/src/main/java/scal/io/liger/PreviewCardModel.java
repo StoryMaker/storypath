@@ -8,7 +8,7 @@ import scal.io.liger.view.PreviewCardView;
 
 
 public class PreviewCardModel extends CardModel {
-    private String mediaPath;
+    private String media_path;
     private String text;
 
     public PreviewCardModel() {
@@ -20,12 +20,12 @@ public class PreviewCardModel extends CardModel {
         return new PreviewCardView(context, this);
     }
 
-    public String getMediaPath() {
-        return mediaPath;
+    public String getMedia_path() {
+        return media_path;
     }
 
-    public void setMediaPath(String mediaPath) {
-        this.mediaPath = mediaPath;
+    public void setMedia_path(String media_path) {
+        this.media_path = media_path;
     }
 
     public String getText() { return this.text; }
