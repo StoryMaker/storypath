@@ -11,12 +11,11 @@ import scal.io.liger.view.IntroCardView;
 
 
 public class ClipCardModel extends CardModel {
-    private enum eClipMedium { VIDEO, AUDIO, PHOTO };
-    private enum eClipType { CHARACTER, ACTION, RESULT };
 
-    private String mediaPath;
-    private eClipMedium clipMedium;
-    private eClipType clipType;
+    private String header;
+    private String media_path;
+    private String clipMedium;
+    private String clipType;
 
     public ClipCardModel() {
         this.type = this.getClass().getName();
@@ -27,19 +26,27 @@ public class ClipCardModel extends CardModel {
         return new ClipCardView(context, this);
     }
 
-    public String getMediaPath() {
-        return mediaPath;
+    public String getHeader() {
+        return header;
     }
 
-    public void setMediaPath(String mediaPath) {
-        this.mediaPath = mediaPath;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
-    public eClipMedium getClipMedium() { return clipMedium; }
+    public String getMedia_path() {
+        return media_path;
+    }
 
-    public void setClipMedium(eClipMedium clipMedium) { this.clipMedium = clipMedium; }
+    public void setMedia_path(String media_path) {
+        this.media_path = media_path;
+    }
 
-    public eClipType getClipType() { return clipType; }
+    public String getClipMedium() { return clipMedium; }
 
-    public void setClipType(eClipType clipType) { this.clipType = clipType; }
+    public void setClipMedium(String clipMedium) { this.clipMedium = clipMedium; }
+
+    public String getClipType() { return clipType; }
+
+    public void setClipType(String clipType) { this.clipType = clipType; }
 }
