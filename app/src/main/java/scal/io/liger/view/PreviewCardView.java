@@ -37,8 +37,12 @@ public class PreviewCardView extends Card {
         VideoView vvCardMedia = ((VideoView) view.findViewById(R.id.vv_card_media));
         TextView tvText= ((TextView) view.findViewById(R.id.tv_text));
 
+        String path = mCardModel.getMedia_path();
+        if ((path == null) && (mCardModel.getMedia_id() != null)) {
+            path = mCardModel.getStoryPathReference().getReferencedValue(mCardModel.getMedia_id());
+        }
         //TODO find better way of checking file is valid
-        File mediaFile = new File(mCardModel.getMedia_path());
+        File mediaFile = new File(path);
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
             MediaController mediaController = new MediaController(mContext);
             mediaController.setAnchorView(vvCardMedia);

@@ -78,7 +78,7 @@ public class ClipCardView extends Card {
                     }
 
                     if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
-                        intent.putExtra(Constants.EXTRA_PATH_ID, storyPathId);
+                        mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, storyPathId).apply(); // FIXME should be done off the ui thread
                         ((Activity) mContext).startActivityForResult(intent, requestId);
                     }
                 }

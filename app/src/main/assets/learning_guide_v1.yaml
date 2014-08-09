@@ -7,11 +7,45 @@
       id: "instruction_type_card"
       header: "This card tells the maker which clip to capture."
       values:
-        - "value::audio"
+        - "value::video"
     - 
       type: "scal.io.liger.ProgressButtonCardModel"
       id: "got_it"
       text: "foooo" 
+      
+    - 
+      type: "scal.io.liger.ClipCardModel"
+      id: "clip_video_character"
+      clip_medium: "video"
+      clip_type: "character"
+      header: "clip_video_character"
+      references:
+        - "learning_guide_v1::instruction_type_card::value::video"
+#      values:
+#        - "value::foobarrrrr"
+    - 
+      type: "scal.io.liger.PreviewCardModel"
+      id: "preview_card_1"
+      media_id: "learning_guide_v1::clip_video_character::value"
+      references:
+        - "learning_guide_v1::clip_video_character::value"
+      
+    - 
+      type: "scal.io.liger.ClipCardModel"
+      id: "clip_video_action"
+      clip_medium: "video"
+      clip_type: "action"
+      header: "clip_video_action"
+      references: 
+        - "learning_guide_v1::instruction_type_card::value::video"
+    - 
+      type: "scal.io.liger.ClipCardModel"
+      id: "clip_video_result"
+      clip_medium: "video"
+      clip_type: "result"
+      header: "clip_video_result"
+      references: 
+        - "learning_guide_v1::instruction_type_card::value::video"
       
     - 
       type: "scal.io.liger.ClipCardModel"
@@ -68,31 +102,6 @@
       header: "clip_photo_result"
       references: 
         - "learning_guide_v1::instruction_type_card::value::photo"
-      
-    - 
-      type: "scal.io.liger.ClipCardModel"
-      id: "clip_video_character"
-      clip_medium: "video"
-      clip_type: "character"
-      header: "clip_video_character"
-      references:
-        - "learning_guide_v1::instruction_type_card::value::video"
-    - 
-      type: "scal.io.liger.ClipCardModel"
-      id: "clip_video_action"
-      clip_medium: "video"
-      clip_type: "action"
-      header: "clip_video_action"
-      references: 
-        - "learning_guide_v1::instruction_type_card::value::video"
-    - 
-      type: "scal.io.liger.ClipCardModel"
-      id: "clip_video_result"
-      clip_medium: "video"
-      clip_type: "result"
-      header: "clip_video_result"
-      references: 
-        - "learning_guide_v1::instruction_type_card::value::video"
       
       
       

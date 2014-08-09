@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -115,17 +117,34 @@ public class MainActivity extends Activity {
             Bundle extras = intent.getExtras();
             String pathId = null;
             Uri uri = intent.getData();
+            String path = getRealPathFromURI(getApplicationContext(), uri);
 
-            if (extras != null) {
-                pathId = extras.getString(Constants.EXTRA_PATH_ID);
-            }
+//            if (extras != null) {
+//                pathId = extras.getString(Constants.EXTRA_PATH_ID);
+//            }
+            pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
             if(null == pathId || null == uri) {
                 return;
             }
 
             CardModel cm = mStoryPathModel.getCardById(pathId);
-            cm.addValue(uri.getPath());
+            cm.addValue("value::" + path);
+        }
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 }

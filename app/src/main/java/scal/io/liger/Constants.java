@@ -7,4 +7,5 @@ public class Constants {
     public static final int REQUEST_AUDIO_CAPTURE = 102;
 
     public static final String EXTRA_PATH_ID = "EXTRA_PATH_ID";
+    public static final String PREFS_CALLING_CARD_ID = "PREFS_CALLING_CARD_ID";
 }
