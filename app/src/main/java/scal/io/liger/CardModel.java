@@ -74,9 +74,15 @@ public abstract class CardModel {
                 // assumes the format story::card::field::value
                 String[] pathParts = reference.split("::");
                 String referencedValue = storyPathReference.getReferencedValue(reference);
-
-                if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
-                    result = false;
+                if (pathParts.length == 3) {
+                    // just check that the value is not null
+                    if (referencedValue == null) { // FIXME this cold be simplified
+                        result = false;
+                    }
+                } else {
+                    if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
+                        result = false;
+                    }
                 }
             }
         }
