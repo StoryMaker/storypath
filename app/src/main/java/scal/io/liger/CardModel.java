@@ -107,7 +107,7 @@ public abstract class CardModel {
     }
 
     public String getValueById (String fullPath) {
-        // assumes the format story::card::field::value
+        // assumes the format story::card::field
         String[] pathParts = fullPath.split("::");
 
         // sanity check

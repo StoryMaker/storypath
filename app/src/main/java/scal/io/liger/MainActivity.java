@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -104,5 +106,26 @@ public class MainActivity extends Activity {
         }
 
         mCardView.refresh();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == RESULT_OK) {
+
+            Bundle extras = intent.getExtras();
+            String pathId = null;
+            Uri uri = intent.getData();
+
+            if (extras != null) {
+                pathId = extras.getString(Constants.EXTRA_PATH_ID);
+            }
+
+            if(null == pathId || null == uri) {
+                return;
+            }
+
+            CardModel cm = mStoryPathModel.getCardById(pathId);
+            cm.addValue(uri.getPath());
+        }
     }
 }
