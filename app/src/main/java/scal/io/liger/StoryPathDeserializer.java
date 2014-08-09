@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
  * System.out.println("TEST: " + gson.toJson(spm));
  */
 public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
+
     @Override
     public StoryPathModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         StoryPathModel spm = new StoryPathModel();

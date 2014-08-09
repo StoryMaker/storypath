@@ -89,7 +89,7 @@ public class JsonHelper {
 
                 //add one choice from assets
                 try {
-                    InputStream jsonStream = context.getAssets().open("misc_card_test.json");
+                    InputStream jsonStream = context.getAssets().open("learning_guide_v1.json");
                     addFileToSDCard(jsonStream);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -129,7 +129,7 @@ public class JsonHelper {
 
         try {
             // write the inputStream to a FileOutputStream
-            outputStream = new FileOutputStream(new File(sdLigerFilePath + "test_json.json"));
+            outputStream = new FileOutputStream(new File(sdLigerFilePath + "learning_guide_v1.json"));
 
             int read = 0;
             byte[] bytes = new byte[1024];

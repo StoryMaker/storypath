@@ -56,9 +56,9 @@
         "id": "eval_report_2",
         "title": "EVAL REPORT 2",
         "headline": "YOU CHECKED THE THIRD BOX",
-        "references": [
-            "eval_check::eval_card::value_2::true"
-        ]
-      }
-  ]
-}
+            "references": [
+                "eval_check::eval_card::value_2::true"
+            ]
+          }
+      ]
+    }
