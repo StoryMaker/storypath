@@ -103,16 +103,22 @@ public abstract class CardModel {
     }
 
     public void addValue(String value) {
+        addValue(value, true);
+    }
+
+    public void addValue(String value, boolean notify) {
         if (this.values == null)
             this.values = new ArrayList<String>();
 
         this.values.add(value);
 
-        // send notification that a value has been saved so that cards can re-check references
-        if (storyPathReference != null) {
-            storyPathReference.notifyActivity();
-        } else {
-            System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+        if (notify) {
+            // send notification that a value has been saved so that cards can re-check references
+            if (storyPathReference != null) {
+                storyPathReference.notifyActivity();
+            } else {
+                System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            }
         }
     }
 
@@ -149,8 +155,9 @@ public abstract class CardModel {
     public String getValueById (String fullPath) {
         // assumes the format story::card::field
         String[] pathParts = fullPath.split("::");
+        //FIXME this should also work for length 3!
 
-         if (pathParts.length == 4) {
+         if (pathParts.length == 4 || pathParts.length == 3) {
             // sanity check
             if (!this.id.equals(pathParts[1])) {
                 System.err.println("CARD ID " + pathParts[1] + " DOES NOT MATCH");

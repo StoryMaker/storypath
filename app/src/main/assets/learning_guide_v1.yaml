@@ -6,10 +6,6 @@
             type: "scal.io.liger.ChooseMediumCardModel"
             id: "choose_medium_card"
             header: "This card tells the maker which clip to capture."
-        - 
-            type: "scal.io.liger.ProgressButtonCardModel"
-            id: "got_it"
-            text: "foooo" 
             
         - 
             type: "scal.io.liger.ClipCardModel"
@@ -66,8 +62,6 @@
             header: "clip_audio_character"
             references: 
                 - "learning_guide_v1::choose_medium_card::value::audio"
-            values:
-                - "media_path::foobar"
         - 
             type: "scal.io.liger.ClipCardModel"
             id: "clip_audio_action"
@@ -76,8 +70,6 @@
             header: "clip_audio_action"
             references: 
                 - "learning_guide_v1::choose_medium_card::value::audio"
-            values:
-                - "media_path::foobar"
         - 
             type: "scal.io.liger.ClipCardModel"
             id: "clip_audio_result"
@@ -86,8 +78,6 @@
             header: "clip_audio_result"
             references: 
                 - "learning_guide_v1::choose_medium_card::value::audio"
-            values:
-                - "media_path::foobar"
             
         - 
             type: "scal.io.liger.ClipCardModel"
@@ -120,17 +110,24 @@
             type: "scal.io.liger.ProgressCardModel"
             id: "three_clips_filled"
             references: 
-                #- "learning_guide_v1::choose_medium_card::value"
-                - "learning_guide_v1::clip_audio_character::media_path"
-                - "learning_guide_v1::clip_audio_action::media_path"
-                - "learning_guide_v1::clip_audio_result::media_path"
-                - "learning_guide_v1::clip_photo_character::media_path"
-                - "learning_guide_v1::clip_photo_action::media_path"
-                - "learning_guide_v1::clip_photo_result::media_path"
-                - "learning_guide_v1::clip_video_character::media_path"
-                - "learning_guide_v1::clip_video_action::media_path"
-                - "learning_guide_v1::clip_video_result::media_path"
+                - "learning_guide_v1::choose_medium_card::value"
+                - "learning_guide_v1::clip_video_character::value"
+                - "learning_guide_v1::clip_video_action::value"
+                - "learning_guide_v1::clip_video_result::value"
+                - "learning_guide_v1::clip_audio_character::value"
+                - "learning_guide_v1::clip_audio_action::value"
+                - "learning_guide_v1::clip_audio_result::value"
+                - "learning_guide_v1::clip_photo_character::value"
+                - "learning_guide_v1::clip_photo_action::value"
+                - "learning_guide_v1::clip_photo_result::value"
             
+        - 
+            type: "scal.io.liger.ProgressButtonCardModel"
+            id: "got_it"
+            text: "foooo" 
+            references: 
+                - "learning_guide_v1::three_clips_filled::value::true"
+                
         - 
             type: "scal.io.liger.ClipInstructionTypeCardModel"
             id: "choose_medium_card"
@@ -142,5 +139,5 @@
                 - "Video"
                 - "Import"
             references: 
-            - "learning_guide_v1::three_clips_filled::value::true"
+                - "learning_guide_v1::three_clips_filled::value::true"
      

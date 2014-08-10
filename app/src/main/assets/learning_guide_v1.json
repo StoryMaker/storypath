@@ -6,11 +6,6 @@
             "id": "choose_medium_card"
         }, 
         {
-            "text": "foooo", 
-            "type": "scal.io.liger.ProgressButtonCardModel", 
-            "id": "got_it"
-        }, 
-        {
             "header": "clip_video_character", 
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video"
@@ -74,9 +69,6 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "character", 
-            "values": [
-                "media_path::foobar"
-            ], 
             "type": "scal.io.liger.ClipCardModel", 
             "id": "clip_audio_character"
         }, 
@@ -87,9 +79,6 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "action", 
-            "values": [
-                "media_path::foobar"
-            ], 
             "type": "scal.io.liger.ClipCardModel", 
             "id": "clip_audio_action"
         }, 
@@ -100,9 +89,6 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "result", 
-            "values": [
-                "media_path::foobar"
-            ], 
             "type": "scal.io.liger.ClipCardModel", 
             "id": "clip_audio_result"
         }, 
@@ -139,17 +125,26 @@
         {
             "type": "scal.io.liger.ProgressCardModel", 
             "references": [
-                "learning_guide_v1::clip_audio_character::media_path", 
-                "learning_guide_v1::clip_audio_action::media_path", 
-                "learning_guide_v1::clip_audio_result::media_path", 
-                "learning_guide_v1::clip_photo_character::media_path", 
-                "learning_guide_v1::clip_photo_action::media_path", 
-                "learning_guide_v1::clip_photo_result::media_path", 
-                "learning_guide_v1::clip_video_character::media_path", 
-                "learning_guide_v1::clip_video_action::media_path", 
-                "learning_guide_v1::clip_video_result::media_path"
+                "learning_guide_v1::choose_medium_card::value", 
+                "learning_guide_v1::clip_video_character::value", 
+                "learning_guide_v1::clip_video_action::value", 
+                "learning_guide_v1::clip_video_result::value", 
+                "learning_guide_v1::clip_audio_character::value", 
+                "learning_guide_v1::clip_audio_action::value", 
+                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::clip_photo_character::value", 
+                "learning_guide_v1::clip_photo_action::value", 
+                "learning_guide_v1::clip_photo_result::value"
             ], 
             "id": "three_clips_filled"
+        }, 
+        {
+            "text": "foooo", 
+            "type": "scal.io.liger.ProgressButtonCardModel", 
+            "id": "got_it", 
+            "references": [
+                "learning_guide_v1::three_clips_filled::value::true"
+            ]
         }, 
         {
             "header": "This card tells the maker which clip to capture.", 

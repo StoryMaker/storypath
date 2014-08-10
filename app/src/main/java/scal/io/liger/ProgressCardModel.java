@@ -35,14 +35,63 @@ public class ProgressCardModel extends CardModel {
 
     @Override
     public boolean checkReferencedValues() {
-        boolean result = true;
+        clearValues();
+        addValue("value::" + (areWeSatisfied() ? "true" : "false"), false); // FIXME this should be in a more general init() method called on each card as the path is bootstrapped
 
-        if ((references != null) && (references.size() == 9)) { // FIXME hardcoding to 9 refs obviously sucks balls
-            return ((g(references.get(0)) && g(references.get(1)) && g(references.get(2)))
-                || (g(references.get(3)) && g(references.get(4)) && g(references.get(5)))
-                || (g(references.get(6)) && g(references.get(7)) && g(references.get(8))));
+        boolean val = g(references.get(0));
+        return val;
+    }
+
+    public boolean areWeSatisfied() {
+        boolean result = false;
+
+        if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
+//            result = ((g(references.get(1)) && g(references.get(2)) && g(references.get(3)))
+//                || (g(references.get(4)) && g(references.get(5)) && g(references.get(6)))
+//                || (g(references.get(7)) && g(references.get(8)) && g(references.get(9))));
+
+            String medium = storyPathReference.getReferencedValue(references.get(0));
+
+            if (medium != null) {
+                // FIXME this is super fragile, assume the clip type is based on order.  ug.
+                if (medium.equals("video")) {
+                    result = (g(references.get(1)) && g(references.get(2)) && g(references.get(3)));
+                } else if (medium.equals("audio")) {
+                    result = (g(references.get(4)) && g(references.get(5)) && g(references.get(6)));
+                } else if (medium.equals("photo")) {
+                    result = (g(references.get(7)) && g(references.get(8)) && g(references.get(9)));
+                }
+            }
+
         }
+        Log.d("areWeSatisfied", result ? "true" : "false");
+        return result;
+    }
 
+    public int getFilledCount() {
+        int result = 0;
+
+        if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
+            String medium = storyPathReference.getReferencedValue(references.get(0));
+            if (medium != null) {
+                // FIXME this is super fragile, assume the clip type is based on order.  ug.
+                if (medium.equals("video")) {
+                    result += (g(references.get(1)) ? 1 : 0);
+                    result += (g(references.get(2)) ? 1 : 0);
+                    result += (g(references.get(3)) ? 1 : 0);
+                } else if (medium.equals("audio")) {
+                    result += (g(references.get(4)) ? 1 : 0);
+                    result += (g(references.get(5)) ? 1 : 0);
+                    result += (g(references.get(6)) ? 1 : 0);
+                } else if (medium.equals("photo")) {
+                    result += (g(references.get(7)) ? 1 : 0);
+                    result += (g(references.get(8)) ? 1 : 0);
+                    result += (g(references.get(9)) ? 1 : 0);
+                }
+            }
+
+        }
+        Log.d("filledCardCount", "" + result);
         return result;
     }
 }
