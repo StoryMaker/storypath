@@ -119,9 +119,6 @@ public class MainActivity extends Activity {
             Uri uri = intent.getData();
             String path = getRealPathFromURI(getApplicationContext(), uri);
 
-//            if (extras != null) {
-//                pathId = extras.getString(Constants.EXTRA_PATH_ID);
-//            }
             pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
             if(null == pathId || null == uri) {

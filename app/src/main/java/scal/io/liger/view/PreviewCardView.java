@@ -47,7 +47,7 @@ public class PreviewCardView extends Card {
             MediaController mediaController = new MediaController(mContext);
             mediaController.setAnchorView(vvCardMedia);
 
-            Uri video = Uri.parse(mCardModel.getMedia_path());
+            Uri video = Uri.parse(path);
             vvCardMedia.setMediaController(mediaController);
             vvCardMedia.setVideoURI(video);
             vvCardMedia.start();
