@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
@@ -18,8 +17,13 @@ public class ChooseMediumCardView extends Card {
     public static final String AUDIO = "audio";
     public static final String PHOTO = "photo";
     public static final String VIDEO = "video";
+
     private ChooseMediumCardModel mCardModel;
     private Context mContext;
+
+    private Button mBtnMediumVideo;
+    private Button mBtnMediumAudio;
+    private Button mBtnMediumPhoto;
 
     public ChooseMediumCardView(Context context, CardModel cardModel) {
         mContext = context;
@@ -34,39 +38,64 @@ public class ChooseMediumCardView extends Card {
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_choose_medium, null);
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
-        Button btnMediumVideo = ((Button) view.findViewById(R.id.btn_medium_video));
-        Button btnMediumAudio = ((Button) view.findViewById(R.id.btn_medium_audio));
-        Button btnMediumPhoto = ((Button) view.findViewById(R.id.btn_medium_photo));
+        mBtnMediumVideo = ((Button) view.findViewById(R.id.btn_medium_video));
+        mBtnMediumAudio = ((Button) view.findViewById(R.id.btn_medium_audio));
+        mBtnMediumPhoto = ((Button) view.findViewById(R.id.btn_medium_photo));
 
         tvHeader.setText(mCardModel.getHeader());
 
-        btnMediumVideo.setOnClickListener(new View.OnClickListener() {
+        mBtnMediumVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(mContext, "Video click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
                 mCardModel.addValue("value::" + VIDEO);
+                highlightButton(v);
             }
         });
 
-        btnMediumAudio.setOnClickListener(new View.OnClickListener() {
+        mBtnMediumAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(mContext, "Audio click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
                 mCardModel.addValue("value::" + AUDIO);
+                highlightButton(v);
             }
         });
 
-        btnMediumPhoto.setOnClickListener(new View.OnClickListener() {
+        mBtnMediumPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(mContext, "Photo click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
                 mCardModel.addValue("value::" + PHOTO);
+                highlightButton(v);
             }
         });
 
+        String value = mCardModel.getValueByKey("value");
+        if (value != null) {
+            if (value.equals(VIDEO)) {
+                mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+                mBtnMediumVideo.setTextColor(mContext.getResources().getColor(R.color.white));
+            } else if (value.equals(AUDIO)) {
+                mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+                mBtnMediumAudio.setTextColor(mContext.getResources().getColor(R.color.white));
+            } else if (value.equals(PHOTO)) {
+                mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+                mBtnMediumPhoto.setTextColor(mContext.getResources().getColor(R.color.white));
+            }
+        }
+
         return view;
+    }
+
+    private void highlightButton(View  button) {
+        mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        button.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+        ((Button) button).setTextColor(mContext.getResources().getColor(R.color.white));
     }
 }

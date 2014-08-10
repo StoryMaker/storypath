@@ -116,20 +116,11 @@ public abstract class CardModel {
         }
     }
 
-    public String getValueById (String fullPath) {
-        // assumes the format story::card::field
-        String[] pathParts = fullPath.split("::");
-
-        // sanity check
-        if (!this.id.equals(pathParts[1])) {
-            System.err.println("CARD ID " + pathParts[1] + " DOES NOT MATCH");
-            return null;
-        }
-
+    public String getValueByKey(String key) {
         if (values != null) {
             for (String value : values) {
                 String[] valueParts = value.split("::");
-                if (valueParts[0].equals(pathParts[2])) {
+                if (valueParts[0].equals(key)) {
                     return valueParts[1];
                 }
             }
@@ -140,13 +131,35 @@ public abstract class CardModel {
         Field f = null;
         try {
             c = this.getClass();
-            f = c.getField(pathParts[2]);
+            f = c.getField(key);
             return f.get(this).toString(); // not the best solution, but somehow int fields come back with Integer values
         } catch (Exception e) {
             System.err.println("EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
         }
 
-        System.err.println("VALUE " + pathParts[2] + " WAS NOT FOUND");
+        System.err.println("VALUE " + key + " WAS NOT FOUND");
+        return null;
+    }
+
+    /**
+     * get's a value.
+     * @param fullPath accepts is a FQID
+     * @return
+     */
+    public String getValueById (String fullPath) {
+        // assumes the format story::card::field
+        String[] pathParts = fullPath.split("::");
+
+         if (pathParts.length == 4) {
+            // sanity check
+            if (!this.id.equals(pathParts[1])) {
+                System.err.println("CARD ID " + pathParts[1] + " DOES NOT MATCH");
+                return null;
+            }
+
+            return getValueByKey(pathParts[2]);
+        }
+
         return null;
     }
 }

@@ -2,11 +2,8 @@
     "cards": [
         {
             "header": "This card tells the maker which clip to capture.", 
-            "values": [
-                "value::video"
-            ], 
-            "id": "instruction_type_card", 
-            "type": "scal.io.liger.ChooseMediumCardModel"
+            "type": "scal.io.liger.ChooseMediumCardModel", 
+            "id": "choose_medium_card"
         }, 
         {
             "text": "foooo", 
@@ -16,7 +13,7 @@
         {
             "header": "clip_video_character", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::video"
+                "learning_guide_v1::choose_medium_card::value::video"
             ], 
             "clip_medium": "video", 
             "clip_type": "character", 
@@ -28,14 +25,14 @@
             "media_id": "learning_guide_v1::clip_video_character::value", 
             "id": "preview_card_1", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::video", 
+                "learning_guide_v1::choose_medium_card::value::video", 
                 "learning_guide_v1::clip_video_character::value"
             ]
         }, 
         {
             "header": "clip_video_action", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::video"
+                "learning_guide_v1::choose_medium_card::value::video"
             ], 
             "clip_medium": "video", 
             "clip_type": "action", 
@@ -47,14 +44,14 @@
             "media_id": "learning_guide_v1::clip_video_action::value", 
             "id": "preview_card_2", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::video", 
+                "learning_guide_v1::choose_medium_card::value::video", 
                 "learning_guide_v1::clip_video_action::value"
             ]
         }, 
         {
             "header": "clip_video_result", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::video"
+                "learning_guide_v1::choose_medium_card::value::video"
             ], 
             "clip_medium": "video", 
             "clip_type": "result", 
@@ -66,14 +63,14 @@
             "media_id": "learning_guide_v1::clip_video_result::value", 
             "id": "preview_card_3", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::video", 
+                "learning_guide_v1::choose_medium_card::value::video", 
                 "learning_guide_v1::clip_video_result::value"
             ]
         }, 
         {
             "header": "clip_audio_character", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::audio"
+                "learning_guide_v1::choose_medium_card::value::audio"
             ], 
             "clip_medium": "audio", 
             "clip_type": "character", 
@@ -86,7 +83,7 @@
         {
             "header": "clip_audio_action", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::audio"
+                "learning_guide_v1::choose_medium_card::value::audio"
             ], 
             "clip_medium": "audio", 
             "clip_type": "action", 
@@ -99,7 +96,7 @@
         {
             "header": "clip_audio_result", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::audio"
+                "learning_guide_v1::choose_medium_card::value::audio"
             ], 
             "clip_medium": "audio", 
             "clip_type": "result", 
@@ -112,7 +109,7 @@
         {
             "header": "clip_photo_character", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::photo"
+                "learning_guide_v1::choose_medium_card::value::photo"
             ], 
             "clip_medium": "photo", 
             "clip_type": "character", 
@@ -123,7 +120,7 @@
             "header": "clip_photo_action", 
             "medium": "photo", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::photo"
+                "learning_guide_v1::choose_medium_card::value::photo"
             ], 
             "clip_type": "action", 
             "type": "scal.io.liger.ClipCardModel", 
@@ -132,7 +129,7 @@
         {
             "header": "clip_photo_result", 
             "references": [
-                "learning_guide_v1::instruction_type_card::value::photo"
+                "learning_guide_v1::choose_medium_card::value::photo"
             ], 
             "clip_medium": "photo", 
             "clip_type": "result", 
@@ -167,7 +164,7 @@
                 "Import"
             ], 
             "type": "scal.io.liger.ClipInstructionTypeCardModel", 
-            "id": "instruction_type_card"
+            "id": "choose_medium_card"
         }
     ], 
     "id": "learning_guide_v1", 
