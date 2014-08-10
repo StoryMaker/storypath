@@ -122,7 +122,7 @@
                 - learning_guide_v1::clip_photo_result::value
             
         - 
-            type: scal.io.liger.model.ProgressButtonCardModel
+            type: scal.io.liger.model.ButtonCardModel
             id: got_it
             text: foooo 
             references: 

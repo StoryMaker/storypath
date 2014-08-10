@@ -4,17 +4,17 @@ import android.content.Context;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.view.ProgressButtonCardView;
+import scal.io.liger.view.ButtonCardView;
 
-public class ProgressButtonCardModel extends CardModel {
+public class ButtonCardModel extends CardModel {
     private String text;
 
-    public ProgressButtonCardModel() {
+    public ButtonCardModel() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) { return new ProgressButtonCardView(context, this); }
+    public Card getCardView(Context context) { return new ButtonCardView(context, this); }
 
     public String getText() {
         return this.text;

@@ -140,7 +140,7 @@
         }, 
         {
             "text": "foooo", 
-            "type": "scal.io.liger.model.ProgressButtonCardModel", 
+            "type": "scal.io.liger.model.ButtonCardModel",
             "id": "got_it", 
             "references": [
                 "learning_guide_v1::three_clips_filled::value::true"
