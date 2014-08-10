@@ -50,7 +50,7 @@ public class PreviewCardView extends Card {
             Uri video = Uri.parse(path);
             vvCardMedia.setMediaController(mediaController);
             vvCardMedia.setVideoURI(video);
-            vvCardMedia.start();
+            vvCardMedia.seekTo(5); // seems to be need to be done to show its thumbnail?
         }
 
         tvText.setText(mCardModel.getText());
