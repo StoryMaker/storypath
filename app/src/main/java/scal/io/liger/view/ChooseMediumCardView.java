@@ -15,7 +15,9 @@ import scal.io.liger.R;
 
 
 public class ChooseMediumCardView extends Card {
-
+    public static final String AUDIO = "audio";
+    public static final String PHOTO = "photo";
+    public static final String VIDEO = "video";
     private ChooseMediumCardModel mCardModel;
     private Context mContext;
 
@@ -41,21 +43,27 @@ public class ChooseMediumCardView extends Card {
         btnMediumVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Video click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Video click", Toast.LENGTH_SHORT).show();
+                mCardModel.clearValues();
+                mCardModel.addValue("value::" + VIDEO);
             }
         });
 
         btnMediumAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Audio click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Audio click", Toast.LENGTH_SHORT).show();
+                mCardModel.clearValues();
+                mCardModel.addValue("value::" + AUDIO);
             }
         });
 
         btnMediumPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Photo click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "Photo click", Toast.LENGTH_SHORT).show();
+                mCardModel.clearValues();
+                mCardModel.addValue("value::" + PHOTO);
             }
         });
 

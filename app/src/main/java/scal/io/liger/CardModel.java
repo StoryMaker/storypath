@@ -94,6 +94,10 @@ public abstract class CardModel {
         return values;
     }
 
+    public void clearValues() {
+        values = null;
+    }
+
     public void setValues(ArrayList<String> values) {
         this.values = values;
     }

@@ -21,13 +21,12 @@
       header: "clip_video_character"
       references:
         - "learning_guide_v1::instruction_type_card::value::video"
-#      values:
-#        - "value::foobarrrrr"
     - 
       type: "scal.io.liger.PreviewCardModel"
       id: "preview_card_1"
       media_id: "learning_guide_v1::clip_video_character::value"
       references:
+        - "learning_guide_v1::instruction_type_card::value::video"
         - "learning_guide_v1::clip_video_character::value"
       
     - 
@@ -39,6 +38,13 @@
       references: 
         - "learning_guide_v1::instruction_type_card::value::video"
     - 
+      type: "scal.io.liger.PreviewCardModel"
+      id: "preview_card_2"
+      media_id: "learning_guide_v1::clip_video_action::value"
+      references:
+        - "learning_guide_v1::instruction_type_card::value::video"
+        - "learning_guide_v1::clip_video_action::value"
+    - 
       type: "scal.io.liger.ClipCardModel"
       id: "clip_video_result"
       clip_medium: "video"
@@ -46,6 +52,13 @@
       header: "clip_video_result"
       references: 
         - "learning_guide_v1::instruction_type_card::value::video"
+    - 
+      type: "scal.io.liger.PreviewCardModel"
+      id: "preview_card_3"
+      media_id: "learning_guide_v1::clip_video_result::value"
+      references:
+        - "learning_guide_v1::instruction_type_card::value::video"
+        - "learning_guide_v1::clip_video_result::value"
       
     - 
       type: "scal.io.liger.ClipCardModel"

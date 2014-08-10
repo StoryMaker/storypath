@@ -28,6 +28,7 @@
             "media_id": "learning_guide_v1::clip_video_character::value", 
             "id": "preview_card_1", 
             "references": [
+                "learning_guide_v1::instruction_type_card::value::video", 
                 "learning_guide_v1::clip_video_character::value"
             ]
         }, 
@@ -42,6 +43,15 @@
             "id": "clip_video_action"
         }, 
         {
+            "type": "scal.io.liger.PreviewCardModel", 
+            "media_id": "learning_guide_v1::clip_video_action::value", 
+            "id": "preview_card_2", 
+            "references": [
+                "learning_guide_v1::instruction_type_card::value::video", 
+                "learning_guide_v1::clip_video_action::value"
+            ]
+        }, 
+        {
             "header": "clip_video_result", 
             "references": [
                 "learning_guide_v1::instruction_type_card::value::video"
@@ -50,6 +60,15 @@
             "clip_type": "result", 
             "type": "scal.io.liger.ClipCardModel", 
             "id": "clip_video_result"
+        }, 
+        {
+            "type": "scal.io.liger.PreviewCardModel", 
+            "media_id": "learning_guide_v1::clip_video_result::value", 
+            "id": "preview_card_3", 
+            "references": [
+                "learning_guide_v1::instruction_type_card::value::video", 
+                "learning_guide_v1::clip_video_result::value"
+            ]
         }, 
         {
             "header": "clip_audio_character", 
