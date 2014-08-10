@@ -3,7 +3,7 @@
   "title": "Story Path 1",
   "cards": [
       {
-        "type": "scal.io.liger.IntroCardModel",
+        "type": "scal.io.liger.model.IntroCardModel",
         "id": "intro_card",
         "title": "INTRO CARD",
         "headline": "Headline that creates interest for what's coming",
@@ -11,7 +11,7 @@
         "time": "20 minutes"
       },
       {
-        "type": "scal.io.liger.ClipInstructionListCardModel",
+        "type": "scal.io.liger.model.ClipInstructionListCardModel",
         "id": "instruction_list_card",
         "title": "INSTRUCTION LIST CARD",
         "media_path": "/path/to/media.file",
@@ -23,7 +23,7 @@
         ]
       },
       {
-        "type": "scal.io.liger.ClipInstructionTypeCardModel",
+        "type": "scal.io.liger.model.ClipInstructionTypeCardModel",
         "id": "instruction_type_card",
         "title": "INSTRUCTION TYPE CARD",
         "media_path": "/path/to/media.file",
@@ -35,7 +35,7 @@
         ]
       },
       {
-        "type": "scal.io.liger.SelfEvalCardModel",
+        "type": "scal.io.liger.model.SelfEvalCardModel",
         "id": "eval_card",
         "title": "EVAL CARD",
         "header": "How did it go?",
@@ -46,7 +46,7 @@
         ]
       },
       {
-        "type": "scal.io.liger.CongratsCardModel",
+        "type": "scal.io.liger.model.CongratsCardModel",
         "id": "congrats_card",
         "title": "CONGRATS CARD",
         "headline": "Congratulations!",

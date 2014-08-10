@@ -1,4 +1,4 @@
-package scal.io.liger;
+package scal.io.liger.model;
 
 /**
  * Created by mnbogner on 7/14/14.

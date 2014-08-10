@@ -12,9 +12,9 @@ import com.fima.cardsui.objects.Card;
 
 import java.util.ArrayList;
 
-import scal.io.liger.CardModel;
+import scal.io.liger.model.CardModel;
 import scal.io.liger.R;
-import scal.io.liger.SelfEvalCardModel;
+import scal.io.liger.model.SelfEvalCardModel;
 
 
 public class SelfEvalCardView extends Card {

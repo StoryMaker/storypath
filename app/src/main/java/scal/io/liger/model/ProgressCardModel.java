@@ -1,4 +1,4 @@
-package scal.io.liger;
+package scal.io.liger.model;
 
 import android.content.Context;
 import android.util.Log;

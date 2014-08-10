@@ -2,7 +2,7 @@
     "cards": [
         {
             "header": "This card tells the maker which clip to capture.", 
-            "type": "scal.io.liger.ChooseMediumCardModel", 
+            "type": "scal.io.liger.model.ChooseMediumCardModel", 
             "id": "choose_medium_card"
         }, 
         {
@@ -12,11 +12,11 @@
             ], 
             "clip_medium": "video", 
             "clip_type": "character", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_video_character"
         }, 
         {
-            "type": "scal.io.liger.PreviewCardModel", 
+            "type": "scal.io.liger.model.PreviewCardModel", 
             "media_id": "learning_guide_v1::clip_video_character::value", 
             "id": "preview_card_1", 
             "references": [
@@ -31,11 +31,11 @@
             ], 
             "clip_medium": "video", 
             "clip_type": "action", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_video_action"
         }, 
         {
-            "type": "scal.io.liger.PreviewCardModel", 
+            "type": "scal.io.liger.model.PreviewCardModel", 
             "media_id": "learning_guide_v1::clip_video_action::value", 
             "id": "preview_card_2", 
             "references": [
@@ -50,11 +50,11 @@
             ], 
             "clip_medium": "video", 
             "clip_type": "result", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_video_result"
         }, 
         {
-            "type": "scal.io.liger.PreviewCardModel", 
+            "type": "scal.io.liger.model.PreviewCardModel", 
             "media_id": "learning_guide_v1::clip_video_result::value", 
             "id": "preview_card_3", 
             "references": [
@@ -69,7 +69,7 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "character", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_audio_character"
         }, 
         {
@@ -79,7 +79,7 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "action", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_audio_action"
         }, 
         {
@@ -89,7 +89,7 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "result", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_audio_result"
         }, 
         {
@@ -99,7 +99,7 @@
             ], 
             "clip_medium": "photo", 
             "clip_type": "character", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_photo_character"
         }, 
         {
@@ -109,7 +109,7 @@
                 "learning_guide_v1::choose_medium_card::value::photo"
             ], 
             "clip_type": "action", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_photo_action"
         }, 
         {
@@ -119,11 +119,11 @@
             ], 
             "clip_medium": "photo", 
             "clip_type": "result", 
-            "type": "scal.io.liger.ClipCardModel", 
+            "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_photo_result"
         }, 
         {
-            "type": "scal.io.liger.ProgressCardModel", 
+            "type": "scal.io.liger.model.ProgressCardModel", 
             "references": [
                 "learning_guide_v1::choose_medium_card::value", 
                 "learning_guide_v1::clip_video_character::value", 
@@ -140,7 +140,7 @@
         }, 
         {
             "text": "foooo", 
-            "type": "scal.io.liger.ProgressButtonCardModel", 
+            "type": "scal.io.liger.model.ProgressButtonCardModel", 
             "id": "got_it", 
             "references": [
                 "learning_guide_v1::three_clips_filled::value::true"
@@ -158,7 +158,7 @@
                 "Video", 
                 "Import"
             ], 
-            "type": "scal.io.liger.ClipInstructionTypeCardModel", 
+            "type": "scal.io.liger.model.ClipInstructionTypeCardModel", 
             "id": "choose_medium_card"
         }
     ], 

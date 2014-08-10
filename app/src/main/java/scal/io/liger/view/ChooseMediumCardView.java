@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.CardModel;
-import scal.io.liger.ChooseMediumCardModel;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.ChooseMediumCardModel;
 import scal.io.liger.R;
 
 

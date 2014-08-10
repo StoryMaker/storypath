@@ -9,9 +9,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
+
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.DependencyModel;
+import scal.io.liger.model.StoryPathModel;
+import scal.io.liger.model.VideoCaptureTypeCardModel;
 
 /**
  * Created by mnbogner on 7/10/14.

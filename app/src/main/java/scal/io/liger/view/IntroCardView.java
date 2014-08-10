@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.CardModel;
-import scal.io.liger.IntroCardModel;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.IntroCardModel;
 import scal.io.liger.R;
 
 

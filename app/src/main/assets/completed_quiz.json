@@ -3,7 +3,7 @@
   "title": "COMPLETED QUIZ",
   "cards": [
       {
-        "type": "scal.io.liger.QuizCardModel",
+        "type": "scal.io.liger.model.QuizCardModel",
         "id": "color_quiz",
         "title": "COLOR QUIZ",
         "description": "What color is the sky?",

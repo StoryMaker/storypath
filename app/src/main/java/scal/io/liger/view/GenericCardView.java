@@ -14,8 +14,8 @@ import com.fima.cardsui.objects.Card;
 
 import java.io.File;
 
-import scal.io.liger.CardModel;
-import scal.io.liger.GenericCardModel;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.GenericCardModel;
 import scal.io.liger.R;
 
 

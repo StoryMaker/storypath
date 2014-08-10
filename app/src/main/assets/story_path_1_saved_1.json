@@ -3,7 +3,7 @@
   "title": "Story Path 1",
   "cards": [
       { 
-        "type": "scal.io.liger.QuizCardModel",
+        "type": "scal.io.liger.model.QuizCardModel",
         "id": "quiz_1",
         "title": "Quiz your Colors",
         "description": "What color is the sky?",
@@ -17,7 +17,7 @@
         ]
       },
       { 
-        "type": "scal.io.liger.QuizCardModel",
+        "type": "scal.io.liger.model.QuizCardModel",
         "id": "quiz_2",
         "title": "Quiz your smartphone brands",
         "description": "Who makes the Galaxy line?",
@@ -30,7 +30,7 @@
           ]
       },
       {
-        "type": "scal.io.liger.ClipTypeCardModel",
+        "type": "scal.io.liger.model.ClipTypeCardModel",
         "id": "cliptype_1",
         "title": "Pick a clip type",
         "clip_types": [

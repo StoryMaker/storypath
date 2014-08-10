@@ -11,15 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.fima.cardsui.objects.Card;
 
 import java.io.File;
 
-import scal.io.liger.CardModel;
-import scal.io.liger.ClipCardModel;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.ClipCardModel;
 import scal.io.liger.Constants;
 import scal.io.liger.R;
 

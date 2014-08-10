@@ -11,11 +11,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.StoryPathModel;
 
 
 public class MainActivity extends Activity {

@@ -3,14 +3,14 @@
   "title": "QUIZ CHECK",
   "dependencies": [
       {
-        "dependencyType": "scal.io.liger.StoryPathModel",
+        "dependencyType": "scal.io.liger.model.StoryPathModel",
         "dependencyId": "completed_quiz",
         "dependencyFile": "completed_quiz.json"
       }
   ],
   "cards": [
       {
-        "type": "scal.io.liger.QuizReportCardModel",
+        "type": "scal.io.liger.model.QuizReportCardModel",
         "id": "quiz_report_1",
         "title": "QUIZ REPORT 1",
         "description": "I WANT RED...",
@@ -19,7 +19,7 @@
         ]
       },
       {
-        "type": "scal.io.liger.QuizReportCardModel",
+        "type": "scal.io.liger.model.QuizReportCardModel",
         "id": "quiz_report_2",
         "title": "QUIZ REPORT 2",
         "description": "I WANT BLUE...",

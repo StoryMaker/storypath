@@ -1,13 +1,10 @@
-package scal.io.liger;
+package scal.io.liger.model;
 
 import android.content.Context;
 
 import com.fima.cardsui.objects.Card;
 
-import java.util.ArrayList;
-
 import scal.io.liger.view.ClipCardView;
-import scal.io.liger.view.IntroCardView;
 
 
 public class ClipCardModel extends CardModel {

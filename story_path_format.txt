@@ -23,28 +23,28 @@ values - array of string values, values to be serialized with the card/story pat
 
 Introduction card fields:
 
-type - string value, must equal scal.io.liger.IntroCardModel
+type - string value, must equal scal.io.liger.model.IntroCardModel
 headline - string value, a headline to display on the card, most likely the lesson title
 level - string value, the difficulty of the lesson, most likely a numeric value
 time - string value, the approximate time that the lesson will take to complete
 
 Instruction list card fields:
 
-type - string value, must equal scal.io.liger.ClipInstructionListCardModel
+type - string value, must equal scal.io.liger.model.ClipInstructionListCardModel
 media_path - string value, the path of an image file to display on the card
 header - string value, a header to display on the card
 bullet_list - array of string values, a list of instructions for capturing media
 
 Instruction type card fields:
 
-type - string value, must equal scal.io.liger.ClipInstructionTypeCardModel
+type - string value, must equal scal.io.liger.model.ClipInstructionTypeCardModel
 media_path - string value, the path of an image file to display on the card
 header - string value, a header to display on the card
 clip_types - array of string values, a list of media capture types
 
 Self evaluation card fields:
 
-type - string value, must equal scal.io.liger.SelfEvalCardModel
+type - string value, must equal scal.io.liger.model.SelfEvalCardModel
 header - string value, a header to display on the card
 checklist - array of string values, a list of self evaluation options
 
@@ -70,7 +70,7 @@ Sample JSON:
   ],
   "cards": [
     {
-      "type": "scal.io.liger.IntroCardModel",
+      "type": "scal.io.liger.model.IntroCardModel",
       "id": "intro_card",
       "title": "INTRO CARD",
       "headline": "Headline that creates interest for what's coming",
@@ -78,7 +78,7 @@ Sample JSON:
       "time": "20 minutes"
     },
     {
-      "type": "scal.io.liger.ClipInstructionListCardModel",
+      "type": "scal.io.liger.model.ClipInstructionListCardModel",
       "id": "instruction_list_card",
       "title": "INSTRUCTION LIST CARD",
       "media_path": "/path/to/media.file",
@@ -90,7 +90,7 @@ Sample JSON:
       ]
     },
     {
-      "type": "scal.io.liger.ClipInstructionTypeCardModel",
+      "type": "scal.io.liger.model.ClipInstructionTypeCardModel",
       "id": "instruction_type_card",
       "title": "INSTRUCTION TYPE CARD",
       "media_path": "/path/to/media.file",
@@ -102,7 +102,7 @@ Sample JSON:
       ]
     },
     {
-      "type": "scal.io.liger.SelfEvalCardModel",
+      "type": "scal.io.liger.model.SelfEvalCardModel",
       "id": "eval_card",
       "title": "EVAL CARD",
       "header": "What's next?",
@@ -116,7 +116,7 @@ Sample JSON:
       ]
     },
     {
-      "type": "scal.io.liger.IntroCardModel",
+      "type": "scal.io.liger.model.IntroCardModel",
        "id": "eval_check_1",
       "title": "EVAL CHECK 1",
       "headline": "YOU CHECKED THE FIRST BOX",
@@ -125,7 +125,7 @@ Sample JSON:
       ]
     },
     {
-      "type": "scal.io.liger.IntroCardModel",
+      "type": "scal.io.liger.model.IntroCardModel",
       "id": "eval_check_2",
       "title": "EVAL CHECK 2",
       "headline": "YOU CHECKED THE SECOND BOX",
@@ -134,7 +134,7 @@ Sample JSON:
       ]
     },
     {
-      "type": "scal.io.liger.IntroCardModel",
+      "type": "scal.io.liger.model.IntroCardModel",
       "id": "eval_check_3",
       "title": "EVAL CHECK 3",
       "headline": "YOU CHECKED THE THIRD BOX",
@@ -168,20 +168,20 @@ clip_types - array of string values, a list of supported media types
 
 Quiz card fields:
 
-type - string value, must equal scal.io.liger.QuizCardModel
+type - string value, must equal scal.io.liger.model.QuizCardModel
 description - string value, text to display on the card, most likely a question
 options - array of string values, a list of possible answers to a question
 
 Quiz report card fields:
 
-type - string value, must equal scal.io.liger.QuizReportCardModel
+type - string value, must equal scal.io.liger.model.QuizReportCardModel
 description - string value, text to display on the card, most likely feedback on the quiz results
 results - array of string values, references to options selected in previous quiz cards
   this field is obsolete now that the "references" field has been added to the base class
 
 Video capture type card fields:
 
-type - string value, must equal scal.io.liger.VideoCaptureTypeCardModel
+type - string value, must equal scal.io.liger.model.VideoCaptureTypeCardModel
 body - array of widget structures, see possible formats below
   these widgets will be objects with functionality such as media capture or image display
 
@@ -209,7 +209,7 @@ Sample JSON:
   "title": "Story Path",
   "cards": [
     {
-      "type": "scal.io.liger.VideoCaptureTypeCardModel",
+      "type": "scal.io.liger.model.VideoCaptureTypeCardModel",
       "id": "video_capture",
       "title": "Video Capture",
       "body": [ 

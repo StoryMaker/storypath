@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.CardModel;
+import scal.io.liger.model.CardModel;
 import scal.io.liger.R;
-import scal.io.liger.BasicTextCardModel;
+import scal.io.liger.model.BasicTextCardModel;
 
 
 public class BasicTextCardView extends Card {

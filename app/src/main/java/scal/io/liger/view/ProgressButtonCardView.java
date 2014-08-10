@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.ProgressButtonCardModel;
-import scal.io.liger.CardModel;
+import scal.io.liger.model.ProgressButtonCardModel;
+import scal.io.liger.model.CardModel;
 import scal.io.liger.R;
 
 public class ProgressButtonCardView extends Card {

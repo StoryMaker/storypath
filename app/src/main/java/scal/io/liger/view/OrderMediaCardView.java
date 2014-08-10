@@ -3,13 +3,11 @@ package scal.io.liger.view;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.CardModel;
-import scal.io.liger.OrderMediaCardModel;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.OrderMediaCardModel;
 import scal.io.liger.R;
 
 public class OrderMediaCardView extends Card {

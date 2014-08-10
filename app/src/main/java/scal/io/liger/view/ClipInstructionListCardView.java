@@ -12,10 +12,9 @@ import android.widget.Toast;
 import com.fima.cardsui.objects.Card;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
-import scal.io.liger.CardModel;
-import scal.io.liger.ClipInstructionListCardModel;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.ClipInstructionListCardModel;
 import scal.io.liger.R;
 
 

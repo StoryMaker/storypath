@@ -1,12 +1,10 @@
-package scal.io.liger;
+package scal.io.liger.model;
 
 import android.content.Context;
 
 import com.fima.cardsui.objects.Card;
 
-import scal.io.liger.CardModel;
 import scal.io.liger.view.BasicTextCardView;
-import scal.io.liger.view.ChooseMediumCardView;
 
 public class BasicTextCardModel extends CardModel {
     private String text;

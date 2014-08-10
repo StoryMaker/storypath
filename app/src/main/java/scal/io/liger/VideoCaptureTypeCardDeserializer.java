@@ -11,6 +11,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+import scal.io.liger.model.VideoCaptureTypeCardModel;
+
 /**
  * Created by mnbogner on 7/11/14.
  *

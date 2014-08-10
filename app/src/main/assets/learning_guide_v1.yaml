@@ -3,12 +3,12 @@
     title: Learning Guide v1
     cards: 
         - 
-            type: scal.io.liger.ChooseMediumCardModel
+            type: scal.io.liger.model.ChooseMediumCardModel
             id: choose_medium_card
             header: This card tells the maker which clip to capture.
             
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_video_character
             clip_medium: video
             clip_type: character
@@ -16,7 +16,7 @@
             references:
                 - learning_guide_v1::choose_medium_card::value::video
         - 
-            type: scal.io.liger.PreviewCardModel
+            type: scal.io.liger.model.PreviewCardModel
             id: preview_card_1
             media_id: learning_guide_v1::clip_video_character::value
             references:
@@ -24,7 +24,7 @@
                 - learning_guide_v1::clip_video_character::value
             
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_video_action
             clip_medium: video
             clip_type: action
@@ -32,14 +32,14 @@
             references: 
                 - learning_guide_v1::choose_medium_card::value::video
         - 
-            type: scal.io.liger.PreviewCardModel
+            type: scal.io.liger.model.PreviewCardModel
             id: preview_card_2
             media_id: learning_guide_v1::clip_video_action::value
             references:
                 - learning_guide_v1::choose_medium_card::value::video
                 - learning_guide_v1::clip_video_action::value
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_video_result
             clip_medium: video
             clip_type: result
@@ -47,7 +47,7 @@
             references: 
                 - learning_guide_v1::choose_medium_card::value::video
         - 
-            type: scal.io.liger.PreviewCardModel
+            type: scal.io.liger.model.PreviewCardModel
             id: preview_card_3
             media_id: learning_guide_v1::clip_video_result::value
             references:
@@ -55,7 +55,7 @@
                 - learning_guide_v1::clip_video_result::value
             
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_audio_character
             clip_medium: audio
             clip_type: character
@@ -63,7 +63,7 @@
             references: 
                 - learning_guide_v1::choose_medium_card::value::audio
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_audio_action
             clip_medium: audio
             clip_type: action
@@ -71,7 +71,7 @@
             references: 
                 - learning_guide_v1::choose_medium_card::value::audio
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_audio_result
             clip_medium: audio
             clip_type: result
@@ -80,7 +80,7 @@
                 - learning_guide_v1::choose_medium_card::value::audio
             
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_photo_character
             clip_medium: photo
             clip_type: character
@@ -88,7 +88,7 @@
             references: 
                 - learning_guide_v1::choose_medium_card::value::photo
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_photo_action
             medium: photo
             clip_type: action
@@ -96,7 +96,7 @@
             references: 
                 - learning_guide_v1::choose_medium_card::value::photo
         - 
-            type: scal.io.liger.ClipCardModel
+            type: scal.io.liger.model.ClipCardModel
             id: clip_photo_result
             clip_medium: photo
             clip_type: result
@@ -107,7 +107,7 @@
             
             
         - 
-            type: scal.io.liger.ProgressCardModel
+            type: scal.io.liger.model.ProgressCardModel
             id: three_clips_filled
             references: 
                 - learning_guide_v1::choose_medium_card::value
@@ -122,14 +122,14 @@
                 - learning_guide_v1::clip_photo_result::value
             
         - 
-            type: scal.io.liger.ProgressButtonCardModel
+            type: scal.io.liger.model.ProgressButtonCardModel
             id: got_it
             text: foooo 
             references: 
                 - learning_guide_v1::three_clips_filled::value::true
                 
         - 
-            type: scal.io.liger.ClipInstructionTypeCardModel
+            type: scal.io.liger.model.ClipInstructionTypeCardModel
             id: choose_medium_card
             title: INSTRUCTION TYPE CARD
             media_path: /path/to/media.file

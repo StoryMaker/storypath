@@ -1,10 +1,14 @@
-package scal.io.liger;
+package scal.io.liger.model;
 
 import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.lang.reflect.Field;
+
 import java.util.ArrayList;
+
+import scal.io.liger.JsonHelper;
+import scal.io.liger.MainActivity;
+import scal.io.liger.StoryPathDeserializer;
 
 /**
  * Created by mnbogner on 7/10/14.

@@ -1,4 +1,4 @@
-package scal.io.liger;
+package scal.io.liger.model;
 
 import android.content.Context;
 
@@ -7,7 +7,6 @@ import com.fima.cardsui.objects.Card;
 import java.util.ArrayList;
 
 import scal.io.liger.view.ClipInstructionTypeCardView;
-import scal.io.liger.view.IntroCardView;
 
 /**
  * Created by mnbogner on 7/17/14.

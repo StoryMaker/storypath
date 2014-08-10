@@ -3,7 +3,7 @@
   "title": "Story Path 1",
   "cards": [
     {
-      "type": "scal.io.liger.CongratsCardModel",
+      "type": "scal.io.liger.model.CongratsCardModel",
       "id": "congrats_card",
       "title": "CONGRATS CARD",
       "headline": "Congratulations!",
@@ -15,7 +15,7 @@
       ]
     },
     {
-          "type": "scal.io.liger.ClipInstructionTypeCardModel",
+          "type": "scal.io.liger.model.ClipInstructionTypeCardModel",
           "id": "instruction_type_card",
           "title": "INSTRUCTION TYPE CARD",
           "media_path": "/path/to/media.file",
