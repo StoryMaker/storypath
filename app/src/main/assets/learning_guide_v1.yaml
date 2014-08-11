@@ -7,6 +7,11 @@
             id: choose_medium_card
             header: This card tells the maker which clip to capture.
             
+#        - 
+#            id: edit_text_card_1
+#            type: scal.io.liger.model.EditTextCardModel
+#            header: Please enter some text
+#            hint_text: this is a hint
         - 
             type: scal.io.liger.model.ClipCardModel
             id: clip_video_character

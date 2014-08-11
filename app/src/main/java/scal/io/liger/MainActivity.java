@@ -31,7 +31,26 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("MainActivity", "onCreate");
-        initApp();
+//        initApp();
+        if (savedInstanceState == null) {
+            initApp();
+        } else {
+            Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
+            if (savedInstanceState.containsKey("storyPathJson")) {
+                String json = savedInstanceState.getString("storyPathJson");
+                initCardList(json);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Gson gson = new Gson();
+        mStoryPathModel.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
+        mStoryPathModel.context = null;
+        String json = gson.toJson(mStoryPathModel);
+        outState.putString("storyPathJson", json);
+        super.onSaveInstanceState(outState);
     }
 
     private void initApp() {
@@ -67,7 +86,8 @@ public class MainActivity extends Activity {
                 .setItems(jsonFiles, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int index) {
                         JsonHelper.setSelectedJSONFile(index);
-                        initCardList();
+                        String json = JsonHelper.loadJSON();
+                        initCardList(json);
                     }
                 });
         }
@@ -76,23 +96,22 @@ public class MainActivity extends Activity {
         alert.show();
     }
 
-    private void initCardList() {
+    private void initCardList(String json) {
         mCardView = (CardUI) findViewById(R.id.cardsview);
         if (mCardView == null)
             return;
 
         mCardView.setSwipeable(false);
 
-        initStoryPathModel();
+        initStoryPathModel(json);
         refreshCardView();
     }
 
-    private void initStoryPathModel() {
+    private void initStoryPathModel(String json) {
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
 
-        String json = JsonHelper.loadJSON();
         mStoryPathModel = gson.fromJson(json, StoryPathModel.class);
         mStoryPathModel.context = this.mContext;
         mStoryPathModel.setCardReferences();
