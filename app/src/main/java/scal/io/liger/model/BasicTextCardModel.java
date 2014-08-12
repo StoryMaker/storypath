@@ -7,7 +7,7 @@ import com.fima.cardsui.objects.Card;
 import scal.io.liger.view.BasicTextCardView;
 
 public class BasicTextCardModel extends CardModel {
-    private String text;
+    public String text;
 
     public BasicTextCardModel() {
         this.type = this.getClass().getName();

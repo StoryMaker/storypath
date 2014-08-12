@@ -26,7 +26,8 @@
                 "bullet_list": [
                   "this should say red: -{{text_test::card1::value1}}-",
                   "this should say green: -{{text_test::card1::value2}}-",
-                  "this should say blue: -{{text_test::card1::value3}}-"
+                  "this should say blue: -{{text_test::card1::value3}}-",
+                  "this should say stuff: -{{text_test::card2::text}}-"
                 ]
       }
   ]
