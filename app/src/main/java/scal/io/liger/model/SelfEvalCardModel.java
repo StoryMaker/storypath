@@ -33,7 +33,12 @@ public class SelfEvalCardModel extends CardModel {
     }
 
     public ArrayList<String> getChecklist() {
-        return checklist;
+        ArrayList<String> a = new ArrayList<String>();
+        for (String s : checklist)
+        {
+            a.add(fillReferences(s));
+        }
+        return a;
     }
 
     public void setChecklist(ArrayList<String> checklist) {

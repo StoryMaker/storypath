@@ -47,7 +47,12 @@ public class GenericCardModel extends CardModel {
     }
 
     public ArrayList<String> getStoryPaths() {
-        return storyPaths;
+        ArrayList<String> a = new ArrayList<String>();
+        for (String s : storyPaths)
+        {
+            a.add(fillReferences(s));
+        }
+        return a;
     }
 
     public void setStoryPaths(ArrayList<String> storyPaths) {

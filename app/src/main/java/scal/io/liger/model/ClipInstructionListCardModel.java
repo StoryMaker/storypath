@@ -42,7 +42,12 @@ public class ClipInstructionListCardModel extends CardModel {
     }
 
     public ArrayList<String> getBullet_list() {
-        return bullet_list;
+        ArrayList<String> a = new ArrayList<String>();
+        for (String s : bullet_list)
+        {
+            a.add(fillReferences(s));
+        }
+        return a;
     }
 
     public void setBullet_list(ArrayList<String> bullet_list) {

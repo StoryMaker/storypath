@@ -173,6 +173,10 @@ public abstract class CardModel {
     }
 
     public String fillReferences(String originalString) {
+        if (originalString == null) {
+            return originalString;
+        }
+
         String newString = originalString;
 
         Pattern p = Pattern.compile("\\{\\{(.+?)\\}\\}");
@@ -181,7 +185,11 @@ public abstract class CardModel {
         while (m.find()) {
             String referenceString = m.group(1);
             if (referenceString != null) {
+                referenceString = referenceString.trim();
                 String referenceValue = storyPathReference.getReferencedValue(referenceString);
+                // doing a replace with a null seems to cause issues
+                if (referenceValue == null)
+                    referenceValue = "";
                 newString = m.replaceFirst(referenceValue);
                 m = p.matcher(newString);
             }

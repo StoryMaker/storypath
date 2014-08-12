@@ -18,6 +18,16 @@
         "id": "card2",
         "title": "CARD2",
         "text": "this should say red: -{{text_test::card1::value1}}- and this should say green: -{{text_test::card1::value2}}- and this should say blue: -{{text_test::card1::value3}}-"
+      },
+      {
+        "type": "scal.io.liger.model.ClipInstructionListCardModel",
+                "id": "card3",
+                "title": "CARD3",
+                "bullet_list": [
+                  "this should say red: -{{text_test::card1::value1}}-",
+                  "this should say green: -{{text_test::card1::value2}}-",
+                  "this should say blue: -{{text_test::card1::value3}}-"
+                ]
       }
   ]
 }

@@ -42,7 +42,12 @@ public class ClipInstructionTypeCardModel extends CardModel {
     }
 
     public ArrayList<String> getClip_types() {
-        return clip_types;
+        ArrayList<String> a = new ArrayList<String>();
+        for (String s : clip_types)
+        {
+            a.add(fillReferences(s));
+        }
+        return a;
     }
 
     public void setClip_types(ArrayList<String> clip_types) {
