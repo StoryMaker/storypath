@@ -26,12 +26,12 @@ public class GenericCardModel extends CardModel {
         return new GenericCardView(context, this);
     }
 
-    public String getMediaPath() { return mediaPath; }
+    public String getMediaPath() { return fillReferences(mediaPath); }
 
     public void setMediaPath(String mediaPath) { this.mediaPath = mediaPath; }
 
     public String getHeader() {
-        return header;
+        return fillReferences(header);
     }
 
     public void setHeader(String header) {
@@ -39,7 +39,7 @@ public class GenericCardModel extends CardModel {
     }
 
     public String getText() {
-        return text;
+        return fillReferences(text);
     }
 
     public void setText(String text) {

@@ -20,7 +20,7 @@ public class ProgressCardModel extends CardModel {
     }
 
     public String getText() {
-        return this.text;
+        return fillReferences(this.text);
     }
 
     public void setText(String time) {

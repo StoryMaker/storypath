@@ -17,7 +17,7 @@ public class ButtonCardModel extends CardModel {
     public Card getCardView(Context context) { return new ButtonCardView(context, this); }
 
     public String getText() {
-        return this.text;
+        return fillReferences(this.text);
     }
 
     public void setText(String time) {

@@ -1,0 +1,23 @@
+{
+  "id": "text_test",
+  "title": "TEXT_TEST",
+  "cards": [
+      {
+        "type": "scal.io.liger.model.BasicTextCardModel",
+        "id": "card1",
+        "title": "CARD1",
+        "text": "card 1 has values for card 2 to reference",
+        "values": [
+          "value1::RED",
+          "value2::GREEN",
+          "value3::BLUE"
+        ]
+      },
+      {
+        "type": "scal.io.liger.model.BasicTextCardModel",
+        "id": "card2",
+        "title": "CARD2",
+        "text": "this should say red: -{{text_test::card1::value1}}- and this should say green: -{{text_test::card1::value2}}- and this should say blue: -{{text_test::card1::value3}}-"
+      }
+  ]
+}

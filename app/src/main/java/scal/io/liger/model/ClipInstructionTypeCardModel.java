@@ -26,7 +26,7 @@ public class ClipInstructionTypeCardModel extends CardModel {
     }
 
     public String getMedia_path() {
-        return media_path;
+        return fillReferences(media_path);
     }
 
     public void setMedia_path(String media_path) {
@@ -34,7 +34,7 @@ public class ClipInstructionTypeCardModel extends CardModel {
     }
 
     public String getHeader() {
-        return header;
+        return fillReferences(header);
     }
 
     public void setHeader(String header) {

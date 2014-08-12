@@ -23,18 +23,18 @@ public class ClipCardModel extends CardModel {
     }
 
     public String getHeader() {
-        return header;
+        return fillReferences(header);
     }
 
     public void setHeader(String header) {
         this.header = header;
     }
 
-    public String getClipMedium() { return clip_medium; }
+    public String getClipMedium() { return fillReferences(clip_medium); }
 
     public void setClipMedium(String clip_medium) { this.clip_medium = clip_medium; }
 
-    public String getClipType() { return clip_type; }
+    public String getClipType() { return fillReferences(clip_type); }
 
     public void setClipType(String clipType) { this.clip_type = clipType; }
 }
