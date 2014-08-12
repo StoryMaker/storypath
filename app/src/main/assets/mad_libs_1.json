@@ -1,0 +1,35 @@
+{
+    "cards": [
+        {
+            "text": "Hello, *this* is markdown\n= header\n== headdddeerr\n", 
+            "type": "scal.io.liger.model.MarkdownCardModel", 
+            "id": "markdown"
+        }, 
+        {
+            "header": "Please enter some text", 
+            "hint_text": "this is a hint", 
+            "type": "scal.io.liger.model.EditTextCardModel", 
+            "id": "edit_text_card_1"
+        }, 
+        {
+            "header": "More text", 
+            "hint_text": "this is a hint", 
+            "type": "scal.io.liger.model.EditTextCardModel", 
+            "id": "edit_text_card_2", 
+            "references": [
+                "mad_libs_1::edit_text_card_1::text"
+            ]
+        }, 
+        {
+            "header": "Morrreeeeee", 
+            "hint_text": "this is a hint", 
+            "type": "scal.io.liger.model.EditTextCardModel", 
+            "id": "edit_text_card_3", 
+            "references": [
+                "mad_libs_1::edit_text_card_2::text"
+            ]
+        }
+    ], 
+    "id": "mad_libs_1", 
+    "title": "Mad Libs 1"
+}

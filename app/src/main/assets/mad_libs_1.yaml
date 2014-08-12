@@ -1,0 +1,30 @@
+---
+    id: mad_libs_1
+    title: Mad Libs 1
+    cards: 
+        -
+            id: markdown
+            type: scal.io.liger.model.MarkdownCardModel
+            text: | 
+                Hello, *this* is markdown
+                = header
+                == headdddeerr
+        - 
+            id: edit_text_card_1
+            type: scal.io.liger.model.EditTextCardModel
+            header: Please enter some text
+            hint_text: this is a hint
+        - 
+            id: edit_text_card_2
+            type: scal.io.liger.model.EditTextCardModel
+            header: More text
+            hint_text: this is a hint
+            references:
+                - mad_libs_1::edit_text_card_1::text
+        - 
+            id: edit_text_card_3
+            type: scal.io.liger.model.EditTextCardModel
+            header: Morrreeeeee
+            hint_text: this is a hint
+            references:
+                - mad_libs_1::edit_text_card_2::text

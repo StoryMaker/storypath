@@ -9,17 +9,17 @@ import com.fima.cardsui.objects.Card;
 
 import scal.io.liger.model.CardModel;
 import scal.io.liger.R;
-import scal.io.liger.model.BasicTextCardModel;
+import scal.io.liger.model.MarkdownCardModel;
 
 
 public class BasicTextCardView extends Card {
 
-    private BasicTextCardModel mCardModel;
+    private MarkdownCardModel mCardModel;
     private Context mContext;
 
     public BasicTextCardView(Context context, CardModel cardModel) {
         mContext = context;
-        mCardModel = (BasicTextCardModel) cardModel;
+        mCardModel = (MarkdownCardModel) cardModel;
     }
 
     @Override

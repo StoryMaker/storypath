@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    maven {
+        url "https://repo.commonsware.com.s3.amazonaws.com"
+    }
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion '20.0.0'
@@ -22,4 +28,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':cardsuilib')
+    compile 'com.commonsware.cwac:anddown:0.2.0'
 }

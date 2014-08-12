@@ -1,11 +1,13 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -53,6 +55,16 @@ public class EditTextCardView extends Card {
                     return true;
                 }
                 return false;
+            }
+        });
+
+        final Button button = (Button) view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCardModel.clearValues();
+                mCardModel.addValue(button.getText().toString());
+                Log.d("EditTextCardView", "editing done: " + button.getText().toString());
             }
         });
 
