@@ -24,7 +24,7 @@ public class IntroCardModel extends CardModel {
     }
 
     public String getHeadline() {
-        return headline;
+        return fillReferences(headline);
     }
 
     public void setHeadline(String headline) {
@@ -32,7 +32,7 @@ public class IntroCardModel extends CardModel {
     }
 
     public String getLevel() {
-        return level;
+        return fillReferences(level);
     }
 
     public void setLevel(String level) {
@@ -40,7 +40,7 @@ public class IntroCardModel extends CardModel {
     }
 
     public String getTime() {
-        return time;
+        return fillReferences(time);
     }
 
     public void setTime(String time) {

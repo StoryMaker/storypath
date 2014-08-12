@@ -19,7 +19,7 @@ public class BasicTextCardModel extends CardModel {
     }
 
     public String getText() {
-        return text;
+        return fillReferences(text);
     }
 
     public void setText(String text) {

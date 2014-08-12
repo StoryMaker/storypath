@@ -20,7 +20,7 @@ public class EditTextCardModel extends CardModel {
     }
 
     public String getHint_text() {
-        return hint_text;
+        return fillReferences(hint_text);
     }
 
     public void setHint_text(String text) {
@@ -28,7 +28,7 @@ public class EditTextCardModel extends CardModel {
     }
 
     public String getHeader() {
-        return header;
+        return fillReferences(header);
     }
 
     public void setHeader(String header) {

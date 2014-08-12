@@ -25,7 +25,7 @@ public class SelfEvalCardModel extends CardModel {
     }
 
     public String getHeader() {
-        return header;
+        return fillReferences(header);
     }
 
     public void setHeader(String header) {

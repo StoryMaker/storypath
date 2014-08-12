@@ -6,6 +6,8 @@ import com.fima.cardsui.objects.Card;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by mnbogner on 7/10/14.
@@ -168,5 +170,23 @@ public abstract class CardModel {
         }
 
         return null;
+    }
+
+    public String fillReferences(String originalString) {
+        String newString = originalString;
+
+        Pattern p = Pattern.compile("\\{\\{(.+?)\\}\\}");
+        Matcher m = p.matcher(newString);
+
+        while (m.find()) {
+            String referenceString = m.group(1);
+            if (referenceString != null) {
+                String referenceValue = storyPathReference.getReferencedValue(referenceString);
+                newString = m.replaceFirst(referenceValue);
+                m = p.matcher(newString);
+            }
+        }
+
+        return newString;
     }
 }

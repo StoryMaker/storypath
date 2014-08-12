@@ -22,7 +22,7 @@ public class PreviewCardModel extends CardModel {
     }
 
     public String getMedia_path() {
-        return media_path;
+        return fillReferences(media_path);
     }
 
     public void setMedia_path(String media_path) {
@@ -30,14 +30,14 @@ public class PreviewCardModel extends CardModel {
     }
 
     public String getMedia_id() {
-        return media_id;
+        return fillReferences(media_id);
     }
 
     public void setMedia_id(String media_id) {
         this.media_id = media_id;
     }
 
-    public String getText() { return this.text; }
+    public String getText() { return fillReferences(this.text); }
 
     public void setText(String text) { this.text = text; }
 }
