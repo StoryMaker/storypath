@@ -365,3 +365,19 @@ These were created to support aspects of the prototype, and don't necessarily co
         }
       ]
     }
+
+
+## Tips
+
+To convert YAML to JSON before you push to your phone to test, you can run a command like this:
+
+```
+python -c 'import sys, yaml, json; json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)' < my.yaml > my.json
+
+```
+
+Then you can push this to your phone for testing:
+
+```
+adb push my.json  /sdcard/Liger/
+```
