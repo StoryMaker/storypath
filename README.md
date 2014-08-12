@@ -69,9 +69,93 @@ liger-prototype
 **text** - string value, text to display on the card  
 **story_paths** - array of string values, a list of optional follow-up story paths  
 
+
+#### Sample YAML
+
+```
+---
+  id: story_path
+  title: STORY PATH
+  dependencies: 
+    - 
+      dependencyId: completed_quiz
+      dependencyFile: completed_quiz.json
+  cards: 
+    - 
+      type: scal.io.liger.model.IntroCardModel
+      id: intro_card
+      title: INTRO CARD
+      headline: Headline that creates interest for what's coming
+      level: Basic 1
+      time: 20 minutes
+    - 
+      type: scal.io.liger.model.ClipInstructionListCardModel
+      id: instruction_list_card
+      title: INSTRUCTION LIST CARD
+      media_path: /path/to/media.file
+      header: Character
+      bullet_list: 
+        - Bullet point structure of qualities & tips
+        - Another quality
+        - Another quality
+    - 
+      type: scal.io.liger.model.ClipInstructionTypeCardModel
+      id: instruction_type_card
+      title: INSTRUCTION TYPE CARD
+      media_path: /path/to/media.file
+      header: This card tells the maker which clip to capture.
+      clip_types: 
+        - Photo
+        - Video
+        - Import
+    - 
+      type: scal.io.liger.model.SelfEvalCardModel
+      id: eval_card
+      title: EVAL CARD
+      header: What's next?
+      checklist: 
+        - Option 1
+        - Option 2
+        - Option 3
+      values: 
+        - option_1::true
+    - 
+      type: scal.io.liger.model.IntroCardModel
+      id: eval_check_1
+      title: EVAL CHECK 1
+      headline: YOU CHECKED THE FIRST BOX
+      references: 
+        - story_path::eval_card::option_1::true
+    - 
+      type: scal.io.liger.model.IntroCardModel
+      id: eval_check_2
+      title: EVAL CHECK 2
+      headline: YOU CHECKED THE SECOND BOX
+      references: 
+        - story_path::eval_card::option_2::true
+    - 
+      type: scal.io.liger.model.IntroCardModel
+      id: eval_check_3
+      title: EVAL CHECK 3
+      headline: YOU CHECKED THE THIRD BOX
+      references: 
+        - story_path::eval_card::option_3::true
+    - 
+      type: scal.io.liger.CongratsCardModel
+      id: congrats_card
+      title: CONGRATS CARD
+      headline: Congratulations!
+      text: NEXT UP Create a Compelling Narrative
+      story_paths: 
+        - Recording stable shots
+        - Photo Stories
+        - Replay this path with a new story
+
+```    
+
 ## Sample JSON:
 
-*`(this is a combination of several files, the syntax should be correct, but it is not necessarily logical)*
+*(this is a combination of several files, the syntax should be correct, but it is not necessarily logical)*
 
     {
       "id": "story_path",
@@ -170,7 +254,7 @@ liger-prototype
         }
       ]
     }
-
+    
 ## Additional card types
 
 These were created to support aspects of the prototype, and don't necessarily correspond to any of the card types described in the design documents.
@@ -213,6 +297,36 @@ These were created to support aspects of the prototype, and don't necessarily co
 
 **references** - string value, must equal scal.io.liger.widget.ImageWidget  
 **path** - string value, the path of an image file to display on the card  
+
+## Sample YAML:
+
+```
+---
+  id: story_path
+  title: Story Path
+  cards: 
+    - 
+      type: scal.io.liger.model.VideoCaptureTypeCardModel
+      id: video_capture
+      title: Video Capture
+      body: 
+        - 
+          type: scal.io.liger.widget.MarkdownWidget
+          text: Some markdown text here
+        - 
+          type: scal.io.liger.widget.ImageWidget
+          path: file:///sdcard/foo.jpg
+        - 
+          type: scal.io.liger.widget.MarkdownWidget
+          text: Some more markdown
+        - 
+          type: scal.io.liger.widget.VideoCaptureWidget
+          camera_type: front
+        - 
+          type: scal.io.liger.widget.MarkdownWidget
+          text: Final markdown
+
+```
 
 ## Sample JSON:
 
