@@ -2,18 +2,26 @@
     id: mad_libs_1
     title: Mad Libs 1
     cards: 
-        -
-            id: markdown
-            type: scal.io.liger.model.MarkdownCardModel
-            text: | 
-                Hello, *this* is markdown
-                = header
-                == headdddeerr
         - 
             id: edit_text_card_1
             type: scal.io.liger.model.EditTextCardModel
             header: Please enter some text
             hint_text: this is a hint
+            values:
+                - value::this is the value
+            
+        - 
+            id: basic
+            type: scal.io.liger.model.BasicTextCardModel
+            text: this is the text {{mad_libs_1::edit_text_card_1::value}}
+            
+        -
+            id: markdown
+            type: scal.io.liger.model.MarkdownCardModel
+            text: | 
+                Hello, *this* is markdown 
+                = header
+                == headdddeerr
         - 
             id: edit_text_card_2
             type: scal.io.liger.model.EditTextCardModel
