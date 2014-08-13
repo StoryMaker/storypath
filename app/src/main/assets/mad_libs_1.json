@@ -1,15 +1,23 @@
 {
     "cards": [
         {
-            "text": "Hello, *this* is markdown\n= header\n== headdddeerr\n", 
-            "type": "scal.io.liger.model.MarkdownCardModel", 
-            "id": "markdown"
-        }, 
-        {
             "header": "Please enter some text", 
             "hint_text": "this is a hint", 
-            "type": "scal.io.liger.model.EditTextCardModel", 
-            "id": "edit_text_card_1"
+            "values": [
+                "value::this is the value"
+            ], 
+            "id": "edit_text_card_1", 
+            "type": "scal.io.liger.model.EditTextCardModel"
+        }, 
+        {
+            "text": "this is the text {{mad_libs_1::edit_text_card_1::value}}", 
+            "type": "scal.io.liger.model.BasicTextCardModel", 
+            "id": "basic"
+        }, 
+        {
+            "text": "Hello, *this* is markdown \n= header\n== headdddeerr\n", 
+            "type": "scal.io.liger.model.MarkdownCardModel", 
+            "id": "markdown"
         }, 
         {
             "header": "More text", 
