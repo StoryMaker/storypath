@@ -291,7 +291,9 @@ These were created to support aspects of the prototype, and don't necessarily co
 #### Markdown widget fields:
 
 **references** - string value, must equal scal.io.liger.widget.MarkdownWidget  
-**text** - string value, markdown text to display on the card  
+**text** - string value, markdown text to display on the card 
+
+*caveats: Android flips bold and italic from the markdown standard in the textview for some reason.  Also, here is the subset of HTML and hence Markdown that is supported: [HTML Tags Supported By TextView](http://commonsware.com/blog/2010/05/26/html-tags-supported-by-textview.html)*
 
 #### Image widget fields:
 
