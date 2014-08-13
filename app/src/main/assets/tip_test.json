@@ -1,0 +1,65 @@
+{
+  "id": "tip_test",
+  "title": "TIP_TEST",
+  "cards": [
+      {
+        "type": "scal.io.liger.model.BasicTextCardModel",
+        "id": "text_card",
+        "title": "TEXT_CARD",
+        "text": "this card has values to reference",
+        "values": [
+          "value1::RED",
+          "value2::GREEN",
+          "value3::BLUE"
+        ]
+      },
+      {
+        "type": "scal.io.liger.model.TipCardModel",
+        "id": "tip_card1",
+        "title": "TIP_CARD1",
+        "tips": [
+          "this is a random tip",
+          "this is another random tip",
+          "this is yet another random tip",
+          "this is a tip about good audio",
+          "this is a tip about fancy videos",
+          "this is a tip about pretty pictures",
+          "this tip should say red: -{{tip_test::text_card::value1}}-",
+          "this tip should say green: -{{tip_test::text_card::value2}}-",
+          "this tip should say blue: -{{tip_test::text_card::value3}}-"
+        ]
+      },
+      {
+        "type": "scal.io.liger.model.TipCardModel",
+        "id": "tip_card2",
+        "title": "TIP_CARD2",
+        "tips": [
+          "this is a random tip",
+          "this is another random tip",
+          "this is yet another random tip",
+          "this is a tip about good audio",
+          "this is a tip about fancy videos",
+          "this is a tip about pretty pictures",
+          "this tip should say red: -{{tip_test::text_card::value1}}-",
+          "this tip should say green: -{{tip_test::text_card::value2}}-",
+          "this tip should say blue: -{{tip_test::text_card::value3}}-"
+        ]
+      },
+      {
+        "type": "scal.io.liger.model.TipCardModel",
+        "id": "tip_card3",
+        "title": "TIP_CARD3",
+        "tips": [
+          "this is a random tip",
+          "this is another random tip",
+          "this is yet another random tip",
+          "this is a tip about good audio",
+          "this is a tip about fancy videos",
+          "this is a tip about pretty pictures",
+          "this tip should say red: -{{tip_test::text_card::value1}}-",
+          "this tip should say green: -{{tip_test::text_card::value2}}-",
+          "this tip should say blue: -{{tip_test::text_card::value3}}-"
+        ]
+      }
+  ]
+}

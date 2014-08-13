@@ -7,7 +7,7 @@ import com.fima.cardsui.objects.Card;
 import scal.io.liger.view.MarkdownCardView;
 
 public class MarkdownCardModel extends CardModel {
-    private String text;
+    public String text;
 
     public MarkdownCardModel() {
         this.type = this.getClass().getName();
