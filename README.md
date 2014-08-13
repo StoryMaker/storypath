@@ -275,12 +275,13 @@ These were created to support aspects of the prototype, and don't necessarily co
 **references** - string value, must equal scal.io.liger.model.QuizReportCardModel  
 **description** - string value, text to display on the card, most likely feedback on the quiz results  
 **results** - array of string values, references to options selected in previous quiz cards  
+
 *this field is obsolete now that the "references" field has been added to the base class*  
 
 #### Video capture type card fields:
 
 **references** - string value, must equal scal.io.liger.model.VideoCaptureTypeCardModel  
-***body** - array of widget structures, see possible formats below  
+**body** - array of widget structures, see possible formats below  
 
 *these widgets will be objects with functionality such as media capture or image display*
 
