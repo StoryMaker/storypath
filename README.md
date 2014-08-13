@@ -155,7 +155,7 @@ liger-prototype
 
 ## Sample JSON:
 
-*(this is a combination of several files, the syntax should be correct, but it is not necessarily logical)*
+*This is a combination of several files, the syntax should be correct, but it is not necessarily logical.*
 
     {
       "id": "story_path",
@@ -281,6 +281,7 @@ These were created to support aspects of the prototype, and don't necessarily co
 
 **references** - string value, must equal scal.io.liger.model.VideoCaptureTypeCardModel  
 ***body** - array of widget structures, see possible formats below  
+
 *these widgets will be objects with functionality such as media capture or image display*
 
 #### Video capture widget fields:
@@ -293,7 +294,7 @@ These were created to support aspects of the prototype, and don't necessarily co
 **references** - string value, must equal scal.io.liger.widget.MarkdownWidget  
 **text** - string value, markdown text to display on the card 
 
-*caveats: Android flips bold and italic from the markdown standard in the textview for some reason.  Also, here is the subset of HTML and hence Markdown that is supported: [HTML Tags Supported By TextView](http://commonsware.com/blog/2010/05/26/html-tags-supported-by-textview.html)*
+*Android flips bold and italic from the markdown standard in the textview for some reason.  Also, here is the subset of HTML and hence Markdown that is supported: [HTML Tags Supported By TextView](http://commonsware.com/blog/2010/05/26/html-tags-supported-by-textview.html)*
 
 #### Image widget fields:
 
