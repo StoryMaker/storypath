@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import scal.io.liger.model.CardModel;
+import scal.io.liger.model.DependencyModel;
 import scal.io.liger.model.StoryPathModel;
 
 
@@ -131,6 +132,64 @@ public class MainActivity extends Activity {
         }
 
         mCardView.refresh();
+    }
+
+    public void goToCard(String cardPath) {
+        // assumes the format story::card::field::value
+        String[] pathParts = cardPath.split("::");
+
+        StoryPathModel story = null;
+        boolean newStory = false;
+        if (mStoryPathModel.getId().equals(pathParts[0])) {
+            // reference targets this story path
+            story = mStoryPathModel;
+        } else {
+            // reference targets a serialized story path
+            for (DependencyModel dependency : mStoryPathModel.getDependencies()) {
+                if (dependency.getDependencyId().equals(pathParts[0])) {
+                    GsonBuilder gBuild = new GsonBuilder();
+                    gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
+                    Gson gson = gBuild.create();
+
+                    String json = JsonHelper.loadJSONFromPath(dependency.getDependencyFile());
+                    story = gson.fromJson(json, StoryPathModel.class);
+
+                    story.context = this.mContext;
+                    story.setCardReferences();
+
+                    newStory = true;
+                }
+            }
+        }
+
+        if (story == null) {
+            System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
+            return;
+        }
+
+        CardModel card = story.getCardById(cardPath);
+
+        if (card == null) {
+            System.err.println("CARD ID " + pathParts[1] + " WAS NOT FOUND");
+            return;
+        }
+
+        int cardIndex = story.getValidCards().indexOf(card);
+
+        if (cardIndex < 0) {
+            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
+            return;
+        }
+
+        if (newStory) {
+
+            // TODO: need additional code to save current story path
+
+            mStoryPathModel = story;
+            refreshCardView();
+        }
+
+        mCardView.scrollToCard(cardIndex);
     }
 
     @Override

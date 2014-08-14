@@ -25,12 +25,13 @@ public class JsonHelper {
     private static String sdLigerFilePath = null;
 
     public static String loadJSONFromPath(String jsonPath) {
+
         String jsonString = "";
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                File jsonFile = new File(jsonPath);
+                File jsonFile = new File(sdLigerFilePath + jsonPath);
                 InputStream jsonStream = new FileInputStream(jsonFile);
 
                 int size = jsonStream.available();
