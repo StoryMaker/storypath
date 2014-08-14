@@ -2,70 +2,39 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="@dimen/padding_large"
     android:paddingLeft="@dimen/padding_medium"
     android:paddingRight="@dimen/padding_medium"
     android:background="@drawable/selectable_background_cardbank">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_card_image"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:adjustViewBounds="true"
+        android:baselineAlignBottom="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/sample1"/>
 
-        <ImageView
-            android:id="@+id/iv_card_image"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:adjustViewBounds="true"
-            android:baselineAlignBottom="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample0"/>
-
-        <TextView
-            android:id="@+id/tv_header"
-            style="@style/CardTitleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_order_media_desc"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_header"
+        style="@style/CardTitleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_order_media_desc"/>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_marginTop="4dp"
-        android:background="@color/stroke" />
+        android:background="@color/stroke"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <scal.io.liger.touch.DraggableGridView
+        android:id="@+id/dgv_media_clips"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:background="#0000"/>
 
-        <ImageView
-            android:id="@+id/iv_image0"
-            android:layout_width="80dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample0"
-            android:padding="@dimen/padding_medium"/>
-
-        <ImageView
-            android:id="@+id/iv_image1"
-            android:layout_width="80dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample1"
-            android:padding="@dimen/padding_medium"/>
-
-        <ImageView
-            android:id="@+id/iv_image2"
-            android:layout_width="80dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample2"
-            android:padding="@dimen/padding_medium"/>
-
-    </LinearLayout>
 </LinearLayout>

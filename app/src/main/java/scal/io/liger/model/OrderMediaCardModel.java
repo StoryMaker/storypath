@@ -11,7 +11,7 @@ import scal.io.liger.view.OrderMediaCardView;
 
 public class OrderMediaCardModel extends CardModel {
     private String header;
-    private ArrayList<Object> clips;
+    private ArrayList<String> clips;
 
     public OrderMediaCardModel() {
         this.type = this.getClass().getName();
@@ -30,17 +30,17 @@ public class OrderMediaCardModel extends CardModel {
         this.header = header;
     }
 
-    public ArrayList<Object> getClips() {
+    public ArrayList<String> getClips() {
         return clips;
     }
 
-    public void setClips(ArrayList<Object> clips) {
+    public void setClips(ArrayList<String> clips) {
         this.clips = clips;
     }
 
-    public void addClips(Object clip) {
+    public void addClips(String clip) {
         if (this.clips == null)
-            this.clips = new ArrayList<Object>();
+            this.clips = new ArrayList<String>();
 
         this.clips.add(clip);
     }
