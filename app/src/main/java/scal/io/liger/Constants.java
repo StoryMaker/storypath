@@ -8,4 +8,12 @@ public class Constants {
 
     public static final String EXTRA_PATH_ID = "EXTRA_PATH_ID";
     public static final String PREFS_CALLING_CARD_ID = "PREFS_CALLING_CARD_ID";
+
+    public static final String AUDIO = "audio";
+    public static final String PHOTO = "photo";
+    public static final String VIDEO = "video";
+
+    public static final String CHARACTER = "character";
+    public static final String ACTION = "action";
+    public static final String RESULT = "result";
 }
