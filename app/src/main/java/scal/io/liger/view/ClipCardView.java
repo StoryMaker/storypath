@@ -52,7 +52,7 @@ public class ClipCardView extends Card {
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
         Button btnRecord = ((Button) view.findViewById(R.id.btn_record_media));
-        ToggleButton btnAudioPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
+        final ToggleButton btnAudioPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
         tvType.setText(mCardModel.getClipType());
@@ -113,6 +113,13 @@ public class ClipCardView extends Card {
                         } else {
                             mediaPlayer.pause();
                         }
+                    }
+                });
+
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer arg0) {
+                        btnAudioPlay.setChecked(false);
                     }
                 });
 
