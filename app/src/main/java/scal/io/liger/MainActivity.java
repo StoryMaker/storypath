@@ -50,6 +50,8 @@ public class MainActivity extends Activity {
         mStoryPathModel.context = null;
         String json = gson.toJson(mStoryPathModel);
         outState.putString("storyPathJson", json);
+        mStoryPathModel.context = this;
+        mStoryPathModel.setCardReferences();
         super.onSaveInstanceState(outState);
     }
 
