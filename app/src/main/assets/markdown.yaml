@@ -6,6 +6,8 @@
             id: markdown
             type: scal.io.liger.model.MarkdownCardModel
             text: | 
-                Hello, *this* is markdown 
+                Hello, is markdown  
+                **this is bold**  
+                *this is italics*  
                 # header
                 ## headdddeerr

@@ -33,7 +33,8 @@
             "clip_medium": "video", 
             "clip_type": "result", 
             "type": "scal.io.liger.model.ClipCardModel", 
-            "id": "clip_video_result"
+            "id": "clip_video_result",
+            "example_media_path": "/storage/emulated/0/video_sample1.mp4"
         },
         {
             "header": "Introduce the audience to a person important to your story",

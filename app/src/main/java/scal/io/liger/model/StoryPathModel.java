@@ -164,7 +164,7 @@ public class StoryPathModel {
 
     public void notifyActivity() {
         if (context != null) {
-            MainActivity mainActivity = (MainActivity) context;
+            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a save cast as context can sometimes not be an activity (getApplicationContext())
             mainActivity.refreshCardView();
         } else {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
