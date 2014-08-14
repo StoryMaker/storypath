@@ -1,7 +1,7 @@
 {
     "cards": [
         {
-            "text": "Hello, *this* is markdown \n# header\n## headdddeerr\n", 
+            "text": "Hello, is markdown  \n**this is bold**  \n*this is italics*  \n# header\n## headdddeerr\n", 
             "type": "scal.io.liger.model.MarkdownCardModel", 
             "id": "markdown"
         }
