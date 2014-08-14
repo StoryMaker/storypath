@@ -12,7 +12,7 @@ import scal.io.liger.view.GenericCardView;
  * Created by mnbogner on 7/17/14.
  */
 public class GenericCardModel extends CardModel {
-    private String mediaPath;
+    private String mediaPath; // FIXME provide a default if they don't specify
     private String header;
     private String text;
     public ArrayList<String> storyPaths;
@@ -48,9 +48,10 @@ public class GenericCardModel extends CardModel {
 
     public ArrayList<String> getStoryPaths() {
         ArrayList<String> a = new ArrayList<String>();
-        for (String s : storyPaths)
-        {
-            a.add(fillReferences(s));
+        if (storyPaths != null) {
+            for (String s : storyPaths) {
+                a.add(fillReferences(s));
+            }
         }
         return a;
     }

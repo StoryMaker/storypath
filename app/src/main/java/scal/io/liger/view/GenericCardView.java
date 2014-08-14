@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.fima.cardsui.objects.Card;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.GenericCardModel;
@@ -63,18 +64,21 @@ public class GenericCardView extends Card {
         }
 
         //add paths
-        for(final String txtPath : mCardModel.getStoryPaths()) {
-            final TextView tvPath = new TextView(mContext);
-            tvPath.setText(txtPath);
+        ArrayList<String> paths = mCardModel.getStoryPaths();
+        if (paths != null) {
+            for (final String txtPath : paths) {
+                final TextView tvPath = new TextView(mContext);
+                tvPath.setText(txtPath);
 
-            llPathsWrapper.addView(tvPath);
-            tvPath.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, txtPath + "click", Toast.LENGTH_SHORT).show();
-                    mCardModel.addValue(txtPath);
-                }
-            });
+                llPathsWrapper.addView(tvPath);
+                tvPath.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, txtPath + "click", Toast.LENGTH_SHORT).show();
+                        mCardModel.addValue(txtPath);
+                    }
+                });
+            }
         }
 
         return view;
