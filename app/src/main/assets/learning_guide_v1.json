@@ -113,27 +113,12 @@
             "id": "three_clips_filled"
         }, 
         {
-            "text": "foooo", 
-            "type": "scal.io.liger.model.ButtonCardModel", 
-            "id": "got_it", 
-            "references": [
-                "learning_guide_v1::three_clips_filled::value::true"
-            ]
-        }, 
-        {
-            "header": "This card tells the maker which clip to capture.", 
-            "media_path": "/path/to/media.file", 
-            "title": "INSTRUCTION TYPE CARD", 
-            "references": [
-                "learning_guide_v1::three_clips_filled::value::true"
-            ], 
-            "clip_types": [
-                "Photo", 
-                "Video", 
-                "Import"
-            ], 
-            "type": "scal.io.liger.model.ClipInstructionTypeCardModel", 
-            "id": "choose_medium_card"
+            "text": "You completed this path.  Wooooot.", 
+            "mediaPath": "/foo/bar.jpg",
+            "header": "Congratulations!",
+            "type": "scal.io.liger.model.CongratulationsCardModel", 
+            "id": "congratulations"
+           
         }
     ], 
     "id": "learning_guide_v1", 
