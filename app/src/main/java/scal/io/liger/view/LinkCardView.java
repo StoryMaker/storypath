@@ -30,7 +30,7 @@ public class LinkCardView extends Card {
         View view = LayoutInflater.from(context).inflate(R.layout.card_progress_button, null);
         TextView linkCardButton = ((TextView) view.findViewById(R.id.btn_card_button));
 
-        String btnText = mCardModel.getLink();
+        String btnText = mCardModel.getText();
 
         if(btnText.isEmpty()) {
             btnText = "Next";
@@ -41,7 +41,6 @@ public class LinkCardView extends Card {
         linkCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.err.println("LINK BUTTON CLICKED!");
                 mCardModel.linkNotification(mCardModel.getLink());
             }
         });

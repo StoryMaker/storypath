@@ -7,6 +7,7 @@ import com.fima.cardsui.objects.Card;
 import scal.io.liger.view.LinkCardView;
 
 public class LinkCardModel extends CardModel {
+    private String text;
     private String link;
 
     public LinkCardModel() {
@@ -15,6 +16,14 @@ public class LinkCardModel extends CardModel {
 
     @Override
     public Card getCardView(Context context) { return new LinkCardView(context, this); }
+
+    public String getText() {
+        return fillReferences(this.text);
+    }
+
+    public void setText(String time) {
+        this.text = time;
+    }
 
     public String getLink() {
         return fillReferences(this.link);

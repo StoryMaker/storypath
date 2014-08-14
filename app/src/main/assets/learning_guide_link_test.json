@@ -153,16 +153,19 @@
             ]
         },
         {
+            "text": "link to top",
             "link": "link_test::choose_medium_card::value::foo",
             "type": "scal.io.liger.model.LinkCardModel",
             "id": "link_start"
         },
         {
+            "text": "link to learning guide",
             "link": "learning_guide_v1::choose_medium_card::value::foo",
             "type": "scal.io.liger.model.LinkCardModel",
             "id": "link_guide"
         },
         {
+            "text": "link to non-visible card",
             "link": "learning_guide_v1::clip_video_character::value::foo",
             "type": "scal.io.liger.model.LinkCardModel",
             "id": "link_fail"
