@@ -45,6 +45,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
         spm.setTitle(title);
 
         GsonBuilder gBuild = new GsonBuilder();
+        gBuild.registerTypeAdapter(NextUpCardDeserializer.class, new NextUpCardDeserializer());
         gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
         Gson gson = gBuild.create();
 

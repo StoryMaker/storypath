@@ -170,6 +170,25 @@
             "type": "scal.io.liger.model.LinkCardModel",
             "id": "link_fail"
         },
+                 {
+                     "text": "list of links",
+                     "type": "scal.io.liger.model.NextUpCardModel",
+                     "id": "list_of_links",
+                     "links": [
+                         {
+                             "link_text": "link to top",
+                             "link_path": "link_test::choose_medium_card::value::foo"
+                         },
+                         {
+                             "link_text": "link to learning guide",
+                             "link_path": "learning_guide_v1::choose_medium_card::value::foo"
+                         },
+                         {
+                             "link_text": "link to non-visible card",
+                             "link_path": "learning_guide_v1::clip_video_character::value::foo"
+                         }
+                     ]
+                 },
         {
             "header": "This card tells the maker which clip to capture.", 
             "media_path": "/path/to/media.file", 
