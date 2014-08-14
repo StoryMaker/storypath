@@ -31,11 +31,12 @@
             android:visibility="gone"/>
 
         <ToggleButton
+            android:background="@drawable/play_stop"
             android:id="@+id/tb_card_audio"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="Stop"
-            android:textOff="Play"
+            android:textOn=""
+            android:textOff=""
             android:visibility="gone"/>
 
     </LinearLayout>
