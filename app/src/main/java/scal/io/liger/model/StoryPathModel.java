@@ -179,4 +179,9 @@ public class StoryPathModel {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
         }
     }
+
+    public void rearrangeCards(int currentIndex, int newIndex) {
+        CardModel card = cards.remove(currentIndex);
+        cards.add(newIndex, card);
+    }
 }
