@@ -170,4 +170,13 @@ public class StoryPathModel {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
         }
     }
+
+    public void linkNotification(String linkPath) {
+        if (context != null) {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.goToCard(linkPath);
+        } else {
+            System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
+        }
+    }
 }
