@@ -34,8 +34,8 @@
             android:id="@+id/tb_card_audio"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textOn="Playing"
-            android:textOff="Stopped"
+            android:textOn="Stop"
+            android:textOff="Play"
             android:visibility="gone"/>
 
     </LinearLayout>
