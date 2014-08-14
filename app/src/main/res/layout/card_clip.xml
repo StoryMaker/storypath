@@ -30,6 +30,14 @@
             android:layout_gravity="center"
             android:visibility="gone"/>
 
+        <ToggleButton
+            android:id="@+id/tb_card_audio"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textOn="Playing"
+            android:textOff="Stopped"
+            android:visibility="gone"/>
+
     </LinearLayout>
 
     <LinearLayout

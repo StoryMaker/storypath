@@ -3,20 +3,26 @@ package scal.io.liger.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import android.widget.VideoView;
 
 import com.fima.cardsui.objects.Card;
 
 import java.io.File;
+import java.io.IOException;
 
+import scal.io.liger.JsonHelper;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.ClipCardModel;
 import scal.io.liger.Constants;
@@ -46,6 +52,7 @@ public class ClipCardView extends Card {
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
         Button btnRecord = ((Button) view.findViewById(R.id.btn_record_media));
+        ToggleButton btnAudioPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
         tvType.setText(mCardModel.getClipType());
@@ -79,7 +86,7 @@ public class ClipCardView extends Card {
                 Uri video = Uri.parse(mediaFile.getPath());
                 vvCardVideo.setMediaController(mediaController);
                 vvCardVideo.setVideoURI(video);
-                vvCardVideo.start();
+                vvCardVideo.seekTo(5);
 
                 vvCardVideo.setVisibility(View.VISIBLE);
             } else if (clipMedium.equals(Constants.PHOTO)) {
@@ -88,7 +95,29 @@ public class ClipCardView extends Card {
 
                 ivCardPhoto.setVisibility(View.VISIBLE);
             } else if (clipMedium.equals(Constants.AUDIO)) {
-                //TODO handle audio
+                Uri myUri = Uri.parse(mediaFile.getPath());
+                final MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                try {
+                    mediaPlayer.setDataSource(mContext, myUri);
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                btnAudioPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            mediaPlayer.seekTo(5);
+                            mediaPlayer.start();
+                        } else {
+                            mediaPlayer.pause();
+                        }
+                    }
+                });
+
+                mediaPlayer.seekTo(5);
+                btnAudioPlay.setVisibility(View.VISIBLE);
             } else {
                 //TODO handle invalid-medium error
             }

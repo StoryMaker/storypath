@@ -196,19 +196,42 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
 
-            Bundle extras = intent.getExtras();
-            String pathId = null;
-            Uri uri = intent.getData();
-            String path = getRealPathFromURI(getApplicationContext(), uri);
+            if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 
-            pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                Uri uri = intent.getData();
+                String path = getRealPathFromURI(getApplicationContext(), uri);
+                String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
-            if(null == pathId || null == uri) {
-                return;
+                if (null == pathId || null == uri) {
+                    return;
+                }
+
+                CardModel cm = mStoryPathModel.getCardById(pathId);
+                cm.addValue("value::" + path);
+            } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
+
+                String path = getLastImagePath();
+                String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+
+                if (null == pathId || null == path) {
+                    return;
+                }
+
+                CardModel cm = mStoryPathModel.getCardById(pathId);
+                cm.addValue("value::" + path);
+            } else if(requestCode == Constants.REQUEST_AUDIO_CAPTURE) {
+
+                Uri uri = intent.getData();
+                String path = getRealPathFromURI(getApplicationContext(), uri);
+                String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+
+                if (null == pathId || null == uri) {
+                    return;
+                }
+
+                CardModel cm = mStoryPathModel.getCardById(pathId);
+                cm.addValue("value::" + path);
             }
-
-            CardModel cm = mStoryPathModel.getCardById(pathId);
-            cm.addValue("value::" + path);
         }
     }
 
@@ -225,5 +248,20 @@ public class MainActivity extends Activity {
                 cursor.close();
             }
         }
+    }
+
+    private String getLastImagePath() {
+        final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
+        final String imageOrderBy = MediaStore.Images.Media._ID + " DESC";
+        Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
+        String imagePath = null;
+
+        if(imageCursor.moveToFirst()){
+            int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
+            imagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            imageCursor.close();
+        }
+
+        return imagePath;
     }
 }
