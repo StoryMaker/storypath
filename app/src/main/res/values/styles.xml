@@ -9,6 +9,14 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="CardLink">
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/padding_medium</item>
+        <item name="android:textColor">@drawable/card_link_button_text</item>
+        <item name="android:background">@drawable/card_link_button_background</item>
+    </style>
+
     <style name="CardLightText" parent="@style/CardText">
         <item name="android:textColor">@color/card_light_text</item>
     </style>
@@ -41,15 +49,12 @@
         <item name="android:textColor">@color/card_title_text</item>
     </style>
 
-    <style name="CardLinkSmall" parent="@style/CardText">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">@dimen/padding_medium</item>
+    <style name="CardLinkSmall" parent="@style/CardLink">
         <item name="android:textSize">@dimen/card_small_text</item>
-        <item name="android:textColor">@drawable/card_link_button_text</item>
-        <item name="android:background">@drawable/card_link_button_background</item>
+    </style>
+
+    <style name="CardLinkMedium" parent="@style/CardLink">
+        <item name="android:textSize">@dimen/card_medium_text</item>
     </style>
 
     <style name="StackTitle" parent="@style/CardText">

@@ -33,16 +33,25 @@
 
         <Button
             android:id="@+id/btn_medium_video"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
             style="@style/CardLinkSmall"
             android:text="@string/lbl_video"/>
 
         <Button
             android:id="@+id/btn_medium_audio"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
             style="@style/CardLinkSmall"
             android:text="@string/lbl_audio"/>
 
         <Button
             android:id="@+id/btn_medium_photo"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
             style="@style/CardLinkSmall"
             android:text="@string/lbl_photo"/>
 

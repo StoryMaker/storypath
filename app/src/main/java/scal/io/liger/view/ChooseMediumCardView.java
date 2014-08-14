@@ -8,16 +8,13 @@ import android.widget.TextView;
 
 import com.fima.cardsui.objects.Card;
 
+import scal.io.liger.Constants;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.ChooseMediumCardModel;
 import scal.io.liger.R;
 
 
 public class ChooseMediumCardView extends Card {
-    public static final String AUDIO = "audio";
-    public static final String PHOTO = "photo";
-    public static final String VIDEO = "video";
-
     private ChooseMediumCardModel mCardModel;
     private Context mContext;
 
@@ -49,7 +46,7 @@ public class ChooseMediumCardView extends Card {
             public void onClick(View v) {
 //                Toast.makeText(mContext, "Video click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
-                mCardModel.addValue("value::" + VIDEO);
+                mCardModel.addValue("value::" + Constants.VIDEO);
                 highlightButton(v);
             }
         });
@@ -59,7 +56,7 @@ public class ChooseMediumCardView extends Card {
             public void onClick(View v) {
 //                Toast.makeText(mContext, "Audio click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
-                mCardModel.addValue("value::" + AUDIO);
+                mCardModel.addValue("value::" + Constants.AUDIO);
                 highlightButton(v);
             }
         });
@@ -69,20 +66,20 @@ public class ChooseMediumCardView extends Card {
             public void onClick(View v) {
 //                Toast.makeText(mContext, "Photo click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
-                mCardModel.addValue("value::" + PHOTO);
+                mCardModel.addValue("value::" + Constants.PHOTO);
                 highlightButton(v);
             }
         });
 
         String value = mCardModel.getValueByKey("value");
         if (value != null) {
-            if (value.equals(VIDEO)) {
+            if (value.equals(Constants.VIDEO)) {
                 mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
                 mBtnMediumVideo.setTextColor(mContext.getResources().getColor(R.color.white));
-            } else if (value.equals(AUDIO)) {
+            } else if (value.equals(Constants.AUDIO)) {
                 mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
                 mBtnMediumAudio.setTextColor(mContext.getResources().getColor(R.color.white));
-            } else if (value.equals(PHOTO)) {
+            } else if (value.equals(Constants.PHOTO)) {
                 mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
                 mBtnMediumPhoto.setTextColor(mContext.getResources().getColor(R.color.white));
             }
@@ -91,7 +88,7 @@ public class ChooseMediumCardView extends Card {
         return view;
     }
 
-    private void highlightButton(View  button) {
+    private void highlightButton(View button) {
         mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.white));
