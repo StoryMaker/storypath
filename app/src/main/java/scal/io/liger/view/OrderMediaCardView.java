@@ -67,19 +67,20 @@ public class OrderMediaCardView extends Card {
         File fileTemp;
         Bitmap bmTemp;
 
-        for (int i=0; i<3; i++) {
-            ivTemp = new ImageView(mContext);
+        if (clipPaths.size() > 0) {
+            for (int i = 0; i < 3; i++) {
+                ivTemp = new ImageView(mContext);
 
-            ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
-            dgvOrderClips.addView(ivTemp);
+                ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
+                dgvOrderClips.addView(ivTemp);
 
-            //TODO TERRIBLE
-            if(firstTime) {
-                CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
-                listCards.add(i, cm);
-            }
+                //TODO TERRIBLE
+                if (firstTime) {
+                    CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
+                    listCards.add(i, cm);
+                }
 
-            //TODO have the clips dynamically pulled from the cards
+                //TODO have the clips dynamically pulled from the cards
             /*
             fileTemp =  new File(clipPaths.get(i));
 
@@ -88,6 +89,7 @@ public class OrderMediaCardView extends Card {
                 ivTemp.setImageBitmap(bmTemp);
                 dgvOrderClips.addView(ivTemp);
             }*/
+            }
         }
 
         firstTime = false;

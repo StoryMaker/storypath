@@ -13,7 +13,10 @@
             "clip_medium": "video", 
             "clip_type": "character", 
             "type": "scal.io.liger.model.ClipCardModel", 
-            "id": "clip_video_character"
+            "id": "clip_video_character",
+            "values": [
+                "value::/sdcard/Liger/video_sample1.mp4"
+            ]
         },
         {
             "header": "Introduce the audience to an action important to your story",
@@ -23,7 +26,10 @@
             "clip_medium": "video", 
             "clip_type": "action", 
             "type": "scal.io.liger.model.ClipCardModel", 
-            "id": "clip_video_action"
+            "id": "clip_video_action",
+            "values": [
+                "value::/sdcard/Liger/video_sample2.mp4"
+            ]
         },
         {
             "header": "Introduce the audience to a result important to your story",
@@ -33,7 +39,10 @@
             "clip_medium": "video", 
             "clip_type": "result", 
             "type": "scal.io.liger.model.ClipCardModel", 
-            "id": "clip_video_result"
+            "id": "clip_video_result",
+            "values": [
+                "value::/sdcard/Liger/video_sample3.mp4"
+            ]
         },
         {
             "header": "Introduce the audience to a person important to your story",
@@ -133,7 +142,8 @@
                 "learning_guide_v1::clip_audio_result::value", 
                 "learning_guide_v1::clip_photo_character::value", 
                 "learning_guide_v1::clip_photo_action::value", 
-                "learning_guide_v1::clip_photo_result::value"
+                "learning_guide_v1::clip_photo_result::value",
+                "learning_guide_v1::three_clips_filled::value::true"
             ]
         },
         {
@@ -155,10 +165,18 @@
         {
             "id": "final_preview",
             "type": "scal.io.liger.model.PreviewCardModel",
-            "media_path": "",
-            "media_id": "",
             "text": "Did you clips tell a complete story with a beginning, middle and end?",
             "references": [
+                "learning_guide_v1::choose_medium_card::value", 
+                "learning_guide_v1::clip_video_character::value", 
+                "learning_guide_v1::clip_video_action::value", 
+                "learning_guide_v1::clip_video_result::value", 
+                "learning_guide_v1::clip_audio_character::value", 
+                "learning_guide_v1::clip_audio_action::value", 
+                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::clip_photo_character::value", 
+                "learning_guide_v1::clip_photo_action::value", 
+                "learning_guide_v1::clip_photo_result::value",
                 "learning_guide_v1::i_like_the_order::value::clicked"
             ]
         }, 
