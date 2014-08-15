@@ -72,45 +72,45 @@ public class OrderMediaCardView extends Card {
         File fileTemp;
         Bitmap bmTemp;
 
-if (clipPaths.size() > 0) {
-        for (int i=0; i<3; i++) {
-            CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
-            listCards.add(i, cm);
+        if (clipPaths.size() > 0) {
+            for (int i=0; i<3; i++) {
+                CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
+                listCards.add(i, cm);
 
-            Uri mediaURI = null;
-            String mediaPath = listCards.get(i).getValueByKey("value");
+                Uri mediaURI = null;
+                String mediaPath = listCards.get(i).getValueByKey("value");
 
-            if(mediaPath != null) {
-                File mediaFile = new File(mediaPath);
-                if(mediaFile.exists() && !mediaFile.isDirectory()) {
-                    mediaURI = Uri.parse(mediaFile.getPath());
+                if(mediaPath != null) {
+                    File mediaFile = new File(mediaPath);
+                    if(mediaFile.exists() && !mediaFile.isDirectory()) {
+                        mediaURI = Uri.parse(mediaFile.getPath());
+                    }
                 }
-            }
 
-            if (medium != null && mediaURI != null) {
-                if (medium.equals(Constants.VIDEO)) {
-                    vvTemp = new VideoView(mContext);
-                    vvTemp.setVideoPath(mediaURI.getPath());
-                    vvTemp.seekTo(10);
-                    dgvOrderClips.addView(vvTemp);
+                if (medium != null && mediaURI != null) {
+                    if (medium.equals(Constants.VIDEO)) {
+                        vvTemp = new VideoView(mContext);
+                        vvTemp.setVideoPath(mediaURI.getPath());
+                        vvTemp.seekTo(10);
+                        dgvOrderClips.addView(vvTemp);
 
-                } else if (medium.equals(Constants.AUDIO)) {
+                    } else if (medium.equals(Constants.AUDIO)) {
+                        ivTemp = new ImageView(mContext);
+                        ivTemp.setImageURI(mediaURI);
+                        dgvOrderClips.addView(ivTemp);
+
+                    } else if (medium.equals(Constants.PHOTO)) {
+                        ivTemp = new ImageView(mContext);
+                        ivTemp.setImageURI(mediaURI);
+                        dgvOrderClips.addView(ivTemp);
+                    }
+                } else {
                     ivTemp = new ImageView(mContext);
-                    ivTemp.setImageURI(mediaURI);
-                    dgvOrderClips.addView(ivTemp);
-
-                } else if (medium.equals(Constants.PHOTO)) {
-                    ivTemp = new ImageView(mContext);
-                    ivTemp.setImageURI(mediaURI);
+                    ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
                     dgvOrderClips.addView(ivTemp);
                 }
-            } else {
-                ivTemp = new ImageView(mContext);
-                ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
-                dgvOrderClips.addView(ivTemp);
             }
         }
-}
 
         dgvOrderClips.setOnRearrangeListener(new OnRearrangeListener() {
             @Override
