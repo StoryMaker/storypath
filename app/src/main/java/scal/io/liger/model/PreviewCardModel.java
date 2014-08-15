@@ -52,7 +52,7 @@ public class PreviewCardModel extends CardModel {
     private boolean g(String ref) {
         String val = storyPathReference.getReferencedValue(ref);
         Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
-        return (val != null) && !val.equals("");
+        return (val != null) && val.equals("true"); // FIXME refactor checkReferenceValues in teh base class to leverage it instead of this hard coded check
     }
 
     @Override
