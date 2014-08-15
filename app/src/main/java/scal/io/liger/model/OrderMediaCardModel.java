@@ -1,11 +1,13 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fima.cardsui.objects.Card;
 
 import java.util.ArrayList;
 
+import scal.io.liger.Constants;
 import scal.io.liger.view.OrderMediaCardView;
 
 
@@ -30,18 +32,30 @@ public class OrderMediaCardModel extends CardModel {
         this.header = header;
     }
 
-    public ArrayList<String> getClips() {
-        return clips;
-    }
+    public ArrayList<String> getClipPaths() {
+        ArrayList<String> clipPaths = new ArrayList<String>();
 
-    public void setClips(ArrayList<String> clips) {
-        this.clips = clips;
-    }
+        if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
 
-    public void addClips(String clip) {
-        if (this.clips == null)
-            this.clips = new ArrayList<String>();
+            String medium = storyPathReference.getReferencedValue(references.get(0));
 
-        this.clips.add(clip);
+            if (medium != null) {
+                // FIXME this is super fragile, assume the clip type is based on order.  ug.
+                if (medium.equals(Constants.VIDEO)) {
+                    clipPaths.add(references.get(1));
+                    clipPaths.add(references.get(2));
+                    clipPaths.add(references.get(3));
+                } else if (medium.equals(Constants.AUDIO)) {
+                    clipPaths.add(references.get(4));
+                    clipPaths.add(references.get(5));
+                    clipPaths.add(references.get(6));
+                } else if (medium.equals(Constants.PHOTO)) {
+                    clipPaths.add(references.get(7));
+                    clipPaths.add(references.get(8));
+                    clipPaths.add(references.get(9));
+                }
+            }
+        }
+        return  clipPaths;
     }
 }

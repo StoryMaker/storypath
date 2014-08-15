@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sample1"/>
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/tv_header"
@@ -28,13 +27,13 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/padding_xsmall"
         android:background="@color/stroke"/>
 
     <scal.io.liger.touch.DraggableGridView
         android:id="@+id/dgv_media_clips"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="90dp"
         android:background="#0000"/>
 
 </LinearLayout>

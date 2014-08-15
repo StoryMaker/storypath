@@ -1,6 +1,8 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+
+import com.fima.cardsui.objects.Card;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -178,6 +180,10 @@ public class StoryPathModel {
         } else {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
         }
+    }
+
+    public int getCardIndex(CardModel cardModel) {
+        return cards.indexOf(cardModel);
     }
 
     public void rearrangeCards(int currentIndex, int newIndex) {
