@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -31,8 +32,9 @@ public class PreviewCardView extends Card {
     public int videoIndex = 0;
     public VideoView vvCardMedia;
 
-    private static List<CardModel> listCards = new ArrayList<CardModel>();
+    private static List<CardModel> listCards = new ArrayList<CardModel>(); // FIXME these statics are causing problems
     private static boolean firstTime = true;
+    private boolean playing = false;
 
     public PreviewCardView(Context context, CardModel cardModel) {
         mContext = context;
@@ -67,19 +69,36 @@ public class PreviewCardView extends Card {
             Uri video = Uri.parse(paths.get(0));
             vvCardMedia.setMediaController(mediaController);
             vvCardMedia.setVideoURI(video);
-            vvCardMedia.seekTo(5); // seems to be need to be done to show its thumbnail?
+//            vvCardMedia.seekTo(5); // seems to be need to be done to show its thumbnail?
         } else {
             System.err.println("INVALID MEDIA FILE: " + mediaFile.getPath());
         }
+
+        vvCardMedia.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (!playing) {
+                        playing = true;
+                        vvCardMedia.start();
+                    } else {
+                        playing = false;
+                        vvCardMedia.stopPlayback();
+                    }
+                }
+                return true;
+            }
+        });
 
         vvCardMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer vvCardPlayer) {
                 videoIndex++;
 
-                // check and loop
-                if (videoIndex >= paths.size())
-                    videoIndex = 0;
+                if (videoIndex >= paths.size()) {
+                    playing = false;
+                    return; // don't loop
+                }
 
                 File mediaFile = new File(paths.get(videoIndex));
                 if (mediaFile.exists() && !mediaFile.isDirectory()) {
