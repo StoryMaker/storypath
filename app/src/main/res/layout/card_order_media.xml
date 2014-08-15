@@ -9,18 +9,10 @@
     android:paddingRight="@dimen/padding_medium"
     android:background="@drawable/selectable_background_cardbank">
 
-    <ImageView
-        android:id="@+id/iv_card_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:baselineAlignBottom="true"
-        android:scaleType="centerCrop"/>
-
     <TextView
         android:id="@+id/tv_header"
         style="@style/CardTitleSmall"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/lbl_order_media_desc"/>
 
@@ -28,6 +20,7 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/padding_xsmall"
+        android:layout_marginBottom="@dimen/padding_xsmall"
         android:background="@color/stroke"/>
 
     <scal.io.liger.touch.DraggableGridView

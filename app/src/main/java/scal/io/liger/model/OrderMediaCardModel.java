@@ -13,6 +13,7 @@ import scal.io.liger.view.OrderMediaCardView;
 
 public class OrderMediaCardModel extends CardModel {
     private String header;
+    private String medium;
     private ArrayList<String> clips;
 
     public OrderMediaCardModel() {
@@ -32,12 +33,20 @@ public class OrderMediaCardModel extends CardModel {
         this.header = header;
     }
 
+    public String getMedium() {
+        return medium;
+    }
+
+    public void setMedium(String medium) {
+        this.medium = medium;
+    }
+
     public ArrayList<String> getClipPaths() {
         ArrayList<String> clipPaths = new ArrayList<String>();
 
         if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
 
-            String medium = storyPathReference.getReferencedValue(references.get(0));
+            medium = storyPathReference.getReferencedValue(references.get(0));
 
             if (medium != null) {
                 // FIXME this is super fragile, assume the clip type is based on order.  ug.

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.fima.cardsui.objects.Card;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import scal.io.liger.Constants;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.OrderMediaCardModel;
 import scal.io.liger.R;
@@ -27,11 +30,9 @@ public class OrderMediaCardView extends Card {
     private OrderMediaCardModel mCardModel;
     private Context mContext;
 
-    ImageView ivCardImage;
     private static List<Integer> listDrawables = new ArrayList<Integer>();
-    private static List<CardModel> listCards = new ArrayList<CardModel>();
-
-    private static boolean firstTime = true;
+    private static boolean firstRun = true;
+    private List<CardModel> listCards = new ArrayList<CardModel>();
 
     public OrderMediaCardView(Context context, CardModel cardModel) {
         mContext = context;
@@ -45,58 +46,75 @@ public class OrderMediaCardView extends Card {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_order_media, null);
-        ivCardImage = ((ImageView) view.findViewById(R.id.iv_card_image));
         DraggableGridView dgvOrderClips = ((DraggableGridView) view.findViewById(R.id.dgv_media_clips));
 
-        if(firstTime) {
-            listDrawables.add(0, R.drawable.cliptype_close);
-            listDrawables.add(1, R.drawable.cliptype_medium);
-            listDrawables.add(2, R.drawable.cliptype_long);
-        }
-
-        ivCardImage.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(0)));
         loadClips(mCardModel.getClipPaths(), dgvOrderClips);
 
         return view;
     }
 
     public void loadClips(ArrayList<String> clipPaths, DraggableGridView dgvOrderClips) {
+
+        if(firstRun) {
+            listDrawables.add(0, R.drawable.cliptype_close);
+            listDrawables.add(1, R.drawable.cliptype_medium);
+            listDrawables.add(2, R.drawable.cliptype_long);
+
+            firstRun = false;
+        }
+
         dgvOrderClips.removeAllViews();
 
+        String medium = mCardModel.getMedium();
+
         ImageView ivTemp;
+        VideoView vvTemp;
         File fileTemp;
         Bitmap bmTemp;
 
         for (int i=0; i<3; i++) {
-            ivTemp = new ImageView(mContext);
+            CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
+            listCards.add(i, cm);
 
-            ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
-            dgvOrderClips.addView(ivTemp);
+            Uri mediaURI = null;
+            String mediaPath = listCards.get(i).getValueByKey("value");
 
-            //TODO TERRIBLE
-            if(firstTime) {
-                CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
-                listCards.add(i, cm);
+            if(mediaPath != null) {
+                File mediaFile = new File(mediaPath);
+                if(mediaFile.exists() && !mediaFile.isDirectory()) {
+                    mediaURI = Uri.parse(mediaFile.getPath());
+                }
             }
 
-            //TODO have the clips dynamically pulled from the cards
-            /*
-            fileTemp =  new File(clipPaths.get(i));
+            if (medium != null && mediaURI != null) {
+                if (medium.equals(Constants.VIDEO)) {
+                    vvTemp = new VideoView(mContext);
+                    vvTemp.setVideoPath(mediaURI.getPath());
+                    vvTemp.seekTo(10);
+                    dgvOrderClips.addView(vvTemp);
 
-            if(fileTemp.exists() && !fileTemp.isDirectory()) {
-                bmTemp = BitmapFactory.decodeFile(fileTemp.getPath());
-                ivTemp.setImageBitmap(bmTemp);
+                } else if (medium.equals(Constants.AUDIO)) {
+                    ivTemp = new ImageView(mContext);
+                    ivTemp.setImageURI(mediaURI);
+                    dgvOrderClips.addView(ivTemp);
+
+                } else if (medium.equals(Constants.PHOTO)) {
+                    ivTemp = new ImageView(mContext);
+                    ivTemp.setImageURI(mediaURI);
+                    dgvOrderClips.addView(ivTemp);
+                }
+            } else {
+                ivTemp = new ImageView(mContext);
+                ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
                 dgvOrderClips.addView(ivTemp);
-            }*/
+            }
         }
-
-        firstTime = false;
 
         dgvOrderClips.setOnRearrangeListener(new OnRearrangeListener() {
             @Override
             public void onRearrange(int currentIndex, int newIndex) {
 
-                //edit internal list
+                //update internal list
                 CardModel currentCard = listCards.remove(currentIndex);
                 listCards.add(newIndex, currentCard);
 
@@ -106,12 +124,9 @@ public class OrderMediaCardView extends Card {
 
                 mCardModel.getStoryPathReference().rearrangeCards(currentCardIndex, newCardIndex);
 
-                //TODO: REMOVE - just for visualization
+                //update internal drawables
                 int currentValue = listDrawables.remove(currentIndex);
                 listDrawables.add(newIndex, currentValue);
-                if(newIndex == 0) {
-                    ivCardImage.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(0)));
-                }
             }
         });
 
