@@ -49,9 +49,9 @@ public class OrderMediaCardView extends Card {
         DraggableGridView dgvOrderClips = ((DraggableGridView) view.findViewById(R.id.dgv_media_clips));
 
         if(firstTime) {
-            listDrawables.add(0, R.drawable.sample0);
-            listDrawables.add(1, R.drawable.sample1);
-            listDrawables.add(2, R.drawable.sample2);
+            listDrawables.add(0, R.drawable.cliptype_close);
+            listDrawables.add(1, R.drawable.cliptype_medium);
+            listDrawables.add(2, R.drawable.cliptype_long);
         }
 
         ivCardImage.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(0)));
