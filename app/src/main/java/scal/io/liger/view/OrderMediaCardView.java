@@ -72,6 +72,7 @@ public class OrderMediaCardView extends Card {
         File fileTemp;
         Bitmap bmTemp;
 
+if (clipPaths.size() > 0) {
         for (int i=0; i<3; i++) {
             CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
             listCards.add(i, cm);
@@ -109,6 +110,7 @@ public class OrderMediaCardView extends Card {
                 dgvOrderClips.addView(ivTemp);
             }
         }
+}
 
         dgvOrderClips.setOnRearrangeListener(new OnRearrangeListener() {
             @Override
