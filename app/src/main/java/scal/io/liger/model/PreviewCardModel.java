@@ -4,12 +4,13 @@ import android.content.Context;
 
 import com.fima.cardsui.objects.Card;
 
+import java.util.ArrayList;
+
 import scal.io.liger.view.PreviewCardView;
 
 
 public class PreviewCardModel extends CardModel {
-    private String media_path;
-    private String media_id;
+    private ArrayList<String> media_paths;
     private String text;
 
     public PreviewCardModel() {
@@ -21,20 +22,24 @@ public class PreviewCardModel extends CardModel {
         return new PreviewCardView(context, this);
     }
 
-    public String getMedia_path() {
-        return fillReferences(media_path);
+    public ArrayList<String> getMedia_paths() {
+        ArrayList<String> a = new ArrayList<String>();
+        for (String s : media_paths)
+        {
+            a.add(fillReferences(s));
+        }
+        return a;
     }
 
-    public void setMedia_path(String media_path) {
-        this.media_path = media_path;
+    public void setMedia_paths(ArrayList<String> media_paths) {
+        this.media_paths = media_paths;
     }
 
-    public String getMedia_id() {
-        return fillReferences(media_id);
-    }
+    public void addMedia_path(String media_path) {
+        if (this.media_paths == null)
+            this.media_paths = new ArrayList<String>();
 
-    public void setMedia_id(String media_id) {
-        this.media_id = media_id;
+        this.media_paths.add(media_path);
     }
 
     public String getText() { return fillReferences(this.text); }
