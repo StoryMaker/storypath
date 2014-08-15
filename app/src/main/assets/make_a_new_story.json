@@ -1,0 +1,11 @@
+{
+    "title": "Make a New Story", 
+    "id": "make_a_new_story", 
+    "cards": [
+        {
+            "id": "top",
+            "text": "This is **Make a New Story**.  *Ohh yeaaaa*.", 
+            "type": "scal.io.liger.model.MarkdownCardModel"
+        }
+    ]
+}

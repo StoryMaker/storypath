@@ -1,0 +1,11 @@
+{
+    "title": "Learning Guide 2", 
+    "id": "learning_guide_v1_2", 
+    "cards": [
+        {
+            "id": "top",
+            "text": "This is **Learning Guide 2**.  *Ohh yeaaaa*.", 
+            "type": "scal.io.liger.model.MarkdownCardModel"
+        }
+    ]
+}
