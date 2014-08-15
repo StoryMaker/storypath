@@ -95,7 +95,16 @@ public class OrderMediaCardView extends Card {
         dgvOrderClips.setOnRearrangeListener(new OnRearrangeListener() {
             @Override
             public void onRearrange(int currentIndex, int newIndex) {
-                mCardModel.getStoryPathReference().rearrangeCards(currentIndex, newIndex);
+
+                //edit internal list
+                CardModel currentCard = listCards.remove(currentIndex);
+                listCards.add(newIndex, currentCard);
+
+                //update actual card list
+                int currentCardIndex = mCardModel.getStoryPathReference().getCardIndex(currentCard);
+                int newCardIndex = currentCardIndex + (currentIndex - newIndex);
+
+                mCardModel.getStoryPathReference().rearrangeCards(currentCardIndex, newCardIndex);
 
                 //TODO: REMOVE - just for visualization
                 int currentValue = listDrawables.remove(currentIndex);
@@ -109,7 +118,6 @@ public class OrderMediaCardView extends Card {
         dgvOrderClips.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int i = 1;
             }
         });
     }
