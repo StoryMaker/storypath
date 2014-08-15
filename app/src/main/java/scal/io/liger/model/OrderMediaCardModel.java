@@ -58,4 +58,47 @@ public class OrderMediaCardModel extends CardModel {
         }
         return  clipPaths;
     }
+
+
+
+    private boolean g(String ref) {
+        String val = storyPathReference.getReferencedValue(ref);
+        Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
+        return (val != null) && !val.equals("");
+    }
+
+    @Override
+    public boolean checkReferencedValues() {
+        clearValues();
+        addValue("value::" + (areWeSatisfied() ? "true" : "false"), false); // FIXME this should be in a more general init() method called on each card as the path is bootstrapped
+
+        boolean val = g(references.get(0));
+        return val;
+    }
+
+    public boolean areWeSatisfied() {
+        boolean result = false;
+
+        if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
+//            result = ((g(references.get(1)) && g(references.get(2)) && g(references.get(3)))
+//                || (g(references.get(4)) && g(references.get(5)) && g(references.get(6)))
+//                || (g(references.get(7)) && g(references.get(8)) && g(references.get(9))));
+
+            String medium = storyPathReference.getReferencedValue(references.get(0));
+
+            if (medium != null) {
+                // FIXME this is super fragile, assume the clip type is based on order.  ug.
+                if (medium.equals("video")) {
+                    result = (g(references.get(1)) && g(references.get(2)) && g(references.get(3)));
+                } else if (medium.equals("audio")) {
+                    result = (g(references.get(4)) && g(references.get(5)) && g(references.get(6)));
+                } else if (medium.equals("photo")) {
+                    result = (g(references.get(7)) && g(references.get(8)) && g(references.get(9)));
+                }
+            }
+
+        }
+        Log.d("areWeSatisfied", result ? "true" : "false");
+        return result;
+    }
 }

@@ -189,5 +189,6 @@ public class StoryPathModel {
     public void rearrangeCards(int currentIndex, int newIndex) {
         CardModel card = cards.remove(currentIndex);
         cards.add(newIndex, card);
+        notifyActivity();
     }
 }

@@ -28,8 +28,8 @@ public class OrderMediaCardView extends Card {
     private Context mContext;
 
     ImageView ivCardImage;
-    List<Integer> listDrawables = new ArrayList<Integer>();
-    List<CardModel> listCards = new ArrayList<CardModel>();
+    private static List<Integer> listDrawables = new ArrayList<Integer>();
+    private static List<CardModel> listCards = new ArrayList<CardModel>();
 
     private static boolean firstTime = true;
 
@@ -102,7 +102,7 @@ public class OrderMediaCardView extends Card {
 
                 //update actual card list
                 int currentCardIndex = mCardModel.getStoryPathReference().getCardIndex(currentCard);
-                int newCardIndex = currentCardIndex + (currentIndex - newIndex);
+                int newCardIndex = currentCardIndex - (currentIndex - newIndex);
 
                 mCardModel.getStoryPathReference().rearrangeCards(currentCardIndex, newCardIndex);
 

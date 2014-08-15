@@ -42,6 +42,7 @@ public class ButtonCardView extends Card {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "Button Click", Toast.LENGTH_SHORT).show();
+                mCardModel.addValue("value::clicked");
             }
         });
 
