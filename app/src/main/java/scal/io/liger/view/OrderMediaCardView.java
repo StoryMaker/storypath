@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scal.io.liger.Constants;
+import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.OrderMediaCardModel;
 import scal.io.liger.R;
@@ -31,7 +33,6 @@ public class OrderMediaCardView extends Card {
     private Context mContext;
 
     private static List<Integer> listDrawables = new ArrayList<Integer>();
-    private static boolean firstRun = true;
     private List<CardModel> listCards = new ArrayList<CardModel>();
 
     public OrderMediaCardView(Context context, CardModel cardModel) {
@@ -55,20 +56,16 @@ public class OrderMediaCardView extends Card {
 
     public void loadClips(ArrayList<String> clipPaths, DraggableGridView dgvOrderClips) {
 
-        if(firstRun) {
-            listDrawables.add(0, R.drawable.cliptype_close);
-            listDrawables.add(1, R.drawable.cliptype_medium);
-            listDrawables.add(2, R.drawable.cliptype_long);
+        listDrawables.add(0, R.drawable.cliptype_close);
+        listDrawables.add(1, R.drawable.cliptype_medium);
+        listDrawables.add(2, R.drawable.cliptype_long);
 
-            firstRun = false;
-        }
 
         dgvOrderClips.removeAllViews();
 
         String medium = mCardModel.getMedium();
 
         ImageView ivTemp;
-        VideoView vvTemp;
         File fileTemp;
         Bitmap bmTemp;
 
@@ -79,9 +76,10 @@ public class OrderMediaCardView extends Card {
 
                 Uri mediaURI = null;
                 String mediaPath = listCards.get(i).getValueByKey("value");
+                File mediaFile = null;
 
                 if(mediaPath != null) {
-                    File mediaFile = new File(mediaPath);
+                    mediaFile = new File(mediaPath);
                     if(mediaFile.exists() && !mediaFile.isDirectory()) {
                         mediaURI = Uri.parse(mediaFile.getPath());
                     }
@@ -89,11 +87,13 @@ public class OrderMediaCardView extends Card {
 
                 if (medium != null && mediaURI != null) {
                     if (medium.equals(Constants.VIDEO)) {
-                        vvTemp = new VideoView(mContext);
-                        vvTemp.setVideoPath(mediaURI.getPath());
-                        vvTemp.seekTo(10);
-                        dgvOrderClips.addView(vvTemp);
+                        ivTemp = new ImageView(mContext);
 
+                        Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
+                        if(null != videoFrame) {
+                            ivTemp.setImageBitmap(videoFrame);
+                        }
+                        dgvOrderClips.addView(ivTemp);
                     } else if (medium.equals(Constants.AUDIO)) {
                         ivTemp = new ImageView(mContext);
                         ivTemp.setImageURI(mediaURI);
