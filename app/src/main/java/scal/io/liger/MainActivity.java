@@ -174,7 +174,7 @@ public class MainActivity extends Activity {
             return;
         }
 
-        int cardIndex = story.getValidCards().indexOf(card);
+        int cardIndex = story.getValidCardIndex(card);
 
         if (cardIndex < 0) {
             System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
