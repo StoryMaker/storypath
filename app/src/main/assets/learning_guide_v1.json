@@ -1,4 +1,16 @@
-{
+{ 
+    "id": "learning_guide_v1", 
+    "title": "Learning Guide v1",
+    "dependencies": [
+        {
+            "dependencyId": "learning_guide_v1_2",
+            "dependencyFile": "learning_guide_v1_2.json"
+        },
+        {
+            "dependencyId": "make_a_new_story",
+            "dependencyFile": "make_a_new_story.json"
+        }
+    ],
     "cards": [
         {
             "header": "This card tells the maker which clip to capture.", 
@@ -251,17 +263,5 @@
                 "learning_guide_v1::yup_im_finished::value::clicked"
             ]
          }
-    ], 
-    "id": "learning_guide_v1", 
-    "title": "Learning Guide v1",
-    "dependencies": [
-        {
-            "dependencyId": "learning_guide_v1_2",
-            "dependencyFile": "learning_guide_v1_2.json"
-        },
-        {
-            "dependencyId": "make_a_new_story",
-            "dependencyFile": "make_a_new_story.json"
-        }
     ]
 }
