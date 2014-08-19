@@ -78,6 +78,25 @@ public class StoryPathModel {
         return null;
     }
 
+    // new method to get batches of cards while preserving card order
+    public ArrayList<CardModel> getCardsByIds(ArrayList<String> fullPaths) {
+        ArrayList<String> cardIds = new ArrayList<String>();
+        for (String fullPath : fullPaths) {
+            // assumes the format story::card::field::value
+            String[] pathParts = fullPath.split("::");
+            cardIds.add(pathParts[1]);
+        }
+
+        ArrayList<CardModel> foundCards = new ArrayList<CardModel>();
+        for (CardModel card : cards) {
+            if (cardIds.contains(card.getId())) {
+                foundCards.add(card);
+            }
+        }
+
+        return foundCards;
+    }
+
     public ArrayList<CardModel> getValidCards() {
         ArrayList<CardModel> validCards = new ArrayList<CardModel>();
 

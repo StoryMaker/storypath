@@ -110,12 +110,11 @@ public class PreviewCardView extends Card {
     }
 
     public void loadClips(ArrayList<String> clipPaths) {
-        if (clipPaths.size() > 0) {
-            for (int i = 0; i < 3; i++) {
-                CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
-                String value = cm.getValueByKey("value");
-                paths.add(i, value);
-            }
+        // get batch of ordered cards
+        ArrayList<CardModel> clipCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
+        for (CardModel cm : clipCards) {
+            String value = cm.getValueByKey("value");
+            paths.add(value);
         }
     }
 }

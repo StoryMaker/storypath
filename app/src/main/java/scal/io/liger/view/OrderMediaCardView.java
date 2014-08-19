@@ -18,6 +18,7 @@ import com.fima.cardsui.objects.Card;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import scal.io.liger.Constants;
@@ -54,12 +55,17 @@ public class OrderMediaCardView extends Card {
         return view;
     }
 
+    public void fillList(ArrayList<String> clipPaths) {
+
+        listCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
+
+    }
+
     public void loadClips(ArrayList<String> clipPaths, DraggableGridView dgvOrderClips) {
 
         listDrawables.add(0, R.drawable.cliptype_close);
         listDrawables.add(1, R.drawable.cliptype_medium);
         listDrawables.add(2, R.drawable.cliptype_long);
-
 
         dgvOrderClips.removeAllViews();
 
@@ -69,66 +75,65 @@ public class OrderMediaCardView extends Card {
         File fileTemp;
         Bitmap bmTemp;
 
-        if (clipPaths.size() > 0) {
-            for (int i=0; i<3; i++) {
-                CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
-                listCards.add(i, cm);
+        fillList(clipPaths);
 
-                Uri mediaURI = null;
-                String mediaPath = listCards.get(i).getValueByKey("value");
-                File mediaFile = null;
+        // removing size check and 1->3 loop, should be covered by fillList + for loop
+        int i = 0;
+        for (CardModel cm : listCards) {
+            Uri mediaURI = null;
+            String mediaPath = cm.getValueByKey("value");
+            File mediaFile = null;
 
-                if(mediaPath != null) {
-                    mediaFile = new File(mediaPath);
-                    if(mediaFile.exists() && !mediaFile.isDirectory()) {
-                        mediaURI = Uri.parse(mediaFile.getPath());
-                    }
-                }
-
-                if (medium != null && mediaURI != null) {
-                    if (medium.equals(Constants.VIDEO)) {
-                        ivTemp = new ImageView(mContext);
-
-                        Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
-                        if(null != videoFrame) {
-                            ivTemp.setImageBitmap(videoFrame);
-                        }
-                        dgvOrderClips.addView(ivTemp);
-                    } else if (medium.equals(Constants.AUDIO)) {
-                        ivTemp = new ImageView(mContext);
-                        ivTemp.setImageURI(mediaURI);
-                        dgvOrderClips.addView(ivTemp);
-
-                    } else if (medium.equals(Constants.PHOTO)) {
-                        ivTemp = new ImageView(mContext);
-                        ivTemp.setImageURI(mediaURI);
-                        dgvOrderClips.addView(ivTemp);
-                    }
-                } else {
-                    ivTemp = new ImageView(mContext);
-                    ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
-                    dgvOrderClips.addView(ivTemp);
+            if(mediaPath != null) {
+                mediaFile = new File(mediaPath);
+                if(mediaFile.exists() && !mediaFile.isDirectory()) {
+                    mediaURI = Uri.parse(mediaFile.getPath());
                 }
             }
+
+            if (medium != null && mediaURI != null) {
+                if (medium.equals(Constants.VIDEO)) {
+                    ivTemp = new ImageView(mContext);
+
+                    Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
+                    if(null != videoFrame) {
+                        ivTemp.setImageBitmap(videoFrame);
+                    }
+                    dgvOrderClips.addView(ivTemp);
+                } else if (medium.equals(Constants.AUDIO)) {
+                    ivTemp = new ImageView(mContext);
+                    ivTemp.setImageURI(mediaURI);
+                    dgvOrderClips.addView(ivTemp);
+
+                } else if (medium.equals(Constants.PHOTO)) {
+                    ivTemp = new ImageView(mContext);
+                    ivTemp.setImageURI(mediaURI);
+                    dgvOrderClips.addView(ivTemp);
+                }
+            } else {
+                ivTemp = new ImageView(mContext);
+                ivTemp.setImageDrawable(mContext.getResources().getDrawable(listDrawables.get(i)));
+                dgvOrderClips.addView(ivTemp);
+            }
+
+            i++; // hack to deal with drawable index
         }
 
         dgvOrderClips.setOnRearrangeListener(new OnRearrangeListener() {
             @Override
             public void onRearrange(int currentIndex, int newIndex) {
 
-                //update internal list
-                CardModel currentCard = listCards.remove(currentIndex);
-                listCards.add(newIndex, currentCard);
+                //update internal drawables (changes currently not retained)
+                int currentValue = listDrawables.remove(currentIndex);
+                listDrawables.add(newIndex, currentValue);
 
                 //update actual card list
+                CardModel currentCard = listCards.get(currentIndex);
                 int currentCardIndex = mCardModel.getStoryPathReference().getCardIndex(currentCard);
                 int newCardIndex = currentCardIndex - (currentIndex - newIndex);
 
                 mCardModel.getStoryPathReference().rearrangeCards(currentCardIndex, newCardIndex);
 
-                //update internal drawables
-                int currentValue = listDrawables.remove(currentIndex);
-                listDrawables.add(newIndex, currentValue);
             }
         });
 
