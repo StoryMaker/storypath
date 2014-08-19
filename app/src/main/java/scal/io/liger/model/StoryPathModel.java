@@ -207,6 +207,28 @@ public class StoryPathModel {
         return cards.indexOf(cardModel);
     }
 
+    public int getValidCardIndex(CardModel cardModel) {
+        return getValidCards().indexOf(cardModel);
+    }
+
+    public CardModel getCardFromIndex(int index) {
+        if(index >= cards.size()) {
+            return null;
+        }
+
+        return cards.get(index);
+    }
+
+    public CardModel getValidCardFromIndex(int index) {
+        ArrayList<CardModel> validCards = getValidCards();
+
+        if(index >= validCards.size()) {
+            return null;
+        }
+
+        return validCards.get(index);
+    }
+
     public void rearrangeCards(int currentIndex, int newIndex) {
         CardModel card = cards.remove(currentIndex);
         cards.add(newIndex, card);

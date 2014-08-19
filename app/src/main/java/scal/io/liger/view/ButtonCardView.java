@@ -11,6 +11,7 @@ import com.fima.cardsui.objects.Card;
 import scal.io.liger.model.ButtonCardModel;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.R;
+import scal.io.liger.model.StoryPathModel;
 
 public class ButtonCardView extends Card {
     private ButtonCardModel mCardModel;
@@ -41,11 +42,18 @@ public class ButtonCardView extends Card {
         btnCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, "Button Click", Toast.LENGTH_SHORT).show();
                 mCardModel.addValue("value::clicked");
+                moveToNextCard();
             }
         });
 
         return view;
+    }
+
+    private void moveToNextCard() {
+        StoryPathModel spm = mCardModel.getStoryPathReference();
+        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
+        String linkPath = spm.getId() + "::" + cm.getId();
+        spm.linkNotification(linkPath);
     }
 }

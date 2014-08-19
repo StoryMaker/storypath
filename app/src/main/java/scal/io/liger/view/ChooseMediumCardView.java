@@ -12,6 +12,7 @@ import scal.io.liger.Constants;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.ChooseMediumCardModel;
 import scal.io.liger.R;
+import scal.io.liger.model.StoryPathModel;
 
 
 public class ChooseMediumCardView extends Card {
@@ -44,30 +45,33 @@ public class ChooseMediumCardView extends Card {
         mBtnMediumVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, "Video click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
                 mCardModel.addValue("value::" + Constants.VIDEO);
                 highlightButton(v);
+
+                moveToNextCard();
             }
         });
 
         mBtnMediumAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, "Audio click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
                 mCardModel.addValue("value::" + Constants.AUDIO);
                 highlightButton(v);
+
+                moveToNextCard();
             }
         });
 
         mBtnMediumPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, "Photo click", Toast.LENGTH_SHORT).show();
                 mCardModel.clearValues();
                 mCardModel.addValue("value::" + Constants.PHOTO);
                 highlightButton(v);
+
+                moveToNextCard();
             }
         });
 
@@ -94,5 +98,12 @@ public class ChooseMediumCardView extends Card {
         mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         button.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
         ((Button) button).setTextColor(mContext.getResources().getColor(R.color.white));
+    }
+
+    private void moveToNextCard() {
+        StoryPathModel spm = mCardModel.getStoryPathReference();
+        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
+        String linkPath = spm.getId() + "::" + cm.getId();
+        spm.linkNotification(linkPath);
     }
 }
