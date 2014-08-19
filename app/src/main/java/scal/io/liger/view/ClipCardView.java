@@ -3,10 +3,12 @@ package scal.io.liger.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scal.io.liger.JsonHelper;
+import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.ClipCardModel;
 import scal.io.liger.Constants;
@@ -34,6 +37,8 @@ public class ClipCardView extends Card {
     private ClipCardModel mCardModel;
     private Context mContext;
     private static final String MEDIA_PATH_KEY = "value";
+
+    MediaController mMediaController;
 
     public ClipCardView(Context context, CardModel cardModel) {
         mContext = context;
@@ -47,8 +52,8 @@ public class ClipCardView extends Card {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_clip, null);
-        VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_video));
-        ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
+        final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_video));
+        final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
         Button btnRecord = ((Button) view.findViewById(R.id.btn_record_media));
@@ -80,15 +85,36 @@ public class ClipCardView extends Card {
             ivCardPhoto.setVisibility(View.VISIBLE);
         } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
             if (clipMedium.equals(Constants.VIDEO)) {
-                MediaController mediaController = new MediaController(mContext);
-                mediaController.setAnchorView(vvCardVideo);
+                mMediaController = new MediaController(mContext);
+                mMediaController.setAnchorView(vvCardVideo);
 
                 Uri video = Uri.parse(mediaFile.getPath());
-                vvCardVideo.setMediaController(mediaController);
                 vvCardVideo.setVideoURI(video);
                 vvCardVideo.seekTo(5);
+                vvCardVideo.setMediaController(mMediaController);
 
-                vvCardVideo.setVisibility(View.VISIBLE);
+                //set up image as preview
+                Bitmap videoFrame = Utility.getFrameFromVideo(video.getPath());
+                if(null != videoFrame) {
+                    ivCardPhoto.setImageBitmap(videoFrame);
+                }
+
+                ivCardPhoto.setVisibility(View.VISIBLE);
+                ivCardPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        vvCardVideo.setVisibility(View.VISIBLE);
+                        ivCardPhoto.setVisibility(View.GONE);
+                    }
+                });
+
+                //revert back to image on video completion
+                vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mp) {
+                        vvCardVideo.setVisibility(View.GONE);
+                        ivCardPhoto.setVisibility(View.VISIBLE);
+                    }
+                });
             } else if (clipMedium.equals(Constants.PHOTO)) {
                 Uri uri = Uri.parse(mediaFile.getPath());
                 ivCardPhoto.setImageURI(uri);

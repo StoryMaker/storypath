@@ -12,12 +12,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <scal.io.liger.ScaleImageView
+            android:id="@+id/iv_card_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:baselineAlignBottom="true"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:visibility="gone"/>
+
         <VideoView
             android:id="@+id/vv_card_media"
             android:layout_width="fill_parent"
             android:layout_height="180dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/padding_medium"
-            android:layout_gravity="center"/>
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_text"

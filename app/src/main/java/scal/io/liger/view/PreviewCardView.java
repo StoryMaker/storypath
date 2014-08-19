@@ -2,6 +2,7 @@ package scal.io.liger.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.PreviewCardModel;
 import scal.io.liger.R;
@@ -30,11 +32,9 @@ public class PreviewCardView extends Card {
     private Context mContext;
     public ArrayList<String> paths = new ArrayList<String>();
     public int videoIndex = 0;
-    public VideoView vvCardMedia;
 
     private static List<CardModel> listCards = new ArrayList<CardModel>(); // FIXME these statics are causing problems
     private static boolean firstTime = true;
-    private boolean playing = false;
 
     public PreviewCardView(Context context, CardModel cardModel) {
         mContext = context;
@@ -48,63 +48,57 @@ public class PreviewCardView extends Card {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_preview, null);
-        vvCardMedia = ((VideoView) view.findViewById(R.id.vv_card_media));
+        final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
+        final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_media));
         TextView tvText= ((TextView) view.findViewById(R.id.tv_text));
         tvText.setText(mCardModel.getText());
 
         loadClips(mCardModel.getClipPaths());
 
-//        paths = mCardModel.getMedia_paths();
-//        if ((paths == null) || (paths.size() == 0)) {
-//            // i assume this will just return a view with no preview
-//            return view;
-//        }
-
         //TODO find better way of checking file is valid
         File mediaFile = new File(paths.get(0));
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
             MediaController mediaController = new MediaController(mContext);
-            mediaController.setAnchorView(vvCardMedia);
+            mediaController.setAnchorView(vvCardVideo);
 
             Uri video = Uri.parse(paths.get(0));
-            vvCardMedia.setMediaController(mediaController);
-            vvCardMedia.setVideoURI(video);
-//            vvCardMedia.seekTo(5); // seems to be need to be done to show its thumbnail?
+            vvCardVideo.setMediaController(mediaController);
+            vvCardVideo.setVideoURI(video);
+
+            //set up image as preview
+            Bitmap videoFrame = Utility.getFrameFromVideo(video.getPath());
+            if(null != videoFrame) {
+                ivCardPhoto.setImageBitmap(videoFrame);
+                ivCardPhoto.setVisibility(View.VISIBLE);
+            }
         } else {
             System.err.println("INVALID MEDIA FILE: " + mediaFile.getPath());
         }
 
-        vvCardMedia.setOnTouchListener(new View.OnTouchListener() {
+        ivCardPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (!playing) {
-                        playing = true;
-                        vvCardMedia.start();
-                    } else {
-                        playing = false;
-                        vvCardMedia.stopPlayback();
-                    }
-                }
-                return true;
+            public void onClick(View v) {
+                vvCardVideo.setVisibility(View.VISIBLE);
+                ivCardPhoto.setVisibility(View.GONE);
             }
         });
 
-        vvCardMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer vvCardPlayer) {
                 videoIndex++;
 
                 if (videoIndex >= paths.size()) {
-                    playing = false;
+                    vvCardVideo.setVisibility(View.GONE);
+                    ivCardPhoto.setVisibility(View.VISIBLE);
                     return; // don't loop
                 }
 
                 File mediaFile = new File(paths.get(videoIndex));
                 if (mediaFile.exists() && !mediaFile.isDirectory()) {
                     Uri video = Uri.parse(paths.get(videoIndex));
-                    vvCardMedia.setVideoURI(video);
-                    vvCardMedia.start();
+                    vvCardVideo.setVideoURI(video);
+                    vvCardVideo.start();
                 } else {
                     System.err.println("INVALID MEDIA FILE: " + mediaFile.getPath());
                 }
