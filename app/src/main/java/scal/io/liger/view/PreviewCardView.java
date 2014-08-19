@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,16 +34,15 @@ public class PreviewCardView extends Card {
     public ArrayList<String> paths = new ArrayList<String>();
     public int videoIndex = 0;
 
-    private static List<CardModel> listCards = new ArrayList<CardModel>(); // FIXME these statics are causing problems
-    private static boolean firstTime = true;
-
     public PreviewCardView(Context context, CardModel cardModel) {
+        Log.d("PreviewCardView", "constructor");
         mContext = context;
         mCardModel = (PreviewCardModel) cardModel;
     }
 
     @Override
     public View getCardContent(Context context) {
+        Log.d("PreviewCardView", "getCardContent");
         if(mCardModel == null) {
             return null;
         }
@@ -110,15 +110,12 @@ public class PreviewCardView extends Card {
     }
 
     public void loadClips(ArrayList<String> clipPaths) {
-        if (firstTime && clipPaths.size() > 0) {
+        if (clipPaths.size() > 0) {
             for (int i = 0; i < 3; i++) {
                 CardModel cm = mCardModel.storyPathReference.getCardById(clipPaths.get(i));
-                listCards.add(i, cm);
                 String value = cm.getValueByKey("value");
                 paths.add(i, value);
             }
         }
-
-        firstTime = false;
     }
 }

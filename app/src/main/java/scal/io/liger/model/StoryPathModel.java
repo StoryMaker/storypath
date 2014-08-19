@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fima.cardsui.objects.Card;
 import com.google.gson.Gson;
@@ -165,6 +166,7 @@ public class StoryPathModel {
     }
 
     public void notifyActivity() {
+        Log.d("StoryPathModel", "notifyActivity");
         if (context != null) {
             MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a save cast as context can sometimes not be an activity (getApplicationContext())
             mainActivity.refreshCardView();
