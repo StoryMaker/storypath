@@ -144,7 +144,7 @@
         {
             "id": "order_preview",
             "type": "scal.io.liger.model.PreviewCardModel",
-            "text": "",
+            "text": "Preview your order.",
             "references": [
                 "learning_guide_v1::choose_medium_card::value", 
                 "learning_guide_v1::clip_video_character::value", 
@@ -162,7 +162,6 @@
         {
             "id": "order_card",
             "type": "scal.io.liger.model.OrderMediaCardModel",
-            "header": "Order card goes here...",
             "references": [
                 "learning_guide_v1::choose_medium_card::value", 
                 "learning_guide_v1::clip_video_character::value", 
@@ -212,11 +211,84 @@
             ]
         }, 
         {
+            "text": "Tweaks & Changes",
+            "type": "scal.io.liger.model.NextUpCardModel",
             "id": "tweaks_and_changes",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "Tweaks & Changes goes here...",
+            "links": [
+                {
+                    "link_text": "Character clip",
+                    "link_path": "learning_guide_v1::clip_video_character"
+                },
+                {
+                    "link_text": "Action clip",
+                    "link_path": "learning_guide_v1::clip_video_action"
+                },
+                {
+                    "link_text": "Result clip",
+                    "link_path": "learning_guide_v1::clip_video_result"
+                },
+                {
+                    "link_text": "Order",
+                    "link_path": "learning_guide_v1::order_preview"
+                }
+            ],
             "references": [
-                "learning_guide_v1::i_like_the_order::value::clicked"
+                "learning_guide_v1::yup_im_finished::value::clicked",
+                "learning_guide_v1::choose_medium_card::value::video"
+            ]
+        },
+        {
+            "text": "Tweaks & Changes",
+            "type": "scal.io.liger.model.NextUpCardModel",
+            "id": "tweaks_and_changes",
+            "links": [
+                {
+                    "link_text": "Character clip",
+                    "link_path": "learning_guide_v1::clip_photo_character"
+                },
+                {
+                    "link_text": "Action clip",
+                    "link_path": "learning_guide_v1::clip_photo_action"
+                },
+                {
+                    "link_text": "Result clip",
+                    "link_path": "learning_guide_v1::clip_photo_result"
+                },
+                {
+                    "link_text": "Order",
+                    "link_path": "learning_guide_v1::order_preview"
+                }
+            ],
+            "references": [
+                "learning_guide_v1::yup_im_finished::value::clicked",
+                "learning_guide_v1::choose_medium_card::value::photo"
+            ]
+        },
+        {
+            "text": "Tweaks & Changes",
+            "type": "scal.io.liger.model.NextUpCardModel",
+            "id": "tweaks_and_changes",
+            "links": [
+                {
+                    "link_text": "Character clip",
+                    "link_path": "learning_guide_v1::clip_audio_character"
+                },
+                {
+                    "link_text": "Action clip",
+                    "link_path": "learning_guide_v1::clip_audio_action"
+                },
+                {
+                    "link_text": "Result clip",
+                    "link_path": "learning_guide_v1::clip_audio_result"
+                },
+                {
+                    "link_text": "Order",
+                    "link_path": "learning_guide_v1::order_preview"
+                }
+            ],
+            "references": [
+                "learning_guide_v1::yup_im_finished::value::clicked",
+                "learning_guide_v1::choose_medium_card::value::audio"
             ]
         },
         {

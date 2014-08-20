@@ -4,24 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/padding_large"
     android:paddingLeft="@dimen/padding_medium"
     android:paddingRight="@dimen/padding_medium"
     android:background="@drawable/selectable_background_cardbank">
-
-    <TextView
-        android:id="@+id/tv_header"
-        style="@style/CardTitleSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_order_media_desc"/>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/padding_xsmall"
-        android:layout_marginBottom="@dimen/padding_xsmall"
-        android:background="@color/stroke"/>
 
     <scal.io.liger.touch.DraggableGridView
         android:id="@+id/dgv_media_clips"

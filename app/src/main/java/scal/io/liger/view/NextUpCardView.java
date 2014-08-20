@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.fima.cardsui.objects.Card;
 
@@ -29,7 +30,9 @@ public class NextUpCardView extends Card {
         }
 
         LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.card_next_up, null);
-
+        TextView tv = (TextView) ll.findViewById(R.id.tv_text);
+        tv.setText(mCardModel.getText());
+        
         for (LinkModel link : mCardModel.getLinks()) {
             Button linkButton = new Button(mContext);
 
