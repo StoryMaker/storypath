@@ -58,17 +58,17 @@ public class MainActivity extends Activity {
 
     private void initApp() {
         SharedPreferences sp = getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
-        boolean isFirstStart = sp.getBoolean("isFirstStartFlag", true);
-
+//        boolean isFirstStart = sp.getBoolean("isFirstStartFlag", true);
+//
         // if it was the first app start
-        if(isFirstStart) {
-            //save our flag
-            SharedPreferences.Editor e = sp.edit();
-            e.putBoolean("isFirstStartFlag", false);
-            e.commit();
-        }
+//        if(isFirstStart) {
+//            //save our flag
+//            SharedPreferences.Editor e = sp.edit();
+//            e.putBoolean("isFirstStartFlag", false);
+//            e.commit();
+//        }
 
-        JsonHelper.setupFileStructure(this, isFirstStart);
+        JsonHelper.setupFileStructure(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] jsonFiles = JsonHelper.getJSONFileList();

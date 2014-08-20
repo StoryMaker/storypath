@@ -4,11 +4,11 @@
     "dependencies": [
         {
             "dependencyId": "learning_guide_v1_2",
-            "dependencyFile": "learning_guide_v1_2.json"
+            "dependencyFile": "default/learning_guide_v1_2.json"
         },
         {
             "dependencyId": "make_a_new_story",
-            "dependencyFile": "make_a_new_story.json"
+            "dependencyFile": "default/make_a_new_story.json"
         }
     ],
     "cards": [
@@ -25,7 +25,10 @@
                 "learning_guide_v1::choose_medium_card::value::video"
             ], 
             "clip_medium": "video", 
-            "clip_type": "character"
+            "clip_type": "character",  
+            "values": [
+                "value::/sdcard/Liger/default/video_sample1.mp4"
+            ]
         },
         {
             "id": "clip_video_action",
@@ -35,7 +38,10 @@
                 "learning_guide_v1::choose_medium_card::value::video"
             ], 
             "clip_medium": "video", 
-            "clip_type": "action"
+            "clip_type": "action", 
+            "values": [
+                "value::/sdcard/Liger/default/video_sample2.mp4"
+            ]
         },
         {
             "id": "clip_video_result",
@@ -45,7 +51,10 @@
                 "learning_guide_v1::choose_medium_card::value::video"
             ], 
             "clip_medium": "video", 
-            "clip_type": "result"
+            "clip_type": "result", 
+            "values": [
+                "value::/sdcard/Liger/default/video_sample3.mp4"
+            ]
         },
         { 
             "id": "clip_audio_character",

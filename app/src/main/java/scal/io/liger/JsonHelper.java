@@ -76,7 +76,7 @@ public class JsonHelper {
         return jsonString;
     }
 
-    public static void setupFileStructure(Context context, boolean isFirstStart) {
+    public static void setupFileStructure(Context context) {
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -84,17 +84,17 @@ public class JsonHelper {
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
 
             //create folder if first app launch
-            if(isFirstStart) {
-                File file = new File(sdLigerFilePath);
-                file.mkdirs();
+            new File( sdLigerFilePath + "/default/").mkdirs();
 
-                //add one choice from assets
-                try {
-                    InputStream jsonStream = context.getAssets().open("learning_guide_v1.json");
-                    addFileToSDCard(jsonStream);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                String[] assets = context.getAssets().list("default");
+                for (String asset: assets) {
+                    String filePath = "/default/" + asset;
+                    InputStream jsonStream = context.getAssets().open("default/" + asset);
+                    addFileToSDCard(jsonStream, filePath);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         } else {
             System.err.println("SD CARD NOT FOUND");
@@ -107,14 +107,26 @@ public class JsonHelper {
             return null;
         }
 
-        File ligerDir = new File(sdLigerFilePath);
         ArrayList<String> jsonFileNamesList = new ArrayList<String>();
         jsonFileList = new ArrayList<File>();
 
-        for (File file : ligerDir.listFiles()) {
-            if (file.getName().endsWith(".json")) {
-                jsonFileNamesList.add(file.getName());
-                jsonFileList.add(file);
+        File ligerDir = new File(sdLigerFilePath);
+        if (ligerDir != null) {
+            for (File file : ligerDir.listFiles()) {
+                if (file.getName().endsWith(".json")) {
+                    jsonFileNamesList.add(file.getName());
+                    jsonFileList.add(file);
+                }
+            }
+        }
+
+        File defaultLigerDir = new File(sdLigerFilePath + "/default/");
+        if (defaultLigerDir != null) {
+            for (File file : defaultLigerDir.listFiles()) {
+                if (file.getName().endsWith(".json")) {
+                    jsonFileNamesList.add(file.getName());
+                    jsonFileList.add(file);
+                }
             }
         }
 
@@ -125,12 +137,12 @@ public class JsonHelper {
         selectedJSONFile = jsonFileList.get(index);
     }
 
-    private static void addFileToSDCard(InputStream jsonInputStream) {
+    private static void addFileToSDCard(InputStream jsonInputStream, String filePath) {
         OutputStream outputStream = null;
 
         try {
             // write the inputStream to a FileOutputStream
-            outputStream = new FileOutputStream(new File(sdLigerFilePath + "learning_guide_v1.json"));
+            outputStream = new FileOutputStream(new File(sdLigerFilePath + filePath));
 
             int read = 0;
             byte[] bytes = new byte[1024];
