@@ -181,7 +181,11 @@
             "type": "scal.io.liger.model.ButtonCardModel",
             "text": "I like the order",
             "references": [
-                "learning_guide_v1::three_clips_filled::value::true"
+                "learning_guide_v1::three_clips_filled::value::true",
+                "learning_guide_v1::i_like_the_order::value::false"
+            ],
+            "values": [
+               "value::false"
             ]
         },
         {
@@ -189,7 +193,7 @@
             "type": "scal.io.liger.model.BasicTextCardModel",
             "text": "Did you follow the clip suggestions?",
             "references": [
-                "learning_guide_v1::i_like_the_order::value::clicked"
+                "learning_guide_v1::i_like_the_order::value::true"
             ]
         },
         {
@@ -207,7 +211,7 @@
                 "learning_guide_v1::clip_photo_character::value", 
                 "learning_guide_v1::clip_photo_action::value", 
                 "learning_guide_v1::clip_photo_result::value",
-                "learning_guide_v1::i_like_the_order::value::clicked"
+                "learning_guide_v1::i_like_the_order::value::true"
             ]
         }, 
         {
@@ -233,7 +237,7 @@
                 }
             ],
             "references": [
-                "learning_guide_v1::yup_im_finished::value::clicked",
+                "learning_guide_v1::i_like_the_order::value::true",
                 "learning_guide_v1::choose_medium_card::value::video"
             ]
         },
@@ -260,7 +264,7 @@
                 }
             ],
             "references": [
-                "learning_guide_v1::yup_im_finished::value::clicked",
+                "learning_guide_v1::i_like_the_order::value::true",
                 "learning_guide_v1::choose_medium_card::value::photo"
             ]
         },
@@ -287,7 +291,7 @@
                 }
             ],
             "references": [
-                "learning_guide_v1::yup_im_finished::value::clicked",
+                "learning_guide_v1::i_like_the_order::value::true",
                 "learning_guide_v1::choose_medium_card::value::audio"
             ]
         },
@@ -296,7 +300,11 @@
             "type": "scal.io.liger.model.ButtonCardModel",
             "text": "Yup, I'm all finished!",
             "references": [
-                "learning_guide_v1::i_like_the_order::value::clicked"
+                "learning_guide_v1::i_like_the_order::value::true",
+                "learning_guide_v1::yup_im_finished::value::false"
+            ],
+            "values": [
+               "value::false"
             ]
         },
         {
@@ -306,7 +314,7 @@
             "type": "scal.io.liger.model.CongratulationsCardModel", 
             "id": "congratulations",
             "references": [
-                "learning_guide_v1::yup_im_finished::value::clicked"
+                "learning_guide_v1::yup_im_finished::value::true"
             ]
         },
         {
@@ -314,7 +322,7 @@
             "type": "scal.io.liger.model.ButtonCardModel",
             "text": "Publish Your Story.",
             "references": [
-                "learning_guide_v1::yup_im_finished::value::clicked"
+                "learning_guide_v1::yup_im_finished::value::true"
             ]
         }, 
         {
@@ -329,10 +337,26 @@
                 {
                     "link_text": "Make a New Story",
                     "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Read more about Photo stories",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Read more about Audio stories",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Read more about Video stories",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Make a New Story",
+                    "link_path": "make_a_new_story::top"
                 }
             ],
             "references": [
-                "learning_guide_v1::yup_im_finished::value::clicked"
+                "learning_guide_v1::yup_im_finished::value::true"
             ]
          }
     ]

@@ -42,18 +42,26 @@ public class ButtonCardView extends Card {
         btnCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCardModel.addValue("value::clicked");
-                moveToNextCard();
+
+                StoryPathModel spm = mCardModel.getStoryPathReference();
+                CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
+
+                mCardModel.clearValues();
+                mCardModel.addValue("value::true");
+//                moveToNextCard();
+
+                String linkPath = spm.getId() + "::" + cm.getId();
+                spm.linkNotification(linkPath);
             }
         });
 
         return view;
     }
 
-    private void moveToNextCard() {
-        StoryPathModel spm = mCardModel.getStoryPathReference();
-        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
-        String linkPath = spm.getId() + "::" + cm.getId();
-        spm.linkNotification(linkPath);
-    }
+//    private void moveToNextCard() {
+//        StoryPathModel spm = mCardModel.getStoryPathReference();
+//        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
+//        String linkPath = spm.getId() + "::" + cm.getId();
+//        spm.linkNotification(linkPath);
+//    }
 }
