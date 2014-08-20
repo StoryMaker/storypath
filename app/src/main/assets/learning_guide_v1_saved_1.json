@@ -1,0 +1,363 @@
+{ 
+    "id": "learning_guide_v1", 
+    "title": "Learning Guide v1",
+    "dependencies": [
+        {
+            "dependencyId": "learning_guide_v1_2",
+            "dependencyFile": "learning_guide_v1_2.json"
+        },
+        {
+            "dependencyId": "make_a_new_story",
+            "dependencyFile": "make_a_new_story.json"
+        }
+    ],
+    "cards": [
+        {
+            "header": "This card tells the maker which clip to capture.", 
+            "type": "scal.io.liger.model.ChooseMediumCardModel", 
+            "id": "choose_medium_card"
+        }, 
+        {
+            "id": "clip_video_character",
+            "type": "scal.io.liger.model.ClipCardModel",
+            "header": "Introduce the audience to a person important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::video"
+            ], 
+            "clip_medium": "video", 
+            "clip_type": "character",  
+            "values": [
+                "value::/sdcard/Liger/video_sample1.mp4"
+            ]
+        },
+        {
+            "id": "clip_video_action",
+            "type": "scal.io.liger.model.ClipCardModel", 
+            "header": "Introduce the audience to an action important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::video"
+            ], 
+            "clip_medium": "video", 
+            "clip_type": "action", 
+            "values": [
+                "value::/sdcard/Liger/video_sample2.mp4"
+            ]
+        },
+        {
+            "id": "clip_video_result",
+            "type": "scal.io.liger.model.ClipCardModel", 
+            "header": "Introduce the audience to a result important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::video"
+            ], 
+            "clip_medium": "video", 
+            "clip_type": "result", 
+            "values": [
+                "value::/sdcard/Liger/video_sample3.mp4"
+            ]
+        },
+        { 
+            "id": "clip_audio_character",
+            "type": "scal.io.liger.model.ClipCardModel",
+            "header": "Introduce the audience to a person important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::audio"
+            ], 
+            "clip_medium": "audio", 
+            "clip_type": "character"
+        }, 
+        {
+            "id": "clip_audio_action",
+            "type": "scal.io.liger.model.ClipCardModel",
+            "header": "Introduce the audience to an action important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::audio"
+            ], 
+            "clip_medium": "audio", 
+            "clip_type": "action"
+            
+        }, 
+        {
+            "id": "clip_audio_result",
+            "type": "scal.io.liger.model.ClipCardModel",
+            "header": "Introduce the audience to a result important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::audio"
+            ], 
+            "clip_medium": "audio", 
+            "clip_type": "result"
+        }, 
+        {
+            "id": "clip_photo_character",
+            "type": "scal.io.liger.model.ClipCardModel",
+            "header": "Introduce the audience to a person important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::photo"
+            ], 
+            "clip_medium": "photo", 
+            "clip_type": "character"
+        }, 
+        { 
+            "id": "clip_photo_action", 
+            "type": "scal.io.liger.model.ClipCardModel",
+            "header": "Introduce the audience to an action important to your story",
+            "medium": "photo", 
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::photo"
+            ], 
+            "clip_type": "action"
+        }, 
+        {
+            "id": "clip_photo_result", 
+            "type": "scal.io.liger.model.ClipCardModel", 
+            "header": "Introduce the audience to a result important to your story",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::photo"
+            ], 
+            "clip_medium": "photo", 
+            "clip_type": "result"
+        }, 
+        {
+            "type": "scal.io.liger.model.ProgressCardModel", 
+            "references": [
+                "learning_guide_v1::choose_medium_card::value", 
+                "learning_guide_v1::clip_video_character::value", 
+                "learning_guide_v1::clip_video_action::value", 
+                "learning_guide_v1::clip_video_result::value", 
+                "learning_guide_v1::clip_audio_character::value", 
+                "learning_guide_v1::clip_audio_action::value", 
+                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::clip_photo_character::value", 
+                "learning_guide_v1::clip_photo_action::value", 
+                "learning_guide_v1::clip_photo_result::value"
+            ], 
+            "id": "three_clips_filled"
+        }, 
+        {
+            "id": "put_your_clips_in_order",
+            "type": "scal.io.liger.model.MarkdownCardModel",
+            "text": "Now put your clips in **order** to create a clear **beginning**, **middle** and **end**.",
+            "references": [
+                "learning_guide_v1::three_clips_filled::value::true"
+            ]
+        }, 
+        {
+            "id": "order_preview",
+            "type": "scal.io.liger.model.PreviewCardModel",
+            "text": "Preview your order.",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value", 
+                "learning_guide_v1::clip_video_character::value", 
+                "learning_guide_v1::clip_video_action::value", 
+                "learning_guide_v1::clip_video_result::value", 
+                "learning_guide_v1::clip_audio_character::value", 
+                "learning_guide_v1::clip_audio_action::value", 
+                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::clip_photo_character::value", 
+                "learning_guide_v1::clip_photo_action::value", 
+                "learning_guide_v1::clip_photo_result::value",
+                "learning_guide_v1::three_clips_filled::value::true"
+            ]
+        }, 
+        {
+            "id": "order_card",
+            "type": "scal.io.liger.model.OrderMediaCardModel",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value", 
+                "learning_guide_v1::clip_video_character::value", 
+                "learning_guide_v1::clip_video_action::value", 
+                "learning_guide_v1::clip_video_result::value", 
+                "learning_guide_v1::clip_audio_character::value", 
+                "learning_guide_v1::clip_audio_action::value", 
+                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::clip_photo_character::value", 
+                "learning_guide_v1::clip_photo_action::value", 
+                "learning_guide_v1::clip_photo_result::value",
+                "learning_guide_v1::three_clips_filled::value::true"
+            ]
+        },
+        {
+            "id": "i_like_the_order",
+            "type": "scal.io.liger.model.ButtonCardModel",
+            "text": "I like the order",
+            "references": [
+                "learning_guide_v1::three_clips_filled::value::true",
+                "learning_guide_v1::i_like_the_order::value::false"
+            ],
+            "values": [
+               "value::false"
+            ]
+        },
+        {
+            "id": "did_you_follow",
+            "type": "scal.io.liger.model.BasicTextCardModel",
+            "text": "Did you follow the clip suggestions?",
+            "references": [
+                "learning_guide_v1::i_like_the_order::value::true"
+            ]
+        },
+        {
+            "id": "final_preview",
+            "type": "scal.io.liger.model.PreviewCardModel",
+            "text": "Did you clips tell a complete story with a beginning, middle and end?",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value", 
+                "learning_guide_v1::clip_video_character::value", 
+                "learning_guide_v1::clip_video_action::value", 
+                "learning_guide_v1::clip_video_result::value", 
+                "learning_guide_v1::clip_audio_character::value", 
+                "learning_guide_v1::clip_audio_action::value", 
+                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::clip_photo_character::value", 
+                "learning_guide_v1::clip_photo_action::value", 
+                "learning_guide_v1::clip_photo_result::value",
+                "learning_guide_v1::i_like_the_order::value::true"
+            ]
+        }, 
+        {
+            "text": "Tweaks & Changes",
+            "type": "scal.io.liger.model.NextUpCardModel",
+            "id": "tweaks_and_changes",
+            "links": [
+                {
+                    "link_text": "Character clip",
+                    "link_path": "learning_guide_v1::clip_video_character"
+                },
+                {
+                    "link_text": "Action clip",
+                    "link_path": "learning_guide_v1::clip_video_action"
+                },
+                {
+                    "link_text": "Result clip",
+                    "link_path": "learning_guide_v1::clip_video_result"
+                },
+                {
+                    "link_text": "Order",
+                    "link_path": "learning_guide_v1::order_preview"
+                }
+            ],
+            "references": [
+                "learning_guide_v1::i_like_the_order::value::true",
+                "learning_guide_v1::choose_medium_card::value::video"
+            ]
+        },
+        {
+            "text": "Tweaks & Changes",
+            "type": "scal.io.liger.model.NextUpCardModel",
+            "id": "tweaks_and_changes",
+            "links": [
+                {
+                    "link_text": "Character clip",
+                    "link_path": "learning_guide_v1::clip_photo_character"
+                },
+                {
+                    "link_text": "Action clip",
+                    "link_path": "learning_guide_v1::clip_photo_action"
+                },
+                {
+                    "link_text": "Result clip",
+                    "link_path": "learning_guide_v1::clip_photo_result"
+                },
+                {
+                    "link_text": "Order",
+                    "link_path": "learning_guide_v1::order_preview"
+                }
+            ],
+            "references": [
+                "learning_guide_v1::i_like_the_order::value::true",
+                "learning_guide_v1::choose_medium_card::value::photo"
+            ]
+        },
+        {
+            "text": "Tweaks & Changes",
+            "type": "scal.io.liger.model.NextUpCardModel",
+            "id": "tweaks_and_changes",
+            "links": [
+                {
+                    "link_text": "Character clip",
+                    "link_path": "learning_guide_v1::clip_audio_character"
+                },
+                {
+                    "link_text": "Action clip",
+                    "link_path": "learning_guide_v1::clip_audio_action"
+                },
+                {
+                    "link_text": "Result clip",
+                    "link_path": "learning_guide_v1::clip_audio_result"
+                },
+                {
+                    "link_text": "Order",
+                    "link_path": "learning_guide_v1::order_preview"
+                }
+            ],
+            "references": [
+                "learning_guide_v1::i_like_the_order::value::true",
+                "learning_guide_v1::choose_medium_card::value::audio"
+            ]
+        },
+        {
+            "id": "yup_im_finished",
+            "type": "scal.io.liger.model.ButtonCardModel",
+            "text": "Yup, I'm all finished!",
+            "references": [
+                "learning_guide_v1::i_like_the_order::value::true",
+                "learning_guide_v1::yup_im_finished::value::false"
+            ],
+            "values": [
+               "value::false"
+            ]
+        },
+        {
+            "text": "You completed this path.  Wooooot.", 
+            "mediaPath": "/foo/bar.jpg",
+            "header": "Congratulations!",
+            "type": "scal.io.liger.model.CongratulationsCardModel", 
+            "id": "congratulations",
+            "references": [
+                "learning_guide_v1::yup_im_finished::value::true"
+            ]
+        },
+        {
+            "id": "publish_your_story",
+            "type": "scal.io.liger.model.ButtonCardModel",
+            "text": "Publish Your Story.",
+            "references": [
+                "learning_guide_v1::yup_im_finished::value::true"
+            ]
+        }, 
+        {
+            "text": "NEXT UP",
+            "type": "scal.io.liger.model.NextUpCardModel",
+            "id": "next_up",
+            "links": [
+                {
+                    "link_text": "Learning Guide #2",
+                    "link_path": "learning_guide_v1_2::top"
+                },
+                {
+                    "link_text": "Make a New Story",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Read more about Photo stories",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Read more about Audio stories",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Read more about Video stories",
+                    "link_path": "make_a_new_story::top"
+                },
+                {
+                    "link_text": "Make a New Story",
+                    "link_path": "make_a_new_story::top"
+                }
+            ],
+            "references": [
+                "learning_guide_v1::yup_im_finished::value::true"
+            ]
+         }
+    ]
+}
