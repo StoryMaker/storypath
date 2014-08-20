@@ -105,6 +105,7 @@ public class ClipCardView extends Card {
                     public void onClick(View v) {
                         vvCardVideo.setVisibility(View.VISIBLE);
                         ivCardPhoto.setVisibility(View.GONE);
+                        vvCardVideo.start();
                     }
                 });
 

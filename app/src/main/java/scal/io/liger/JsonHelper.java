@@ -40,7 +40,7 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException e) {
-                System.err.println("READING JSON FILE FRON SD CARD FAILED: " + e.getMessage());
+                System.err.println("READING JSON FILE FROM SD CARD FAILED: " + e.getMessage());
             }
         } else {
             System.err.println("SD CARD NOT FOUND");
