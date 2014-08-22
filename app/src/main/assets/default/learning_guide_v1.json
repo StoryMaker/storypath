@@ -92,7 +92,7 @@
             "id": "clip_photo_action", 
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to an action important to your story",
-            "medium": "photo", 
+            "clip_medium": "photo", 
             "references": [
                 "learning_guide_v1::choose_medium_card::value::photo"
             ], 
