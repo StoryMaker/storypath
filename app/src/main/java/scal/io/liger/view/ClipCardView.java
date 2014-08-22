@@ -57,7 +57,7 @@ public class ClipCardView extends Card {
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
         Button btnRecord = ((Button) view.findViewById(R.id.btn_record_media));
-        final ToggleButton btnAudioPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
+        final ToggleButton btnMediaPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
         tvType.setText(mCardModel.getClipType());
@@ -100,11 +100,13 @@ public class ClipCardView extends Card {
                 }
 
                 ivCardPhoto.setVisibility(View.VISIBLE);
-                ivCardPhoto.setOnClickListener(new View.OnClickListener() {
+                btnMediaPlay.setVisibility(View.VISIBLE);
+                btnMediaPlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         vvCardVideo.setVisibility(View.VISIBLE);
                         ivCardPhoto.setVisibility(View.GONE);
+                        btnMediaPlay.setVisibility(View.GONE);
                         vvCardVideo.start();
                     }
                 });
@@ -114,12 +116,13 @@ public class ClipCardView extends Card {
                     public void onCompletion(MediaPlayer mp) {
                         vvCardVideo.setVisibility(View.GONE);
                         ivCardPhoto.setVisibility(View.VISIBLE);
+                        btnMediaPlay.setVisibility(View.VISIBLE);
+                        btnMediaPlay.setChecked(false);
                     }
                 });
             } else if (clipMedium.equals(Constants.PHOTO)) {
                 Uri uri = Uri.parse(mediaFile.getPath());
                 ivCardPhoto.setImageURI(uri);
-
                 ivCardPhoto.setVisibility(View.VISIBLE);
             } else if (clipMedium.equals(Constants.AUDIO)) {
                 Uri myUri = Uri.parse(mediaFile.getPath());
@@ -148,7 +151,7 @@ public class ClipCardView extends Card {
                     e.printStackTrace();
                 }
 
-                btnAudioPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                btnMediaPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
                             mediaPlayer.seekTo(5);
@@ -162,12 +165,12 @@ public class ClipCardView extends Card {
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer arg0) {
-                        btnAudioPlay.setChecked(false);
+                        btnMediaPlay.setChecked(false);
                     }
                 });
 
                 mediaPlayer.seekTo(5);
-                btnAudioPlay.setVisibility(View.VISIBLE);
+                btnMediaPlay.setVisibility(View.VISIBLE);
             } else {
                 //TODO handle invalid-medium error
             }
