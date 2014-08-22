@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,22 +23,27 @@ import com.fima.cardsui.objects.Card;
 import java.io.File;
 import java.io.IOException;
 
-import scal.io.liger.JsonHelper;
-import scal.io.liger.Utility;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.ClipCardModel;
 import scal.io.liger.Constants;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
+import scal.io.liger.model.CardModel;
+import scal.io.liger.model.ExampleCardModel;
 
+public class ExampleCardView extends Card {
 
-public class ClipCardView extends ExampleCardView {
+    public ExampleCardModel mCardModel;
+    public Context mContext;
+    public static final String MEDIA_PATH_KEY = "value";
 
-    public ClipCardModel mCardModel;
+    public MediaController mMediaController;
 
-    public ClipCardView(Context context, CardModel cardModel) {
-        super();
+    public ExampleCardView () {
+        // empty, required for ClipCardView
+    }
+
+    public ExampleCardView(Context context, CardModel cardModel) {
         mContext = context;
-        mCardModel = (ClipCardModel) cardModel;
+        mCardModel = (ExampleCardModel) cardModel;
     }
 
     @Override
@@ -48,12 +52,11 @@ public class ClipCardView extends ExampleCardView {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_clip, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_example, null);
         final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_video));
         final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
-        Button btnRecord = ((Button) view.findViewById(R.id.btn_record_media));
         final ToggleButton btnMediaPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
@@ -63,7 +66,7 @@ public class ClipCardView extends ExampleCardView {
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
 
         //set up media display
-        File mediaFile = getValidFile(mCardModel.getValueByKey(MEDIA_PATH_KEY), mCardModel.getExampleMediaPath());
+        File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
 
         if (mediaFile == null) {
             String clipType = mCardModel.getClipType();
@@ -173,33 +176,19 @@ public class ClipCardView extends ExampleCardView {
             }
         }
 
-        //set correct listener for record button
-        btnRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = null;
-                int requestId = -1;
-
-                if(clipMedium.equals(Constants.VIDEO)) {
-                    intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    requestId = Constants.REQUEST_VIDEO_CAPTURE;
-
-                } else if(clipMedium.equals(Constants.PHOTO)) {
-                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    requestId = Constants.REQUEST_IMAGE_CAPTURE;
-
-                }  else if(clipMedium.equals(Constants.AUDIO)) {
-                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
-                }
-
-                if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
-                    mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // FIXME should be done off the ui thread
-                    ((Activity) mContext).startActivityForResult(intent, requestId);
-                }
-            }
-        });
-
         return view;
+    }
+
+    //returns stored mediaPath (if exists) or exampleMediaPath (if exists)
+    public File getValidFile(String mediaPath, String exampleMediaPath) {
+        File mediaFile = null;
+
+        if (mediaPath != null) {
+            mediaFile = new File(mediaPath);
+        } else if (exampleMediaPath != null) {
+            mediaFile = new File(exampleMediaPath);
+        }
+
+        return mediaFile;
     }
 }
