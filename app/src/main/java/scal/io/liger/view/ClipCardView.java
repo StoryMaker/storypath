@@ -125,6 +125,22 @@ public class ClipCardView extends Card {
                 Uri myUri = Uri.parse(mediaFile.getPath());
                 final MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                //set background image
+                String clipType = mCardModel.getClipType();
+                int drawable = R.drawable.ic_launcher;
+
+                if (clipType.equals(Constants.CHARACTER)) {
+                    drawable = R.drawable.cliptype_close;
+                } else if (clipType.equals(Constants.ACTION)) {
+                    drawable = R.drawable.cliptype_medium;
+                } else if (clipType.equals(Constants.RESULT)){
+                    drawable = R.drawable.cliptype_long;
+                }
+                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(drawable));
+                ivCardPhoto.setVisibility(View.VISIBLE);
+
+                //set up media player
                 try {
                     mediaPlayer.setDataSource(mContext, myUri);
                     mediaPlayer.prepare();
