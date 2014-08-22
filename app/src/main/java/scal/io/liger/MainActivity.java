@@ -256,13 +256,14 @@ public class MainActivity extends Activity {
     private String getLastImagePath() {
         final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
         final String imageOrderBy = MediaStore.Images.Media._ID + " DESC";
-        Cursor imageCursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
+        Cursor imageCursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
         String imagePath = null;
 
         if(imageCursor.moveToFirst()){
             int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
             imagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
             imageCursor.close();
+            imageCursor = null;
         }
 
         return imagePath;
