@@ -207,6 +207,7 @@ public class MainActivity extends Activity {
                 }
 
                 CardModel cm = mStoryPathModel.getCardById(pathId);
+                cm.clearValues();
                 cm.addValue("value::" + path);
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
@@ -218,6 +219,7 @@ public class MainActivity extends Activity {
                 }
 
                 CardModel cm = mStoryPathModel.getCardById(pathId);
+                cm.clearValues();
                 cm.addValue("value::" + path);
             } else if(requestCode == Constants.REQUEST_AUDIO_CAPTURE) {
 
@@ -230,6 +232,7 @@ public class MainActivity extends Activity {
                 }
 
                 CardModel cm = mStoryPathModel.getCardById(pathId);
+                cm.clearValues();
                 cm.addValue("value::" + path);
             }
         }
