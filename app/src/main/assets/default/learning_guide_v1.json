@@ -23,7 +23,7 @@
             "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
             "clip_medium": "video", 
             "clip_type": "character",
-            "example_media_path": "/storage/emulated/0/Liger/default/video_preview.mp4",
+            "example_media_path": "/sdcard/Liger/default/video_preview.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video"
             ]
@@ -34,7 +34,7 @@
             "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
             "clip_medium": "audio", 
             "clip_type": "character",
-            "example_media_path": "/storage/emulated/0/Liger/default/video_preview.mp4",
+            "example_media_path": "/sdcard/Liger/default/video_preview.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::audio"
             ]
@@ -45,7 +45,7 @@
             "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
             "clip_medium": "photo", 
             "clip_type": "character",
-            "example_media_path": "/storage/emulated/0/Liger/default/video_preview.mp4",
+            "example_media_path": "/sdcard/Liger/default/video_preview.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::photo"
             ]
@@ -58,7 +58,14 @@
         {
             "id": "got_it",
             "type": "scal.io.liger.model.ButtonCardModel",
-            "text": "Got it!"
+            "text": "Got it!",
+            "values": [
+                "value::false"
+            ],
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::video",
+                "learning_guide_v1::got_it::value::false"
+            ]
         },
         {
             "id": "clip_video_character",
@@ -66,7 +73,7 @@
             "header": "Introduce the audience to a person important to your story",
             "clip_medium": "video", 
             "clip_type": "character",
-            "example_media_path": "/storage/emulated/0/Liger/default/video_sample1.mp4",
+            "example_media_path": "/sdcard/Liger/default/video_sample1.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video",
                 "learning_guide_v1::got_it::value::true"
