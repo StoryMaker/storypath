@@ -12,7 +12,6 @@ public class ExampleCardModel extends CardModel {
 
     public String header;
     public String clip_medium;
-    public String clip_type;
     public String example_media_path;
 
     public ExampleCardModel() {
@@ -35,10 +34,6 @@ public class ExampleCardModel extends CardModel {
     public String getClipMedium() { return fillReferences(clip_medium); }
 
     public void setClipMedium(String clip_medium) { this.clip_medium = clip_medium; }
-
-    public String getClipType() { return fillReferences(clip_type); }
-
-    public void setClipType(String clip_type) { this.clip_type = clip_type; }
 
     public String getExampleMediaPath() { return example_media_path; }
 

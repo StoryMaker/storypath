@@ -56,11 +56,9 @@ public class ExampleCardView extends Card {
         final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_video));
         final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
-        TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
         final ToggleButton btnMediaPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
-        tvType.setText(mCardModel.getClipType());
 
         final String clipMedium = mCardModel.getClipMedium();
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
@@ -69,19 +67,8 @@ public class ExampleCardView extends Card {
         File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
 
         if (mediaFile == null) {
-            String clipType = mCardModel.getClipType();
-
-            if (clipType.equals(Constants.CHARACTER)) {
-                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_close));
-            } else if (clipType.equals(Constants.ACTION)) {
-                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
-            } else if (clipType.equals(Constants.RESULT)){
-                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_long));
-            } else {
-                //TODO handle invalid clip type
-                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher));
-            }
-
+            // using medium cliptype image as default in case media file is missing
+            ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
             ivCardPhoto.setVisibility(View.VISIBLE);
         } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
             if (clipMedium.equals(Constants.VIDEO)) {
@@ -129,18 +116,8 @@ public class ExampleCardView extends Card {
                 final MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-                //set background image
-                String clipType = mCardModel.getClipType();
-                int drawable = R.drawable.ic_launcher;
-
-                if (clipType.equals(Constants.CHARACTER)) {
-                    drawable = R.drawable.cliptype_close;
-                } else if (clipType.equals(Constants.ACTION)) {
-                    drawable = R.drawable.cliptype_medium;
-                } else if (clipType.equals(Constants.RESULT)){
-                    drawable = R.drawable.cliptype_long;
-                }
-                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(drawable));
+                //set background image (using medium cliptype image as placeholder)
+                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
                 ivCardPhoto.setVisibility(View.VISIBLE);
 
                 //set up media player
