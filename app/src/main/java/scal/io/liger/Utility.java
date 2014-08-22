@@ -12,7 +12,7 @@ public class Utility {
 
         try {
             retriever.setDataSource(videoPath);
-            videoFrame = retriever.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST);
+            videoFrame = retriever.getFrameAtTime(1000000, MediaMetadataRetriever.OPTION_CLOSEST);
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
         } catch (RuntimeException ex) {

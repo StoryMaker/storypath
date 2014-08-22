@@ -63,6 +63,7 @@ public class PreviewCardView extends Card {
 
             Uri video = Uri.parse(paths.get(0));
             vvCardVideo.setMediaController(mediaController);
+            vvCardVideo.setMediaController(null);
             vvCardVideo.setVideoURI(video);
 
             //set up image as preview

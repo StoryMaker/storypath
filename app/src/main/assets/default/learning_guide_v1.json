@@ -21,31 +21,34 @@
             "id": "clip_video_character",
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to a person important to your story",
+            "clip_medium": "video", 
+            "clip_type": "character",
+            "example_media_path": "/storage/emulated/0/Liger/default/video_sample1.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video"
-            ], 
-            "clip_medium": "video", 
-            "clip_type": "character"
+            ]
         },
         {
             "id": "clip_video_action",
             "type": "scal.io.liger.model.ClipCardModel", 
             "header": "Introduce the audience to an action important to your story",
+            "clip_medium": "video", 
+            "clip_type": "action",
+            "example_media_path": "/storage/emulated/0/Liger/default/video_sample2.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video"
-            ], 
-            "clip_medium": "video", 
-            "clip_type": "action"
+            ]
         },
         {
             "id": "clip_video_result",
             "type": "scal.io.liger.model.ClipCardModel", 
-            "header": "Introduce the audience to a result important to your story",
+            "header": "Introduce the audience to a result important to your story", 
+            "clip_medium": "video", 
+            "clip_type": "result",
+            "example_media_path": "/storage/emulated/0/Liger/default/video_sample3.mp4",
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video"
-            ], 
-            "clip_medium": "video", 
-            "clip_type": "result"
+            ]
         },
         { 
             "id": "clip_audio_character",
