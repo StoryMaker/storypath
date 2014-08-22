@@ -58,11 +58,7 @@ public class PreviewCardView extends Card {
         //TODO find better way of checking file is valid
         File mediaFile = new File(paths.get(0));
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
-            MediaController mediaController = new MediaController(mContext);
-            mediaController.setAnchorView(vvCardVideo);
-
             Uri video = Uri.parse(paths.get(0));
-            vvCardVideo.setMediaController(mediaController);
             vvCardVideo.setMediaController(null);
             vvCardVideo.setVideoURI(video);
 
