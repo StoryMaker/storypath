@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scal.io.liger.Constants;
+import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
@@ -79,7 +80,7 @@ public class OrderMediaCardView extends Card {
             File mediaFile = null;
 
             if(mediaPath != null) {
-                mediaFile = new File(mediaPath);
+                mediaFile = MediaHelper.loadFileFromPath(mediaPath);
                 if(mediaFile.exists() && !mediaFile.isDirectory()) {
                     mediaURI = Uri.parse(mediaFile.getPath());
                 }

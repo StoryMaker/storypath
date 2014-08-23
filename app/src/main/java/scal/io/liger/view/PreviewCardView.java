@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import scal.io.liger.MediaHelper;
 import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.PreviewCardModel;
@@ -56,12 +57,12 @@ public class PreviewCardView extends Card {
         loadClips(mCardModel.getClipPaths());
 
         //TODO find better way of checking file is valid
-        File mediaFile = new File(paths.get(0));
+        File mediaFile = MediaHelper.loadFileFromPath(paths.get(0));
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
             MediaController mediaController = new MediaController(mContext);
             mediaController.setAnchorView(vvCardVideo);
 
-            Uri video = Uri.parse(paths.get(0));
+            Uri video = Uri.parse(mediaFile.getPath());
             vvCardVideo.setMediaController(mediaController);
             vvCardVideo.setMediaController(null);
             vvCardVideo.setVideoURI(video);
@@ -96,9 +97,9 @@ public class PreviewCardView extends Card {
                     return; // don't loop
                 }
 
-                File mediaFile = new File(paths.get(videoIndex));
+                File mediaFile = MediaHelper.loadFileFromPath(paths.get(videoIndex));
                 if (mediaFile.exists() && !mediaFile.isDirectory()) {
-                    Uri video = Uri.parse(paths.get(videoIndex));
+                    Uri video = Uri.parse(mediaFile.getPath());
                     vvCardVideo.setVideoURI(video);
                     vvCardVideo.start();
                 } else {

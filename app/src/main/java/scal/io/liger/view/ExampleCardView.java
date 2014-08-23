@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scal.io.liger.Constants;
+import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
@@ -161,9 +162,9 @@ public class ExampleCardView extends Card {
         File mediaFile = null;
 
         if (mediaPath != null) {
-            mediaFile = new File(mediaPath);
+            mediaFile = MediaHelper.loadFileFromPath(mediaPath);
         } else if (exampleMediaPath != null) {
-            mediaFile = new File(exampleMediaPath);
+            mediaFile = MediaHelper.loadFileFromPath(exampleMediaPath);
         }
 
         return mediaFile;

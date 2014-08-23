@@ -69,6 +69,7 @@ public class MainActivity extends Activity {
 //        }
 
         JsonHelper.setupFileStructure(this);
+        MediaHelper.setupFileStructure(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] jsonFiles = JsonHelper.getJSONFileList();
