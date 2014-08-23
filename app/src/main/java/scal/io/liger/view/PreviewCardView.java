@@ -77,6 +77,8 @@ public class PreviewCardView extends Card {
             public void onClick(View v) {
                 vvCardVideo.setVisibility(View.VISIBLE);
                 ivCardPhoto.setVisibility(View.GONE);
+                Uri video = Uri.parse(paths.get(videoIndex));
+                vvCardVideo.setVideoURI(video);
                 vvCardVideo.start();
             }
         });
@@ -89,6 +91,7 @@ public class PreviewCardView extends Card {
                 if (videoIndex >= paths.size()) {
                     vvCardVideo.setVisibility(View.GONE);
                     ivCardPhoto.setVisibility(View.VISIBLE);
+                    videoIndex = 0;
                     return; // don't loop
                 }
 
