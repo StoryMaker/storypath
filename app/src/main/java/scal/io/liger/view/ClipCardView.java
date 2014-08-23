@@ -82,13 +82,10 @@ public class ClipCardView extends ExampleCardView {
             ivCardPhoto.setVisibility(View.VISIBLE);
         } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
             if (clipMedium.equals(Constants.VIDEO)) {
-                mMediaController = new MediaController(mContext);
-                mMediaController.setAnchorView(vvCardVideo);
-
                 Uri video = Uri.parse(mediaFile.getPath());
                 vvCardVideo.setVideoURI(video);
                 vvCardVideo.seekTo(5);
-                vvCardVideo.setMediaController(mMediaController);
+                vvCardVideo.setMediaController(null);
 
                 //set up image as preview
                 Bitmap videoFrame = Utility.getFrameFromVideo(video.getPath());

@@ -38,14 +38,19 @@ public class ProgressCardModel extends CardModel {
         clearValues();
         addValue("value::" + (areWeSatisfied() ? "true" : "false"), false); // FIXME this should be in a more general init() method called on each card as the path is bootstrapped
 
-        boolean val = g(references.get(0));
-        return val;
+        boolean val1 = g(references.get(0));
+
+        String sv = storyPathReference.getReferencedValue(references.get(10));
+        Log.d("ProgressCardModel", "ref: " + references.get(10) + ", val: " + sv);
+        boolean val2 = (sv != null) && sv.equals("true");
+
+        return val1 && val2;
     }
 
     public boolean areWeSatisfied() {
         boolean result = false;
 
-        if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
+        if ((references != null) && (references.size() == 11)) { // FIXME hardcoding to 9 refs (+1 ignored for medium) (+1 for got it card) obviously sucks balls
 //            result = ((g(references.get(1)) && g(references.get(2)) && g(references.get(3)))
 //                || (g(references.get(4)) && g(references.get(5)) && g(references.get(6)))
 //                || (g(references.get(7)) && g(references.get(8)) && g(references.get(9))));
@@ -71,7 +76,7 @@ public class ProgressCardModel extends CardModel {
     public int getFilledCount() {
         int result = 0;
 
-        if ((references != null) && (references.size() == 10)) { // FIXME hardcoding to 9 refs (+1 ignored) obviously sucks balls
+        if ((references != null) && (references.size() == 11)) { // FIXME hardcoding to 9 refs (+1 ignored for medium) (+1 for got it card)  obviously sucks balls
             String medium = storyPathReference.getReferencedValue(references.get(0));
             if (medium != null) {
                 // FIXME this is super fragile, assume the clip type is based on order.  ug.

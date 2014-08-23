@@ -59,11 +59,8 @@ public class PreviewCardView extends Card {
         //TODO find better way of checking file is valid
         File mediaFile = MediaHelper.loadFileFromPath(paths.get(0));
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
-            MediaController mediaController = new MediaController(mContext);
-            mediaController.setAnchorView(vvCardVideo);
 
             Uri video = Uri.parse(mediaFile.getPath());
-            vvCardVideo.setMediaController(mediaController);
             vvCardVideo.setMediaController(null);
             vvCardVideo.setVideoURI(video);
 
@@ -82,6 +79,8 @@ public class PreviewCardView extends Card {
             public void onClick(View v) {
                 vvCardVideo.setVisibility(View.VISIBLE);
                 ivCardPhoto.setVisibility(View.GONE);
+                Uri video = Uri.parse(paths.get(videoIndex));
+                vvCardVideo.setVideoURI(video);
                 vvCardVideo.start();
             }
         });
@@ -94,6 +93,7 @@ public class PreviewCardView extends Card {
                 if (videoIndex >= paths.size()) {
                     vvCardVideo.setVisibility(View.GONE);
                     ivCardPhoto.setVisibility(View.VISIBLE);
+                    videoIndex = 0;
                     return; // don't loop
                 }
 

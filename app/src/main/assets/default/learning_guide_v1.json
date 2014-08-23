@@ -18,14 +18,65 @@
             "id": "choose_medium_card"
         }, 
         {
+            "id": "example_video",
+            "type": "scal.io.liger.model.ExampleCardModel",
+            "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+            "clip_medium": "video", 
+            "clip_type": "character",
+            "example_media_path": "/sdcard/Liger/default/video_preview.mp4",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::video"
+            ]
+        }, 
+        {
+            "id": "example_audio",
+            "type": "scal.io.liger.model.ExampleCardModel",
+            "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+            "clip_medium": "audio", 
+            "clip_type": "character",
+            "example_media_path": "/sdcard/Liger/default/video_preview.mp4",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::audio"
+            ]
+        }, 
+        {
+            "id": "example_photo",
+            "type": "scal.io.liger.model.ExampleCardModel",
+            "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+            "clip_medium": "photo", 
+            "clip_type": "character",
+            "example_media_path": "/sdcard/Liger/default/video_preview.mp4",
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::photo"
+            ]
+        },
+        {
+            "id": "ingredients",
+            "type": "scal.io.liger.model.MarkdownCardModel", 
+            "text": "**Ingredients**: What you're going to need.  \n\n\\- Character  \n\n\\- Action  \n\n\\- Result"
+        },
+        {
+            "id": "got_it",
+            "type": "scal.io.liger.model.ButtonCardModel",
+            "text": "Got it!",
+            "values": [
+                "value::false"
+            ],
+            "references": [
+                "learning_guide_v1::choose_medium_card::value::video",
+                "learning_guide_v1::got_it::value::false"
+            ]
+        },
+        {
             "id": "clip_video_character",
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to a person important to your story",
             "clip_medium": "video", 
             "clip_type": "character",
-            "example_media_path": "/storage/emulated/0/Liger/default/video_sample1.mp4",
+            "example_media_path": "/sdcard/Liger/default/video_sample1.mp4",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::video"
+                "learning_guide_v1::choose_medium_card::value::video",
+                "learning_guide_v1::got_it::value::true"
             ]
         },
         {
@@ -36,7 +87,8 @@
             "clip_type": "action",
             "example_media_path": "/storage/emulated/0/Liger/default/video_sample2.mp4",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::video"
+                "learning_guide_v1::choose_medium_card::value::video",
+                "learning_guide_v1::got_it::value::true"
             ]
         },
         {
@@ -47,7 +99,8 @@
             "clip_type": "result",
             "example_media_path": "/storage/emulated/0/Liger/default/video_sample3.mp4",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::video"
+                "learning_guide_v1::choose_medium_card::value::video",
+                "learning_guide_v1::got_it::value::true"
             ]
         },
         { 
@@ -55,7 +108,8 @@
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to a person important to your story",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::audio"
+                "learning_guide_v1::choose_medium_card::value::audio",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "clip_medium": "audio", 
             "clip_type": "character"
@@ -65,7 +119,8 @@
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to an action important to your story",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::audio"
+                "learning_guide_v1::choose_medium_card::value::audio",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "clip_medium": "audio", 
             "clip_type": "action"
@@ -76,7 +131,8 @@
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to a result important to your story",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::audio"
+                "learning_guide_v1::choose_medium_card::value::audio",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "clip_medium": "audio", 
             "clip_type": "result"
@@ -86,7 +142,8 @@
             "type": "scal.io.liger.model.ClipCardModel",
             "header": "Introduce the audience to a person important to your story",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::photo"
+                "learning_guide_v1::choose_medium_card::value::photo",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "clip_medium": "photo", 
             "clip_type": "character"
@@ -97,7 +154,8 @@
             "header": "Introduce the audience to an action important to your story",
             "clip_medium": "photo", 
             "references": [
-                "learning_guide_v1::choose_medium_card::value::photo"
+                "learning_guide_v1::choose_medium_card::value::photo",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "clip_type": "action"
         }, 
@@ -106,7 +164,8 @@
             "type": "scal.io.liger.model.ClipCardModel", 
             "header": "Introduce the audience to a result important to your story",
             "references": [
-                "learning_guide_v1::choose_medium_card::value::photo"
+                "learning_guide_v1::choose_medium_card::value::photo",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "clip_medium": "photo", 
             "clip_type": "result"
@@ -123,7 +182,8 @@
                 "learning_guide_v1::clip_audio_result::value", 
                 "learning_guide_v1::clip_photo_character::value", 
                 "learning_guide_v1::clip_photo_action::value", 
-                "learning_guide_v1::clip_photo_result::value"
+                "learning_guide_v1::clip_photo_result::value",
+                "learning_guide_v1::got_it::value::true"
             ], 
             "id": "three_clips_filled"
         }, 

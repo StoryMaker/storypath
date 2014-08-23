@@ -94,12 +94,12 @@ public class OrderMediaCardView extends Card {
                         ivTemp.setImageBitmap(videoFrame);
                     }
                     dgvOrderClips.addView(ivTemp);
-                    return;
+                    continue;
                 }else if (medium.equals(Constants.PHOTO)) {
                     ivTemp = new ImageView(mContext);
                     ivTemp.setImageURI(mediaURI);
                     dgvOrderClips.addView(ivTemp);
-                    return;
+                    continue;
                 }
             }
 
