@@ -48,7 +48,7 @@ public class PreviewCardView extends Card {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_preview, null);
+        View view = LayoutInflater.from(context).inflate (R.layout.card_preview, null);
         final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
         final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_media));
         TextView tvText= ((TextView) view.findViewById(R.id.tv_text));
@@ -59,13 +59,8 @@ public class PreviewCardView extends Card {
         //TODO find better way of checking file is valid
         File mediaFile = MediaHelper.loadFileFromPath(paths.get(0));
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
-
-            Uri video = Uri.parse(mediaFile.getPath());
-            vvCardVideo.setMediaController(null);
-            vvCardVideo.setVideoURI(video);
-
             //set up image as preview
-            Bitmap videoFrame = Utility.getFrameFromVideo(video.getPath());
+            Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
             if(null != videoFrame) {
                 ivCardPhoto.setImageBitmap(videoFrame);
                 ivCardPhoto.setVisibility(View.VISIBLE);
@@ -79,6 +74,7 @@ public class PreviewCardView extends Card {
             public void onClick(View v) {
                 vvCardVideo.setVisibility(View.VISIBLE);
                 ivCardPhoto.setVisibility(View.GONE);
+                vvCardVideo.setMediaController(null);
                 Uri video = Uri.parse(paths.get(videoIndex));
                 vvCardVideo.setVideoURI(video);
                 vvCardVideo.start();

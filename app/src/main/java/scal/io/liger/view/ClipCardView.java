@@ -63,7 +63,7 @@ public class ClipCardView extends ExampleCardView {
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
 
         //set up media display
-        File mediaFile = getValidFile(mCardModel.getValueByKey(MEDIA_PATH_KEY), mCardModel.getExampleMediaPath());
+        final File mediaFile = getValidFile(mCardModel.getValueByKey(MEDIA_PATH_KEY), mCardModel.getExampleMediaPath());
 
         if (mediaFile == null) {
             String clipType = mCardModel.getClipType();
@@ -82,13 +82,9 @@ public class ClipCardView extends ExampleCardView {
             ivCardPhoto.setVisibility(View.VISIBLE);
         } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
             if (clipMedium.equals(Constants.VIDEO)) {
-                Uri video = Uri.parse(mediaFile.getPath());
-                vvCardVideo.setVideoURI(video);
-                vvCardVideo.seekTo(5);
-                vvCardVideo.setMediaController(null);
 
                 //set up image as preview
-                Bitmap videoFrame = Utility.getFrameFromVideo(video.getPath());
+                Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
                 if(null != videoFrame) {
                     ivCardPhoto.setImageBitmap(videoFrame);
                 }
@@ -98,6 +94,10 @@ public class ClipCardView extends ExampleCardView {
                 btnMediaPlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Uri video = Uri.parse(mediaFile.getPath());
+                        vvCardVideo.setVideoURI(video);
+                        vvCardVideo.seekTo(5);
+                        vvCardVideo.setMediaController(null);
                         vvCardVideo.setVisibility(View.VISIBLE);
                         ivCardPhoto.setVisibility(View.GONE);
                         btnMediaPlay.setVisibility(View.GONE);
