@@ -63,6 +63,7 @@ public class PreviewCardView extends Card {
             Uri video = Uri.parse(mediaFile.getPath());
             vvCardVideo.setMediaController(null);
             vvCardVideo.setVideoURI(video);
+            vvCardVideo.seekTo(5); // seems to be need to be done to show its thumbnail?
 
             //set up image as preview
             Bitmap videoFrame = Utility.getFrameFromVideo(video.getPath());

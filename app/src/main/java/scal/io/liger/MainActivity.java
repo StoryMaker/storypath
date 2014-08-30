@@ -22,6 +22,7 @@ import scal.io.liger.model.StoryPathModel;
 
 
 public class MainActivity extends Activity {
+    private static final String TAG = "MainActivity";
 
     Context mContext = this;
     CardUI mCardView;
@@ -34,8 +35,10 @@ public class MainActivity extends Activity {
         Log.d("MainActivity", "onCreate");
 //        initApp();
         if (savedInstanceState == null) {
+            Log.d(TAG, "onSaveInstanceState called with savedInstanceState");
             initApp();
         } else {
+            Log.d(TAG, "onSaveInstanceState called with no saved state");
             Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
             if (savedInstanceState.containsKey("storyPathJson")) {
                 String json = savedInstanceState.getString("storyPathJson");
@@ -46,6 +49,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState called");
         Gson gson = new Gson();
         mStoryPathModel.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         mStoryPathModel.context = null;
@@ -101,6 +105,7 @@ public class MainActivity extends Activity {
     }
 
     private void initCardList(String json) {
+        Log.d(TAG, "initCardList called");
         mCardView = (CardUI) findViewById(R.id.cardsview);
         if (mCardView == null)
             return;
@@ -112,6 +117,7 @@ public class MainActivity extends Activity {
     }
 
     private void initStoryPathModel(String json) {
+        Log.d(TAG, "initStoryPathModel called");
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
@@ -122,6 +128,7 @@ public class MainActivity extends Activity {
     }
 
     public void refreshCardView () {
+        Log.d(TAG, "refreshCardview called");
         if (mCardView == null)
             return;
 
@@ -136,6 +143,7 @@ public class MainActivity extends Activity {
     }
 
     public void goToCard(String cardPath) {
+        Log.d(TAG, "goToCard: " + cardPath);
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
 
@@ -195,12 +203,14 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.d(TAG, "onActivityResult, requestCode:" + requestCode + ", resultCode: " + resultCode);
         if (resultCode == RESULT_OK) {
 
             if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 
                 Uri uri = intent.getData();
                 String path = getRealPathFromURI(getApplicationContext(), uri);
+                Log.d(TAG, "onActivityResult, video path:" + path);
                 String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
@@ -213,6 +223,7 @@ public class MainActivity extends Activity {
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
                 String path = getLastImagePath();
+                Log.d(TAG, "onActivityResult, path:" + path);
                 String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == path) {
@@ -226,6 +237,7 @@ public class MainActivity extends Activity {
 
                 Uri uri = intent.getData();
                 String path = getRealPathFromURI(getApplicationContext(), uri);
+                Log.d(TAG, "onActivityResult, audio path:" + path);
                 String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {

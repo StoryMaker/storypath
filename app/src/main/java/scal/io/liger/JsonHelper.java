@@ -3,6 +3,7 @@ package scal.io.liger;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by mnbogner on 7/14/14.
  */
 public class JsonHelper {
-
+    private static final String TAG = "JsonHelper";
     private static final String LIGER_DIR = "Liger";
     private static File selectedJSONFile = null;
     private static ArrayList<File> jsonFileList = null;
@@ -40,7 +41,7 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException e) {
-                System.err.println("READING JSON FILE FROM SD CARD FAILED: " + e.getMessage());
+                Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED: " + e.getMessage());
             }
         } else {
             System.err.println("SD CARD NOT FOUND");
@@ -67,10 +68,10 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException e) {
-                System.err.println("READING JSON FILE FRON SD CARD FAILED: " + e.getMessage());
+                Log.e(TAG, "READING JSON FILE FRON SD CARD FAILED: " + e.getMessage());
             }
         } else {
-            System.err.println("SD CARD NOT FOUND");
+            Log.e(TAG, "SD CARD NOT FOUND");
         }
 
         return jsonString;
@@ -82,7 +83,7 @@ public class JsonHelper {
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
-
+            Log.d(TAG, "sdLigerFilePath: " + sdLigerFilePath);
             //create folder if first app launch
             new File( sdLigerFilePath + "/default/").mkdirs();
 
@@ -97,7 +98,7 @@ public class JsonHelper {
                 e.printStackTrace();
             }
         } else {
-            System.err.println("SD CARD NOT FOUND");
+            Log.e(TAG, "SD CARD NOT FOUND");
         }
     }
 
