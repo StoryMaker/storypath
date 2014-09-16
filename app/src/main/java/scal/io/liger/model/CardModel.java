@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fima.cardsui.objects.Card;
 
@@ -17,7 +18,7 @@ public abstract class CardModel {
     public String id;
     public String title;
     public StoryPathModel storyPathReference;
-    public ArrayList<String> references;
+    public ArrayList<Object> references;
     public ArrayList<String> values;
 
     public String getType() {
@@ -53,17 +54,17 @@ public abstract class CardModel {
         this.storyPathReference = storyPathReference;
     }
 
-    public ArrayList<String> getReferences() {
+    public ArrayList<Object> getReferences() {
         return references;
     }
 
-    public void setReferences(ArrayList<String> references) {
+    public void setReferences(ArrayList<Object> references) {
         this.references = references;
     }
 
-    public void addReference(String reference) {
+    public void addReference(Object reference) {
         if (this.references == null)
-            this.references = new ArrayList<String>();
+            this.references = new ArrayList<Object>();
 
         this.references.add(reference);
     }
@@ -72,19 +73,27 @@ public abstract class CardModel {
         boolean result = true;
 
         if (references != null) {
-            for (String reference : references) {
-                // assumes the format story::card::field::value
-                String[] pathParts = reference.split("::");
-                String referencedValue = storyPathReference.getReferencedValue(reference);
-                if (pathParts.length == 3) {
-                    // just check that the value is not null
-                    if (referencedValue == null) { // FIXME this cold be simplified
-                        result = false;
+            for (Object obj : references) {
+                if (obj instanceof String) {
+                    String reference = (String)obj;
+                    // assumes the format story::card::field::value
+                    String[] pathParts = reference.split("::");
+                    String referencedValue = storyPathReference.getReferencedValue(reference);
+                    if (pathParts.length == 3) {
+                        // just check that the value is not null
+                        if (referencedValue == null) { // FIXME this cold be simplified
+                            result = false;
+                        }
+                    } else {
+                        if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
+                            result = false;
+                        }
                     }
-                } else {
-                    if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
-                        result = false;
-                    }
+                }
+                else
+                {
+                    Log.d("TESTING", "REFERENCE IS NOT A STRING");
+                    result = false;
                 }
             }
         }
@@ -142,10 +151,10 @@ public abstract class CardModel {
             f = c.getField(key);
             return f.get(this).toString(); // not the best solution, but somehow int fields come back with Integer values
         } catch (Exception e) {
-            System.err.println("EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
+            //Log.d("TESTING", "EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
         }
 
-        System.err.println("VALUE " + key + " WAS NOT FOUND");
+        //Log.e("TESTING", "VALUE " + key + " WAS NOT FOUND");
         return null;
     }
 

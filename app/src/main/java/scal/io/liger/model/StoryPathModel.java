@@ -142,45 +142,52 @@ public class StoryPathModel {
         }
     }
 
-    public String getReferencedValue(String fullPath) {
-        // assumes the format story::card::field::value
-        String[] pathParts = fullPath.split("::");
+    public String getReferencedValue(Object obj) {
+        if (obj instanceof String) {
+            String fullPath = (String)obj;
+            // assumes the format story::card::field::value
+            String[] pathParts = fullPath.split("::");
 
-        StoryPathModel story = null;
-        if (this.getId().equals(pathParts[0])) {
-            // reference targets this story path
-            story = this;
-        } else {
-            // reference targets a serialized story path
-            for (DependencyModel dependency : dependencies) {
-                if (dependency.getDependencyId().equals(pathParts[0])) {
-                    GsonBuilder gBuild = new GsonBuilder();
-                    gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
-                    Gson gson = gBuild.create();
+            StoryPathModel story = null;
+            if (this.getId().equals(pathParts[0])) {
+                // reference targets this story path
+                story = this;
+            } else {
+                // reference targets a serialized story path
+                for (DependencyModel dependency : dependencies) {
+                    if (dependency.getDependencyId().equals(pathParts[0])) {
+                        GsonBuilder gBuild = new GsonBuilder();
+                        gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
+                        Gson gson = gBuild.create();
 
-                    String json = JsonHelper.loadJSONFromPath(dependency.getDependencyFile());
-                    story = gson.fromJson(json, StoryPathModel.class);
+                        String json = JsonHelper.loadJSONFromPath(dependency.getDependencyFile());
+                        story = gson.fromJson(json, StoryPathModel.class);
+                    }
+                }
+            }
+
+            if (story == null) {
+                System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
+                return null;
+            }
+
+            CardModel card = story.getCardById(fullPath);
+
+            if (card == null) {
+                return null;
+            } else {
+                String value = card.getValueById(fullPath);
+
+                if (value == null) {
+                    return null;
+                } else {
+                    return value;
                 }
             }
         }
-
-        if (story == null) {
-            System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
+        else {
+            Log.d("TESTING", "REFERENCE IS NOT A STRING");
             return null;
-        }
-
-        CardModel card = story.getCardById(fullPath);
-
-        if (card == null) {
-            return null;
-        } else {
-            String value = card.getValueById(fullPath);
-
-            if (value == null) {
-                return null;
-            } else {
-                return value;
-            }
         }
     }
 

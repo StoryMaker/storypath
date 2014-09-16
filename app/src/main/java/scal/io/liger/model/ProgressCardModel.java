@@ -27,10 +27,17 @@ public class ProgressCardModel extends CardModel {
         this.text = time;
     }
 
-    private boolean g(String ref) {
-        String val = storyPathReference.getReferencedValue(ref);
-        Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
-        return (val != null) && !val.equals("");
+    private boolean g(Object obj) {
+        if (obj instanceof String) {
+            String ref = (String)obj;
+            String val = storyPathReference.getReferencedValue(ref);
+            Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
+            return (val != null) && !val.equals("");
+        }
+        else {
+            Log.d("TESTING", "REFERENCE IS NOT A STRING");
+            return false;
+        }
     }
 
     @Override

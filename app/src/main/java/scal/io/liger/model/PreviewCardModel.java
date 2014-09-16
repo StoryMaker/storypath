@@ -49,10 +49,17 @@ public class PreviewCardModel extends CardModel {
     public void setText(String text) { this.text = text; }
 
 
-    private boolean g(String ref) {
-        String val = storyPathReference.getReferencedValue(ref);
-        Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
-        return (val != null) && val.equals("true"); // FIXME refactor checkReferenceValues in teh base class to leverage it instead of this hard coded check
+    private boolean g(Object obj) {
+        if (obj instanceof String) {
+            String ref = (String)obj;
+            String val = storyPathReference.getReferencedValue(ref);
+            Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
+            return (val != null) && val.equals("true"); // FIXME refactor checkReferenceValues in teh base class to leverage it instead of this hard coded check
+        }
+        else {
+            Log.d("TESTING", "REFERENCE IS NOT A STRING");
+            return false;
+        }
     }
 
     @Override
@@ -70,18 +77,19 @@ public class PreviewCardModel extends CardModel {
 
             if (medium != null) {
                 // FIXME this is super fragile, assume the clip type is based on order.  ug.
+                // CASTING IS A BAD SOLUTION, BUT THIS WILL BE REVISED SOON
                 if (medium.equals(Constants.VIDEO)) {
-                    clipPaths.add(references.get(1));
-                    clipPaths.add(references.get(2));
-                    clipPaths.add(references.get(3));
+                    clipPaths.add((String)references.get(1));
+                    clipPaths.add((String)references.get(2));
+                    clipPaths.add((String)references.get(3));
                 } else if (medium.equals(Constants.AUDIO)) {
-                    clipPaths.add(references.get(4));
-                    clipPaths.add(references.get(5));
-                    clipPaths.add(references.get(6));
+                    clipPaths.add((String)references.get(4));
+                    clipPaths.add((String)references.get(5));
+                    clipPaths.add((String)references.get(6));
                 } else if (medium.equals(Constants.PHOTO)) {
-                    clipPaths.add(references.get(7));
-                    clipPaths.add(references.get(8));
-                    clipPaths.add(references.get(9));
+                    clipPaths.add((String)references.get(7));
+                    clipPaths.add((String)references.get(8));
+                    clipPaths.add((String)references.get(9));
                 }
             }
         }
