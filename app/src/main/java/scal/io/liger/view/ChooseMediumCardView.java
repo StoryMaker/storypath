@@ -46,7 +46,7 @@ public class ChooseMediumCardView extends Card {
             @Override
             public void onClick(View v) {
                 mCardModel.clearValues();
-                mCardModel.addValue("value::" + Constants.VIDEO);
+                mCardModel.addValue("value", Constants.VIDEO);
                 highlightButton(v);
 
                 moveToNextCard();
@@ -57,7 +57,7 @@ public class ChooseMediumCardView extends Card {
             @Override
             public void onClick(View v) {
                 mCardModel.clearValues();
-                mCardModel.addValue("value::" + Constants.AUDIO);
+                mCardModel.addValue("value", Constants.AUDIO);
                 highlightButton(v);
 
                 moveToNextCard();
@@ -68,7 +68,7 @@ public class ChooseMediumCardView extends Card {
             @Override
             public void onClick(View v) {
                 mCardModel.clearValues();
-                mCardModel.addValue("value::" + Constants.PHOTO);
+                mCardModel.addValue("value", Constants.PHOTO);
                 highlightButton(v);
 
                 moveToNextCard();

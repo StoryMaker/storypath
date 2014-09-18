@@ -7,6 +7,7 @@ import com.fima.cardsui.objects.Card;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +20,7 @@ public abstract class CardModel {
     public String title;
     public StoryPathModel storyPathReference;
     public ArrayList<String> references;
-    public ArrayList<String> values;
+    public HashMap<String, String> values;
 
     public String getType() {
         return type;
@@ -93,27 +94,19 @@ public abstract class CardModel {
         return result;
     }
 
-    public ArrayList<String> getValues() {
-        return values;
-    }
-
     public void clearValues() {
         values = null;
     }
 
-    public void setValues(ArrayList<String> values) {
-        this.values = values;
+    public void addValue(String key, String value) {
+        addValue(key, value, true);
     }
 
-    public void addValue(String value) {
-        addValue(value, true);
-    }
-
-    public void addValue(String value, boolean notify) {
+    public void addValue(String key, String value, boolean notify) {
         if (this.values == null)
-            this.values = new ArrayList<String>();
+            this.values = new HashMap<String, String>();
 
-        this.values.add(value);
+        this.values.put(key, value);
 
         if (notify) {
             // send notification that a value has been saved so that cards can re-check references
@@ -127,11 +120,8 @@ public abstract class CardModel {
 
     public boolean isKey(String key) {
         if (values != null) {
-            for (String value : values) {
-                String[] parts = value.split("::");
-                if (parts[0].equals(key)) {
-                    return true;
-                }
+            if (values.keySet().contains(key)) {
+                return true;
             }
         }
 
@@ -154,11 +144,8 @@ public abstract class CardModel {
 
     public String getValueByKey(String key) {
         if (values != null) {
-            for (String value : values) {
-                String[] valueParts = value.split("::");
-                if (valueParts[0].equals(key)) {
-                    return valueParts[1];
-                }
+            if (values.keySet().contains(key)) {
+                return values.get(key);
             }
         }
 

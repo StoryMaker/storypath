@@ -59,9 +59,9 @@
             "id": "got_it",
             "type": "scal.io.liger.model.ButtonCardModel",
             "text": "Got it!",
-            "values": [
-                "value::false"
-            ],
+            "values": {
+                "value": "false"
+            },
             "references": [
                 "learning_guide_v1::choose_medium_card::value::video",
                 "learning_guide_v1::got_it::value::false"
@@ -262,9 +262,9 @@
                 "learning_guide_v1::three_clips_filled::value::true",
                 "learning_guide_v1::i_like_the_order::value::false"
             ],
-            "values": [
-               "value::false"
-            ]
+            "values": {
+               "value": "false"
+            }
         },
         {
             "id": "did_you_follow",
@@ -389,9 +389,9 @@
                 "learning_guide_v1::i_like_the_order::value::true",
                 "learning_guide_v1::yup_im_finished::value::false"
             ],
-            "values": [
-               "value::false"
-            ]
+            "values": {
+               "value": "false"
+            }
         },
         {
             "text": "You completed this path.  Wooooot.", 

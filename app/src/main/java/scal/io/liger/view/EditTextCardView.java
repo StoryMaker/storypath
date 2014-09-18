@@ -50,7 +50,7 @@ public class EditTextCardView extends Card {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                     mCardModel.clearValues();
-                    mCardModel.addValue(v.getText().toString());
+                    mCardModel.addValue("value", v.getText().toString()); // what was intended key?
                     Log.d("EditTextCardView", "editing done: " + v.getText().toString());
                     return true;
                 }
@@ -63,7 +63,7 @@ public class EditTextCardView extends Card {
             @Override
             public void onClick(View v) {
                 mCardModel.clearValues();
-                mCardModel.addValue(button.getText().toString());
+                mCardModel.addValue("value", button.getText().toString()); // what was intended key?
                 Log.d("EditTextCardView", "editing done: " + button.getText().toString());
             }
         });

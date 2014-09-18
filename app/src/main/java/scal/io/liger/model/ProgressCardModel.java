@@ -86,7 +86,7 @@ public class ProgressCardModel extends CardModel {
     @Override
     public boolean checkReferencedValues() {
         clearValues();
-        addValue("value::" + (areWeSatisfied() ? "true" : "false"), false); // FIXME this should be in a more general init() method called on each card as the path is bootstrapped
+        addValue("value", (areWeSatisfied() ? "true" : "false"), false); // FIXME this should be in a more general init() method called on each card as the path is bootstrapped
 
         /*
         boolean val1 = g(references.get(0));

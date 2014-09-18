@@ -75,7 +75,7 @@ public class GenericCardView extends Card {
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(mContext, txtPath + "click", Toast.LENGTH_SHORT).show();
-                        mCardModel.addValue(txtPath);
+                        mCardModel.addValue("value", txtPath); // what was intended key?
                     }
                 });
             }

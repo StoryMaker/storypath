@@ -59,7 +59,7 @@ public class ClipInstructionTypeCardView extends Card {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, txtOption + "click", Toast.LENGTH_SHORT).show();
-                    mCardModel.addValue(txtOption);
+                    mCardModel.addValue("value", txtOption); // what was intended key?
                 }
             });
         }

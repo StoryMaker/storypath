@@ -47,7 +47,7 @@ public class ButtonCardView extends Card {
                 CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
 
                 mCardModel.clearValues();
-                mCardModel.addValue("value::true");
+                mCardModel.addValue("value", "true");
 //                moveToNextCard();
 
                 String linkPath = spm.getId() + "::" + cm.getId();
