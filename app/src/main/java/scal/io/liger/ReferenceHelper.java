@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.StoryPathModel;
@@ -13,321 +14,121 @@ import scal.io.liger.model.StoryPathModel;
  */
 public class ReferenceHelper {
 
-    public static boolean checkReferences(StoryPathModel spm, String name, ArrayList<Object> references) {
-
-        // it no longer makes sense to have multiple strings or arrays tested for true/false
-        // boolean checks should be as follows:
-        // 1. "name::story::card::key::value"
-        // 2. "name::and/or::story::wildcard::key::wildcard"
-        // 3. "name::story::card::key::value::and/or::story::wildcard::key::wildcard"
-        // 4. [
-        //        "name::and/or",
-        //        "story::card::key::value",
-        //        "and/or::story::wildcard::key::wildcard",
-        //        "story::card::key::value::and/or::story::wildcard::key::wildcard"
-        //    ]
-
-        // references may be strings or arrays of strings (which may have wildcards)
-        for (Object obj : references) {
-
-            if (obj instanceof String) {
-                String referenceString = (String)obj;
-                if (referenceString.startsWith(name)) {
-                    // trim name + "::"
-                    referenceString = referenceString.substring(name.length() + 2);
-                    Log.d("TESTING", "FOUND STRING: " + referenceString);
-
-                    return doString(spm, referenceString);
-                }
-            }
-            else if (obj instanceof ArrayList) {
-                ArrayList<String> referenceArray = (ArrayList<String>)obj;
-                if (referenceArray.get(0).startsWith(name)) {
-                    Log.d("TESTING", "FOUND ARRAY: " + referenceArray.get(1));
-                    String[] parts = referenceArray.remove(0).split("::"); // get parts and leave only references in array
-                    if (parts[1].equals("and")) {
-                        // if anything is false, return false
-                        for (String s : referenceArray) {
-                            if (!doString(spm, s)) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                    else if (parts[1].equals("or")) {
-                        // if anything is true, return true
-                        for (String s : referenceArray) {
-                            if (doString(spm, s)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-                }
-            }
-            else {
-                Log.e("TESTING", "UNEXPECTED REFERENCE TYPE");
-            }
-        }
-
+    public static boolean getBoolean(StoryPathModel story, ArrayList<String> references) {
         return false;
     }
 
-    private static boolean doString(StoryPathModel spm, String referenceString) {
-        if (referenceString.startsWith("and::")) {
-            // single string
-            return getBoolean(spm, "and", referenceString.substring(5));
-        }
-        else if (referenceString.startsWith("or::")) {
-            // single string
-            return getBoolean(spm, "or", referenceString.substring(4));
-        }
-        else if (referenceString.contains("::and::")) {
-            // multiple strings
-            ArrayList<String> strings = new ArrayList<String>(Arrays.asList(referenceString.split("::and::")));
-            return andStrings(spm, strings);
+    public static ArrayList<CardModel> getCards(StoryPathModel story, ArrayList<String> references) {
+        ArrayList<CardModel> results = new ArrayList<CardModel>();
 
-        }
-        else if (referenceString.contains("::or::")) {
-            // multiple strings
-            ArrayList<String> strings = new ArrayList<String>(Arrays.asList(referenceString.split("::or::")));
-            return orStrings(spm, strings);
-        }
-        else {
-            // regular reference
-            // getBoolean will handle regular references, and/or is ignored
-            return getBoolean(spm, "and", referenceString);
-        }
-    }
+        ArrayList<CardModel> unfilteredCards = null;
+        ArrayList<CardModel> filteredCards = null;
 
-    private static boolean andStrings(StoryPathModel spm, ArrayList<String> strings) {
-        // if anything is false, return false
-        for (String s : strings) {
-            if (!getBoolean(spm, "and", s)) {
-                return false;
+        for (String reference : references) {
+            String[] parts = reference.split("::");
+
+            // TODO: check parts[0] and load external story path if necessary
+
+            unfilteredCards = gatherCards(story, parts[1]);
+
+            // check for key/value parts
+            if (parts.length == 4) {
+                filteredCards = filterCards(unfilteredCards, parts[2], parts[3]);
+            } else {
+                filteredCards = unfilteredCards;
             }
-        }
 
-        return true;
-    }
-
-    private static boolean orStrings(StoryPathModel spm, ArrayList<String> strings) {
-        // if anything is true, return true
-        for (String s : strings) {
-            if (getBoolean(spm, "or", s)) {
-                return true;
-            }
-        }
-
-        return true;
-    }
-
-    private static boolean getBoolean(StoryPathModel spm, String type, String wildcardString) {
-
-        String[] parts = wildcardString.split("::");
-        if (parts.length < 4) {
-            Log.e("TESTING", "PART MISSING: " + wildcardString);
-            return false;
-        }
-        // create strings for clarity
-        String story = parts[0];
-        String card = parts[1];
-        String key = parts[2];
-        String value = parts[3];
-
-        ArrayList<CardModel> cards = wildcardCards(spm, card);
-
-        if (type.equals("and")) {
-            return getAnd(cards, key, value);
-        }
-        if (type.equals("or")) {
-            return getOr(cards, key, value);
-        }
-
-        Log.e("TESTING", "UNEXPECTED TYPE: " + type);
-        return false;
-    }
-
-    private static boolean getAnd(ArrayList<CardModel> cards, String key, String value) {
-        boolean result = true;
-
-        // if anything is false, return false  SWITCH ASSIGN TO RETURN
-
-        for (CardModel cm : cards) {
-            String cardValue = cm.getValueByKey(key);
-
-            //Log.e("TESTING", "COMPUTE AND: -" + value + "- vs. -" + cardValue + "-");
-
-            if (value.equals("*") && (cardValue == null)) {
-                result = false;
-                Log.e("TESTING", "FALSE: (1) -" + value + "- vs. -" + cardValue + "-");
-            }
-            else if (value.equals("null") && (cardValue != null)) {
-                result = false;
-                Log.e("TESTING", "FALSE: -" + value + "- vs. -" + cardValue + "-");
-            }
-            else if (!value.equals("*") && !value.equals(cardValue)) {
-                result = false;
-                Log.e("TESTING", "FALSE: -" + value + "- vs. -" + cardValue + "-");
-            }
-            else {
-                Log.e("TESTING", "TRUE: -" + value + "- vs. -" + cardValue + "-");
-            }
-        }
-
-        return result;
-    }
-
-    private static boolean getOr(ArrayList<CardModel> cards, String key, String value) {
-        boolean result = false;
-
-        // if anything is true, return true  SWITCH ASSIGN TO RETURN
-
-        for (CardModel cm : cards) {
-            String cardValue = cm.getValueByKey(key);
-
-            //Log.e("TESTING", "COMPUTE OR: -" + value + "- vs. -" + cardValue + "-");
-
-            if (value.equals("*") && (cardValue != null)) {
-                result = true;
-                Log.e("TESTING", "TRUE: (2) -" + value + "- vs. -" + cardValue + "-");
-            }
-            else if (value.equals("null") && (cardValue == null)) {
-                result = true;
-                Log.e("TESTING", "TRUE: -" + value + "- vs. -" + cardValue + "-");
-            }
-            else if (!value.equals("*") && value.equals(cardValue)) {
-                result = true;
-                Log.e("TESTING", "TRUE: -" + value + "- vs. -" + cardValue + "-");
-            }
-            else {
-                Log.e("TESTING", "FALSE: -" + value + "- vs. -" + cardValue + "-");
-            }
-        }
-
-        return result;
-    }
-
-    public static ArrayList<String> getReferencedValues(StoryPathModel spm, String name, ArrayList<Object> references) {
-
-        ArrayList<String> values = new ArrayList<String>();
-
-        ArrayList<CardModel> allCards = new ArrayList<CardModel>();
-
-        for (Object obj : references) {
-
-            // no reason to use arrays for non-logic references
-            if (obj instanceof String) {
-                String referenceString = (String) obj;
-                if (referenceString.startsWith(name)) {
-                    // trim name + "::"
-                    referenceString = referenceString.substring(name.length() + 2);
-                    Log.d("TESTING", "FOUND STRING: " + referenceString);
-
-                    String[] parts = referenceString.split("::");
-                    if (parts.length < 4) {
-                        Log.e("TESTING", "PART MISSING: " + referenceString);
-                        return null;
-                    }
-                    // create strings for clarity
-                    String story = parts[0];
-                    String card = parts[1];
-                    String key = parts[2];
-                    //String value = parts[3];
-
-                    // this may be overkill, but duplicates will probably break logic downstream
-                    ArrayList<CardModel> foundCards = wildcardCards(spm, card);
-                    for (CardModel cm : foundCards) {
-                        if (!allCards.contains(cm)) {
-
-                            String value = cm.getValueByKey(key);
-                            if (value != null) {
-                                values.add(value);
-
-                                Log.e("TESTING", "GOT VALUE: -" + value + "-");
-                            }
-                            else {
-                                Log.e("TESTING", "KEY -" + key + "- NOT FOUND IN CARD: -" + cm.getId() + "-");
-                            }
-
-                            allCards.add(cm);
-                        }
-                    }
+            // check for duplicates
+            for (CardModel card : filteredCards) {
+                if (!results.contains(card)) {
+                    results.add(card);
                 }
             }
         }
 
-        return values;
+        return results;
     }
 
-    public static ArrayList<CardModel> getReferencedCards(StoryPathModel spm, String name, ArrayList<Object> references) {
+    public static ArrayList<String> getValues(StoryPathModel story, ArrayList<String> references) {
+        HashMap<String, String> resultMap = new HashMap<String, String>();
 
-        ArrayList<CardModel> allCards = new ArrayList<CardModel>();
+        ArrayList<CardModel> unfilteredCards = null;
+        ArrayList<CardModel> filteredCards = null;
 
-        for (Object obj : references) {
+        for (String reference : references) {
+            String[] parts = reference.split("::");
 
-            // no reason to use arrays for non-logic references
-            if (obj instanceof String) {
-                String referenceString = (String) obj;
-                if (referenceString.startsWith(name)) {
-                    // trim name + "::"
-                    referenceString = referenceString.substring(name.length() + 2);
-                    Log.d("TESTING", "FOUND STRING: " + referenceString);
+            // TODO: check parts[0] and load external story path if necessary
 
-                    String[] parts = referenceString.split("::");
-                    if (parts.length < 4) {
-                        Log.e("TESTING", "PART MISSING: " + referenceString);
-                        return null;
-                    }
-                    // create strings for clarity
-                    String story = parts[0];
-                    String card = parts[1];
-                    String key = parts[2];
-                    String value = parts[3];
+            unfilteredCards = gatherCards(story, parts[1]);
 
-                    // this may be overkill, but duplicates will probably break logic downstream
-                    ArrayList<CardModel> foundCards = wildcardCards(spm, card);
-                    for (CardModel cm : foundCards) {
-                        if (!allCards.contains(cm)) {
-                            allCards.add(cm);
+            // check for key/value parts
+            if (parts.length == 4) {
+                filteredCards = filterCards(unfilteredCards, parts[2], parts[3]);
+            } else {
+                filteredCards = unfilteredCards;
+            }
 
-                            Log.e("TESTING", "GOT CARD: -" + cm.getId() + "-");
-                        }
-                    }
+            // check for key part
+            if (parts.length > 2) {
+                // check for duplicates
+                for (CardModel card : filteredCards) {
+                    resultMap.put(card.getId(), card.getValueByKey(parts[2]));
                 }
             }
         }
 
-        return allCards;
+        ArrayList<String> results = new ArrayList<String>(resultMap.values());
+        return results;
     }
 
-    private static ArrayList<CardModel> wildcardCards(StoryPathModel spm, String card) {
+    private static ArrayList<CardModel> gatherCards(StoryPathModel story, String cardTarget) {
+        ArrayList<CardModel> results = new ArrayList<CardModel>();
 
-        // TODO: deal with references to other story paths
-
-        ArrayList<CardModel> cards = new ArrayList<CardModel>();
-
-        if (card.equals("*")) {
-            cards = spm.getCards();
-        }
-        else if (card.startsWith("<<")) {
+        if (cardTarget.equals("*")) {
+            results = story.getCards();
+        } else if (cardTarget.startsWith("<<")) {
             // strip "<<" and ">>"
-            card = card.substring(2, card.length()-2);
-            Log.d("TESTING", "CHECK: " + card);
-            for (CardModel cm : spm.getCards()) {
-                if (cm.getType().equals(card)) {
-                    cards.add(cm);
+            cardTarget = cardTarget.substring(2, cardTarget.length()-2);
+            for (CardModel card : story.getCards()) {
+                if (card.getType().equals(cardTarget)) {
+                    results.add(card);
                 }
             }
-        }
-        else {
-            for (CardModel cm : spm.getCards()) {
-                if (cm.getId().equals(card)) {
-                    cards.add(cm);
+        } else {
+            for (CardModel card : story.getCards()) {
+                if (card.getId().equals(cardTarget)) {
+                    results.add(card);
                 }
             }
         }
 
-        return cards;
+        return results;
+    }
+
+    private static ArrayList<CardModel> filterCards(ArrayList<CardModel> cards, String keyTarget, String valueTarget) {
+        ArrayList<CardModel> results = new ArrayList<CardModel>();
+
+        for (CardModel card : cards) {
+            if (valueTarget.equals("*")) {
+                if (card.getValueByKey(keyTarget) != null) {
+                    results.add(card);
+                }
+            } else {
+                if ((card.getValueByKey(keyTarget) != null) && (card.getValueByKey(keyTarget).equals(valueTarget))) {
+                    results.add(card);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    // uncertain of use case, values must be extracted at the point in the code where a specific
+    // reference is available, so found cards cannot be aggregated and checked for values
+    private static ArrayList<String> gatherValues(ArrayList<CardModel> cards, String keyTarget, String valueTarget) {
+        ArrayList<String> results = new ArrayList<String>();
+
+        return results;
     }
 }

@@ -18,7 +18,7 @@ public abstract class CardModel {
     public String id;
     public String title;
     public StoryPathModel storyPathReference;
-    public ArrayList<Object> references;
+    public ArrayList<String> references;
     public ArrayList<String> values;
 
     public String getType() {
@@ -54,17 +54,17 @@ public abstract class CardModel {
         this.storyPathReference = storyPathReference;
     }
 
-    public ArrayList<Object> getReferences() {
+    public ArrayList<String> getReferences() {
         return references;
     }
 
-    public void setReferences(ArrayList<Object> references) {
+    public void setReferences(ArrayList<String> references) {
         this.references = references;
     }
 
-    public void addReference(Object reference) {
+    public void addReference(String reference) {
         if (this.references == null)
-            this.references = new ArrayList<Object>();
+            this.references = new ArrayList<String>();
 
         this.references.add(reference);
     }
@@ -73,27 +73,19 @@ public abstract class CardModel {
         boolean result = true;
 
         if (references != null) {
-            for (Object obj : references) {
-                if (obj instanceof String) {
-                    String reference = (String)obj;
-                    // assumes the format story::card::field::value
-                    String[] pathParts = reference.split("::");
-                    String referencedValue = storyPathReference.getReferencedValue(reference);
-                    if (pathParts.length == 3) {
-                        // just check that the value is not null
-                        if (referencedValue == null) { // FIXME this cold be simplified
-                            result = false;
-                        }
-                    } else {
-                        if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
-                            result = false;
-                        }
+            for (String reference : references) {
+                // assumes the format story::card::field::value
+                String[] pathParts = reference.split("::");
+                String referencedValue = storyPathReference.getReferencedValue(reference);
+                if (pathParts.length == 3) {
+                    // just check that the value is not null
+                    if (referencedValue == null) { // FIXME this cold be simplified
+                        result = false;
                     }
-                }
-                else
-                {
-                    Log.d("TESTING", "REFERENCE IS NOT A STRING");
-                    result = false;
+                } else {
+                    if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
+                        result = false;
+                    }
                 }
             }
         }
@@ -131,6 +123,33 @@ public abstract class CardModel {
                 System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             }
         }
+    }
+
+    public boolean isKey(String key) {
+        if (values != null) {
+            for (String value : values) {
+                String[] parts = value.split("::");
+                if (parts[0].equals(key)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isField(String key) {
+        Class c = null;
+        Field f = null;
+        try {
+            c = this.getClass();
+            f = c.getField(key);
+            return true;
+        } catch (Exception e) {
+            // field not found
+        }
+
+        return false;
     }
 
     public String getValueByKey(String key) {

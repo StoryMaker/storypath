@@ -33,7 +33,7 @@ public class ProgressCardView extends Card {
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_progress, null);
 
-        ((TextView) view.findViewById(R.id.tv_text)).setText(mCardModel.getFilledCount() + " / 3");
+        ((TextView) view.findViewById(R.id.tv_text)).setText(mCardModel.getFilledCount() + " / " + mCardModel.getMaxCount());
 
         return view;
     }

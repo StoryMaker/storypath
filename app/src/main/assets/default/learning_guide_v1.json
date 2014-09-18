@@ -136,7 +136,7 @@
             ], 
             "clip_medium": "audio", 
             "clip_type": "result"
-        }, 
+        },
         {
             "id": "clip_photo_character",
             "type": "scal.io.liger.model.ClipCardModel",
@@ -171,20 +171,28 @@
             "clip_type": "result"
         }, 
         {
-            "type": "scal.io.liger.model.ProgressCardModel", 
+            "type": "scal.io.liger.model.ProgressCardModel",
             "references": [
-                "learning_guide_v1::choose_medium_card::value", 
-                "learning_guide_v1::clip_video_character::value", 
-                "learning_guide_v1::clip_video_action::value", 
-                "learning_guide_v1::clip_video_result::value", 
-                "learning_guide_v1::clip_audio_character::value", 
-                "learning_guide_v1::clip_audio_action::value", 
-                "learning_guide_v1::clip_audio_result::value", 
-                "learning_guide_v1::clip_photo_character::value", 
-                "learning_guide_v1::clip_photo_action::value", 
-                "learning_guide_v1::clip_photo_result::value",
                 "learning_guide_v1::got_it::value::true"
-            ], 
+            ],
+            "story_medium": [
+                "learning_guide_v1::choose_medium_card::value"
+            ],
+            "video_clip_cards": [
+                "learning_guide_v1::clip_video_character::value",
+                "learning_guide_v1::clip_video_action::value",
+                "learning_guide_v1::clip_video_result::value"
+            ],
+            "audio_clip_cards": [
+                "learning_guide_v1::clip_audio_character::value",
+                "learning_guide_v1::clip_audio_action::value",
+                "learning_guide_v1::clip_audio_result::value"
+            ],
+            "photo_clip_cards": [
+                "learning_guide_v1::clip_photo_character::value",
+                "learning_guide_v1::clip_photo_action::value",
+                "learning_guide_v1::clip_photo_result::value"
+            ],
             "id": "three_clips_filled"
         }, 
         {
@@ -200,34 +208,50 @@
             "type": "scal.io.liger.model.PreviewCardModel",
             "text": "Preview your order.",
             "references": [
-                "learning_guide_v1::choose_medium_card::value", 
-                "learning_guide_v1::clip_video_character::value", 
-                "learning_guide_v1::clip_video_action::value", 
-                "learning_guide_v1::clip_video_result::value", 
-                "learning_guide_v1::clip_audio_character::value", 
-                "learning_guide_v1::clip_audio_action::value", 
-                "learning_guide_v1::clip_audio_result::value", 
+                "learning_guide_v1::three_clips_filled::value::true"
+            ],
+            "story_medium": [
+                "learning_guide_v1::choose_medium_card::value"
+            ],
+            "video_clip_cards": [
+                "learning_guide_v1::clip_video_character::value",
+                "learning_guide_v1::clip_video_action::value",
+                "learning_guide_v1::clip_video_result::value"
+            ],
+            "audio_clip_cards": [
+                "learning_guide_v1::clip_audio_character::value",
+                "learning_guide_v1::clip_audio_action::value",
+                "learning_guide_v1::clip_audio_result::value"
+            ],
+            "photo_clip_cards": [
                 "learning_guide_v1::clip_photo_character::value", 
                 "learning_guide_v1::clip_photo_action::value", 
-                "learning_guide_v1::clip_photo_result::value",
-                "learning_guide_v1::three_clips_filled::value::true"
+                "learning_guide_v1::clip_photo_result::value"
             ]
         }, 
         {
             "id": "order_card",
             "type": "scal.io.liger.model.OrderMediaCardModel",
             "references": [
-                "learning_guide_v1::choose_medium_card::value", 
-                "learning_guide_v1::clip_video_character::value", 
-                "learning_guide_v1::clip_video_action::value", 
-                "learning_guide_v1::clip_video_result::value", 
-                "learning_guide_v1::clip_audio_character::value", 
-                "learning_guide_v1::clip_audio_action::value", 
-                "learning_guide_v1::clip_audio_result::value", 
-                "learning_guide_v1::clip_photo_character::value", 
-                "learning_guide_v1::clip_photo_action::value", 
-                "learning_guide_v1::clip_photo_result::value",
                 "learning_guide_v1::three_clips_filled::value::true"
+            ],
+            "story_medium": [
+                "learning_guide_v1::choose_medium_card::value"
+            ],
+            "video_clip_cards": [
+                "learning_guide_v1::clip_video_character::value",
+                "learning_guide_v1::clip_video_action::value",
+                "learning_guide_v1::clip_video_result::value"
+            ],
+            "audio_clip_cards": [
+                "learning_guide_v1::clip_audio_character::value",
+                "learning_guide_v1::clip_audio_action::value",
+                "learning_guide_v1::clip_audio_result::value"
+            ],
+            "photo_clip_cards": [
+                "learning_guide_v1::clip_photo_character::value",
+                "learning_guide_v1::clip_photo_action::value",
+                "learning_guide_v1::clip_photo_result::value"
             ]
         },
         {
@@ -255,17 +279,25 @@
             "type": "scal.io.liger.model.PreviewCardModel",
             "text": "Did you clips tell a complete story with a beginning, middle and end?",
             "references": [
-                "learning_guide_v1::choose_medium_card::value", 
-                "learning_guide_v1::clip_video_character::value", 
-                "learning_guide_v1::clip_video_action::value", 
-                "learning_guide_v1::clip_video_result::value", 
-                "learning_guide_v1::clip_audio_character::value", 
-                "learning_guide_v1::clip_audio_action::value", 
-                "learning_guide_v1::clip_audio_result::value", 
-                "learning_guide_v1::clip_photo_character::value", 
-                "learning_guide_v1::clip_photo_action::value", 
-                "learning_guide_v1::clip_photo_result::value",
-                "learning_guide_v1::i_like_the_order::value::true"
+                "learning_guide_v1::three_clips_filled::value::true"
+            ],
+            "story_medium": [
+                "learning_guide_v1::choose_medium_card::value"
+            ],
+            "video_clip_cards": [
+                "learning_guide_v1::clip_video_character::value",
+                "learning_guide_v1::clip_video_action::value",
+                "learning_guide_v1::clip_video_result::value"
+            ],
+            "audio_clip_cards": [
+                "learning_guide_v1::clip_audio_character::value",
+                "learning_guide_v1::clip_audio_action::value",
+                "learning_guide_v1::clip_audio_result::value"
+            ],
+            "photo_clip_cards": [
+                "learning_guide_v1::clip_photo_character::value",
+                "learning_guide_v1::clip_photo_action::value",
+                "learning_guide_v1::clip_photo_result::value"
             ]
         }, 
         {
