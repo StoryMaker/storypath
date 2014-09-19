@@ -68,43 +68,16 @@ public class ProgressCardModel extends CardModel {
         this.photo_clip_cards = photo_clip_cards;
     }
 
-    /*
-    private boolean g(Object obj) {
-        if (obj instanceof String) {
-            String ref = (String)obj;
-            String val = storyPathReference.getReferencedValue(ref);
-            Log.d("ProgressCardModel", "ref: " + ref + ", val: " + val);
-            return (val != null) && !val.equals("");
-        }
-        else {
-            Log.d("TESTING", "REFERENCE IS NOT A STRING");
-            return false;
-        }
-    }
-    */
-
     @Override
     public boolean checkReferencedValues() {
         clearValues();
         addValue("value", (areWeSatisfied() ? "true" : "false"), false); // FIXME this should be in a more general init() method called on each card as the path is bootstrapped
-
-        /*
-        boolean val1 = g(references.get(0));
-
-        String sv = storyPathReference.getReferencedValue(references.get(10));
-        Log.d("ProgressCardModel", "ref: " + references.get(10) + ", val: " + sv);
-        boolean val2 = (sv != null) && sv.equals("true");
-
-        return val1 && val2;
-        */
 
         // no need to check both choose_medium and got_it, since got_it already references choose_medium
         return super.checkReferencedValues();
     }
 
     public boolean areWeSatisfied() {
-        // boolean result = true;
-
         String mediumReference = "";
 
         if (story_medium.size() == 1) {
@@ -139,31 +112,6 @@ public class ProgressCardModel extends CardModel {
         }
 
         return true;
-
-        /*
-        if ((references != null) && (references.size() == 11)) { // FIXME hardcoding to 9 refs (+1 ignored for medium) (+1 for got it card) obviously sucks balls
-//            result = ((g(references.get(1)) && g(references.get(2)) && g(references.get(3)))
-//                || (g(references.get(4)) && g(references.get(5)) && g(references.get(6)))
-//                || (g(references.get(7)) && g(references.get(8)) && g(references.get(9))));
-
-            String medium = storyPathReference.getReferencedValue(references.get(0));
-
-            if (medium != null) {
-                // FIXME this is super fragile, assume the clip type is based on order.  ug.
-                if (medium.equals("video")) {
-                    result = (g(references.get(1)) && g(references.get(2)) && g(references.get(3)));
-                } else if (medium.equals("audio")) {
-                    result = (g(references.get(4)) && g(references.get(5)) && g(references.get(6)));
-                } else if (medium.equals("photo")) {
-                    result = (g(references.get(7)) && g(references.get(8)) && g(references.get(9)));
-                }
-            }
-
-        }
-        Log.d("areWeSatisfied", result ? "true" : "false");
-
-        return result;
-        */
     }
 
     public int getFilledCount() {
@@ -201,30 +149,6 @@ public class ProgressCardModel extends CardModel {
                 result++;
             }
         }
-
-        /*
-        if ((references != null) && (references.size() == 11)) { // FIXME hardcoding to 9 refs (+1 ignored for medium) (+1 for got it card)  obviously sucks balls
-            String medium = storyPathReference.getReferencedValue(references.get(0));
-            if (medium != null) {
-                // FIXME this is super fragile, assume the clip type is based on order.  ug.
-                if (medium.equals("video")) {
-                    result += (g(references.get(1)) ? 1 : 0);
-                    result += (g(references.get(2)) ? 1 : 0);
-                    result += (g(references.get(3)) ? 1 : 0);
-                } else if (medium.equals("audio")) {
-                    result += (g(references.get(4)) ? 1 : 0);
-                    result += (g(references.get(5)) ? 1 : 0);
-                    result += (g(references.get(6)) ? 1 : 0);
-                } else if (medium.equals("photo")) {
-                    result += (g(references.get(7)) ? 1 : 0);
-                    result += (g(references.get(8)) ? 1 : 0);
-                    result += (g(references.get(9)) ? 1 : 0);
-                }
-            }
-
-        }
-        Log.d("filledCardCount", "" + result);
-        */
 
         return result;
     }

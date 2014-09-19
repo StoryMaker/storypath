@@ -63,8 +63,8 @@ public class SelfEvalCardView extends Card {
                     cbCurrent = cbOptionsList.get(i);
 
                     if(cbCurrent.isChecked()) {
-                        value = String.format("value_%d::true", i);
-                        mCardModel.addValue("value", value); // what was intended key?
+                        value = String.format("value_%d", i);
+                        mCardModel.addValue(value, "true");
                     }
                 }
             }

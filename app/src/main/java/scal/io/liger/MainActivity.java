@@ -219,7 +219,7 @@ public class MainActivity extends Activity {
 
                 CardModel cm = mStoryPathModel.getCardById(pathId);
                 cm.clearValues();
-                cm.addValue("value::" + path);
+                cm.addValue("value", path);
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
                 String path = getLastImagePath();
@@ -232,7 +232,7 @@ public class MainActivity extends Activity {
 
                 CardModel cm = mStoryPathModel.getCardById(pathId);
                 cm.clearValues();
-                cm.addValue("value::" + path);
+                cm.addValue("value", path);
             } else if(requestCode == Constants.REQUEST_AUDIO_CAPTURE) {
 
                 Uri uri = intent.getData();
@@ -246,7 +246,7 @@ public class MainActivity extends Activity {
 
                 CardModel cm = mStoryPathModel.getCardById(pathId);
                 cm.clearValues();
-                cm.addValue("value::" + path);
+                cm.addValue("value", path);
             }
         }
     }
