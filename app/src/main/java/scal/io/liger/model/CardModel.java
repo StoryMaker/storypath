@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import scal.io.liger.Constants;
+
 /**
  * Created by mnbogner on 7/10/14.
  */
@@ -78,6 +80,11 @@ public abstract class CardModel {
                 // assumes the format story::card::field::value
                 String[] pathParts = reference.split("::");
                 String referencedValue = storyPathReference.getReferencedValue(reference);
+
+                if ((referencedValue != null) && (referencedValue.equals(Constants.EXTERNAL))) {
+                    referencedValue = storyPathReference.getExternalReferencedValue(reference);
+                }
+
                 if (pathParts.length == 3) {
                     // just check that the value is not null
                     if (referencedValue == null) { // FIXME this cold be simplified
@@ -202,6 +209,11 @@ public abstract class CardModel {
             if (referenceString != null) {
                 referenceString = referenceString.trim();
                 String referenceValue = storyPathReference.getReferencedValue(referenceString);
+
+                if ((referenceValue != null) && (referenceValue.equals(Constants.EXTERNAL))) {
+                    referenceValue = storyPathReference.getExternalReferencedValue(referenceString);
+                }
+
                 // doing a replace with a null seems to cause issues
                 if (referenceValue == null)
                     referenceValue = "";

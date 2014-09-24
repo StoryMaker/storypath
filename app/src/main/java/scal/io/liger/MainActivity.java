@@ -16,6 +16,8 @@ import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.DependencyModel;
 import scal.io.liger.model.StoryPathModel;
@@ -93,9 +95,9 @@ public class MainActivity extends Activity {
             builder.setTitle("Choose Story File(SdCard/Liger/)")
                 .setItems(jsonFiles, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int index) {
-                        JsonHelper.setSelectedJSONFile(index);
+                        File jsonFile = JsonHelper.setSelectedJSONFile(index);
                         String json = JsonHelper.loadJSON();
-                        initCardList(json);
+                        initCardList(json, jsonFile);
                     }
                 });
         }
@@ -105,6 +107,10 @@ public class MainActivity extends Activity {
     }
 
     private void initCardList(String json) {
+        initCardList(json, null);
+    }
+
+    private void initCardList(String json, File jsonFile) {
         Log.d(TAG, "initCardList called");
         mCardView = (CardUI) findViewById(R.id.cardsview);
         if (mCardView == null)
@@ -112,11 +118,11 @@ public class MainActivity extends Activity {
 
         mCardView.setSwipeable(false);
 
-        initStoryPathModel(json);
+        initStoryPathModel(json, jsonFile);
         refreshCardView();
     }
 
-    private void initStoryPathModel(String json) {
+    private void initStoryPathModel(String json, File jsonFile) {
         Log.d(TAG, "initStoryPathModel called");
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
@@ -125,6 +131,16 @@ public class MainActivity extends Activity {
         mStoryPathModel = gson.fromJson(json, StoryPathModel.class);
         mStoryPathModel.context = this.mContext;
         mStoryPathModel.setCardReferences();
+
+        // a story path model must have a file location to manage relative paths
+        // if it is loaded from a saved state, the location should already be set
+        if ((jsonFile == null) || (jsonFile.length() == 0)) {
+            if ((mStoryPathModel.getFileLocation() == null) || (mStoryPathModel.getFileLocation().length() == 0)) {
+                Log.e(TAG, "file location for story path " + mStoryPathModel.getId() + " could not be determined");
+            }
+        } else {
+            mStoryPathModel.setFileLocation(jsonFile.getPath());
+        }
     }
 
     public void refreshCardView () {
@@ -160,11 +176,13 @@ public class MainActivity extends Activity {
                     gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
                     Gson gson = gBuild.create();
 
-                    String json = JsonHelper.loadJSONFromPath(dependency.getDependencyFile());
+                    String jsonFile = dependency.getDependencyFile();
+                    String json = JsonHelper.loadJSONFromPath(mStoryPathModel.buildPath(jsonFile));
                     story = gson.fromJson(json, StoryPathModel.class);
 
                     story.context = this.mContext;
                     story.setCardReferences();
+                    story.setFileLocation(mStoryPathModel.buildPath(jsonFile));
 
                     newStory = true;
                 }

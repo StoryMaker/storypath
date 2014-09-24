@@ -159,9 +159,9 @@ public class ExampleCardView extends Card {
         File mediaFile = null;
 
         if (mediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mediaPath);
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(mediaPath));
         } else if (exampleMediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(exampleMediaPath);
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
         }
 
         return mediaFile;

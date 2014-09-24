@@ -80,7 +80,7 @@ public class OrderMediaCardView extends Card {
             File mediaFile = null;
 
             if(mediaPath != null) {
-                mediaFile = MediaHelper.loadFileFromPath(mediaPath);
+                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPathReference().buildPath(mediaPath));
                 if(mediaFile.exists() && !mediaFile.isDirectory()) {
                     mediaURI = Uri.parse(mediaFile.getPath());
                 }

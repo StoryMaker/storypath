@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 import scal.io.liger.JsonHelper;
+import scal.io.liger.MediaHelper;
 import scal.io.liger.Utility;
 import scal.io.liger.model.CardModel;
 import scal.io.liger.model.ClipCardModel;
@@ -198,5 +199,19 @@ public class ClipCardView extends ExampleCardView {
         });
 
         return view;
+    }
+
+    //returns stored mediaPath (if exists) or exampleMediaPath (if exists)
+    @Override
+    public File getValidFile(String mediaPath, String exampleMediaPath) {
+        File mediaFile = null;
+
+        if (mediaPath != null) {
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(mediaPath));
+        } else if (exampleMediaPath != null) {
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
+        }
+
+        return mediaFile;
     }
 }

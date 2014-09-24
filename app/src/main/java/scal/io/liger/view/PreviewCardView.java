@@ -118,7 +118,7 @@ public class PreviewCardView extends Card {
         ArrayList<CardModel> clipCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
         for (CardModel cm : clipCards) {
             String value = cm.getValueByKey("value");
-            paths.add(value);
+            paths.add(mCardModel.getStoryPathReference().buildPath(value));
         }
     }
 }

@@ -32,7 +32,7 @@ public class JsonHelper {
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                File jsonFile = new File(sdLigerFilePath + jsonPath);
+                File jsonFile = new File(jsonPath);
                 InputStream jsonStream = new FileInputStream(jsonFile);
 
                 int size = jsonStream.available();
@@ -134,8 +134,9 @@ public class JsonHelper {
         return jsonFileNamesList.toArray(new String[jsonFileNamesList.size()]);
     }
 
-    public static void setSelectedJSONFile(int index) {
+    public static File setSelectedJSONFile(int index) {
         selectedJSONFile = jsonFileList.get(index);
+        return selectedJSONFile;
     }
 
     private static void addFileToSDCard(InputStream jsonInputStream, String filePath) {

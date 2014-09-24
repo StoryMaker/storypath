@@ -7,8 +7,10 @@ import com.fima.cardsui.objects.Card;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
 import scal.io.liger.StoryPathDeserializer;
@@ -21,6 +23,7 @@ public class StoryPathModel {
     public String title;
     public ArrayList<CardModel> cards;
     public ArrayList<DependencyModel> dependencies;
+    public String fileLocation;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -124,6 +127,14 @@ public class StoryPathModel {
         this.dependencies.add(dependency);
     }
 
+    public String getFileLocation() {
+        return fileLocation;
+    }
+
+    public void setFileLocation(String fileLocation) {
+        this.fileLocation = fileLocation;
+    }
+
     // set a reference to this story path in each card
     // must be done before cards attempt to reference
     // values from previous story paths or cards
@@ -142,52 +153,86 @@ public class StoryPathModel {
         }
     }
 
-    public String getReferencedValue(Object obj) {
-        if (obj instanceof String) {
-            String fullPath = (String)obj;
-            // assumes the format story::card::field::value
-            String[] pathParts = fullPath.split("::");
+    public String getReferencedValue(String fullPath) {
+        // assumes the format story::card::field::value
+        String[] pathParts = fullPath.split("::");
 
-            StoryPathModel story = null;
-            if (this.getId().equals(pathParts[0])) {
-                // reference targets this story path
-                story = this;
-            } else {
-                // reference targets a serialized story path
-                for (DependencyModel dependency : dependencies) {
-                    if (dependency.getDependencyId().equals(pathParts[0])) {
-                        GsonBuilder gBuild = new GsonBuilder();
-                        gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
-                        Gson gson = gBuild.create();
+        if (!this.getId().equals(pathParts[0])) {
+            return Constants.EXTERNAL;
+        }
 
-                        String json = JsonHelper.loadJSONFromPath(dependency.getDependencyFile());
-                        story = gson.fromJson(json, StoryPathModel.class);
-                    }
-                }
-            }
+        CardModel card = this.getCardById(fullPath);
 
-            if (story == null) {
-                System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
-                return null;
-            }
+        if (card == null) {
+            return null;
+        } else {
+            String value = card.getValueById(fullPath);
 
-            CardModel card = story.getCardById(fullPath);
-
-            if (card == null) {
+            if (value == null) {
                 return null;
             } else {
-                String value = card.getValueById(fullPath);
-
-                if (value == null) {
-                    return null;
-                } else {
-                    return value;
-                }
+                return value;
             }
         }
-        else {
-            Log.d("TESTING", "REFERENCE IS NOT A STRING");
+    }
+
+    public String getExternalReferencedValue(String fullPath) {
+        // assumes the format story::card::field::value
+        String[] pathParts = fullPath.split("::");
+
+        StoryPathModel story = null;
+
+        // reference targets a serialized story path
+        for (DependencyModel dependency : dependencies) {
+            if (dependency.getDependencyId().equals(pathParts[0])) {
+                GsonBuilder gBuild = new GsonBuilder();
+                gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
+                Gson gson = gBuild.create();
+
+                String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
+                story = gson.fromJson(json, StoryPathModel.class);
+
+                story.context = this.context;
+                story.setCardReferences();
+                story.setFileLocation(buildPath(dependency.getDependencyFile()));
+            }
+        }
+
+        if (story == null) {
+            Log.e(this.getClass().getName(), "STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
             return null;
+        }
+
+        CardModel card = story.getCardById(fullPath);
+
+        if (card == null) {
+            return null;
+        } else {
+            String value = card.getValueById(fullPath);
+
+            if (value == null) {
+                return null;
+            } else {
+                return value;
+            }
+        }
+    }
+
+    public String buildPath(String originalPath) {
+        if (originalPath.startsWith(File.separator)) {
+            return originalPath;
+        }
+
+        // construct path relative to location of story path
+        String relativePath = getFileLocation();
+
+        if ((relativePath != null) && (relativePath.length() != 0)) {
+            relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
+            relativePath = relativePath + File.separator + originalPath;
+            return relativePath;
+        } else {
+            Log.e(this.getClass().getName(), "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
+            return originalPath;
         }
     }
 
