@@ -2,10 +2,12 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fima.cardsui.objects.Card;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -248,8 +250,12 @@ public class StoryPathModel {
 
     public void linkNotification(String linkPath) {
         if (context != null) {
-            MainActivity mainActivity = (MainActivity) context;
-            mainActivity.goToCard(linkPath);
+            try {
+                MainActivity mainActivity = (MainActivity) context;
+                mainActivity.goToCard(linkPath);
+            } catch (Exception e) {
+                Toast.makeText(context, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
+            }
         } else {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
         }

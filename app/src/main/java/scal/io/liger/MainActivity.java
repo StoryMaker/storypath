@@ -11,10 +11,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 
@@ -118,11 +120,15 @@ public class MainActivity extends Activity {
 
         mCardView.setSwipeable(false);
 
-        initStoryPathModel(json, jsonFile);
-        refreshCardView();
+        try {
+            initStoryPathModel(json, jsonFile);
+            refreshCardView();
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void initStoryPathModel(String json, File jsonFile) {
+    private void initStoryPathModel(String json, File jsonFile) throws MalformedJsonException {
         Log.d(TAG, "initStoryPathModel called");
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
@@ -158,7 +164,7 @@ public class MainActivity extends Activity {
         mCardView.refresh();
     }
 
-    public void goToCard(String cardPath) {
+    public void goToCard(String cardPath) throws MalformedJsonException {
         Log.d(TAG, "goToCard: " + cardPath);
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
