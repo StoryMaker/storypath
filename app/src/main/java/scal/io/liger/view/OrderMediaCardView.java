@@ -77,8 +77,7 @@ public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
                 // ERROR AND RETURN?
             }
 
-            ClipMetadata cmd = ccm.getClips().get(0); // NEED TO RESOLVE HOW TO HANDLE MULTIPLE CLIPS
-            MediaFile mf = ccm.loadMediaFile(cmd);
+            MediaFile mf = ccm.getSelectedMediaFile();
             String mediaPath = mf.getPath();
 
             File mediaFile = null;

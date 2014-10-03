@@ -50,13 +50,14 @@ public class ClipCard extends ExampleCard {
             this.clips = new ArrayList<ClipMetadata>();
         }
 
-        this.clips.add(clip);
+        // by default, the last recorded clip is considered "selected"
+        this.clips.add(0, clip);
 
         // send notification that a clip has been saved so that cards will be refreshed
         if (storyPathReference != null) {
             storyPathReference.notifyActivity();
         } else {
-            System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            Log.e(this.getClass().getName(), "story path reference not found, cannot sent notification");
         }
     }
 
@@ -66,12 +67,32 @@ public class ClipCard extends ExampleCard {
         cmd.type = clip_type;
         cmd.uuid = UUID.randomUUID().toString();
 
-
         getStoryPathReference().saveMediaFile(cmd.uuid, mf);
         addClip(cmd);
     }
 
     public MediaFile loadMediaFile(ClipMetadata cmd) {
         return getStoryPathReference().loadMediaFile(cmd.uuid);
+    }
+
+    public void selectMediaFile(int index) {
+        // unsure if selection should be based on index or object
+
+        if ((clips == null) || (clips.size() < 1)) {
+            Log.e(this.getClass().getName(), "no clip metadata was found, cannot select a file");
+            return;
+        }
+
+        ClipMetadata cmd = clips.remove(index);
+        clips.add(0, cmd);
+    }
+
+    public MediaFile getSelectedMediaFile() {
+        if ((clips == null) || (clips.size() < 1)) {
+            Log.e(this.getClass().getName(), "no clip metadata was found, cannot get a selected file");
+            return null;
+        }
+
+        return loadMediaFile(clips.get(0));
     }
 }

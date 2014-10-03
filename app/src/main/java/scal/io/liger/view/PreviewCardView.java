@@ -53,7 +53,7 @@ public class PreviewCardView extends com.fima.cardsui.objects.Card {
         loadClips(mCardModel.getClipPaths());
 
         //TODO find better way of checking file is valid
-        File mediaFile = MediaHelper.loadFileFromPath(paths.get(0));
+        File mediaFile = MediaHelper.loadFileFromPath(paths.get(0)); // preview will play clips in sequence, but thumbnail is taken from first clip
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
 
             Uri video = Uri.parse(mediaFile.getPath());
@@ -121,8 +121,7 @@ public class PreviewCardView extends com.fima.cardsui.objects.Card {
                 // ERROR AND RETURN?
             }
 
-            ClipMetadata cmd = ccm.getClips().get(0); // NEED TO RESOLVE HOW TO HANDLE MULTIPLE CLIPS
-            MediaFile mf = ccm.loadMediaFile(cmd);
+            MediaFile mf = ccm.getSelectedMediaFile();
             String mediaPath = mf.getPath();
 
             paths.add(mCardModel.getStoryPathReference().buildPath(mediaPath));

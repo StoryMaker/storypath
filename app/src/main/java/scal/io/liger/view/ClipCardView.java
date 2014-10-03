@@ -66,9 +66,7 @@ public class ClipCardView extends ExampleCardView {
 
         if ((mCardModel.getClips() != null) && (mCardModel.getClips().size() > 0)) {
 
-            ClipMetadata cmd = mCardModel.getClips().get(0); // NEED TO RESOLVE HOW TO HANDLE MULTIPLE CLIPS (get selected?)
-
-            MediaFile mf = mCardModel.loadMediaFile(cmd);
+            MediaFile mf = mCardModel.getSelectedMediaFile();
 
             p = mf.getPath();
         }
