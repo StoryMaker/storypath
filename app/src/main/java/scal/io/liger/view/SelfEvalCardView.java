@@ -8,24 +8,22 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
-import scal.io.liger.model.CardModel;
+import scal.io.liger.model.Card;
 import scal.io.liger.R;
-import scal.io.liger.model.SelfEvalCardModel;
+import scal.io.liger.model.SelfEvalCard;
 
 
-public class SelfEvalCardView extends Card {
+public class SelfEvalCardView extends com.fima.cardsui.objects.Card {
 
-    private SelfEvalCardModel mCardModel;
+    private SelfEvalCard mCardModel;
     private Context mContext;
     private ArrayList<CheckBox> cbOptionsList;
 
-    public SelfEvalCardView(Context context, CardModel cardModel) {
+    public SelfEvalCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (SelfEvalCardModel) cardModel;
+        mCardModel = (SelfEvalCard) cardModel;
     }
 
     @Override

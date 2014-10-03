@@ -2,19 +2,17 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.view.BasicTextCardView;
 
-public class BasicTextCardModel extends CardModel {
+public class BasicTextCard extends Card {
     public String text;
 
-    public BasicTextCardModel() {
+    public BasicTextCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new BasicTextCardView(context, this);
     }
 

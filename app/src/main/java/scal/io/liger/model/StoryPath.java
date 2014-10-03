@@ -4,10 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.fima.cardsui.objects.Card;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,12 +18,13 @@ import scal.io.liger.StoryPathDeserializer;
 /**
  * Created by mnbogner on 7/10/14.
  */
-public class StoryPathModel {
+public class StoryPath {
     public String id;
     public String title;
-    public ArrayList<CardModel> cards;
-    public ArrayList<DependencyModel> dependencies;
+    public ArrayList<Card> cards;
+    public ArrayList<Dependency> dependencies;
     public String fileLocation;
+    public Story storyReference;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -48,22 +47,22 @@ public class StoryPathModel {
         this.title = title;
     }
 
-    public ArrayList<CardModel> getCards() {
+    public ArrayList<Card> getCards() {
         return cards;
     }
 
-    public void setCards(ArrayList<CardModel> cards) {
+    public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
 
-    public void addCard(CardModel card) {
+    public void addCard(Card card) {
         if (this.cards == null)
-            this.cards = new ArrayList<CardModel>();
+            this.cards = new ArrayList<Card>();
 
         this.cards.add(card);
     }
 
-    public CardModel getCardById(String fullPath) {
+    public Card getCardById(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
 
@@ -73,7 +72,7 @@ public class StoryPathModel {
             return null;
         }
 
-        for (CardModel card : cards) {
+        for (Card card : cards) {
             if (card.getId().equals(pathParts[1])) {
                 return card;
             }
@@ -84,7 +83,7 @@ public class StoryPathModel {
     }
 
     // new method to get batches of cards while preserving card order
-    public ArrayList<CardModel> getCardsByIds(ArrayList<String> fullPaths) {
+    public ArrayList<Card> getCardsByIds(ArrayList<String> fullPaths) {
         ArrayList<String> cardIds = new ArrayList<String>();
         for (String fullPath : fullPaths) {
             // assumes the format story::card::field::value
@@ -92,8 +91,8 @@ public class StoryPathModel {
             cardIds.add(pathParts[1]);
         }
 
-        ArrayList<CardModel> foundCards = new ArrayList<CardModel>();
-        for (CardModel card : cards) {
+        ArrayList<Card> foundCards = new ArrayList<Card>();
+        for (Card card : cards) {
             if (cardIds.contains(card.getId())) {
                 foundCards.add(card);
             }
@@ -102,10 +101,10 @@ public class StoryPathModel {
         return foundCards;
     }
 
-    public ArrayList<CardModel> getValidCards() {
-        ArrayList<CardModel> validCards = new ArrayList<CardModel>();
+    public ArrayList<Card> getValidCards() {
+        ArrayList<Card> validCards = new ArrayList<Card>();
 
-        for (CardModel card : cards) {
+        for (Card card : cards) {
             if (card.checkReferencedValues()) {
                 validCards.add(card);
             }
@@ -114,17 +113,17 @@ public class StoryPathModel {
         return validCards;
     }
 
-    public ArrayList<DependencyModel> getDependencies() {
+    public ArrayList<Dependency> getDependencies() {
         return dependencies;
     }
 
-    public void setDependencies(ArrayList<DependencyModel> dependencies) {
+    public void setDependencies(ArrayList<Dependency> dependencies) {
         this.dependencies = dependencies;
     }
 
-    public void addDependency(DependencyModel dependency) {
+    public void addDependency(Dependency dependency) {
         if (this.dependencies == null)
-            this.dependencies = new ArrayList<DependencyModel>();
+            this.dependencies = new ArrayList<Dependency>();
 
         this.dependencies.add(dependency);
     }
@@ -137,11 +136,27 @@ public class StoryPathModel {
         this.fileLocation = fileLocation;
     }
 
+    public Story getStoryReference() {
+        return storyReference;
+    }
+
+    public void setStoryReference(Story storyReference) {
+        this.storyReference = storyReference;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     // set a reference to this story path in each card
     // must be done before cards attempt to reference
     // values from previous story paths or cards
     public void setCardReferences() {
-        for (CardModel card : cards) {
+        for (Card card : cards) {
             card.setStoryPathReference(this);
         }
     }
@@ -150,7 +165,7 @@ public class StoryPathModel {
     // must be done before serializing this story path to
     // prevent duplication or circular references
     public void clearCardReferences() {
-        for (CardModel card : cards) {
+        for (Card card : cards) {
             card.setStoryPathReference(null);
         }
     }
@@ -163,7 +178,7 @@ public class StoryPathModel {
             return Constants.EXTERNAL;
         }
 
-        CardModel card = this.getCardById(fullPath);
+        Card card = this.getCardById(fullPath);
 
         if (card == null) {
             return null;
@@ -182,17 +197,17 @@ public class StoryPathModel {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
 
-        StoryPathModel story = null;
+        StoryPath story = null;
 
         // reference targets a serialized story path
-        for (DependencyModel dependency : dependencies) {
+        for (Dependency dependency : dependencies) {
             if (dependency.getDependencyId().equals(pathParts[0])) {
                 GsonBuilder gBuild = new GsonBuilder();
-                gBuild.registerTypeAdapter(StoryPathModel.class, new StoryPathDeserializer());
+                gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
                 Gson gson = gBuild.create();
 
                 String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
-                story = gson.fromJson(json, StoryPathModel.class);
+                story = gson.fromJson(json, StoryPath.class);
 
                 story.context = this.context;
                 story.setCardReferences();
@@ -205,7 +220,7 @@ public class StoryPathModel {
             return null;
         }
 
-        CardModel card = story.getCardById(fullPath);
+        Card card = story.getCardById(fullPath);
 
         if (card == null) {
             return null;
@@ -261,15 +276,15 @@ public class StoryPathModel {
         }
     }
 
-    public int getCardIndex(CardModel cardModel) {
+    public int getCardIndex(Card cardModel) {
         return cards.indexOf(cardModel);
     }
 
-    public int getValidCardIndex(CardModel cardModel) {
+    public int getValidCardIndex(Card cardModel) {
         return getValidCards().indexOf(cardModel);
     }
 
-    public CardModel getCardFromIndex(int index) {
+    public Card getCardFromIndex(int index) {
         if(index >= cards.size()) {
             return null;
         }
@@ -277,8 +292,8 @@ public class StoryPathModel {
         return cards.get(index);
     }
 
-    public CardModel getValidCardFromIndex(int index) {
-        ArrayList<CardModel> validCards = getValidCards();
+    public Card getValidCardFromIndex(int index) {
+        ArrayList<Card> validCards = getValidCards();
 
         if(index >= validCards.size()) {
             return null;
@@ -288,8 +303,16 @@ public class StoryPathModel {
     }
 
     public void rearrangeCards(int currentIndex, int newIndex) {
-        CardModel card = cards.remove(currentIndex);
+        Card card = cards.remove(currentIndex);
         cards.add(newIndex, card);
         notifyActivity();
+    }
+
+    public void saveMediaFile(String uuid, MediaFile file) {
+        storyReference.saveMediaFile(uuid, file);
+    }
+
+    public MediaFile loadMediaFile(String uuid) {
+        return storyReference.loadMediaFile(uuid);
     }
 }

@@ -6,12 +6,12 @@ import java.util.Random;
 /**
  * Created by mnbogner on 8/13/14.
  */
-public class TipCardModel extends MarkdownCardModel {
+public class TipCard extends MarkdownCard {
 
     private Random random;
     public ArrayList<String> tips;
 
-    public TipCardModel() {
+    public TipCard() {
         this.type = this.getClass().getName();
         random = new Random();
     }

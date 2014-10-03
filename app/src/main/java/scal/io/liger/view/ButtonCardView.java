@@ -4,22 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.fima.cardsui.objects.Card;
-
-import scal.io.liger.model.ButtonCardModel;
-import scal.io.liger.model.CardModel;
+import scal.io.liger.model.ButtonCard;
+import scal.io.liger.model.Card;
 import scal.io.liger.R;
-import scal.io.liger.model.StoryPathModel;
+import scal.io.liger.model.StoryPath;
 
-public class ButtonCardView extends Card {
-    private ButtonCardModel mCardModel;
+public class ButtonCardView extends com.fima.cardsui.objects.Card {
+    private ButtonCard mCardModel;
     private Context mContext;
 
-    public ButtonCardView(Context context, CardModel cardModel) {
+    public ButtonCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ButtonCardModel) cardModel;
+        mCardModel = (ButtonCard) cardModel;
     }
 
     @Override
@@ -43,12 +40,12 @@ public class ButtonCardView extends Card {
             @Override
             public void onClick(View v) {
 
-                StoryPathModel spm = mCardModel.getStoryPathReference();
-                CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
+                StoryPath spm = mCardModel.getStoryPathReference();
+                Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
 
                 mCardModel.clearValues();
                 mCardModel.addValue("value", "true");
-//                moveToNextCard();
+                // moveToNextCard();
 
                 String linkPath = spm.getId() + "::" + cm.getId();
                 spm.linkNotification(linkPath);
@@ -58,10 +55,12 @@ public class ButtonCardView extends Card {
         return view;
     }
 
-//    private void moveToNextCard() {
-//        StoryPathModel spm = mCardModel.getStoryPathReference();
-//        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
-//        String linkPath = spm.getId() + "::" + cm.getId();
-//        spm.linkNotification(linkPath);
-//    }
+    /*
+    private void moveToNextCard() {
+        StoryPathModel spm = mCardModel.getStoryPathReference();
+        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
+        String linkPath = spm.getId() + "::" + cm.getId();
+        spm.linkNotification(linkPath);
+    }
+    */
 }

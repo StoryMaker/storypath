@@ -5,7 +5,7 @@
         {
             "id": "top",
             "text": "This is **Learning Guide 2**.  *Ohh yeaaaa*.", 
-            "type": "scal.io.liger.model.MarkdownCardModel"
+            "type": "scal.io.liger.model.MarkdownCard"
         }
     ]
 }

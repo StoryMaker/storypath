@@ -3,15 +3,13 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
 import scal.io.liger.Constants;
 import scal.io.liger.ReferenceHelper;
 import scal.io.liger.view.ProgressCardView;
 
-public class ProgressCardModel extends CardModel {
+public class ProgressCard extends Card {
     private String text;
 
     private ArrayList<String> story_medium;
@@ -19,12 +17,12 @@ public class ProgressCardModel extends CardModel {
     private ArrayList<String> audio_clip_cards;
     private ArrayList<String> photo_clip_cards;
 
-    public ProgressCardModel() {
+    public ProgressCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new ProgressCardView(context, this);
     }
 

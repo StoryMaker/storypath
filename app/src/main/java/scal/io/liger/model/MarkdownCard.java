@@ -2,19 +2,17 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.view.MarkdownCardView;
 
-public class MarkdownCardModel extends CardModel {
+public class MarkdownCard extends Card {
     public String text;
 
-    public MarkdownCardModel() {
+    public MarkdownCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new MarkdownCardView(context, this);
     }
 

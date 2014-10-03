@@ -7,21 +7,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fima.cardsui.objects.Card;
-
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.IntroCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.IntroCard;
 import scal.io.liger.R;
 
 
-public class IntroCardView extends Card {
+public class IntroCardView extends com.fima.cardsui.objects.Card {
 
-    private IntroCardModel mCardModel;
+    private IntroCard mCardModel;
     private Context mContext;
 
-    public IntroCardView(Context context, CardModel cardModel) {
+    public IntroCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (IntroCardModel) cardModel;
+        mCardModel = (IntroCard) cardModel;
     }
 
     @Override

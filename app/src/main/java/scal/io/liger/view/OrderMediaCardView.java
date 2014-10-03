@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
-import com.fima.cardsui.objects.Card;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +16,23 @@ import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.ClipCardModel;
-import scal.io.liger.model.OrderMediaCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.ClipCard;
+import scal.io.liger.model.ClipMetadata;
+import scal.io.liger.model.MediaFile;
+import scal.io.liger.model.OrderMediaCard;
 import scal.io.liger.touch.DraggableGridView;
 import scal.io.liger.touch.OnRearrangeListener;
 
-public class OrderMediaCardView extends Card {
-    private OrderMediaCardModel mCardModel;
+public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
+    private OrderMediaCard mCardModel;
     private Context mContext;
 
-    private List<CardModel> listCards = new ArrayList<CardModel>();
+    private List<Card> listCards = new ArrayList<Card>();
 
-    public OrderMediaCardView(Context context, CardModel cardModel) {
+    public OrderMediaCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (OrderMediaCardModel) cardModel;
+        mCardModel = (OrderMediaCard) cardModel;
     }
 
     @Override
@@ -67,17 +67,22 @@ public class OrderMediaCardView extends Card {
         fillList(clipPaths);
 
         // removing size check and 1->3 loop, should be covered by fillList + for loop
-        for (CardModel cm : listCards) {
+        for (Card cm : listCards) {
 
-            ClipCardModel ccm = null;
+            ClipCard ccm = null;
 
-            if (cm instanceof ClipCardModel) {
-                ccm = (ClipCardModel) cm;
+            if (cm instanceof ClipCard) {
+                ccm = (ClipCard) cm;
+            } else {
+                // ERROR AND RETURN?
             }
 
-            Uri mediaURI = null;
-            String mediaPath = ccm.getValueByKey("value");
+            ClipMetadata cmd = ccm.getClips().get(0); // NEED TO RESOLVE HOW TO HANDLE MULTIPLE CLIPS
+            MediaFile mf = ccm.loadMediaFile(cmd);
+            String mediaPath = mf.getPath();
+
             File mediaFile = null;
+            Uri mediaURI = null;
 
             if(mediaPath != null) {
                 mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPathReference().buildPath(mediaPath));
@@ -106,7 +111,7 @@ public class OrderMediaCardView extends Card {
             //handle fall-through cases: (media==null || medium==AUDIO)
             ivTemp = new ImageView(mContext);
 
-            String clipType = ccm.getClipType();
+            String clipType = ccm.getClip_type();
             int drawable = R.drawable.ic_launcher;
 
             if (clipType.equals(Constants.CHARACTER)) {
@@ -125,7 +130,7 @@ public class OrderMediaCardView extends Card {
             @Override
             public void onRearrange(int currentIndex, int newIndex) {
                 //update actual card list
-                CardModel currentCard = listCards.get(currentIndex);
+                Card currentCard = listCards.get(currentIndex);
                 int currentCardIndex = mCardModel.getStoryPathReference().getCardIndex(currentCard);
                 int newCardIndex = currentCardIndex - (currentIndex - newIndex);
 

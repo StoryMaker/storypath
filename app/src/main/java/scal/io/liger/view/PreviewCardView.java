@@ -2,43 +2,39 @@ package scal.io.liger.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.fima.cardsui.objects.Card;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import scal.io.liger.MediaHelper;
 import scal.io.liger.Utility;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.PreviewCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.ClipCard;
+import scal.io.liger.model.ClipMetadata;
+import scal.io.liger.model.MediaFile;
+import scal.io.liger.model.PreviewCard;
 import scal.io.liger.R;
-import scal.io.liger.touch.DraggableGridView;
 
 
-public class PreviewCardView extends Card {
+public class PreviewCardView extends com.fima.cardsui.objects.Card {
 
-    private PreviewCardModel mCardModel;
+    private PreviewCard mCardModel;
     private Context mContext;
     public ArrayList<String> paths = new ArrayList<String>();
     public int videoIndex = 0;
 
-    public PreviewCardView(Context context, CardModel cardModel) {
+    public PreviewCardView(Context context, Card cardModel) {
         Log.d("PreviewCardView", "constructor");
         mContext = context;
-        mCardModel = (PreviewCardModel) cardModel;
+        mCardModel = (PreviewCard) cardModel;
     }
 
     @Override
@@ -115,10 +111,21 @@ public class PreviewCardView extends Card {
 
     public void loadClips(ArrayList<String> clipPaths) {
         // get batch of ordered cards
-        ArrayList<CardModel> clipCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
-        for (CardModel cm : clipCards) {
-            String value = cm.getValueByKey("value");
-            paths.add(mCardModel.getStoryPathReference().buildPath(value));
+        ArrayList<Card> clipCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
+        for (Card cm : clipCards) {
+            ClipCard ccm = null;
+
+            if (cm instanceof ClipCard) {
+                ccm = (ClipCard) cm;
+            } else {
+                // ERROR AND RETURN?
+            }
+
+            ClipMetadata cmd = ccm.getClips().get(0); // NEED TO RESOLVE HOW TO HANDLE MULTIPLE CLIPS
+            MediaFile mf = ccm.loadMediaFile(cmd);
+            String mediaPath = mf.getPath();
+
+            paths.add(mCardModel.getStoryPathReference().buildPath(mediaPath));
         }
     }
 }

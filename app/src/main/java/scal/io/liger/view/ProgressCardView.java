@@ -5,27 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.fima.cardsui.objects.Card;
-
-import scal.io.liger.model.CardModel;
+import scal.io.liger.model.Card;
 import scal.io.liger.R;
-import scal.io.liger.model.ProgressCardModel;
+import scal.io.liger.model.ProgressCard;
 
 /**
  * Created by josh on 8/8/14.
  */
-public class ProgressCardView extends Card {
-    private ProgressCardModel mCardModel;
+public class ProgressCardView extends com.fima.cardsui.objects.Card {
+    private ProgressCard mCardModel;
     private Context mContext;
 
-    public ProgressCardView(Context context, CardModel cardModel) {
+    public ProgressCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ProgressCardModel) cardModel;
+        mCardModel = (ProgressCard) cardModel;
     }
 
     @Override
     public View getCardContent(Context context) {
-//        StoryPathModel spm = mCardModel.getStoryPathReference();
+        // StoryPath spm = mCardModel.getStoryPathReference();
 
         if (mCardModel == null) {
             return null;

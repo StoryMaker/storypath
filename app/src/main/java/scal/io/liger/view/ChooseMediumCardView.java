@@ -6,26 +6,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.Constants;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.ChooseMediumCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.ChooseMediumCard;
 import scal.io.liger.R;
-import scal.io.liger.model.StoryPathModel;
+import scal.io.liger.model.StoryPath;
 
 
-public class ChooseMediumCardView extends Card {
-    private ChooseMediumCardModel mCardModel;
+public class ChooseMediumCardView extends com.fima.cardsui.objects.Card {
+    private ChooseMediumCard mCardModel;
     private Context mContext;
 
     private Button mBtnMediumVideo;
     private Button mBtnMediumAudio;
     private Button mBtnMediumPhoto;
 
-    public ChooseMediumCardView(Context context, CardModel cardModel) {
+    public ChooseMediumCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ChooseMediumCardModel) cardModel;
+        mCardModel = (ChooseMediumCard) cardModel;
     }
 
     @Override
@@ -101,8 +99,8 @@ public class ChooseMediumCardView extends Card {
     }
 
     private void moveToNextCard() {
-        StoryPathModel spm = mCardModel.getStoryPathReference();
-        CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
+        StoryPath spm = mCardModel.getStoryPathReference();
+        Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
         String linkPath = spm.getId() + "::" + cm.getId();
         spm.linkNotification(linkPath);
     }

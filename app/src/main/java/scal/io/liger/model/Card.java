@@ -1,9 +1,6 @@
 package scal.io.liger.model;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.fima.cardsui.objects.Card;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,11 +13,11 @@ import scal.io.liger.Constants;
 /**
  * Created by mnbogner on 7/10/14.
  */
-public abstract class CardModel {
+public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
     public String type;
     public String id;
     public String title;
-    public StoryPathModel storyPathReference;
+    public StoryPath storyPathReference;
     public ArrayList<String> references;
     public HashMap<String, String> values;
 
@@ -46,14 +43,13 @@ public abstract class CardModel {
         this.title = title;
     }
 
-    public StoryPathModel getStoryPathReference() {
+    public StoryPath getStoryPathReference() {
         return storyPathReference;
     }
 
+    public abstract com.fima.cardsui.objects.Card getCardView(Context context);
 
-    public abstract Card getCardView(Context context);
-
-    public void setStoryPathReference(StoryPathModel storyPathReference) {
+    public void setStoryPathReference(StoryPath storyPathReference) {
         this.storyPathReference = storyPathReference;
     }
 
@@ -163,6 +159,7 @@ public abstract class CardModel {
             c = this.getClass();
             f = c.getField(key);
             return f.get(this).toString(); // not the best solution, but somehow int fields come back with Integer values
+                                           // NEEDS REVISION TO HANDLE NON-STRING FIELDS (IE: CLIPS)
         } catch (Exception e) {
             //Log.d("TESTING", "EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
         }

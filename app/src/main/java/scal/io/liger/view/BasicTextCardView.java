@@ -5,21 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.fima.cardsui.objects.Card;
-
-import scal.io.liger.model.CardModel;
+import scal.io.liger.model.BasicTextCard;
+import scal.io.liger.model.Card;
 import scal.io.liger.R;
-import scal.io.liger.model.BasicTextCardModel;
 
 
-public class BasicTextCardView extends Card {
+public class BasicTextCardView extends com.fima.cardsui.objects.Card {
 
-    private BasicTextCardModel mCardModel;
+    private BasicTextCard mCardModel;
     private Context mContext;
 
-    public BasicTextCardView(Context context, CardModel cardModel) {
+    public BasicTextCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (BasicTextCardModel) cardModel;
+        mCardModel = (BasicTextCard) cardModel;
     }
 
     @Override

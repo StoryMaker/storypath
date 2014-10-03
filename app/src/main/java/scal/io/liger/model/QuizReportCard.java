@@ -2,8 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
 import scal.io.liger.view.IntroCardView;
@@ -11,16 +9,16 @@ import scal.io.liger.view.IntroCardView;
 /**
  * Created by mnbogner on 7/10/14.
  */
-public class QuizReportCardModel extends CardModel {
+public class QuizReportCard extends Card {
     public String description;
     public ArrayList<Object> results;
 
-    public QuizReportCardModel() {
+    public QuizReportCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new IntroCardView(context, this); //TODO
     }
 

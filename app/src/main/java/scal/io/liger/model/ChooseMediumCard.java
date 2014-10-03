@@ -2,20 +2,18 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.view.ChooseMediumCardView;
 
 
-public class ChooseMediumCardModel extends CardModel {
+public class ChooseMediumCard extends Card {
     private String header;
 
-    public ChooseMediumCardModel() {
+    public ChooseMediumCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new ChooseMediumCardView(context, this);
     }
 

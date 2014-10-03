@@ -2,27 +2,25 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
-import scal.io.liger.view.ClipInstructionTypeCardView;
+import scal.io.liger.view.ClipInstructionListCardView;
 
 /**
  * Created by mnbogner on 7/17/14.
  */
-public class ClipInstructionTypeCardModel extends CardModel {
+public class ClipInstructionListCard extends Card {
     public String media_path;
     public String header;
-    public ArrayList<String> clip_types;
+    public ArrayList<String> bullet_list;
 
-    public ClipInstructionTypeCardModel() {
+    public ClipInstructionListCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
-        return new ClipInstructionTypeCardView(context, this);
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
+        return new ClipInstructionListCardView(context, this);
     }
 
     public String getMedia_path() {
@@ -41,23 +39,23 @@ public class ClipInstructionTypeCardModel extends CardModel {
         this.header = header;
     }
 
-    public ArrayList<String> getClip_types() {
+    public ArrayList<String> getBullet_list() {
         ArrayList<String> a = new ArrayList<String>();
-        for (String s : clip_types)
+        for (String s : bullet_list)
         {
             a.add(fillReferences(s));
         }
         return a;
     }
 
-    public void setClip_types(ArrayList<String> clip_types) {
-        this.clip_types = clip_types;
+    public void setBullet_list(ArrayList<String> bullet_list) {
+        this.bullet_list = bullet_list;
     }
 
-    public void addClipType(String clip_type) {
-        if (this.clip_types == null)
-            this.clip_types = new ArrayList<String>();
+    public void addBulletListItem(String bullet_listItem) {
+        if (this.bullet_list == null)
+            this.bullet_list = new ArrayList<String>();
 
-        this.clip_types.add(clip_type);
+        this.bullet_list.add(bullet_listItem);
     }
 }

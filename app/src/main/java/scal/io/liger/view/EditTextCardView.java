@@ -1,7 +1,6 @@
 package scal.io.liger.view;
 
 import android.content.Context;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,21 +10,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.R;
-import scal.io.liger.model.EditTextCardModel;
-import scal.io.liger.model.CardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.EditTextCard;
 
 
-public class EditTextCardView extends Card {
+public class EditTextCardView extends com.fima.cardsui.objects.Card {
 
-    private EditTextCardModel mCardModel;
+    private EditTextCard mCardModel;
     private Context mContext;
 
-    public EditTextCardView(Context context, CardModel cardModel) {
+    public EditTextCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (EditTextCardModel) cardModel;
+        mCardModel = (EditTextCard) cardModel;
     }
 
     @Override

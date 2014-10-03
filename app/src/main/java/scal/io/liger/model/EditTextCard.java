@@ -2,20 +2,18 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.view.EditTextCardView;
 
-public class EditTextCardModel extends CardModel {
+public class EditTextCard extends Card {
     private String hint_text;
     private String header;
 
-    public EditTextCardModel() {
+    public EditTextCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new EditTextCardView(context, this);
     }
 

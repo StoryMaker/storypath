@@ -7,20 +7,18 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.R;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.LinkModel;
-import scal.io.liger.model.NextUpCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.Link;
+import scal.io.liger.model.NextUpCard;
 
-public class NextUpCardView extends Card {
-    private NextUpCardModel mCardModel;
+public class NextUpCardView extends com.fima.cardsui.objects.Card {
+    private NextUpCard mCardModel;
     private Context mContext;
 
-    public NextUpCardView(Context context, CardModel cardModel) {
+    public NextUpCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (NextUpCardModel)cardModel;
+        mCardModel = (NextUpCard)cardModel;
     }
 
     @Override
@@ -33,7 +31,7 @@ public class NextUpCardView extends Card {
         TextView tv = (TextView) ll.findViewById(R.id.tv_text);
         tv.setText(mCardModel.getText());
 
-        for (LinkModel link : mCardModel.getLinks()) {
+        for (Link link : mCardModel.getLinks()) {
             Button linkButton = new Button(mContext);
 
             final String text = link.getLink_text();

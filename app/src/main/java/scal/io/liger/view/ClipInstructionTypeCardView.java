@@ -10,23 +10,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fima.cardsui.objects.Card;
-
 import java.io.File;
 
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.ClipInstructionTypeCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.ClipInstructionTypeCard;
 import scal.io.liger.R;
 
 
-public class ClipInstructionTypeCardView extends Card {
+public class ClipInstructionTypeCardView extends com.fima.cardsui.objects.Card {
 
-    private ClipInstructionTypeCardModel mCardModel;
+    private ClipInstructionTypeCard mCardModel;
     private Context mContext;
 
-    public ClipInstructionTypeCardView(Context context, CardModel cardModel) {
+    public ClipInstructionTypeCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ClipInstructionTypeCardModel) cardModel;
+        mCardModel = (ClipInstructionTypeCard) cardModel;
     }
 
     @Override

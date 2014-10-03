@@ -2,127 +2,59 @@
     "id": "logic_test",
     "title": "Logic Test",
     "cards": [
-
         {
-            "id": "dummy_1_1",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_1_1",
+            "id": "text_true",
+            "type": "scal.io.liger.model.BasicTextCard",
+            "text": "TEXT_TRUE",
             "values": [
-                "value_1::true"
+                "value_1::true",
+                "value_2::TRUE"
             ]
         },
         {
-            "id": "dummy_1_2",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_1_2",
-            "values": [
-                "value_2::true"
-            ]
-        },
-        {
-            "id": "dummy_1_3",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_1_3",
-            "values": [
-                "value_3::false"
-            ]
-        },
-        {
-            "id": "dummy_2_1",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_2_1",
-            "values": [
-                "value_1::true"
-            ]
-        },
-        {
-            "id": "dummy_2_2",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_2_2",
-            "values": [
-                "value_2::true"
-            ]
-        },
-        {
-            "id": "dummy_3_1",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_3_1",
+            "id": "text_false",
+            "type": "scal.io.liger.model.BasicTextCard",
+            "text": "TEXT_FALSE",
             "values": [
                 "value_1::false"
             ]
         },
         {
-            "id": "dummy_3_2",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_3_2",
+            "id": "button_true",
+            "type": "scal.io.liger.model.ButtonCard",
+            "text": "BUTTON_TRUE",
             "values": [
-                "value_2::false"
+                "value_1::true",
+                "value_2::TRUE"
             ]
         },
         {
-            "id": "dummy_4_1",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_4_1",
+            "id": "button_false",
+            "type": "scal.io.liger.model.ButtonCard",
+            "text": "BUTTON_FALSE",
             "values": [
-                "value_1::true"
+                "value_1::false"
             ]
         },
         {
-            "id": "dummy_4_2",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "DUMMY_4_2",
-            "values": [
-                "value_2::true"
-            ]
-        },
-        {
-            "id": "logic_1",
-            "type": "scal.io.liger.model.BasicTextCardModel",
-            "text": "LOGIC_1",
+            "id": "logic",
+            "type": "scal.io.liger.model.BasicTextCard",
+            "text": "LOGIC",
             "references": [
-                [
-                    "logic_1::or",
-                    "logic_test::dummy_1_1::value_1::true::and::logic_test::dummy_2_1::value_1::true::and::logic_test::dummy_2_2::value_2::true",
-                    "logic_test::dummy_1_2::value_2::true::and::logic_test::dummy_3_1::value_1::true::and::logic_test::dummy_3_2::value_2::true",
-                    "logic_test::dummy_1_3::value_3::true::and::logic_test::dummy_4_1::value_1::true::and::logic_test::dummy_4_2::value_2::true"
-                ],
-                [
-                    "logic_2::and",
-                    "logic_test::dummy_1_1::value_1::true::or::logic_test::dummy_2_1::value_1::true::or::logic_test::dummy_2_2::value_2::true",
-                    "logic_test::dummy_1_2::value_2::true::or::logic_test::dummy_3_1::value_1::true::or::logic_test::dummy_3_2::value_2::true",
-                    "logic_test::dummy_1_3::value_3::true::or::logic_test::dummy_4_1::value_1::true::or::logic_test::dummy_4_2::value_2::true"
-                ],
-                [
-                    "logic_3::or",
-                    "logic_test::dummy_1_1::value_1::true::and::logic_test::*::value_3::false",
-                    "logic_test::dummy_1_2::value_2::true::and::logic_test::*::value_3::*",
-                    "logic_test::dummy_1_3::value_3::true::and::logic_test::*::value_3::null"
-                ],
-                [
-                    "logic_4::or",
-                    "logic_test::dummy_1_1::value_1::true::and::logic_test::<<scal.io.liger.model.BasicTextCardModel>>::value_3::false",
-                    "logic_test::dummy_1_2::value_2::true::and::logic_test::<<scal.io.liger.model.BasicTextCardModel>>::value_3::*",
-                    "logic_test::dummy_1_3::value_3::true::and::logic_test::<<scal.io.liger.model.BasicTextCardModel>>::value_3::null"
-                ],
-                [
-                    "logic_5::and",
-                    "logic_test::dummy_1_1::value_1::true::or::logic_test::*::value_3::false",
-                    "logic_test::dummy_1_2::value_2::true::or::logic_test::*::value_3::*",
-                    "logic_test::dummy_1_3::value_3::true::or::logic_test::*::value_3::null"
-                ],
-                [
-                    "logic_6::and",
-                    "logic_test::dummy_1_1::value_1::true::or::logic_test::<<scal.io.liger.model.BasicTextCardModel>>::value_3::false",
-                    "logic_test::dummy_1_2::value_2::true::or::logic_test::<<scal.io.liger.model.BasicTextCardModel>>::value_3::*",
-                    "logic_test::dummy_1_3::value_3::true::or::logic_test::<<scal.io.liger.model.BasicTextCardModel>>::value_3::null"
-                ],
-                "wildcard_1::logic_test::<<BasicTextCardModel>>::value_2::*",
-                "wildcard_1::logic_test::*::value_1::true",
-                "wildcard_1::logic_test::*::value_3::*",
-                "wildcard_2::logic_test::dummy_1_1::value_1::*",
-                "wildcard_2::logic_test::dummy_1_2::value_2::*",
-                "wildcard_2::logic_test::dummy_1_3::value_3::*"
-
+                "logic_test::*",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>",
+                "logic_test::*::value_1",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>::value_1",
+                "logic_test::*::value_2",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>::value_2",
+                "logic_test::*::value_1::*",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>::value_1::*",
+                "logic_test::*::value_2::*",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>::value_2::*",
+                "logic_test::*::value_1::true",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>::value_1::true",
+                "logic_test::*::value_2::true",
+                "logic_test::<<scal.io.liger.model.ButtonCard>>::value_2::true"
             ]
         }
     ]

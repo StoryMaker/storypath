@@ -2,24 +2,21 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
-import scal.io.liger.view.ClipCardView;
 import scal.io.liger.view.ExampleCardView;
 
 
-public class ExampleCardModel extends CardModel {
+public class ExampleCard extends Card {
 
     public String header;
     public String clip_medium;
     public String example_media_path;
 
-    public ExampleCardModel() {
+    public ExampleCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new ExampleCardView(context, this);
     }
 

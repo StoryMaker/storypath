@@ -2,24 +2,22 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import scal.io.liger.view.IntroCardView;
 
 /**
  * Created by mnbogner on 7/17/14.
  */
-public class IntroCardModel extends CardModel {
+public class IntroCard extends Card {
     public String headline;
     public String level;
     public String time;
 
-    public IntroCardModel() {
+    public IntroCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new IntroCardView(context, this); //TODO
     }
 

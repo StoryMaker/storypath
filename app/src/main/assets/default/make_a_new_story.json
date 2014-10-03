@@ -5,7 +5,7 @@
         {
             "id": "top",
             "text": "This is **Make a New Story**.  *Ohh yeaaaa*.", 
-            "type": "scal.io.liger.model.MarkdownCardModel"
+            "type": "scal.io.liger.model.MarkdownCard"
         }
     ]
 }

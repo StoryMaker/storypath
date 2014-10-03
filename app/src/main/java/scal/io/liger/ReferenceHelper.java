@@ -3,26 +3,25 @@ package scal.io.liger;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.StoryPathModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.StoryPath;
 
 /**
  * Created by mnbogner on 9/8/14.
  */
 public class ReferenceHelper {
 
-    public static boolean getBoolean(StoryPathModel story, ArrayList<String> references) {
+    public static boolean getBoolean(StoryPath story, ArrayList<String> references) {
         return false;
     }
 
-    public static ArrayList<CardModel> getCards(StoryPathModel story, ArrayList<String> references) {
-        ArrayList<CardModel> results = new ArrayList<CardModel>();
+    public static ArrayList<Card> getCards(StoryPath story, ArrayList<String> references) {
+        ArrayList<Card> results = new ArrayList<Card>();
 
-        ArrayList<CardModel> unfilteredCards = null;
-        ArrayList<CardModel> filteredCards = null;
+        ArrayList<Card> unfilteredCards = null;
+        ArrayList<Card> filteredCards = null;
 
         for (String reference : references) {
             String[] parts = reference.split("::");
@@ -39,7 +38,7 @@ public class ReferenceHelper {
             }
 
             // check for duplicates
-            for (CardModel card : filteredCards) {
+            for (Card card : filteredCards) {
                 if (!results.contains(card)) {
                     results.add(card);
                 }
@@ -49,11 +48,11 @@ public class ReferenceHelper {
         return results;
     }
 
-    public static ArrayList<String> getValues(StoryPathModel story, ArrayList<String> references) {
+    public static ArrayList<String> getValues(StoryPath story, ArrayList<String> references) {
         HashMap<String, String> resultMap = new HashMap<String, String>();
 
-        ArrayList<CardModel> unfilteredCards = null;
-        ArrayList<CardModel> filteredCards = null;
+        ArrayList<Card> unfilteredCards = null;
+        ArrayList<Card> filteredCards = null;
 
         for (String reference : references) {
             String[] parts = reference.split("::");
@@ -72,7 +71,7 @@ public class ReferenceHelper {
             // check for key part
             if (parts.length > 2) {
                 // check for duplicates
-                for (CardModel card : filteredCards) {
+                for (Card card : filteredCards) {
                     resultMap.put(card.getId(), card.getValueByKey(parts[2]));
                 }
             }
@@ -82,21 +81,21 @@ public class ReferenceHelper {
         return results;
     }
 
-    private static ArrayList<CardModel> gatherCards(StoryPathModel story, String cardTarget) {
-        ArrayList<CardModel> results = new ArrayList<CardModel>();
+    private static ArrayList<Card> gatherCards(StoryPath story, String cardTarget) {
+        ArrayList<Card> results = new ArrayList<Card>();
 
         if (cardTarget.equals("*")) {
             results = story.getCards();
         } else if (cardTarget.startsWith("<<")) {
             // strip "<<" and ">>"
             cardTarget = cardTarget.substring(2, cardTarget.length()-2);
-            for (CardModel card : story.getCards()) {
+            for (Card card : story.getCards()) {
                 if (card.getType().equals(cardTarget)) {
                     results.add(card);
                 }
             }
         } else {
-            for (CardModel card : story.getCards()) {
+            for (Card card : story.getCards()) {
                 if (card.getId().equals(cardTarget)) {
                     results.add(card);
                 }
@@ -106,10 +105,10 @@ public class ReferenceHelper {
         return results;
     }
 
-    private static ArrayList<CardModel> filterCards(ArrayList<CardModel> cards, String keyTarget, String valueTarget) {
-        ArrayList<CardModel> results = new ArrayList<CardModel>();
+    private static ArrayList<Card> filterCards(ArrayList<Card> cards, String keyTarget, String valueTarget) {
+        ArrayList<Card> results = new ArrayList<Card>();
 
-        for (CardModel card : cards) {
+        for (Card card : cards) {
             if (valueTarget.equals("*")) {
                 if (card.getValueByKey(keyTarget) != null) {
                     results.add(card);
@@ -126,7 +125,7 @@ public class ReferenceHelper {
 
     // uncertain of use case, values must be extracted at the point in the code where a specific
     // reference is available, so found cards cannot be aggregated and checked for values
-    private static ArrayList<String> gatherValues(ArrayList<CardModel> cards, String keyTarget, String valueTarget) {
+    private static ArrayList<String> gatherValues(ArrayList<Card> cards, String keyTarget, String valueTarget) {
         ArrayList<String> results = new ArrayList<String>();
 
         return results;

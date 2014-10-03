@@ -2,27 +2,25 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
-import scal.io.liger.view.ClipInstructionListCardView;
+import scal.io.liger.view.ClipInstructionTypeCardView;
 
 /**
  * Created by mnbogner on 7/17/14.
  */
-public class ClipInstructionListCardModel extends CardModel {
+public class ClipInstructionTypeCard extends Card {
     public String media_path;
     public String header;
-    public ArrayList<String> bullet_list;
+    public ArrayList<String> clip_types;
 
-    public ClipInstructionListCardModel() {
+    public ClipInstructionTypeCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
-        return new ClipInstructionListCardView(context, this);
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
+        return new ClipInstructionTypeCardView(context, this);
     }
 
     public String getMedia_path() {
@@ -41,23 +39,23 @@ public class ClipInstructionListCardModel extends CardModel {
         this.header = header;
     }
 
-    public ArrayList<String> getBullet_list() {
+    public ArrayList<String> getClip_types() {
         ArrayList<String> a = new ArrayList<String>();
-        for (String s : bullet_list)
+        for (String s : clip_types)
         {
             a.add(fillReferences(s));
         }
         return a;
     }
 
-    public void setBullet_list(ArrayList<String> bullet_list) {
-        this.bullet_list = bullet_list;
+    public void setClip_types(ArrayList<String> clip_types) {
+        this.clip_types = clip_types;
     }
 
-    public void addBulletListItem(String bullet_listItem) {
-        if (this.bullet_list == null)
-            this.bullet_list = new ArrayList<String>();
+    public void addClipType(String clip_type) {
+        if (this.clip_types == null)
+            this.clip_types = new ArrayList<String>();
 
-        this.bullet_list.add(bullet_listItem);
+        this.clip_types.add(clip_type);
     }
 }

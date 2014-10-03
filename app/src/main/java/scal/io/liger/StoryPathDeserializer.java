@@ -11,10 +11,10 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.DependencyModel;
-import scal.io.liger.model.StoryPathModel;
-import scal.io.liger.model.VideoCaptureTypeCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.Dependency;
+import scal.io.liger.model.StoryPath;
+import scal.io.liger.model.VideoCaptureTypeCard;
 
 /**
  * Created by mnbogner on 7/10/14.
@@ -30,11 +30,11 @@ import scal.io.liger.model.VideoCaptureTypeCardModel;
  *
  * System.out.println("TEST: " + gson.toJson(spm));
  */
-public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
+public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
 
     @Override
-    public StoryPathModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        StoryPathModel spm = new StoryPathModel();
+    public StoryPath deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        StoryPath spm = new StoryPath();
 
         JsonObject jObj = jsonElement.getAsJsonObject();
 
@@ -46,7 +46,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(NextUpCardDeserializer.class, new NextUpCardDeserializer());
-        gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
+        gBuild.registerTypeAdapter(VideoCaptureTypeCard.class, new VideoCaptureTypeCardDeserializer());
         Gson gson = gBuild.create();
 
         JsonElement jEle = jObj.get("dependencies");
@@ -54,7 +54,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
                 JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                DependencyModel dependency = (gson.fromJson(arrObj, DependencyModel.class));
+                Dependency dependency = (gson.fromJson(arrObj, Dependency.class));
                 spm.addDependency(dependency);
             }
         }
@@ -67,7 +67,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPathModel>{
                 String cardType = arrObj.get("type").getAsString();
                 try {
                     Class cardClass = Class.forName(cardType);
-                    CardModel card = (CardModel)(gson.fromJson(arrObj, cardClass));
+                    Card card = (Card)(gson.fromJson(arrObj, cardClass));
                     spm.addCard(card);
                 } catch (ClassNotFoundException e) {
                     System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + cardType);

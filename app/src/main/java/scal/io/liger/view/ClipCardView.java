@@ -8,39 +8,37 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.DragEvent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
 
-import com.fima.cardsui.objects.Card;
-
 import java.io.File;
 import java.io.IOException;
 
-import scal.io.liger.JsonHelper;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.Utility;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.ClipCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.ClipCard;
 import scal.io.liger.Constants;
 import scal.io.liger.R;
+import scal.io.liger.model.ClipMetadata;
+import scal.io.liger.model.MediaFile;
 
 
 public class ClipCardView extends ExampleCardView {
 
-    public ClipCardModel mCardModel;
+    public ClipCard mCardModel;
 
-    public ClipCardView(Context context, CardModel cardModel) {
+    public ClipCardView(Context context, Card cardModel) {
         super();
         mContext = context;
-        mCardModel = (ClipCardModel) cardModel;
+        mCardModel = (ClipCard) cardModel;
     }
 
     @Override
@@ -58,16 +56,27 @@ public class ClipCardView extends ExampleCardView {
         final ToggleButton btnMediaPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
-        tvType.setText(mCardModel.getClipType());
+        tvType.setText(mCardModel.getClip_type());
 
         final String clipMedium = mCardModel.getClipMedium();
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
 
         //set up media display
-        final File mediaFile = getValidFile(mCardModel.getValueByKey(MEDIA_PATH_KEY), mCardModel.getExampleMediaPath());
+        String p = null;
+
+        if ((mCardModel.getClips() != null) && (mCardModel.getClips().size() > 0)) {
+
+            ClipMetadata cmd = mCardModel.getClips().get(0); // NEED TO RESOLVE HOW TO HANDLE MULTIPLE CLIPS (get selected?)
+
+            MediaFile mf = mCardModel.loadMediaFile(cmd);
+
+            p = mf.getPath();
+        }
+
+        final File mediaFile = getValidFile(p, mCardModel.getExampleMediaPath());
 
         if (mediaFile == null) {
-            String clipType = mCardModel.getClipType();
+            String clipType = mCardModel.getClip_type();
 
             if (clipType.equals(Constants.CHARACTER)) {
                 ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_close));
@@ -125,7 +134,7 @@ public class ClipCardView extends ExampleCardView {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
                 //set background image
-                String clipType = mCardModel.getClipType();
+                String clipType = mCardModel.getClip_type();
                 int drawable = R.drawable.ic_launcher;
 
                 if (clipType.equals(Constants.CHARACTER)) {

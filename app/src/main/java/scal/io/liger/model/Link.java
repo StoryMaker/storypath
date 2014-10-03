@@ -3,7 +3,7 @@ package scal.io.liger.model;
 /**
  * Created by mnbogner on 7/14/14.
  */
-public class LinkModel {
+public class Link {
     public String link_text;
     public String link_path;
 

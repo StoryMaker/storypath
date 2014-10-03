@@ -2,8 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
 import scal.io.liger.view.GenericCardView;
@@ -11,18 +9,18 @@ import scal.io.liger.view.GenericCardView;
 /**
  * Created by mnbogner on 7/17/14.
  */
-public class GenericCardModel extends CardModel {
+public class GenericCard extends Card {
     private String mediaPath; // FIXME provide a default if they don't specify
     private String header;
     private String text;
     public ArrayList<String> storyPaths;
 
-    public GenericCardModel() {
+    public GenericCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new GenericCardView(context, this);
     }
 

@@ -10,24 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fima.cardsui.objects.Card;
-
 import java.io.File;
 import java.util.ArrayList;
 
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.GenericCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.GenericCard;
 import scal.io.liger.R;
 
 
-public class GenericCardView extends Card {
+public class GenericCardView extends com.fima.cardsui.objects.Card {
 
-    private GenericCardModel mCardModel;
+    private GenericCard mCardModel;
     private Context mContext;
 
-    public GenericCardView(Context context, CardModel cardModel) {
+    public GenericCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (GenericCardModel) cardModel;
+        mCardModel = (GenericCard) cardModel;
     }
 
     @Override

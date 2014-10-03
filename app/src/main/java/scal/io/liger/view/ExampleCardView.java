@@ -1,24 +1,18 @@
 package scal.io.liger.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
-
-import com.fima.cardsui.objects.Card;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +21,12 @@ import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.ExampleCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.ExampleCard;
 
-public class ExampleCardView extends Card {
+public class ExampleCardView extends com.fima.cardsui.objects.Card {
 
-    public ExampleCardModel mCardModel;
+    public ExampleCard mCardModel;
     public Context mContext;
     public static final String MEDIA_PATH_KEY = "value";
 
@@ -42,9 +36,9 @@ public class ExampleCardView extends Card {
         // empty, required for ClipCardView
     }
 
-    public ExampleCardView(Context context, CardModel cardModel) {
+    public ExampleCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ExampleCardModel) cardModel;
+        mCardModel = (ExampleCard) cardModel;
     }
 
     @Override

@@ -2,8 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import com.fima.cardsui.objects.Card;
-
 import java.util.ArrayList;
 
 import scal.io.liger.view.IntroCardView;
@@ -11,15 +9,15 @@ import scal.io.liger.view.IntroCardView;
 /**
  * Created by mnbogner on 7/11/14.
  */
-public class VideoCaptureTypeCardModel extends CardModel {
+public class VideoCaptureTypeCard extends Card {
     public ArrayList<Object> body;
 
-    public VideoCaptureTypeCardModel() {
+    public VideoCaptureTypeCard() {
         this.type = this.getClass().getName();
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public com.fima.cardsui.objects.Card getCardView(Context context) {
         return new IntroCardView(context, this); //TODO
     }
 

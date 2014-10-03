@@ -4,21 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.fima.cardsui.objects.Card;
 
 import scal.io.liger.R;
-import scal.io.liger.model.CardModel;
-import scal.io.liger.model.LinkCardModel;
+import scal.io.liger.model.Card;
+import scal.io.liger.model.LinkCard;
 
-public class LinkCardView extends Card {
-    private LinkCardModel mCardModel;
+public class LinkCardView extends com.fima.cardsui.objects.Card {
+    private LinkCard mCardModel;
     private Context mContext;
 
-    public LinkCardView(Context context, CardModel cardModel) {
+    public LinkCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (LinkCardModel) cardModel;
+        mCardModel = (LinkCard) cardModel;
     }
 
     @Override

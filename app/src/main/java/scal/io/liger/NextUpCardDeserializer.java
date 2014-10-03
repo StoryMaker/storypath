@@ -11,8 +11,8 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import scal.io.liger.model.LinkModel;
-import scal.io.liger.model.NextUpCardModel;
+import scal.io.liger.model.Link;
+import scal.io.liger.model.NextUpCard;
 
 /**
  * Created by mnbogner on 7/11/14.
@@ -23,10 +23,10 @@ import scal.io.liger.model.NextUpCardModel;
  * gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
  * Gson gson = gBuild.create();
  */
-public class NextUpCardDeserializer implements JsonDeserializer<NextUpCardModel> {
+public class NextUpCardDeserializer implements JsonDeserializer<NextUpCard> {
     @Override
-    public NextUpCardModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        NextUpCardModel nucm = new NextUpCardModel();
+    public NextUpCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        NextUpCard nucm = new NextUpCard();
 
         JsonObject jObj = jsonElement.getAsJsonObject();
 
@@ -44,7 +44,7 @@ public class NextUpCardDeserializer implements JsonDeserializer<NextUpCardModel>
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
                 JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                LinkModel link = (gson.fromJson(arrObj, LinkModel.class));
+                Link link = (gson.fromJson(arrObj, Link.class));
                 nucm.addLink(link);
             }
         }

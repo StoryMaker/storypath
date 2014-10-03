@@ -11,7 +11,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-import scal.io.liger.model.VideoCaptureTypeCardModel;
+import scal.io.liger.model.VideoCaptureTypeCard;
 
 /**
  * Created by mnbogner on 7/11/14.
@@ -22,10 +22,10 @@ import scal.io.liger.model.VideoCaptureTypeCardModel;
  * gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
  * Gson gson = gBuild.create();
  */
-public class VideoCaptureTypeCardDeserializer implements JsonDeserializer<VideoCaptureTypeCardModel> {
+public class VideoCaptureTypeCardDeserializer implements JsonDeserializer<VideoCaptureTypeCard> {
     @Override
-    public VideoCaptureTypeCardModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        VideoCaptureTypeCardModel vctcm = new VideoCaptureTypeCardModel();
+    public VideoCaptureTypeCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        VideoCaptureTypeCard vctcm = new VideoCaptureTypeCard();
 
         JsonObject jObj = jsonElement.getAsJsonObject();
 
