@@ -95,4 +95,16 @@ public class ClipCard extends ExampleCard {
 
         return loadMediaFile(clips.get(0));
     }
+
+    // the card-level delete method only deletes the local reference, not the actual media file
+    public void deleteMediaFile(int index) {
+        // unsure if selection should be based on index or object
+
+        if ((clips == null) || (index >= clips.size())) {
+            Log.e(this.getClass().getName(), "index out of range, cannot delete file");
+            return;
+        }
+
+        clips.remove(index);
+    }
 }

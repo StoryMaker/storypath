@@ -118,13 +118,18 @@ public class PreviewCardView extends com.fima.cardsui.objects.Card {
             if (cm instanceof ClipCard) {
                 ccm = (ClipCard) cm;
             } else {
-                // ERROR AND RETURN?
+                continue;
             }
 
+            String mediaPath = null;
             MediaFile mf = ccm.getSelectedMediaFile();
-            String mediaPath = mf.getPath();
 
-            paths.add(mCardModel.getStoryPathReference().buildPath(mediaPath));
+            if (mf == null) {
+                Log.e(this.getClass().getName(), "no media file was found");
+            } else {
+                mediaPath = mf.getPath();
+                paths.add(mCardModel.getStoryPathReference().buildPath(mediaPath));
+            }
         }
     }
 }

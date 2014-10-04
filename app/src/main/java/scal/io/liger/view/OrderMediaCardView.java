@@ -3,6 +3,7 @@ package scal.io.liger.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -74,11 +75,17 @@ public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
             if (cm instanceof ClipCard) {
                 ccm = (ClipCard) cm;
             } else {
-                // ERROR AND RETURN?
+                continue;
             }
 
+            String mediaPath = null;
             MediaFile mf = ccm.getSelectedMediaFile();
-            String mediaPath = mf.getPath();
+
+            if (mf == null) {
+                Log.e(this.getClass().getName(), "no media file was found");
+            } else {
+                mediaPath = mf.getPath();
+            }
 
             File mediaFile = null;
             Uri mediaURI = null;

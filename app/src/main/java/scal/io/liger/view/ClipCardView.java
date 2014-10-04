@@ -68,7 +68,11 @@ public class ClipCardView extends ExampleCardView {
 
             MediaFile mf = mCardModel.getSelectedMediaFile();
 
-            p = mf.getPath();
+            if (mf == null) {
+                Log.e(this.getClass().getName(), "no media file was found");
+            } else {
+                p = mf.getPath();
+            }
         }
 
         final File mediaFile = getValidFile(p, mCardModel.getExampleMediaPath());
