@@ -38,8 +38,4 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testLoadJSONFile() {
         onData(hasToString(equalToIgnoringCase("learning_guide_library.json"))).perform(click());
     }
-
-    public void testClickVideo() {
-        assertOnScreen(mMainActivity.getWindow().getDecorView(), mCardUI);
-    }
 }
