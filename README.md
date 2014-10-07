@@ -2,6 +2,12 @@ liger-prototype
 ================
 
 ---
+# Testing
+---
+#### Espresso Testing:
+To run the test suite, you simply need add the correct instrumentation runner to the Run config.  In Android Studio, open the 'Run' -> 'Edit Configurations' -> 'General tab.' Expand 'Android Tests' on the left and click 'MainActivityTest.'  Under 'Specific instrumentation runner (optional)', paste the following: com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner.
+
+---
 # Story Path format spec
 ---
 
