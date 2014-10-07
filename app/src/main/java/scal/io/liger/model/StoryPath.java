@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
+import scal.io.liger.ReferenceHelper;
 import scal.io.liger.StoryPathDeserializer;
 
 /**
@@ -314,5 +315,41 @@ public class StoryPath {
 
     public MediaFile loadMediaFile(String uuid) {
         return storyReference.loadMediaFile(uuid);
+    }
+
+    public ArrayList<ClipMetadata> exportMetadata() {
+        ArrayList<ClipMetadata> metadata = new ArrayList<ClipMetadata>();
+        ArrayList<String> classReference = new ArrayList<String>();
+        classReference.add(this.getId() + "::<<" + ClipCard.class.getName() + ">>");
+        ArrayList<Card> clipCards = ReferenceHelper.getCards(this, classReference);
+        for (Card c : clipCards) {
+            // should be safe to cast, cards fetched based on class
+            ClipCard cc = (ClipCard)c;
+
+            if (cc.getClips() != null) {
+                for (ClipMetadata cmd : cc.getClips()) {
+                    if (!metadata.contains(cmd)) {
+                        metadata.add(cmd);
+                    }
+                }
+            }
+        }
+        return metadata;
+    }
+
+    public void importMetadata(ArrayList<ClipMetadata> metadata) {
+        ArrayList<String> classReference = new ArrayList<String>();
+        classReference.add(this.getId() + "::<<" + ClipCard.class.getName() + ">>");
+        ArrayList<Card> clipCards = ReferenceHelper.getCards(this, classReference);
+        for (Card c : clipCards) {
+            // should be safe to cast, cards fetched based on class
+            ClipCard cc = (ClipCard) c;
+
+            // NEED TO REPLACE THIS WITH A BETTER ALGORITHM FOR MATCHING CLIPS TO CARDS
+            if (metadata.size() > 0) {
+                ClipMetadata cmd = metadata.remove(0);
+                cc.addClip(cmd, false);
+            }
+        }
     }
 }

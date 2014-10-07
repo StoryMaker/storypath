@@ -278,6 +278,30 @@ public class MainActivity extends Activity {
 
         StoryPath story = null;
         boolean newStory = false;
+
+        /*
+        // TEMP CODE FOR TESTING
+        if (cardPath == "SWITCH") {
+            GsonBuilder gBuild = new GsonBuilder();
+            gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
+            Gson gson = gBuild.create();
+
+            String jsonFile = "learning_guide_v2.json";
+
+            String json = JsonHelper.loadJSONFromPath(mStory.getStoryPathLibrary().buildPath(jsonFile));
+            story = gson.fromJson(json, StoryPath.class);
+            story.context = this.mContext;
+            story.setCardReferences();
+            story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
+
+            mStory.switchPaths(story);
+            refreshCardView();
+            mCardView.scrollToCard(0);
+
+            return;
+        }
+        */
+
         if (mStory.getCurrentStoryPath().getId().equals(pathParts[0])) {
             // reference targets this story path
             story = mStory.getCurrentStoryPath();

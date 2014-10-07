@@ -2,6 +2,7 @@
     "id": "learning_guide_library",
     "title": "Learning Guide Library",
     "story_path_template_files": [
-        "learning_guide_v1.json"
+        "learning_guide_v1.json",
+        "learning_guide_v2.json"
     ]
 }

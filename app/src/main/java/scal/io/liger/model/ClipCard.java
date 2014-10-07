@@ -46,6 +46,10 @@ public class ClipCard extends ExampleCard {
     }
 
     public void addClip(ClipMetadata clip) {
+        addClip(clip, true);
+    }
+
+    public void addClip(ClipMetadata clip, boolean notify) {
         if (this.clips == null) {
             this.clips = new ArrayList<ClipMetadata>();
         }
@@ -55,7 +59,9 @@ public class ClipCard extends ExampleCard {
 
         // send notification that a clip has been saved so that cards will be refreshed
         if (storyPathReference != null) {
-            storyPathReference.notifyActivity();
+            if (notify) {
+                storyPathReference.notifyActivity();
+            }
         } else {
             Log.e(this.getClass().getName(), "story path reference not found, cannot sent notification");
         }

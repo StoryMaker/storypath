@@ -2,6 +2,12 @@ package scal.io.liger.model;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -76,5 +82,46 @@ public class Story {
         }
 
         mediaFiles.remove(uuid);
+
+        // NEED TO DELETE ACTUAL FILE...
+    }
+
+    // NOT YET SURE WHERE TO PRESENT PATH OPTIONS AND DESERIALIZE NEW PATH
+    public void switchPaths(StoryPath newPath) {
+        // export clip metadata
+        // also may need to export stored values
+        StoryPath oldPath = this.getCurrentStoryPath();
+        ArrayList<ClipMetadata> metadata = oldPath.exportMetadata();
+
+        // serialize current story path
+        Gson gson = new Gson();
+        oldPath.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
+        oldPath.context = null;
+        oldPath.storyReference = null;
+        String json = gson.toJson(oldPath);
+
+        try {
+            File oldPathFile = new File(oldPath.buildPath(oldPath.getId() + ".path"));
+            PrintStream ps = new PrintStream(new FileOutputStream(oldPathFile.getPath()));
+            ps.print(json);
+            // store file path
+            // NOT YET SURE HOW TO HANDLE VERSIONS OR DUPLICATES
+            this.addStoryPathFile(oldPathFile.getPath());
+        } catch (FileNotFoundException fnfe) {
+            Log.e(this.getClass().getName(), "could not file file: " + fnfe.getMessage());
+        } catch (Exception e) {
+            Log.e(this.getClass().getName(), "other exception: " + e.getMessage());
+        }
+
+        // import clip metadata
+        newPath.importMetadata(metadata);
+
+        // should this be done externally?
+        newPath.setStoryReference(this);
+
+        // update current story path
+        this.setCurrentStoryPath(newPath);
+
+        // NOTIFY/REFRESH HERE OR LET THAT BE HANDLED BY WHATEVER CALLS THIS?
     }
 }
