@@ -31,6 +31,9 @@ public class BasicTextCardView extends com.fima.cardsui.objects.Card {
 
         tvText.setText(mCardModel.getText());
 
+        // supports automated testing
+        view.setTag(mCardModel.getId());
+
         return view;
     }
 }

@@ -63,6 +63,9 @@ public class MarkdownCardView extends com.fima.cardsui.objects.Card {
         Spanned htmlSpanned = Html.fromHtml(html);
         tvText.setText(htmlSpanned);
 
+        // supports automated testing
+        view.setTag(mCardModel.getId());
+
         return view;
     }
 }

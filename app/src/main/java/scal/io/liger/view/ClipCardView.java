@@ -209,6 +209,9 @@ public class ClipCardView extends ExampleCardView {
             }
         });
 
+        // supports automated testing
+        view.setTag(mCardModel.getId());
+
         return view;
     }
 

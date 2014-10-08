@@ -47,6 +47,9 @@ public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
 
         loadClips(mCardModel.getClipPaths(), dgvOrderClips);
 
+        // supports automated testing
+        view.setTag(mCardModel.getId());
+
         return view;
     }
 

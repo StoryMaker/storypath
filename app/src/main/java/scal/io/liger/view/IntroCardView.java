@@ -47,6 +47,9 @@ public class IntroCardView extends com.fima.cardsui.objects.Card {
             }
         });
 
+        // supports automated testing
+        view.setTag(mCardModel.getId());
+
         return view;
     }
 }

@@ -33,6 +33,9 @@ public class ProgressCardView extends com.fima.cardsui.objects.Card {
 
         ((TextView) view.findViewById(R.id.tv_text)).setText(mCardModel.getFilledCount() + " / " + mCardModel.getMaxCount());
 
+        // supports automated testing
+        view.setTag(mCardModel.getId());
+
         return view;
     }
 }

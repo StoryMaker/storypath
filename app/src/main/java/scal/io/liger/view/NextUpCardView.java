@@ -48,6 +48,9 @@ public class NextUpCardView extends com.fima.cardsui.objects.Card {
             ll.addView(linkButton);
         }
 
+        // supports automated testing
+        ll.setTag(mCardModel.getId());
+
         return ll;
     }
 }
