@@ -1,8 +1,8 @@
 {
     "dependencies": [
         {
-            "dependencyId": "learning_guide_v1",
-            "dependencyFile": "learning_guide_v1.json"
+            "dependency_id": "learning_guide_v1",
+            "dependency_file": "learning_guide_v1.json"
         }
     ],
     "cards": [

@@ -8,11 +8,13 @@ import scal.io.liger.view.IntroCardView;
  * Created by mnbogner on 7/17/14.
  */
 public class IntroCard extends Card {
-    public String headline;
-    public String level;
-    public String time;
+
+    private String headline;
+    private String level;
+    private String time;
 
     public IntroCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

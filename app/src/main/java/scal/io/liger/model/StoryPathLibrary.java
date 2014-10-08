@@ -11,11 +11,11 @@ import java.util.Map;
  */
 public class StoryPathLibrary {
 
-    public String id;
-    public String title;
-    public String fileLocation;
+    private String id;
+    private String title;
+    private String file_location;
     private Map<List<String>, String> hook_map;
-    private List<String> story_path_template_files; // story path template files
+    private List<String> story_path_template_files;
 
     public String getId() {
         return id;
@@ -33,12 +33,12 @@ public class StoryPathLibrary {
         this.title = title;
     }
 
-    public String getFileLocation() {
-        return fileLocation;
+    public String getFile_location() {
+        return file_location;
     }
 
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setFile_location(String file_location) {
+        this.file_location = file_location;
     }
 
     public Map<List<String>, String> getHook_map() {
@@ -63,7 +63,7 @@ public class StoryPathLibrary {
         }
 
         // construct path relative to location of story path
-        String relativePath = getFileLocation();
+        String relativePath = getFile_location();
 
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));

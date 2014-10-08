@@ -10,12 +10,14 @@ import scal.io.liger.view.GenericCardView;
  * Created by mnbogner on 7/17/14.
  */
 public class GenericCard extends Card {
-    private String mediaPath; // FIXME provide a default if they don't specify
+
+    private String media_path; // FIXME provide a default if they don't specify
     private String header;
     private String text;
-    public ArrayList<String> storyPaths;
+    private ArrayList<String> story_paths;
 
     public GenericCard() {
+        super();
         this.type = this.getClass().getName();
     }
 
@@ -24,9 +26,9 @@ public class GenericCard extends Card {
         return new GenericCardView(context, this);
     }
 
-    public String getMediaPath() { return fillReferences(mediaPath); }
+    public String getMedia_path() { return fillReferences(media_path); }
 
-    public void setMediaPath(String mediaPath) { this.mediaPath = mediaPath; }
+    public void setMedia_path(String media_path) { this.media_path = media_path; }
 
     public String getHeader() {
         return fillReferences(header);
@@ -44,24 +46,24 @@ public class GenericCard extends Card {
         this.text = text;
     }
 
-    public ArrayList<String> getStoryPaths() {
+    public ArrayList<String> getStory_paths() {
         ArrayList<String> a = new ArrayList<String>();
-        if (storyPaths != null) {
-            for (String s : storyPaths) {
+        if (story_paths != null) {
+            for (String s : story_paths) {
                 a.add(fillReferences(s));
             }
         }
         return a;
     }
 
-    public void setStoryPaths(ArrayList<String> storyPaths) {
-        this.storyPaths = storyPaths;
+    public void setStory_paths(ArrayList<String> story_paths) {
+        this.story_paths = story_paths;
     }
 
     public void addStoryPath(String storyPath) {
-        if (this.storyPaths == null)
-            this.storyPaths = new ArrayList<String>();
+        if (this.story_paths == null)
+            this.story_paths = new ArrayList<String>();
 
-        this.storyPaths.add(storyPath);
+        this.story_paths.add(storyPath);
     }
 }

@@ -4,22 +4,32 @@ package scal.io.liger.model;
  * Created by mnbogner on 7/14/14.
  */
 public class Dependency {
-    public String dependencyId;
-    public String dependencyFile;
 
-    public String getDependencyId() {
-        return dependencyId;
+    private String dependency_id;
+    private String dependency_file;
+
+    public Dependency() {
+        // required for JSON/GSON
     }
 
-    public void setDependencyId(String dependencyId) {
-        this.dependencyId = dependencyId;
+    public Dependency(String dependency_id, String dependency_file) {
+        this.dependency_id = dependency_id;
+        this.dependency_file = dependency_file;
     }
 
-    public String getDependencyFile() {
-        return dependencyFile;
+    public String getDependency_id() {
+        return dependency_id;
     }
 
-    public void setDependencyFile(String dependencyFile) {
-        this.dependencyFile = dependencyFile;
+    public void setDependency_id(String dependency_id) {
+        this.dependency_id = dependency_id;
+    }
+
+    public String getDependency_file() {
+        return dependency_file;
+    }
+
+    public void setDependency_file(String dependency_file) {
+        this.dependency_file = dependency_file;
     }
 }

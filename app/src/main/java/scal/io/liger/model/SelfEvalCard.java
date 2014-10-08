@@ -10,10 +10,12 @@ import scal.io.liger.view.SelfEvalCardView;
  * Created by mnbogner on 7/17/14.
  */
 public class SelfEvalCard extends Card {
-    public String header;
-    public ArrayList<String> checklist;
+
+    private String header;
+    private ArrayList<String> checklist;
 
     public SelfEvalCard() {
+        super();
         this.type = this.getClass().getName();
     }
 
@@ -32,9 +34,10 @@ public class SelfEvalCard extends Card {
 
     public ArrayList<String> getChecklist() {
         ArrayList<String> a = new ArrayList<String>();
-        for (String s : checklist)
-        {
-            a.add(fillReferences(s));
+        if (checklist != null) {
+            for (String s : checklist) {
+                a.add(fillReferences(s));
+            }
         }
         return a;
     }

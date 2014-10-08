@@ -10,11 +10,13 @@ import scal.io.liger.view.ClipInstructionListCardView;
  * Created by mnbogner on 7/17/14.
  */
 public class ClipInstructionListCard extends Card {
-    public String media_path;
-    public String header;
-    public ArrayList<String> bullet_list;
+
+    private String media_path;
+    private String header;
+    private ArrayList<String> bullet_list;
 
     public ClipInstructionListCard() {
+        super();
         this.type = this.getClass().getName();
     }
 
@@ -41,9 +43,10 @@ public class ClipInstructionListCard extends Card {
 
     public ArrayList<String> getBullet_list() {
         ArrayList<String> a = new ArrayList<String>();
-        for (String s : bullet_list)
-        {
-            a.add(fillReferences(s));
+        if (bullet_list != null) {
+            for (String s : bullet_list) {
+                a.add(fillReferences(s));
+            }
         }
         return a;
     }

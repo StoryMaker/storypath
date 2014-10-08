@@ -6,9 +6,11 @@ import scal.io.liger.view.ChooseMediumCardView;
 
 
 public class ChooseMediumCard extends Card {
+
     private String header;
 
     public ChooseMediumCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

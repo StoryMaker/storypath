@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import scal.io.liger.view.NextUpCardView;
 
 public class NextUpCard extends Card {
+
     private String text;
-    public ArrayList<Link> links;
+    private ArrayList<Link> links;
 
     public NextUpCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

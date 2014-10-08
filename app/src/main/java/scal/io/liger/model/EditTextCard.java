@@ -5,10 +5,12 @@ import android.content.Context;
 import scal.io.liger.view.EditTextCardView;
 
 public class EditTextCard extends Card {
+
     private String hint_text;
     private String header;
 
     public EditTextCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

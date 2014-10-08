@@ -16,10 +16,18 @@ import java.util.HashMap;
  */
 public class Story {
 
-    public StoryPathLibrary storyPathLibrary;
-    public StoryPath currentStoryPath;
-    public ArrayList<String> storyPathInstanceFiles; // story path instance files
-    public HashMap<String, MediaFile> mediaFiles;
+    private StoryPathLibrary storyPathLibrary; // not serialized
+    private StoryPath currentStoryPath; // not serialized
+    private ArrayList<String> story_path_instance_files;
+    private HashMap<String, MediaFile> media_files;
+
+    public Story() {
+        // required for JSON/GSON
+    }
+
+    public Story(StoryPathLibrary storyPathLibrary) {
+        this.storyPathLibrary = storyPathLibrary;
+    }
 
     public StoryPathLibrary getStoryPathLibrary() {
         return storyPathLibrary;
@@ -37,51 +45,51 @@ public class Story {
         this.currentStoryPath = currentStoryPath;
     }
 
-    public ArrayList<String> getStoryPathInstanceFiles() {
-        return storyPathInstanceFiles;
+    public ArrayList<String> getStory_path_instance_files() {
+        return story_path_instance_files;
     }
 
-    public void setStoryPathInstanceFiles(ArrayList<String> storyPathInstanceFiles) {
-        this.storyPathInstanceFiles = storyPathInstanceFiles;
+    public void setStory_path_instance_files(ArrayList<String> story_path_instance_files) {
+        this.story_path_instance_files = story_path_instance_files;
     }
 
-    public void addStoryPathFile(String file) {
-        if (storyPathInstanceFiles == null) {
-            storyPathInstanceFiles = new ArrayList<String>();
+    public void addStoryPathInstanceFile(String file) {
+        if (this.story_path_instance_files == null) {
+            this.story_path_instance_files = new ArrayList<String>();
         }
 
-        storyPathInstanceFiles.add(file);
+        this.story_path_instance_files.add(file);
     }
 
-    public HashMap<String, MediaFile> getMediaFiles() {
-        return mediaFiles;
+    public HashMap<String, MediaFile> getMedia_files() {
+        return media_files;
     }
 
-    public void setMediaFiles(HashMap<String, MediaFile> mediaFiles) {
-        this.mediaFiles = mediaFiles;
+    public void setMedia_files(HashMap<String, MediaFile> media_files) {
+        this.media_files = media_files;
     }
 
     public void saveMediaFile(String uuid, MediaFile file) {
 
-        if (mediaFiles == null) {
-            mediaFiles = new HashMap<String, MediaFile>();
+        if (this.media_files == null) {
+            this.media_files = new HashMap<String, MediaFile>();
         }
-        mediaFiles.put(uuid, file);
+        this.media_files.put(uuid, file);
     }
 
     public MediaFile loadMediaFile(String uuid) {
-        return mediaFiles.get(uuid);
+        return media_files.get(uuid);
     }
 
     // need to determine whether users are allowed to delete files that are referenced by cards
     // need to determine whether to automatically delete files when they are no longer referenced
     public void deleteMediaFile(String uuid) {
-        if ((mediaFiles == null) || (!mediaFiles.keySet().contains(uuid))) {
+        if ((media_files == null) || (!media_files.keySet().contains(uuid))) {
             Log.e(this.getClass().getName(), "key was not found, cannot delete file");
             return;
         }
 
-        mediaFiles.remove(uuid);
+        media_files.remove(uuid);
 
         // NEED TO DELETE ACTUAL FILE...
     }
@@ -96,8 +104,8 @@ public class Story {
         // serialize current story path
         Gson gson = new Gson();
         oldPath.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
-        oldPath.context = null;
-        oldPath.storyReference = null;
+        oldPath.setContext(null);
+        oldPath.setStoryReference(null);
         String json = gson.toJson(oldPath);
 
         try {
@@ -106,7 +114,7 @@ public class Story {
             ps.print(json);
             // store file path
             // NOT YET SURE HOW TO HANDLE VERSIONS OR DUPLICATES
-            this.addStoryPathFile(oldPathFile.getPath());
+            this.addStoryPathInstanceFile(oldPathFile.getPath());
         } catch (FileNotFoundException fnfe) {
             Log.e(this.getClass().getName(), "could not file file: " + fnfe.getMessage());
         } catch (Exception e) {

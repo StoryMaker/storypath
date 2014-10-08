@@ -16,6 +16,15 @@ public class MediaFile {
     private String medium; // mime type?
     private Bitmap thumbnail;
 
+    public MediaFile() {
+      // required for JSON/GSON
+    }
+
+    public MediaFile(String path, String medium) {
+        this.path = path;
+        this.medium = medium;
+    }
+
     public String getPath() {
         return path;
     }

@@ -7,11 +7,12 @@ import scal.io.liger.view.ExampleCardView;
 
 public class ExampleCard extends Card {
 
-    public String header;
-    public String clip_medium;
-    public String example_media_path;
+    private String header;
+    private String clip_medium;
+    private String example_media_path;
 
     public ExampleCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

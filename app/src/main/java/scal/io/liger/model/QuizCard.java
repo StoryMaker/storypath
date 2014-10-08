@@ -10,10 +10,12 @@ import scal.io.liger.view.IntroCardView;
  * Created by mnbogner on 7/10/14.
  */
 public class QuizCard extends Card {
-    public String description;
-    public ArrayList<Object> options;
+
+    private String description;
+    private ArrayList<Object> options;
 
     public QuizCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

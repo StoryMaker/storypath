@@ -10,14 +10,15 @@ import scal.io.liger.view.PreviewCardView;
 
 
 public class PreviewCard extends Card {
+    
     private String text;
-
-    private ArrayList<String> story_medium;
+    private ArrayList<String> story_medium; // why is this an array?
     private ArrayList<String> video_clip_cards;
     private ArrayList<String> audio_clip_cards;
     private ArrayList<String> photo_clip_cards;
 
     public PreviewCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

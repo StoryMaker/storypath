@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -14,12 +15,19 @@ import scal.io.liger.Constants;
  * Created by mnbogner on 7/10/14.
  */
 public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
-    public String type;
-    public String id;
-    public String title;
-    public StoryPath storyPathReference;
-    public ArrayList<String> references;
-    public HashMap<String, String> values;
+
+    protected String type;
+    private String id;
+    private String title;
+    protected StoryPath storyPathReference; // not serialized
+    private ArrayList<String> references;
+    private HashMap<String, String> values;
+
+    public Card() {
+        // required for JSON/GSON
+    }
+
+    public abstract com.fima.cardsui.objects.Card getCardView(Context context);
 
     public String getType() {
         return type;
@@ -46,8 +54,6 @@ public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
     public StoryPath getStoryPathReference() {
         return storyPathReference;
     }
-
-    public abstract com.fima.cardsui.objects.Card getCardView(Context context);
 
     public void setStoryPathReference(StoryPath storyPathReference) {
         this.storyPathReference = storyPathReference;
@@ -157,7 +163,8 @@ public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
         Field f = null;
         try {
             c = this.getClass();
-            f = c.getField(key);
+            f = c.getDeclaredField(key);
+            f.setAccessible(true);
             return f.get(this).toString(); // not the best solution, but somehow int fields come back with Integer values
                                            // NEEDS REVISION TO HANDLE NON-STRING FIELDS (IE: CLIPS)
         } catch (Exception e) {

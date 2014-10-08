@@ -20,17 +20,18 @@ import scal.io.liger.StoryPathDeserializer;
  * Created by mnbogner on 7/10/14.
  */
 public class StoryPath {
-    public String id;
-    public String title;
-    public ArrayList<Card> cards;
-    public ArrayList<Dependency> dependencies;
-    public String fileLocation;
-    public Story storyReference;
+
+    private String id;
+    private String title;
+    private ArrayList<Card> cards;
+    private ArrayList<Dependency> dependencies;
+    private String file_location;
+    private Story storyReference; // not serialized
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
     // also must be cleared before serializing story path
-    public Context context;
+    private Context context;
 
     public String getId() {
         return id;
@@ -129,12 +130,12 @@ public class StoryPath {
         this.dependencies.add(dependency);
     }
 
-    public String getFileLocation() {
-        return fileLocation;
+    public String getFile_location() {
+        return file_location;
     }
 
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setFile_location(String file_location) {
+        this.file_location = file_location;
     }
 
     public Story getStoryReference() {
@@ -202,17 +203,17 @@ public class StoryPath {
 
         // reference targets a serialized story path
         for (Dependency dependency : dependencies) {
-            if (dependency.getDependencyId().equals(pathParts[0])) {
+            if (dependency.getDependency_id().equals(pathParts[0])) {
                 GsonBuilder gBuild = new GsonBuilder();
                 gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
                 Gson gson = gBuild.create();
 
-                String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
+                String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependency_file()));
                 story = gson.fromJson(json, StoryPath.class);
 
                 story.context = this.context;
                 story.setCardReferences();
-                story.setFileLocation(buildPath(dependency.getDependencyFile()));
+                story.setFile_location(buildPath(dependency.getDependency_file()));
             }
         }
 
@@ -242,7 +243,7 @@ public class StoryPath {
         }
 
         // construct path relative to location of story path
-        String relativePath = getFileLocation();
+        String relativePath = getFile_location();
 
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));

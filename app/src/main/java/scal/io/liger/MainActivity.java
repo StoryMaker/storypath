@@ -73,8 +73,8 @@ public class MainActivity extends Activity {
         } else {
             Gson gson = new Gson();
             mStory.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
-            mStory.getCurrentStoryPath().context = null;
-            mStory.getCurrentStoryPath().storyReference = null;
+            mStory.getCurrentStoryPath().setContext(null);
+            mStory.getCurrentStoryPath().setStoryReference(null);;
 
             // need to serialize Story as well?
 
@@ -96,9 +96,9 @@ public class MainActivity extends Activity {
             mStory.setStoryPathLibrary(mStoryPathLibrary);
             mStory.setCurrentStoryPath(sp);
 
-            mStory.getCurrentStoryPath().context = this;
+            mStory.getCurrentStoryPath().setContext(this);
             mStory.getCurrentStoryPath().setCardReferences();
-            mStory.getCurrentStoryPath().storyReference = mStory;
+            mStory.getCurrentStoryPath().setStoryReference(mStory);
 
         }
 
@@ -198,18 +198,16 @@ public class MainActivity extends Activity {
         // a story path library model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
         if ((jsonFile == null) || (jsonFile.length() == 0)) {
-            if ((mStoryPathLibrary.getFileLocation() == null) || (mStoryPathLibrary.getFileLocation().length() == 0)) {
+            if ((mStoryPathLibrary.getFile_location() == null) || (mStoryPathLibrary.getFile_location().length() == 0)) {
                 Log.e(TAG, "file location for story path library " + mStoryPathLibrary.getId() + " could not be determined");
             }
         } else {
-            mStoryPathLibrary.setFileLocation(jsonFile.getPath());
+            mStoryPathLibrary.setFile_location(jsonFile.getPath());
         }
 
         if (mStory == null) {
-            mStory = new Story();
+            mStory = new Story(mStoryPathLibrary);
         }
-
-        mStory.setStoryPathLibrary(mStoryPathLibrary);
     }
 
     private void initCardList(String json) {
@@ -239,17 +237,17 @@ public class MainActivity extends Activity {
         Gson gson = gBuild.create();
 
         StoryPath sp = gson.fromJson(json, StoryPath.class);
-        sp.context = this.mContext;
+        sp.setContext(this.mContext);
         sp.setCardReferences();
 
         // a story path model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
         if ((jsonFile == null) || (jsonFile.length() == 0)) {
-            if ((sp.getFileLocation() == null) || (sp.getFileLocation().length() == 0)) {
+            if ((sp.getFile_location() == null) || (sp.getFile_location().length() == 0)) {
                 Log.e(TAG, "file location for story path " + sp.getId() + " could not be determined");
             }
         } else {
-            sp.setFileLocation(jsonFile.getPath());
+            sp.setFile_location(jsonFile.getPath());
         }
 
         sp.setStoryReference(mStory);
@@ -292,7 +290,7 @@ public class MainActivity extends Activity {
             story = gson.fromJson(json, StoryPath.class);
             story.context = this.mContext;
             story.setCardReferences();
-            story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
+            story.setFile_location(mStory.getCurrentStoryPath().buildPath(jsonFile));
 
             mStory.switchPaths(story);
             refreshCardView();
@@ -308,18 +306,18 @@ public class MainActivity extends Activity {
         } else {
             // reference targets a serialized story path
             for (Dependency dependency : mStory.getCurrentStoryPath().getDependencies()) {
-                if (dependency.getDependencyId().equals(pathParts[0])) {
+                if (dependency.getDependency_id().equals(pathParts[0])) {
                     GsonBuilder gBuild = new GsonBuilder();
                     gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
                     Gson gson = gBuild.create();
 
-                    String jsonFile = dependency.getDependencyFile();
+                    String jsonFile = dependency.getDependency_file();
                     String json = JsonHelper.loadJSONFromPath(mStory.getCurrentStoryPath().buildPath(jsonFile));
                     story = gson.fromJson(json, StoryPath.class);
 
-                    story.context = this.mContext;
+                    story.setContext(this.mContext);
                     story.setCardReferences();
-                    story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
+                    story.setFile_location(mStory.getCurrentStoryPath().buildPath(jsonFile));
 
                     newStory = true;
                 }
@@ -379,11 +377,7 @@ public class MainActivity extends Activity {
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-
-                    MediaFile mf = new MediaFile();
-                    mf.setMedium(Constants.VIDEO);
-                    mf.setPath(path);
-
+                    MediaFile mf = new MediaFile(path, Constants.VIDEO);
                     cc.saveMediaFile(mf);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
@@ -403,11 +397,7 @@ public class MainActivity extends Activity {
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-
-                    MediaFile mf = new MediaFile();
-                    mf.setMedium(Constants.PHOTO);
-                    mf.setPath(path);
-
+                    MediaFile mf = new MediaFile(path, Constants.PHOTO);
                     cc.saveMediaFile(mf);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
@@ -428,11 +418,7 @@ public class MainActivity extends Activity {
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-
-                    MediaFile mf = new MediaFile();
-                    mf.setMedium(Constants.AUDIO);
-                    mf.setPath(path);
-
+                    MediaFile mf = new MediaFile(path, Constants.AUDIO);
                     cc.saveMediaFile(mf);
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");

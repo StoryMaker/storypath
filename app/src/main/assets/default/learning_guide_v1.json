@@ -3,12 +3,12 @@
     "title": "Learning Guide v1",
     "dependencies": [
         {
-            "dependencyId": "learning_guide_v1_2",
-            "dependencyFile": "learning_guide_v1_2.json"
+            "dependency_id": "learning_guide_v1_2",
+            "dependency_file": "learning_guide_v1_2.json"
         },
         {
-            "dependencyId": "make_a_new_story",
-            "dependencyFile": "make_a_new_story.json"
+            "dependency_id": "make_a_new_story",
+            "dependency_file": "make_a_new_story.json"
         }
     ],
     "cards": [
@@ -395,7 +395,7 @@
         },
         {
             "text": "You completed this path.  Wooooot.", 
-            "mediaPath": "/foo/bar.jpg",
+            "media_path": "/foo/bar.jpg",
             "header": "Congratulations!",
             "type": "scal.io.liger.model.CongratulationsCard",
             "id": "congratulations",

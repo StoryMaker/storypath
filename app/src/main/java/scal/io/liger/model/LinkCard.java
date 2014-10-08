@@ -5,10 +5,12 @@ import android.content.Context;
 import scal.io.liger.view.LinkCardView;
 
 public class LinkCard extends Card {
+
     private String text;
     private String link;
 
     public LinkCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

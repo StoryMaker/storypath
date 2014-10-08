@@ -10,9 +10,11 @@ import scal.io.liger.view.IntroCardView;
  * Created by mnbogner on 7/11/14.
  */
 public class VideoCaptureTypeCard extends Card {
-    public ArrayList<Object> body;
+
+    private ArrayList<Object> body;
 
     public VideoCaptureTypeCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

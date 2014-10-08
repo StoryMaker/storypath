@@ -16,11 +16,12 @@ import scal.io.liger.view.ClipCardView;
 
 public class ClipCard extends ExampleCard {
 
+    private String clip_type;
+    private ArrayList<ClipMetadata> clips;
     // need length, medium, type restrictions, etc
-    public String clip_type;
-    public ArrayList<ClipMetadata> clips;
 
     public ClipCard() {
+        super();
         this.type = this.getClass().getName();
     }
 
@@ -53,7 +54,6 @@ public class ClipCard extends ExampleCard {
         if (this.clips == null) {
             this.clips = new ArrayList<ClipMetadata>();
         }
-
         // by default, the last recorded clip is considered "selected"
         this.clips.add(0, clip);
 
@@ -68,17 +68,14 @@ public class ClipCard extends ExampleCard {
     }
 
     public void saveMediaFile(MediaFile mf) {
+        ClipMetadata cmd = new ClipMetadata(clip_type, UUID.randomUUID().toString());
 
-        ClipMetadata cmd = new ClipMetadata();
-        cmd.type = clip_type;
-        cmd.uuid = UUID.randomUUID().toString();
-
-        getStoryPathReference().saveMediaFile(cmd.uuid, mf);
+        getStoryPathReference().saveMediaFile(cmd.getUuid(), mf);
         addClip(cmd);
     }
 
     public MediaFile loadMediaFile(ClipMetadata cmd) {
-        return getStoryPathReference().loadMediaFile(cmd.uuid);
+        return getStoryPathReference().loadMediaFile(cmd.getUuid());
     }
 
     public void selectMediaFile(int index) {

@@ -5,9 +5,11 @@ import android.content.Context;
 import scal.io.liger.view.ButtonCardView;
 
 public class ButtonCard extends Card {
+
     private String text;
 
     public ButtonCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

@@ -9,11 +9,12 @@ import java.util.Random;
 public class TipCard extends MarkdownCard {
 
     private Random random;
-    public ArrayList<String> tips;
+    private ArrayList<String> tips;
 
     public TipCard() {
+        super();
         this.type = this.getClass().getName();
-        random = new Random();
+        this.random = new Random();
     }
 
     @Override
@@ -25,10 +26,11 @@ public class TipCard extends MarkdownCard {
 
     public ArrayList<String> getTips() {
         ArrayList<String> a = new ArrayList<String>();
-        for (String s : tips) {
-            a.add(fillReferences(s));
+        if (tips != null) {
+            for (String s : tips) {
+                a.add(fillReferences(s));
+            }
         }
-
         return a;
     }
 

@@ -43,9 +43,9 @@ public class GenericCardView extends com.fima.cardsui.objects.Card {
         LinearLayout llTextWrapper = (LinearLayout) view.findViewById(R.id.ll_text_wrapper);
 
         //TODO find better way of checking file is valid
-        File mediaFile = new File(mCardModel.getMediaPath());
+        File mediaFile = new File(mCardModel.getMedia_path());
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMediaPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMedia_path());
             ivCardImage.setImageBitmap(bitmap);
             ivCardImage.setVisibility(View.VISIBLE);
         }
@@ -62,7 +62,7 @@ public class GenericCardView extends com.fima.cardsui.objects.Card {
         }
 
         //add paths
-        ArrayList<String> paths = mCardModel.getStoryPaths();
+        ArrayList<String> paths = mCardModel.getStory_paths();
         if (paths != null) {
             for (final String txtPath : paths) {
                 final TextView tvPath = new TextView(mContext);

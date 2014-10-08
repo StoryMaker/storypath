@@ -10,16 +10,16 @@ import scal.io.liger.view.OrderMediaCardView;
 
 
 public class OrderMediaCard extends Card {
+
     private String header;
     private String medium;
-    private ArrayList<String> clips;
-
-    private ArrayList<String> story_medium;
+    private ArrayList<String> story_medium; // why is this an array?
     private ArrayList<String> video_clip_cards;
     private ArrayList<String> audio_clip_cards;
     private ArrayList<String> photo_clip_cards;
 
     public OrderMediaCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

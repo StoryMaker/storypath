@@ -5,9 +5,11 @@ import android.content.Context;
 import scal.io.liger.view.BasicTextCardView;
 
 public class BasicTextCard extends Card {
-    public String text;
+
+    private String text;
 
     public BasicTextCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

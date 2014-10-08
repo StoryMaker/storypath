@@ -5,9 +5,11 @@ import android.content.Context;
 import scal.io.liger.view.MarkdownCardView;
 
 public class MarkdownCard extends Card {
-    public String text;
+
+    protected String text;
 
     public MarkdownCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

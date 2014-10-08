@@ -10,14 +10,15 @@ import scal.io.liger.ReferenceHelper;
 import scal.io.liger.view.ProgressCardView;
 
 public class ProgressCard extends Card {
-    private String text;
 
-    private ArrayList<String> story_medium;
+    private String text;
+    private ArrayList<String> story_medium; // why is this an array?
     private ArrayList<String> video_clip_cards;
     private ArrayList<String> audio_clip_cards;
     private ArrayList<String> photo_clip_cards;
 
     public ProgressCard() {
+        super();
         this.type = this.getClass().getName();
     }
 

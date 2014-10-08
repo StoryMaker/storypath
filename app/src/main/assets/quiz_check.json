@@ -3,9 +3,8 @@
   "title": "QUIZ CHECK",
   "dependencies": [
       {
-        "dependencyType": "scal.io.liger.model.StoryPathModel",
-        "dependencyId": "completed_quiz",
-        "dependencyFile": "completed_quiz.json"
+        "dependency_id": "completed_quiz",
+        "dependency_file": "completed_quiz.json"
       }
   ],
   "cards": [
