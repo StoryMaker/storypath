@@ -40,9 +40,11 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
 
         String id = jObj.get("id").getAsString();
         String title = jObj.get("title").getAsString();
+        String class_package = jObj.get("class_package").getAsString();
 
         spm.setId(id);
         spm.setTitle(title);
+        spm.setClass_package(class_package);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(NextUpCardDeserializer.class, new NextUpCardDeserializer());
@@ -64,7 +66,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
                 JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                String cardType = arrObj.get("type").getAsString();
+                String cardType = class_package + "." + arrObj.get("type").getAsString();
                 try {
                     Class cardClass = Class.forName(cardType);
                     Card card = (Card)(gson.fromJson(arrObj, cardClass));

@@ -23,6 +23,7 @@ public class StoryPath {
 
     private String id;
     private String title;
+    private String class_package;
     private ArrayList<Card> cards;
     private ArrayList<Dependency> dependencies;
     private String file_location;
@@ -47,6 +48,14 @@ public class StoryPath {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getClass_package() {
+        return class_package;
+    }
+
+    public void setClass_package(String class_package) {
+        this.class_package = class_package;
     }
 
     public ArrayList<Card> getCards() {
