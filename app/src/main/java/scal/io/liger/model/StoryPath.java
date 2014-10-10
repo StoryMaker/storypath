@@ -362,4 +362,20 @@ public class StoryPath {
             }
         }
     }
+
+    public ArrayList<FullMetadata> exportAllMetadata() {
+        ArrayList<ClipMetadata> metadata = exportMetadata();
+        ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
+        for (ClipMetadata cm : metadata) {
+            MediaFile mf = loadMediaFile(cm.getUuid());
+
+            if (mf == null) {
+                Log.e(this.getClass().getName(), "no media file was found for uuid " + cm.getUuid());
+            } else {
+                FullMetadata fm = new FullMetadata(cm, mf);
+                allMetadata.add(fm);
+            }
+        }
+        return allMetadata;
+    }
 }
