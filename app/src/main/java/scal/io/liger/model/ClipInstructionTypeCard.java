@@ -11,9 +11,9 @@ import scal.io.liger.view.ClipInstructionTypeCardView;
  */
 public class ClipInstructionTypeCard extends Card {
 
-    private String media_path;
+    private String mediaPath;
     private String header;
-    private ArrayList<String> clip_types;
+    private ArrayList<String> clipTypes;
 
     public ClipInstructionTypeCard() {
         super();
@@ -25,12 +25,12 @@ public class ClipInstructionTypeCard extends Card {
         return new ClipInstructionTypeCardView(context, this);
     }
 
-    public String getMedia_path() {
-        return fillReferences(media_path);
+    public String getMediaPath() {
+        return fillReferences(mediaPath);
     }
 
-    public void setMedia_path(String media_path) {
-        this.media_path = media_path;
+    public void setMediaPath(String mediaPath) {
+        this.mediaPath = mediaPath;
     }
 
     public String getHeader() {
@@ -41,24 +41,24 @@ public class ClipInstructionTypeCard extends Card {
         this.header = header;
     }
 
-    public ArrayList<String> getClip_types() {
+    public ArrayList<String> getClipTypes() {
         ArrayList<String> a = new ArrayList<String>();
-        if (clip_types != null) {
-            for (String s : clip_types) {
+        if (clipTypes != null) {
+            for (String s : clipTypes) {
                 a.add(fillReferences(s));
             }
         }
         return a;
     }
 
-    public void setClip_types(ArrayList<String> clip_types) {
-        this.clip_types = clip_types;
+    public void setClipTypes(ArrayList<String> clipTypes) {
+        this.clipTypes = clipTypes;
     }
 
     public void addClipType(String clip_type) {
-        if (this.clip_types == null)
-            this.clip_types = new ArrayList<String>();
+        if (this.clipTypes == null)
+            this.clipTypes = new ArrayList<String>();
 
-        this.clip_types.add(clip_type);
+        this.clipTypes.add(clip_type);
     }
 }

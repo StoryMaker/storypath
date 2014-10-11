@@ -41,14 +41,14 @@ public class ClipInstructionTypeCardView extends com.fima.cardsui.objects.Card {
         tvHeader.setText(mCardModel.getHeader());
 
         //TODO find better way of checking file is valid
-        File mediaFile = new File(mCardModel.getMedia_path());
+        File mediaFile = new File(mCardModel.getMediaPath());
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMedia_path());
+            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMediaPath());
             ivCardImage.setImageBitmap(bitmap);
         }
 
         //add options
-        for(final String txtOption : mCardModel.getClip_types()) {
+        for(final String txtOption : mCardModel.getClipTypes()) {
             final TextView tvOption = new TextView(mContext);
             tvOption.setText(txtOption);
 

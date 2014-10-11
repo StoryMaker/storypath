@@ -12,10 +12,10 @@ import scal.io.liger.view.ProgressCardView;
 public class ProgressCard extends Card {
 
     private String text;
-    private ArrayList<String> story_medium; // why is this an array?
-    private ArrayList<String> video_clip_cards;
-    private ArrayList<String> audio_clip_cards;
-    private ArrayList<String> photo_clip_cards;
+    private ArrayList<String> storyMedium; // why is this an array?
+    private ArrayList<String> videoClipCards;
+    private ArrayList<String> audioClipCards;
+    private ArrayList<String> photoClipCards;
 
     public ProgressCard() {
         super();
@@ -35,36 +35,36 @@ public class ProgressCard extends Card {
         this.text = time;
     }
 
-    public ArrayList<String> getStory_medium() {
-        return story_medium;
+    public ArrayList<String> getStoryMedium() {
+        return storyMedium;
     }
 
-    public void setStory_medium(ArrayList<String> story_medium) {
-        this.story_medium = story_medium;
+    public void setStoryMedium(ArrayList<String> storyMedium) {
+        this.storyMedium = storyMedium;
     }
 
-    public ArrayList<String> getVideo_clip_cards() {
-        return video_clip_cards;
+    public ArrayList<String> getVideoClipCards() {
+        return videoClipCards;
     }
 
-    public void setVideo_clip_cards(ArrayList<String> video_clip_cards) {
-        this.video_clip_cards = video_clip_cards;
+    public void setVideoClipCards(ArrayList<String> videoClipCards) {
+        this.videoClipCards = videoClipCards;
     }
 
-    public ArrayList<String> getAudio_clip_cards() {
-        return audio_clip_cards;
+    public ArrayList<String> getAudioClipCards() {
+        return audioClipCards;
     }
 
-    public void setAudio_clip_cards(ArrayList<String> audio_clip_cards) {
-        this.audio_clip_cards = audio_clip_cards;
+    public void setAudioClipCards(ArrayList<String> audioClipCards) {
+        this.audioClipCards = audioClipCards;
     }
 
-    public ArrayList<String> getPhoto_clip_cards() {
-        return photo_clip_cards;
+    public ArrayList<String> getPhotoClipCards() {
+        return photoClipCards;
     }
 
-    public void setPhoto_clip_cards(ArrayList<String> photo_clip_cards) {
-        this.photo_clip_cards = photo_clip_cards;
+    public void setPhotoClipCards(ArrayList<String> photoClipCards) {
+        this.photoClipCards = photoClipCards;
     }
 
     @Override
@@ -79,11 +79,11 @@ public class ProgressCard extends Card {
     public boolean areWeSatisfied() {
         String mediumReference = "";
 
-        if (story_medium.size() == 1) {
-            mediumReference = story_medium.get(0);
+        if (storyMedium.size() == 1) {
+            mediumReference = storyMedium.get(0);
         }
         else {
-            Log.e(this.type, "unexpected number of story medium references: " + story_medium.size());
+            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
             return false;
         }
 
@@ -95,13 +95,13 @@ public class ProgressCard extends Card {
             return false;
         }
         else if (medium.equals(Constants.VIDEO)) {
-            values = ReferenceHelper.getValues(storyPathReference, video_clip_cards);
+            values = ReferenceHelper.getValues(storyPathReference, videoClipCards);
         }
         else if (medium.equals(Constants.AUDIO)) {
-            values = ReferenceHelper.getValues(storyPathReference, audio_clip_cards);
+            values = ReferenceHelper.getValues(storyPathReference, audioClipCards);
         }
         else if (medium.equals(Constants.PHOTO)) {
-            values = ReferenceHelper.getValues(storyPathReference, photo_clip_cards);
+            values = ReferenceHelper.getValues(storyPathReference, photoClipCards);
         }
 
         for (String s : values) {
@@ -118,11 +118,11 @@ public class ProgressCard extends Card {
 
         String mediumReference = "";
 
-        if (story_medium.size() == 1) {
-            mediumReference = story_medium.get(0);
+        if (storyMedium.size() == 1) {
+            mediumReference = storyMedium.get(0);
         }
         else {
-            Log.e(this.type, "unexpected number of story medium references: " + story_medium.size());
+            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
             return 0;
         }
 
@@ -134,13 +134,13 @@ public class ProgressCard extends Card {
             return 0;
         }
         else if (medium.equals(Constants.VIDEO)) {
-            values = ReferenceHelper.getValues(storyPathReference, video_clip_cards);
+            values = ReferenceHelper.getValues(storyPathReference, videoClipCards);
         }
         else if (medium.equals(Constants.AUDIO)) {
-            values = ReferenceHelper.getValues(storyPathReference, audio_clip_cards);
+            values = ReferenceHelper.getValues(storyPathReference, audioClipCards);
         }
         else if (medium.equals(Constants.PHOTO)) {
-            values = ReferenceHelper.getValues(storyPathReference, photo_clip_cards);
+            values = ReferenceHelper.getValues(storyPathReference, photoClipCards);
         }
 
         for (String s : values) {
@@ -157,11 +157,11 @@ public class ProgressCard extends Card {
 
         String mediumReference = "";
 
-        if (story_medium.size() == 1) {
-            mediumReference = story_medium.get(0);
+        if (storyMedium.size() == 1) {
+            mediumReference = storyMedium.get(0);
         }
         else {
-            Log.e(this.type, "unexpected number of story medium references: " + story_medium.size());
+            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
             return 0;
         }
 
@@ -172,13 +172,13 @@ public class ProgressCard extends Card {
             return 0;
         }
         else if (medium.equals(Constants.VIDEO)) {
-            result = video_clip_cards.size();
+            result = videoClipCards.size();
         }
         else if (medium.equals(Constants.AUDIO)) {
-            result = audio_clip_cards.size();
+            result = audioClipCards.size();
         }
         else if (medium.equals(Constants.PHOTO)) {
-            result = photo_clip_cards.size();
+            result = photoClipCards.size();
         }
 
         return result;

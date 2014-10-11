@@ -18,8 +18,8 @@ public class Story {
 
     private StoryPathLibrary storyPathLibrary; // not serialized
     private StoryPath currentStoryPath; // not serialized
-    private ArrayList<String> story_path_instance_files;
-    private HashMap<String, MediaFile> media_files;
+    private ArrayList<String> storyPathInstanceFiles;
+    private HashMap<String, MediaFile> mediaFiles;
 
     public Story() {
         // required for JSON/GSON
@@ -45,51 +45,51 @@ public class Story {
         this.currentStoryPath = currentStoryPath;
     }
 
-    public ArrayList<String> getStory_path_instance_files() {
-        return story_path_instance_files;
+    public ArrayList<String> getStoryPathInstanceFiles() {
+        return storyPathInstanceFiles;
     }
 
-    public void setStory_path_instance_files(ArrayList<String> story_path_instance_files) {
-        this.story_path_instance_files = story_path_instance_files;
+    public void setStoryPathInstanceFiles(ArrayList<String> storyPathInstanceFiles) {
+        this.storyPathInstanceFiles = storyPathInstanceFiles;
     }
 
     public void addStoryPathInstanceFile(String file) {
-        if (this.story_path_instance_files == null) {
-            this.story_path_instance_files = new ArrayList<String>();
+        if (this.storyPathInstanceFiles == null) {
+            this.storyPathInstanceFiles = new ArrayList<String>();
         }
 
-        this.story_path_instance_files.add(file);
+        this.storyPathInstanceFiles.add(file);
     }
 
-    public HashMap<String, MediaFile> getMedia_files() {
-        return media_files;
+    public HashMap<String, MediaFile> getMediaFiles() {
+        return mediaFiles;
     }
 
-    public void setMedia_files(HashMap<String, MediaFile> media_files) {
-        this.media_files = media_files;
+    public void setMediaFiles(HashMap<String, MediaFile> mediaFiles) {
+        this.mediaFiles = mediaFiles;
     }
 
     public void saveMediaFile(String uuid, MediaFile file) {
 
-        if (this.media_files == null) {
-            this.media_files = new HashMap<String, MediaFile>();
+        if (this.mediaFiles == null) {
+            this.mediaFiles = new HashMap<String, MediaFile>();
         }
-        this.media_files.put(uuid, file);
+        this.mediaFiles.put(uuid, file);
     }
 
     public MediaFile loadMediaFile(String uuid) {
-        return media_files.get(uuid);
+        return mediaFiles.get(uuid);
     }
 
     // need to determine whether users are allowed to delete files that are referenced by cards
     // need to determine whether to automatically delete files when they are no longer referenced
     public void deleteMediaFile(String uuid) {
-        if ((media_files == null) || (!media_files.keySet().contains(uuid))) {
+        if ((mediaFiles == null) || (!mediaFiles.keySet().contains(uuid))) {
             Log.e(this.getClass().getName(), "key was not found, cannot delete file");
             return;
         }
 
-        media_files.remove(uuid);
+        mediaFiles.remove(uuid);
 
         // NEED TO DELETE ACTUAL FILE...
     }

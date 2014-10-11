@@ -8,7 +8,7 @@
       "title": "CONGRATS CARD",
       "headline": "Congratulations!",
       "text": "Create a Compelling Narrative",
-      "story_paths": [
+      "storyPaths": [
         "Recording stable shots",
         "Photo Stories",
         "Replay this path with a new story"
@@ -18,9 +18,9 @@
           "type": "scal.io.liger.model.ClipInstructionTypeCardModel",
           "id": "instruction_type_card",
           "title": "INSTRUCTION TYPE CARD",
-          "media_path": "/path/to/media.file",
+          "mediaPath": "/path/to/media.file",
           "header": "This card tells the maker which clip to capture.",
-          "clip_types": [
+          "clipTypes": [
             "Photo",
             "Video",
             "Import"

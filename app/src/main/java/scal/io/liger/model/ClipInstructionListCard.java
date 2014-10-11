@@ -11,9 +11,9 @@ import scal.io.liger.view.ClipInstructionListCardView;
  */
 public class ClipInstructionListCard extends Card {
 
-    private String media_path;
+    private String mediaPath;
     private String header;
-    private ArrayList<String> bullet_list;
+    private ArrayList<String> bulletList;
 
     public ClipInstructionListCard() {
         super();
@@ -25,12 +25,12 @@ public class ClipInstructionListCard extends Card {
         return new ClipInstructionListCardView(context, this);
     }
 
-    public String getMedia_path() {
-        return fillReferences(media_path);
+    public String getMediaPath() {
+        return fillReferences(mediaPath);
     }
 
-    public void setMedia_path(String media_path) {
-        this.media_path = media_path;
+    public void setMediaPath(String mediaPath) {
+        this.mediaPath = mediaPath;
     }
 
     public String getHeader() {
@@ -41,24 +41,24 @@ public class ClipInstructionListCard extends Card {
         this.header = header;
     }
 
-    public ArrayList<String> getBullet_list() {
+    public ArrayList<String> getBulletList() {
         ArrayList<String> a = new ArrayList<String>();
-        if (bullet_list != null) {
-            for (String s : bullet_list) {
+        if (bulletList != null) {
+            for (String s : bulletList) {
                 a.add(fillReferences(s));
             }
         }
         return a;
     }
 
-    public void setBullet_list(ArrayList<String> bullet_list) {
-        this.bullet_list = bullet_list;
+    public void setBulletList(ArrayList<String> bulletList) {
+        this.bulletList = bulletList;
     }
 
     public void addBulletListItem(String bullet_listItem) {
-        if (this.bullet_list == null)
-            this.bullet_list = new ArrayList<String>();
+        if (this.bulletList == null)
+            this.bulletList = new ArrayList<String>();
 
-        this.bullet_list.add(bullet_listItem);
+        this.bulletList.add(bullet_listItem);
     }
 }

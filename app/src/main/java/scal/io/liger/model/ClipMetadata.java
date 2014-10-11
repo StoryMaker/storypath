@@ -5,8 +5,8 @@ package scal.io.liger.model;
  */
 public class ClipMetadata {
 
-    private int start_time;
-    private int stop_time;
+    private int startTime;
+    private int stopTime;
     private int volume;
     private String effect;
     private String type;
@@ -21,20 +21,20 @@ public class ClipMetadata {
         this.uuid = uuid;
     }
 
-    public int getStart_time() {
-        return start_time;
+    public int getStartTime() {
+        return startTime;
     }
 
-    public void setStart_time(int start_time) {
-        this.start_time = start_time;
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
     }
 
-    public int getStop_time() {
-        return stop_time;
+    public int getStopTime() {
+        return stopTime;
     }
 
-    public void setStop_time(int stop_time) {
-        this.stop_time = stop_time;
+    public void setStopTime(int stopTime) {
+        this.stopTime = stopTime;
     }
 
     public int getVolume() {

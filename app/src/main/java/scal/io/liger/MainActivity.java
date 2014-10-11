@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
 
                         // need to implement selection of story path based on hook
 
-                        jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStory_path_template_files().get(0)));
+                        jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get(0)));
                         json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
 
                         initCardList(json, jsonFile);
@@ -198,11 +198,11 @@ public class MainActivity extends Activity {
         // a story path library model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
         if ((jsonFile == null) || (jsonFile.length() == 0)) {
-            if ((mStoryPathLibrary.getFile_location() == null) || (mStoryPathLibrary.getFile_location().length() == 0)) {
+            if ((mStoryPathLibrary.getFileLocation() == null) || (mStoryPathLibrary.getFileLocation().length() == 0)) {
                 Log.e(TAG, "file location for story path library " + mStoryPathLibrary.getId() + " could not be determined");
             }
         } else {
-            mStoryPathLibrary.setFile_location(jsonFile.getPath());
+            mStoryPathLibrary.setFileLocation(jsonFile.getPath());
         }
 
         if (mStory == null) {
@@ -243,11 +243,11 @@ public class MainActivity extends Activity {
         // a story path model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
         if ((jsonFile == null) || (jsonFile.length() == 0)) {
-            if ((sp.getFile_location() == null) || (sp.getFile_location().length() == 0)) {
+            if ((sp.getFileLocation() == null) || (sp.getFileLocation().length() == 0)) {
                 Log.e(TAG, "file location for story path " + sp.getId() + " could not be determined");
             }
         } else {
-            sp.setFile_location(jsonFile.getPath());
+            sp.setFileLocation(jsonFile.getPath());
         }
 
         sp.setStoryReference(mStory);
@@ -290,7 +290,7 @@ public class MainActivity extends Activity {
             story = gson.fromJson(json, StoryPath.class);
             story.context = this.mContext;
             story.setCardReferences();
-            story.setFile_location(mStory.getCurrentStoryPath().buildPath(jsonFile));
+            story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
 
             mStory.switchPaths(story);
             refreshCardView();
@@ -306,18 +306,18 @@ public class MainActivity extends Activity {
         } else {
             // reference targets a serialized story path
             for (Dependency dependency : mStory.getCurrentStoryPath().getDependencies()) {
-                if (dependency.getDependency_id().equals(pathParts[0])) {
+                if (dependency.getDependencyId().equals(pathParts[0])) {
                     GsonBuilder gBuild = new GsonBuilder();
                     gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
                     Gson gson = gBuild.create();
 
-                    String jsonFile = dependency.getDependency_file();
+                    String jsonFile = dependency.getDependencyFile();
                     String json = JsonHelper.loadJSONFromPath(mStory.getCurrentStoryPath().buildPath(jsonFile));
                     story = gson.fromJson(json, StoryPath.class);
 
                     story.setContext(this.mContext);
                     story.setCardReferences();
-                    story.setFile_location(mStory.getCurrentStoryPath().buildPath(jsonFile));
+                    story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
 
                     newStory = true;
                 }

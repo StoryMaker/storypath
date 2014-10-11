@@ -13,9 +13,9 @@ public class StoryPathLibrary {
 
     private String id;
     private String title;
-    private String file_location;
-    private Map<List<String>, String> hook_map;
-    private List<String> story_path_template_files;
+    private String fileLocation;
+    private Map<List<String>, String> hookMap;
+    private List<String> storyPathTemplateFiles;
 
     public String getId() {
         return id;
@@ -33,28 +33,28 @@ public class StoryPathLibrary {
         this.title = title;
     }
 
-    public String getFile_location() {
-        return file_location;
+    public String getFileLocation() {
+        return fileLocation;
     }
 
-    public void setFile_location(String file_location) {
-        this.file_location = file_location;
+    public void setFileLocation(String fileLocation) {
+        this.fileLocation = fileLocation;
     }
 
-    public Map<List<String>, String> getHook_map() {
-        return hook_map;
+    public Map<List<String>, String> getHookMap() {
+        return hookMap;
     }
 
-    public void setHook_map(Map<List<String>, String> hook_map) {
-        this.hook_map = hook_map;
+    public void setHookMap(Map<List<String>, String> hookMap) {
+        this.hookMap = hookMap;
     }
 
-    public List<String> getStory_path_template_files() {
-        return story_path_template_files;
+    public List<String> getStoryPathTemplateFiles() {
+        return storyPathTemplateFiles;
     }
 
-    public void setStory_path_template_files(List<String> story_path_template_files) {
-        this.story_path_template_files = story_path_template_files;
+    public void setStoryPathTemplateFiles(List<String> storyPathTemplateFiles) {
+        this.storyPathTemplateFiles = storyPathTemplateFiles;
     }
 
     public String buildPath(String originalPath) {
@@ -63,7 +63,7 @@ public class StoryPathLibrary {
         }
 
         // construct path relative to location of story path
-        String relativePath = getFile_location();
+        String relativePath = getFileLocation();
 
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));

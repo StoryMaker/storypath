@@ -19,7 +19,6 @@ import scal.io.liger.R;
 import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
-import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.OrderMediaCard;
 import scal.io.liger.touch.DraggableGridView;
@@ -120,7 +119,7 @@ public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
             //handle fall-through cases: (media==null || medium==AUDIO)
             ivTemp = new ImageView(mContext);
 
-            String clipType = ccm.getClip_type();
+            String clipType = ccm.getClipType();
             int drawable = R.drawable.ic_launcher;
 
             if (clipType.equals(Constants.CHARACTER)) {

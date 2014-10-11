@@ -3,8 +3,8 @@
   "title": "QUIZ CHECK",
   "dependencies": [
       {
-        "dependency_id": "completed_quiz",
-        "dependency_file": "completed_quiz.json"
+        "dependencyId": "completed_quiz",
+        "dependencyFile": "completed_quiz.json"
       }
   ],
   "cards": [

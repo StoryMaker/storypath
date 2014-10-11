@@ -34,8 +34,8 @@ public class NextUpCardView extends com.fima.cardsui.objects.Card {
         for (Link link : mCardModel.getLinks()) {
             Button linkButton = new Button(mContext);
 
-            final String text = link.getLink_text();
-            final String path = link.getLink_path();
+            final String text = link.getLinkText();
+            final String path = link.getLinkPath();
 
             linkButton.setText(text);
             linkButton.setOnClickListener(new View.OnClickListener() {

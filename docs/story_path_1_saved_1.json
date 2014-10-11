@@ -31,7 +31,7 @@
         "class": "ClipType",
         "id": "cliptype_1",
         "title": "Pick a clip type",
-        "clip_types": [
+        "clipTypes": [
           "closeup",
           "medium",
           "long"

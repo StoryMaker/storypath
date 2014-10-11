@@ -5,31 +5,31 @@ package scal.io.liger.model;
  */
 public class Link {
 
-    private String link_text;
-    private String link_path;
+    private String linkText;
+    private String linkPath;
 
     public Link() {
         // required for JSON/GSON
     }
 
-    public Link(String link_text, String link_path) {
-        this.link_text = link_text;
-        this.link_path = link_path;
+    public Link(String linkText, String linkPath) {
+        this.linkText = linkText;
+        this.linkPath = linkPath;
     }
 
-    public String getLink_text() {
-        return link_text;
+    public String getLinkText() {
+        return linkText;
     }
 
-    public void setLink_text(String link_text) {
-        this.link_text = link_text;
+    public void setLinkText(String linkText) {
+        this.linkText = linkText;
     }
 
-    public String getLink_path() {
-        return link_path;
+    public String getLinkPath() {
+        return linkPath;
     }
 
-    public void setLink_path(String link_path) {
-        this.link_path = link_path;
+    public void setLinkPath(String linkPath) {
+        this.linkPath = linkPath;
     }
 }

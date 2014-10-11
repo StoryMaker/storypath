@@ -6,7 +6,7 @@ import scal.io.liger.view.EditTextCardView;
 
 public class EditTextCard extends Card {
 
-    private String hint_text;
+    private String hintText;
     private String header;
 
     public EditTextCard() {
@@ -19,12 +19,12 @@ public class EditTextCard extends Card {
         return new EditTextCardView(context, this);
     }
 
-    public String getHint_text() {
-        return fillReferences(hint_text);
+    public String getHintText() {
+        return fillReferences(hintText);
     }
 
-    public void setHint_text(String text) {
-        this.hint_text = text;
+    public void setHintText(String text) {
+        this.hintText = text;
     }
 
     public String getHeader() {

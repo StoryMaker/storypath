@@ -1,15 +1,15 @@
 { 
     "id": "learning_guide_v2",
     "title": "Learning Guide v2",
-    "class_package", "scal.io.liger.model";
+    "classPackage", "scal.io.liger.model";
     "dependencies": [
         {
-            "dependency_id": "learning_guide_v1_2",
-            "dependency_file": "learning_guide_v1_2.json"
+            "dependencyId": "learning_guide_v1_2",
+            "dependencyFile": "learning_guide_v1_2.json"
         },
         {
-            "dependency_id": "make_a_new_story",
-            "dependency_file": "make_a_new_story.json"
+            "dependencyId": "make_a_new_story",
+            "dependencyFile": "make_a_new_story.json"
         }
     ],
     "cards": [
@@ -22,9 +22,9 @@
             "id": "example_video",
             "type": "ExampleCard",
             "header": "VIDEO STUFF",
-            "clip_medium": "video", 
-            "clip_type": "character",
-            "example_media_path": "video_preview.mp4",
+            "clipMedium": "video",
+            "clipType": "character",
+            "exampleMediaPath": "video_preview.mp4",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::video"
             ]
@@ -33,9 +33,9 @@
             "id": "example_audio",
             "type": "ExampleCard",
             "header": "AUDIO STUFF",
-            "clip_medium": "audio", 
-            "clip_type": "character",
-            "example_media_path": "video_preview.mp4",
+            "clipMedium": "audio",
+            "clipType": "character",
+            "exampleMediaPath": "video_preview.mp4",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::audio"
             ]
@@ -44,9 +44,9 @@
             "id": "example_photo",
             "type": "ExampleCard",
             "header": "PHOTO STUFF",
-            "clip_medium": "photo", 
-            "clip_type": "character",
-            "example_media_path": "video_preview.mp4",
+            "clipMedium": "photo",
+            "clipType": "character",
+            "exampleMediaPath": "video_preview.mp4",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::photo"
             ]
@@ -72,9 +72,9 @@
             "id": "clip_video_character",
             "type": "ClipCard",
             "header": "DO THINGS",
-            "clip_medium": "video", 
-            "clip_type": "character",
-            "example_media_path": "video_sample1.mp4",
+            "clipMedium": "video",
+            "clipType": "character",
+            "exampleMediaPath": "video_sample1.mp4",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::video",
                 "learning_guide_v2::got_it::value::true"
@@ -84,9 +84,9 @@
             "id": "clip_video_action",
             "type": "ClipCard",
             "header": "DO STUFF",
-            "clip_medium": "video", 
-            "clip_type": "action",
-            "example_media_path": "video_sample2.mp4",
+            "clipMedium": "video",
+            "clipType": "action",
+            "exampleMediaPath": "video_sample2.mp4",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::video",
                 "learning_guide_v2::got_it::value::true"
@@ -96,9 +96,9 @@
             "id": "clip_video_result",
             "type": "ClipCard",
             "header": "MORE",
-            "clip_medium": "video", 
-            "clip_type": "result",
-            "example_media_path": "video_sample3.mp4",
+            "clipMedium": "video",
+            "clipType": "result",
+            "exampleMediaPath": "video_sample3.mp4",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::video",
                 "learning_guide_v2::got_it::value::true"
@@ -112,8 +112,8 @@
                 "learning_guide_v2::choose_medium_card::value::audio",
                 "learning_guide_v2::got_it::value::true"
             ], 
-            "clip_medium": "audio", 
-            "clip_type": "character"
+            "clipMedium": "audio",
+            "clipType": "character"
         }, 
         {
             "id": "clip_audio_action",
@@ -123,8 +123,8 @@
                 "learning_guide_v2::choose_medium_card::value::audio",
                 "learning_guide_v2::got_it::value::true"
             ], 
-            "clip_medium": "audio", 
-            "clip_type": "action"
+            "clipMedium": "audio",
+            "clipType": "action"
             
         }, 
         {
@@ -135,8 +135,8 @@
                 "learning_guide_v2::choose_medium_card::value::audio",
                 "learning_guide_v2::got_it::value::true"
             ], 
-            "clip_medium": "audio", 
-            "clip_type": "result"
+            "clipMedium": "audio",
+            "clipType": "result"
         },
         {
             "id": "clip_photo_character",
@@ -146,19 +146,19 @@
                 "learning_guide_v2::choose_medium_card::value::photo",
                 "learning_guide_v2::got_it::value::true"
             ], 
-            "clip_medium": "photo", 
-            "clip_type": "character"
+            "clipMedium": "photo",
+            "clipType": "character"
         }, 
         { 
             "id": "clip_photo_action", 
             "type": "ClipCard",
             "header": "Introduce the audience to an action important to your story",
-            "clip_medium": "photo", 
+            "clipMedium": "photo",
             "references": [
                 "learning_guide_v2::choose_medium_card::value::photo",
                 "learning_guide_v2::got_it::value::true"
             ], 
-            "clip_type": "action"
+            "clipType": "action"
         }, 
         {
             "id": "clip_photo_result", 
@@ -168,28 +168,28 @@
                 "learning_guide_v2::choose_medium_card::value::photo",
                 "learning_guide_v2::got_it::value::true"
             ], 
-            "clip_medium": "photo", 
-            "clip_type": "result"
+            "clipMedium": "photo",
+            "clipType": "result"
         }, 
         {
             "type": "ProgressCard",
             "references": [
                 "learning_guide_v2::got_it::value::true"
             ],
-            "story_medium": [
+            "storyMedium": [
                 "learning_guide_v2::choose_medium_card::value"
             ],
-            "video_clip_cards": [
+            "videoClipCards": [
                 "learning_guide_v2::clip_video_character::clips",
                 "learning_guide_v2::clip_video_action::clips",
                 "learning_guide_v2::clip_video_result::clips"
             ],
-            "audio_clip_cards": [
+            "audioClipCards": [
                 "learning_guide_v2::clip_audio_character::clips",
                 "learning_guide_v2::clip_audio_action::clips",
                 "learning_guide_v2::clip_audio_result::clips"
             ],
-            "photo_clip_cards": [
+            "photoClipCards": [
                 "learning_guide_v2::clip_photo_character::clips",
                 "learning_guide_v2::clip_photo_action::clips",
                 "learning_guide_v2::clip_photo_result::clips"
@@ -211,20 +211,20 @@
             "references": [
                 "learning_guide_v2::three_clips_filled::value::true"
             ],
-            "story_medium": [
+            "storyMedium": [
                 "learning_guide_v2::choose_medium_card::value"
             ],
-            "video_clip_cards": [
+            "videoClipCards": [
                 "learning_guide_v2::clip_video_character::clips",
                 "learning_guide_v2::clip_video_action::clips",
                 "learning_guide_v2::clip_video_result::clips"
             ],
-            "audio_clip_cards": [
+            "audioClipCards": [
                 "learning_guide_v2::clip_audio_character::clips",
                 "learning_guide_v2::clip_audio_action::clips",
                 "learning_guide_v2::clip_audio_result::clips"
             ],
-            "photo_clip_cards": [
+            "photoClipCards": [
                 "learning_guide_v2::clip_photo_character::clips",
                 "learning_guide_v2::clip_photo_action::clips",
                 "learning_guide_v2::clip_photo_result::clips"
@@ -236,20 +236,20 @@
             "references": [
                 "learning_guide_v2::three_clips_filled::value::true"
             ],
-            "story_medium": [
+            "storyMedium": [
                 "learning_guide_v2::choose_medium_card::value"
             ],
-            "video_clip_cards": [
+            "videoClipCards": [
                 "learning_guide_v2::clip_video_character::clips",
                 "learning_guide_v2::clip_video_action::clips",
                 "learning_guide_v2::clip_video_result::clips"
             ],
-            "audio_clip_cards": [
+            "audioClipCards": [
                 "learning_guide_v2::clip_audio_character::clips",
                 "learning_guide_v2::clip_audio_action::clips",
                 "learning_guide_v2::clip_audio_result::clips"
             ],
-            "photo_clip_cards": [
+            "photoClipCards": [
                 "learning_guide_v2::clip_photo_character::clips",
                 "learning_guide_v2::clip_photo_action::clips",
                 "learning_guide_v2::clip_photo_result::clips"
@@ -282,20 +282,20 @@
             "references": [
                 "learning_guide_v2::three_clips_filled::value::true"
             ],
-            "story_medium": [
+            "storyMedium": [
                 "learning_guide_v2::choose_medium_card::value"
             ],
-            "video_clip_cards": [
+            "videoClipCards": [
                 "learning_guide_v2::clip_video_character::clips",
                 "learning_guide_v2::clip_video_action::clips",
                 "learning_guide_v2::clip_video_result::clips"
             ],
-            "audio_clip_cards": [
+            "audioClipCards": [
                 "learning_guide_v2::clip_audio_character::clips",
                 "learning_guide_v2::clip_audio_action::clips",
                 "learning_guide_v2::clip_audio_result::clips"
             ],
-            "photo_clip_cards": [
+            "photoClipCards": [
                 "learning_guide_v2::clip_photo_character::clips",
                 "learning_guide_v2::clip_photo_action::clips",
                 "learning_guide_v2::clip_photo_result::clips"
@@ -307,20 +307,20 @@
             "id": "tweaks_and_changes",
             "links": [
                 {
-                    "link_text": "Character clip",
-                    "link_path": "learning_guide_v2::clip_video_character"
+                    "linkText": "Character clip",
+                    "linkPath": "learning_guide_v2::clip_video_character"
                 },
                 {
-                    "link_text": "Action clip",
-                    "link_path": "learning_guide_v2::clip_video_action"
+                    "linkText": "Action clip",
+                    "linkPath": "learning_guide_v2::clip_video_action"
                 },
                 {
-                    "link_text": "Result clip",
-                    "link_path": "learning_guide_v2::clip_video_result"
+                    "linkText": "Result clip",
+                    "linkPath": "learning_guide_v2::clip_video_result"
                 },
                 {
-                    "link_text": "Order",
-                    "link_path": "learning_guide_v2::order_preview"
+                    "linkText": "Order",
+                    "linkPath": "learning_guide_v2::order_preview"
                 }
             ],
             "references": [
@@ -334,20 +334,20 @@
             "id": "tweaks_and_changes",
             "links": [
                 {
-                    "link_text": "Character clip",
-                    "link_path": "learning_guide_v2::clip_photo_character"
+                    "linkText": "Character clip",
+                    "linkPath": "learning_guide_v2::clip_photo_character"
                 },
                 {
-                    "link_text": "Action clip",
-                    "link_path": "learning_guide_v2::clip_photo_action"
+                    "linkText": "Action clip",
+                    "linkPath": "learning_guide_v2::clip_photo_action"
                 },
                 {
-                    "link_text": "Result clip",
-                    "link_path": "learning_guide_v2::clip_photo_result"
+                    "linkText": "Result clip",
+                    "linkPath": "learning_guide_v2::clip_photo_result"
                 },
                 {
-                    "link_text": "Order",
-                    "link_path": "learning_guide_v2::order_preview"
+                    "linkText": "Order",
+                    "linkPath": "learning_guide_v2::order_preview"
                 }
             ],
             "references": [
@@ -361,20 +361,20 @@
             "id": "tweaks_and_changes",
             "links": [
                 {
-                    "link_text": "Character clip",
-                    "link_path": "learning_guide_v2::clip_audio_character"
+                    "linkText": "Character clip",
+                    "linkPath": "learning_guide_v2::clip_audio_character"
                 },
                 {
-                    "link_text": "Action clip",
-                    "link_path": "learning_guide_v2::clip_audio_action"
+                    "linkText": "Action clip",
+                    "linkPath": "learning_guide_v2::clip_audio_action"
                 },
                 {
-                    "link_text": "Result clip",
-                    "link_path": "learning_guide_v2::clip_audio_result"
+                    "linkText": "Result clip",
+                    "linkPath": "learning_guide_v2::clip_audio_result"
                 },
                 {
-                    "link_text": "Order",
-                    "link_path": "learning_guide_v2::order_preview"
+                    "linkText": "Order",
+                    "linkPath": "learning_guide_v2::order_preview"
                 }
             ],
             "references": [
@@ -396,7 +396,7 @@
         },
         {
             "text": "You completed this path.  Wooooot.", 
-            "media_path": "/foo/bar.jpg",
+            "mediaPath": "/foo/bar.jpg",
             "header": "Congratulations!",
             "type": "CongratulationsCard",
             "id": "congratulations",
@@ -418,28 +418,28 @@
             "id": "next_up",
             "links": [
                 {
-                    "link_text": "Learning Guide #2",
-                    "link_path": "learning_guide_v1_2::top"
+                    "linkText": "Learning Guide #2",
+                    "linkPath": "learning_guide_v1_2::top"
                 },
                 {
-                    "link_text": "Make a New Story",
-                    "link_path": "make_a_new_story::top"
+                    "linkText": "Make a New Story",
+                    "linkPath": "make_a_new_story::top"
                 },
                 {
-                    "link_text": "Read more about Photo stories",
-                    "link_path": "make_a_new_story::top"
+                    "linkText": "Read more about Photo stories",
+                    "linkPath": "make_a_new_story::top"
                 },
                 {
-                    "link_text": "Read more about Audio stories",
-                    "link_path": "make_a_new_story::top"
+                    "linkText": "Read more about Audio stories",
+                    "linkPath": "make_a_new_story::top"
                 },
                 {
-                    "link_text": "Read more about Video stories",
-                    "link_path": "make_a_new_story::top"
+                    "linkText": "Read more about Video stories",
+                    "linkPath": "make_a_new_story::top"
                 },
                 {
-                    "link_text": "Make a New Story",
-                    "link_path": "make_a_new_story::top"
+                    "linkText": "Make a New Story",
+                    "linkPath": "make_a_new_story::top"
                 }
             ],
             "references": [

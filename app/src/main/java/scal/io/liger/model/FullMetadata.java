@@ -16,8 +16,8 @@ public class FullMetadata {
     private String filePath;
 
     public FullMetadata (ClipMetadata cm, MediaFile mf) {
-        this.startTime = cm.getStart_time();
-        this.stopTime = cm.getStop_time();
+        this.startTime = cm.getStartTime();
+        this.stopTime = cm.getStopTime();
         this.volume = cm.getVolume();
         this.effect = cm.getEffect();
         this.type = cm.getType();

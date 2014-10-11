@@ -40,11 +40,11 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
 
         String id = jObj.get("id").getAsString();
         String title = jObj.get("title").getAsString();
-        String class_package = jObj.get("class_package").getAsString();
+        String class_package = jObj.get("classPackage").getAsString();
 
         spm.setId(id);
         spm.setTitle(title);
-        spm.setClass_package(class_package);
+        spm.setClassPackage(class_package);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(NextUpCardDeserializer.class, new NextUpCardDeserializer());

@@ -1,8 +1,8 @@
 {
     "dependencies": [
         {
-            "dependency_id": "learning_guide_v1",
-            "dependency_file": "learning_guide_v1.json"
+            "dependencyId": "learning_guide_v1",
+            "dependencyFile": "learning_guide_v1.json"
         }
     ],
     "cards": [
@@ -20,7 +20,7 @@
                 "value::/sdcard/Liger/video_sample1.mp4"
             ],
             "clip_medium": "video", 
-            "clip_type": "character", 
+            "clipType": "character",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_video_character"
         },
@@ -33,7 +33,7 @@
                 "value::/sdcard/Liger/video_sample2.mp4"
             ],
             "clip_medium": "video", 
-            "clip_type": "action", 
+            "clipType": "action",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_video_action"
         },
@@ -46,7 +46,7 @@
                 "value::/sdcard/Liger/video_sample3.mp4"
             ],
             "clip_medium": "video", 
-            "clip_type": "result", 
+            "clipType": "result",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_video_result"
         },
@@ -56,7 +56,7 @@
                 "link_test::choose_medium_card::value::audio"
             ], 
             "clip_medium": "audio", 
-            "clip_type": "character", 
+            "clipType": "character",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_audio_character"
         }, 
@@ -66,7 +66,7 @@
                 "link_test::choose_medium_card::value::audio"
             ], 
             "clip_medium": "audio", 
-            "clip_type": "action", 
+            "clipType": "action",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_audio_action"
         }, 
@@ -76,7 +76,7 @@
                 "link_test::choose_medium_card::value::audio"
             ], 
             "clip_medium": "audio", 
-            "clip_type": "result", 
+            "clipType": "result",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_audio_result"
         }, 
@@ -86,7 +86,7 @@
                 "link_test::choose_medium_card::value::photo"
             ], 
             "clip_medium": "photo", 
-            "clip_type": "character", 
+            "clipType": "character",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_photo_character"
         }, 
@@ -96,7 +96,7 @@
             "references": [
                 "link_test::choose_medium_card::value::photo"
             ], 
-            "clip_type": "action", 
+            "clipType": "action",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_photo_action"
         }, 
@@ -106,7 +106,7 @@
                 "link_test::choose_medium_card::value::photo"
             ], 
             "clip_medium": "photo", 
-            "clip_type": "result", 
+            "clipType": "result",
             "type": "scal.io.liger.model.ClipCardModel", 
             "id": "clip_photo_result"
         }, 
@@ -171,27 +171,27 @@
              "id": "list_of_links",
              "links": [
                  {
-                     "link_text": "link to top",
-                     "link_path": "link_test::choose_medium_card::value::foo"
+                     "linkText": "link to top",
+                     "linkPath": "link_test::choose_medium_card::value::foo"
                  },
                  {
-                     "link_text": "link to learning guide",
-                     "link_path": "learning_guide_v1::choose_medium_card::value::foo"
+                     "linkText": "link to learning guide",
+                     "linkPath": "learning_guide_v1::choose_medium_card::value::foo"
                  },
                  {
-                     "link_text": "link to non-visible card",
-                     "link_path": "learning_guide_v1::clip_video_character::value::foo"
+                     "linkText": "link to non-visible card",
+                     "linkPath": "learning_guide_v1::clip_video_character::value::foo"
                  }
              ]
          },
         {
             "header": "This card tells the maker which clip to capture.", 
-            "media_path": "/path/to/media.file", 
+            "mediaPath": "/path/to/media.file",
             "title": "INSTRUCTION TYPE CARD", 
             "references": [
                 "link_test::three_clips_filled::value::true"
             ], 
-            "clip_types": [
+            "clipTypes": [
                 "Photo", 
                 "Video", 
                 "Import"

@@ -40,7 +40,7 @@ public class EditTextCardView extends com.fima.cardsui.objects.Card {
         }
 
         EditText etText = ((EditText) view.findViewById(R.id.et_text));
-        etText.setHint(mCardModel.getHint_text());
+        etText.setHint(mCardModel.getHintText());
         etText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

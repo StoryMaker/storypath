@@ -8,8 +8,8 @@ import scal.io.liger.view.ExampleCardView;
 public class ExampleCard extends Card {
 
     private String header;
-    private String clip_medium;
-    private String example_media_path;
+    private String clipMedium;
+    private String exampleMediaPath;
 
     public ExampleCard() {
         super();
@@ -29,11 +29,11 @@ public class ExampleCard extends Card {
         this.header = header;
     }
 
-    public String getClipMedium() { return fillReferences(clip_medium); }
+    public String getClipMedium() { return fillReferences(clipMedium); }
 
-    public void setClipMedium(String clip_medium) { this.clip_medium = clip_medium; }
+    public void setClipMedium(String clip_medium) { this.clipMedium = clip_medium; }
 
-    public String getExampleMediaPath() { return example_media_path; }
+    public String getExampleMediaPath() { return exampleMediaPath; }
 
-    public void setExampleMediaPath(String example_media_path) { this.example_media_path = example_media_path; }
+    public void setExampleMediaPath(String example_media_path) { this.exampleMediaPath = example_media_path; }
 }

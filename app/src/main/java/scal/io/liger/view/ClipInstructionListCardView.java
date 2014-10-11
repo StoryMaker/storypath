@@ -39,7 +39,7 @@ public class ClipInstructionListCardView extends com.fima.cardsui.objects.Card {
 
         //build out bullet list spaces
         String bulletList = "";
-        for (String bulletItem : mCardModel.getBullet_list()) {
+        for (String bulletItem : mCardModel.getBulletList()) {
             bulletList += ("-" + bulletItem + "\n");
         }
 
@@ -47,9 +47,9 @@ public class ClipInstructionListCardView extends com.fima.cardsui.objects.Card {
         tvBulletList.setText(bulletList);
 
         //TODO find better way of checking file is valid
-        File mediaFile = new File(mCardModel.getMedia_path());
+        File mediaFile = new File(mCardModel.getMediaPath());
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMedia_path());
+            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMediaPath());
             ivCardImage.setImageBitmap(bitmap);
         }
 

@@ -5,10 +5,7 @@ import android.util.Log;
 
 import com.fima.cardsui.objects.Card;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import scal.io.liger.view.ClipCardView;
@@ -16,7 +13,7 @@ import scal.io.liger.view.ClipCardView;
 
 public class ClipCard extends ExampleCard {
 
-    private String clip_type;
+    private String clipType;
     private ArrayList<ClipMetadata> clips;
     // need length, medium, type restrictions, etc
 
@@ -30,12 +27,12 @@ public class ClipCard extends ExampleCard {
         return new ClipCardView(context, this);
     }
 
-    public String getClip_type() {
-        return fillReferences(clip_type);
+    public String getClipType() {
+        return fillReferences(clipType);
     }
 
-    public void setClip_type(String clip_type) {
-        this.clip_type = clip_type;
+    public void setClipType(String clipType) {
+        this.clipType = clipType;
     }
 
     public ArrayList<ClipMetadata> getClips() {
@@ -68,7 +65,7 @@ public class ClipCard extends ExampleCard {
     }
 
     public void saveMediaFile(MediaFile mf) {
-        ClipMetadata cmd = new ClipMetadata(clip_type, UUID.randomUUID().toString());
+        ClipMetadata cmd = new ClipMetadata(clipType, UUID.randomUUID().toString());
 
         getStoryPathReference().saveMediaFile(cmd.getUuid(), mf);
         addClip(cmd);

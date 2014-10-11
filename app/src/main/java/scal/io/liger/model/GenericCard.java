@@ -11,10 +11,10 @@ import scal.io.liger.view.GenericCardView;
  */
 public class GenericCard extends Card {
 
-    private String media_path; // FIXME provide a default if they don't specify
+    private String mediaPath; // FIXME provide a default if they don't specify
     private String header;
     private String text;
-    private ArrayList<String> story_paths;
+    private ArrayList<String> storyPaths;
 
     public GenericCard() {
         super();
@@ -26,9 +26,9 @@ public class GenericCard extends Card {
         return new GenericCardView(context, this);
     }
 
-    public String getMedia_path() { return fillReferences(media_path); }
+    public String getMediaPath() { return fillReferences(mediaPath); }
 
-    public void setMedia_path(String media_path) { this.media_path = media_path; }
+    public void setMediaPath(String mediaPath) { this.mediaPath = mediaPath; }
 
     public String getHeader() {
         return fillReferences(header);
@@ -46,24 +46,24 @@ public class GenericCard extends Card {
         this.text = text;
     }
 
-    public ArrayList<String> getStory_paths() {
+    public ArrayList<String> getStoryPaths() {
         ArrayList<String> a = new ArrayList<String>();
-        if (story_paths != null) {
-            for (String s : story_paths) {
+        if (storyPaths != null) {
+            for (String s : storyPaths) {
                 a.add(fillReferences(s));
             }
         }
         return a;
     }
 
-    public void setStory_paths(ArrayList<String> story_paths) {
-        this.story_paths = story_paths;
+    public void setStoryPaths(ArrayList<String> storyPaths) {
+        this.storyPaths = storyPaths;
     }
 
     public void addStoryPath(String storyPath) {
-        if (this.story_paths == null)
-            this.story_paths = new ArrayList<String>();
+        if (this.storyPaths == null)
+            this.storyPaths = new ArrayList<String>();
 
-        this.story_paths.add(storyPath);
+        this.storyPaths.add(storyPath);
     }
 }

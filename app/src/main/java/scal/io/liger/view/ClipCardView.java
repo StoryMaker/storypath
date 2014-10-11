@@ -27,7 +27,6 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.Constants;
 import scal.io.liger.R;
-import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 
 
@@ -56,7 +55,7 @@ public class ClipCardView extends ExampleCardView {
         final ToggleButton btnMediaPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
 
         tvHeader.setText(mCardModel.getHeader());
-        tvType.setText(mCardModel.getClip_type());
+        tvType.setText(mCardModel.getClipType());
 
         final String clipMedium = mCardModel.getClipMedium();
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
@@ -78,7 +77,7 @@ public class ClipCardView extends ExampleCardView {
         final File mediaFile = getValidFile(p, mCardModel.getExampleMediaPath());
 
         if (mediaFile == null) {
-            String clipType = mCardModel.getClip_type();
+            String clipType = mCardModel.getClipType();
 
             if (clipType.equals(Constants.CHARACTER)) {
                 ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_close));
@@ -136,7 +135,7 @@ public class ClipCardView extends ExampleCardView {
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
                 //set background image
-                String clipType = mCardModel.getClip_type();
+                String clipType = mCardModel.getClipType();
                 int drawable = R.drawable.ic_launcher;
 
                 if (clipType.equals(Constants.CHARACTER)) {

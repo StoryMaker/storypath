@@ -14,9 +14,9 @@
         "type": "scal.io.liger.model.ClipInstructionListCardModel",
         "id": "instruction_list_card",
         "title": "INSTRUCTION LIST CARD",
-        "media_path": "/storage/emulated/0/Pictures/image.jpg",
+        "mediaPath": "/storage/emulated/0/Pictures/image.jpg",
         "header": "Character",
-        "bullet_list": [
+        "bulletList": [
             "Bullet point structure of qualities & tips",
             "Another quality",
             "Another quality"
