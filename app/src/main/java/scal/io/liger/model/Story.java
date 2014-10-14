@@ -18,6 +18,8 @@ public class Story {
 
     private StoryPathLibrary storyPathLibrary; // not serialized
     private StoryPath currentStoryPath; // not serialized
+    private String storyPathLibraryFile;
+    private String currentStoryPathFile;
     private ArrayList<String> storyPathInstanceFiles;
     private HashMap<String, MediaFile> mediaFiles;
 
@@ -43,6 +45,22 @@ public class Story {
 
     public void setCurrentStoryPath(StoryPath currentStoryPath) {
         this.currentStoryPath = currentStoryPath;
+    }
+
+    public String getStoryPathLibraryFile() {
+        return storyPathLibraryFile;
+    }
+
+    public void setStoryPathLibraryFile(String storyPathLibraryFile) {
+        this.storyPathLibraryFile = storyPathLibraryFile;
+    }
+
+    public String getCurrentStoryPathFile() {
+        return currentStoryPathFile;
+    }
+
+    public void setCurrentStoryPathFile(String currentStoryPathFile) {
+        this.currentStoryPathFile = currentStoryPathFile;
     }
 
     public ArrayList<String> getStoryPathInstanceFiles() {

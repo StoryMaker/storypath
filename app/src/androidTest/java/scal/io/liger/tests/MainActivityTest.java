@@ -44,32 +44,42 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     public void testLoadJSONFile() {
-        getJSONFile();
+        getJSONFile("learning_guide_library.json");
     }
 
     public void testClickMediumVideo() {
-        getJSONFile();
+        getJSONFile("learning_guide_library.json");
         onView(withId(R.id.btn_medium_video)).perform(click());
     }
 
     public void testClickMediumAudio() {
-        getJSONFile();
+        getJSONFile("learning_guide_library.json");
         onView(withId(R.id.btn_medium_audio)).perform(click());
     }
 
     public void testClickMediumPhoto() {
-        getJSONFile();
+        getJSONFile("learning_guide_library.json");
         onView(withId(R.id.btn_medium_photo)).perform(click());
     }
 
-    private void getJSONFile() {
-        onData(hasToString(equalToIgnoringCase("learning_guide_library.json"))).perform(click());
+    private void getJSONFile(String fileToClick) {
+        onData(hasToString(equalToIgnoringCase(fileToClick))).perform(click());
     }
 
     public void testClickContinue() {
-        getJSONFile();
+        getJSONFile("learning_guide_library.json");
         onView(withId(R.id.btn_medium_video)).perform(click());
         onView(withId(R.id.cardsview)).perform(Util.swipeUp());
         onView(withText("Got it!")).perform(click());
+    }
+
+    public void testAfterRecording() {
+        getJSONFile("TEST_STORY.json");
+        onView(withId(R.id.cardsview)).perform(Util.swipeUp());
+        onView(withId(R.id.cardsview)).perform(Util.swipeUp());
+        onView(withId(R.id.cardsview)).perform(Util.swipeUp());
+        onView(withText("I like the order")).perform(click());
+        onView(withId(R.id.cardsview)).perform(Util.swipeUp());
+        onView(withText("Yup, I'm all finished!")).perform(click());
     }
 }

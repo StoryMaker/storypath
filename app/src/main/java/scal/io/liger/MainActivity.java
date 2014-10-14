@@ -18,7 +18,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.MalformedJsonException;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
@@ -142,16 +146,24 @@ public class MainActivity extends Activity {
                 .setItems(jsonFiles, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int index) {
                         File jsonFile = JsonHelper.setSelectedJSONFile(index);
-                        String json = JsonHelper.loadJSON();
 
-                        initHook(json, jsonFile);
+                        // TEMP - unsure how to best determine new story vs. existing story
+                        if (jsonFile.getPath().endsWith("TEST_STORY.json")) {
 
-                        // need to implement selection of story path based on hook
+                            loadStoryFile(jsonFile);
 
-                        jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get(0)));
-                        json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
+                        } else {
+                            String json = JsonHelper.loadJSON();
 
-                        initCardList(json, jsonFile);
+                            initHook(json, jsonFile);
+
+                            // need to implement selection of story path based on hook
+
+                            jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get(0)));
+                            json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
+
+                            initCardList(json, jsonFile);
+                        }
                     }
                 });
         }
@@ -426,6 +438,95 @@ public class MainActivity extends Activity {
 
             }
         }
+    }
+
+    public void saveStoryFile() {
+        Gson gson = new Gson();
+
+        // prep and serialize story path library
+        String json3 = gson.toJson(mStoryPathLibrary);
+
+        // write to file, store path
+        try {
+            File storyPathLibraryFile = new File("/storage/emulated/0/Liger/default/TEST_LIB.json"); // need file naming plan
+            FileOutputStream fos = new FileOutputStream(storyPathLibraryFile);
+            if (!storyPathLibraryFile.exists()) {
+                storyPathLibraryFile.createNewFile();
+            }
+            byte data[] = json3.getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+            mStory.setStoryPathLibrary(null);
+            mStory.setStoryPathLibraryFile(storyPathLibraryFile.getPath());
+        } catch (IOException ioe) {
+            Log.e(TAG, ioe.getMessage());
+        }
+
+        // prep and serialize current story path
+        StoryPath sp = mStory.getCurrentStoryPath();
+        mStory.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
+        mStory.getCurrentStoryPath().setContext(null);
+        mStory.getCurrentStoryPath().setStoryReference(null);;
+        String json1 = gson.toJson(mStory.getCurrentStoryPath());
+
+        // write to file, store path
+        try {
+            File currentStoryPathFile = new File("/storage/emulated/0/Liger/default/TEST_PATH.json"); // need file naming plan
+            FileOutputStream fos = new FileOutputStream(currentStoryPathFile);
+            if (!currentStoryPathFile.exists()) {
+                currentStoryPathFile.createNewFile();
+            }
+            byte data[] = json1.getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+            mStory.setCurrentStoryPath(null);
+            mStory.setCurrentStoryPathFile(currentStoryPathFile.getPath());
+        } catch (IOException ioe) {
+            Log.e(TAG, ioe.getMessage());
+        }
+
+        // prep and serialize top level story
+        String json2 = gson.toJson(mStory);
+
+        // write to file
+        try {
+            File storyFile = new File("/storage/emulated/0/Liger/default/TEST_STORY.json");  // need file naming plan
+            FileOutputStream fos = new FileOutputStream(storyFile);
+            if (!storyFile.exists()) {
+                storyFile.createNewFile();
+            }
+            byte data[] = json2.getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+        } catch (IOException ioe) {
+            Log.e(TAG, ioe.getMessage());
+        }
+
+        // restore links and continue
+        mStory.setStoryPathLibrary(mStoryPathLibrary);
+        mStory.setCurrentStoryPath(sp);
+        mStory.getCurrentStoryPath().setContext(this);
+        mStory.getCurrentStoryPath().setCardReferences();
+        mStory.getCurrentStoryPath().setStoryReference(mStory);
+    }
+
+    public void loadStoryFile(File jsonFile) {
+        GsonBuilder gBuild = new GsonBuilder();
+        Gson gson = gBuild.create();
+
+        String storyJson = JsonHelper.loadJSONFromPath(jsonFile.getPath());
+        mStory = gson.fromJson(storyJson, Story.class);
+
+        String libraryJson = JsonHelper.loadJSONFromPath(mStory.getStoryPathLibraryFile());
+        mStoryPathLibrary = gson.fromJson(libraryJson, StoryPathLibrary.class);
+
+        mStory.setStoryPathLibrary(mStoryPathLibrary);
+
+        String pathJson = JsonHelper.loadJSONFromPath(mStory.getCurrentStoryPathFile());
+        initCardList(pathJson);
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
