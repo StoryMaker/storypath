@@ -76,9 +76,10 @@ public class MainActivity extends Activity {
             Log.d(TAG, "data not yet loaded, no state to save");
         } else {
             Gson gson = new Gson();
+            mStory.getCurrentStoryPath().setStoryReference(null);
+            mStory.getCurrentStoryPath().clearObservers();
             mStory.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
             mStory.getCurrentStoryPath().setContext(null);
-            mStory.getCurrentStoryPath().setStoryReference(null);;
 
             // need to serialize Story as well?
 
@@ -102,6 +103,7 @@ public class MainActivity extends Activity {
 
             mStory.getCurrentStoryPath().setContext(this);
             mStory.getCurrentStoryPath().setCardReferences();
+            mStory.getCurrentStoryPath().initializeObservers();
             mStory.getCurrentStoryPath().setStoryReference(mStory);
 
         }
@@ -237,8 +239,10 @@ public class MainActivity extends Activity {
         try {
             initStoryPathModel(json, jsonFile);
             refreshCardView();
-        } catch (Exception e) {
-            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
+        } catch (com.google.gson.JsonSyntaxException e) {
+            Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (MalformedJsonException e) {
+            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -251,6 +255,7 @@ public class MainActivity extends Activity {
         StoryPath sp = gson.fromJson(json, StoryPath.class);
         sp.setContext(this.mContext);
         sp.setCardReferences();
+        sp.initializeObservers();
 
         // a story path model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
@@ -465,9 +470,10 @@ public class MainActivity extends Activity {
 
         // prep and serialize current story path
         StoryPath sp = mStory.getCurrentStoryPath();
+        mStory.getCurrentStoryPath().setStoryReference(null);
+        mStory.getCurrentStoryPath().clearObservers();
         mStory.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         mStory.getCurrentStoryPath().setContext(null);
-        mStory.getCurrentStoryPath().setStoryReference(null);;
         String json1 = gson.toJson(mStory.getCurrentStoryPath());
 
         // write to file, store path
@@ -508,8 +514,10 @@ public class MainActivity extends Activity {
         // restore links and continue
         mStory.setStoryPathLibrary(mStoryPathLibrary);
         mStory.setCurrentStoryPath(sp);
+
         mStory.getCurrentStoryPath().setContext(this);
         mStory.getCurrentStoryPath().setCardReferences();
+        mStory.getCurrentStoryPath().initializeObservers();
         mStory.getCurrentStoryPath().setStoryReference(mStory);
     }
 

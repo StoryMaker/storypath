@@ -6,6 +6,8 @@ import android.util.Log;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,14 +16,74 @@ import scal.io.liger.Constants;
 /**
  * Created by mnbogner on 7/10/14.
  */
-public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
+public abstract class Card extends Observable implements Observer{  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
 
     protected String type;
     private String id;
     private String title;
     protected StoryPath storyPathReference; // not serialized
-    private ArrayList<String> references;
+    protected ArrayList<String> references;
     private HashMap<String, String> values;
+
+    // NEW
+    protected boolean stateVisiblity = false;
+
+    // NEW
+    public boolean getStateVisiblity() {
+        return stateVisiblity;
+    }
+
+    // no setter, should not be set from outside the class
+
+    // NEW
+    // NOTE: may be sensible to revise this so that it checks references against the card received
+    //       by the update method instead of fetching values from the entire story path
+    @Override
+    public void update(Observable observable, Object o) {
+        if (!(observable instanceof Card)) {
+            Log.e(this.getClass().getName(), "update notification received from non-card observable");
+            return;
+        }
+        if (storyPathReference == null) {
+            Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            return;
+        }
+
+        Card card = (Card)observable;
+
+        if (checkStateVisibility()) {
+            storyPathReference.notifyActivity(this);
+        }
+    }
+
+    // NEW
+    public boolean checkStateVisibility() {
+        boolean newVisibility = checkReferencedValues();
+        if (stateVisiblity != newVisibility) {
+            stateVisiblity = newVisibility;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void registerObservers() {
+        if (references != null) {
+            for (String reference : references) {
+                Card card = storyPathReference.getCardById(reference);
+                card.addObserver(this);
+            }
+        }
+    }
+
+    public void removeObservers() {
+        if (references != null) {
+            for (String reference : references) {
+                Card card = storyPathReference.getCardById(reference);
+                card.deleteObserver(this);
+            }
+        }
+    }
 
     public Card() {
         // required for JSON/GSON
@@ -118,12 +180,17 @@ public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
         this.values.put(key, value);
 
         if (notify) {
+            setChanged();
+            notifyObservers();
+
+            /*
             // send notification that a value has been saved so that cards can re-check references
             if (storyPathReference != null) {
                 storyPathReference.notifyActivity();
             } else {
                 System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             }
+            */
         }
     }
 
@@ -198,7 +265,7 @@ public abstract class Card {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
         return null;
     }
 
-    public String fillReferences(String originalString) {
+    public String fillReferences(String originalString) { // <- need to integrate with observer/update process
         if (originalString == null) {
             return originalString;
         }
