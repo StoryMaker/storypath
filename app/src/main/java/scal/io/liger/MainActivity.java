@@ -17,13 +17,17 @@ import com.fima.cardsui.views.CardUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.MalformedJsonException;
+import com.twotoasters.android.support.v7.widget.LinearLayoutManager;
+import com.twotoasters.android.support.v7.widget.RecyclerView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
+import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
@@ -37,7 +41,8 @@ public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
     Context mContext = this;
-    CardUI mCardView;
+    RecyclerView mRecyclerView;
+    //CardUI mCardView;
     StoryPathLibrary mStoryPathLibrary;
     //Story mStory;
 
@@ -45,6 +50,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         Log.d("MainActivity", "onCreate");
 //        initApp();
         if (savedInstanceState == null) {
@@ -230,11 +237,10 @@ public class MainActivity extends Activity {
 
     private void initCardList(String json, File jsonFile) {
         Log.d(TAG, "initCardList called");
-        mCardView = (CardUI) findViewById(R.id.cardsview);
-        if (mCardView == null)
+        if (mRecyclerView == null)
             return;
 
-        mCardView.setSwipeable(false);
+        //mCardView.setSwipeable(false);
 
         try {
             initStoryPathModel(json, jsonFile);
@@ -273,17 +279,12 @@ public class MainActivity extends Activity {
 
     public void refreshCardView () {
         Log.d(TAG, "refreshCardview called");
-        if (mCardView == null)
+        if (mRecyclerView == null)
             return;
 
-        mCardView.clearCards();
-
         //add cardlist to view
-        for (Card model : mStoryPathLibrary.getCurrentStoryPath().getValidCards()) {
-            mCardView.addCard(model.getCardView(mContext));
-        }
-
-        mCardView.refresh();
+        List<Card> cards = mStoryPathLibrary.getCurrentStoryPath().getValidCards();
+        mRecyclerView.setAdapter(new CardAdapter(this, cards));
     }
 
     public void goToCard(String cardPath) throws MalformedJsonException {
@@ -370,8 +371,8 @@ public class MainActivity extends Activity {
             mStoryPathLibrary.setCurrentStoryPath(story);
             refreshCardView();
         }
-
-        mCardView.scrollToCard(cardIndex);
+        // TODO: Scroll to card
+        //mCardView.scrollToCard(cardIndex);
     }
 
     @Override
