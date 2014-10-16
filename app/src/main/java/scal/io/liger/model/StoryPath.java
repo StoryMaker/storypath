@@ -28,7 +28,7 @@ public class StoryPath {
     private ArrayList<Card> visibleCards;
     private ArrayList<Dependency> dependencies;
     private String fileLocation;
-    private Story storyReference; // not serialized
+    private StoryPathLibrary storyReference; // not serialized
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -162,11 +162,11 @@ public class StoryPath {
         this.fileLocation = fileLocation;
     }
 
-    public Story getStoryReference() {
+    public StoryPathLibrary getStoryReference() {
         return storyReference;
     }
 
-    public void setStoryReference(Story storyReference) {
+    public void setStoryReference(StoryPathLibrary storyReference) {
         this.storyReference = storyReference;
     }
 
