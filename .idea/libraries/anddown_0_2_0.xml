@@ -1,8 +1,11 @@
 <component name="libraryTable">
   <library name="anddown-0.2.0">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.commonsware.cwac/anddown/0.2.0/res" />
       <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.commonsware.cwac/anddown/0.2.0/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.commonsware.cwac/anddown/0.2.0/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.commonsware.cwac/anddown/0.2.0/libs/libtestlib-0.2.0-armeabi-v7a.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.commonsware.cwac/anddown/0.2.0/libs/libtestlib-0.2.0-x86.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.commonsware.cwac/anddown/0.2.0/libs/libtestlib-0.2.0-armeabi.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
