@@ -9,8 +9,7 @@ import scal.io.liger.model.BasicTextCard;
 import scal.io.liger.model.Card;
 import scal.io.liger.R;
 
-
-public class BasicTextCardView extends com.fima.cardsui.objects.Card {
+public class BasicTextCardView implements DisplayableCard {
 
     private BasicTextCard mCardModel;
     private Context mContext;
@@ -21,7 +20,7 @@ public class BasicTextCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

@@ -15,7 +15,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.EditTextCard;
 
 
-public class EditTextCardView extends com.fima.cardsui.objects.Card {
+public class EditTextCardView implements DisplayableCard {
 
     private EditTextCard mCardModel;
     private Context mContext;
@@ -26,7 +26,7 @@ public class EditTextCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

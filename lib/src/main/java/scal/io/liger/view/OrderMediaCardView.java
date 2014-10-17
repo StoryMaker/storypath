@@ -24,7 +24,7 @@ import scal.io.liger.model.OrderMediaCard;
 import scal.io.liger.touch.DraggableGridView;
 import scal.io.liger.touch.OnRearrangeListener;
 
-public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
+public class OrderMediaCardView implements DisplayableCard {
     private OrderMediaCard mCardModel;
     private Context mContext;
 
@@ -36,7 +36,7 @@ public class OrderMediaCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

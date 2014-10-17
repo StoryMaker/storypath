@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.IntroCardView;
 
 /**
@@ -19,7 +20,7 @@ public class VideoCaptureTypeCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new IntroCardView(context, this); //TODO
     }
 

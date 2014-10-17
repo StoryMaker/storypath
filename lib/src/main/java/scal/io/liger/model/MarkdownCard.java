@@ -2,6 +2,7 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.MarkdownCardView;
 
 public class MarkdownCard extends Card {
@@ -14,7 +15,7 @@ public class MarkdownCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new MarkdownCardView(context, this);
     }
 

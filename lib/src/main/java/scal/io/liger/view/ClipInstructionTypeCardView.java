@@ -17,7 +17,7 @@ import scal.io.liger.model.ClipInstructionTypeCard;
 import scal.io.liger.R;
 
 
-public class ClipInstructionTypeCardView extends com.fima.cardsui.objects.Card {
+public class ClipInstructionTypeCardView implements DisplayableCard {
 
     private ClipInstructionTypeCard mCardModel;
     private Context mContext;
@@ -28,7 +28,7 @@ public class ClipInstructionTypeCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

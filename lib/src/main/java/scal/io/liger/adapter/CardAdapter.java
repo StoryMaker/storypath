@@ -1,24 +1,19 @@
 package scal.io.liger.adapter;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.twotoasters.android.support.v7.widget.CardView;
 import com.twotoasters.android.support.v7.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
+import scal.io.liger.view.DisplayableCard;
 
 /**
  * Created by davidbrodsky on 10/12/14.
@@ -72,11 +67,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         } else {
             // Rebuild the view
             Context context = holder.cardView.getContext();
-            com.fima.cardsui.objects.Card cardsuiCard = newCard.getCardView(holder.cardView.getContext());
+            DisplayableCard cardsuiCard = newCard.getDisplayableCard(holder.cardView.getContext());
             holder.cardView.removeAllViews();
             // TODO: Remove CardsUi library entirely so we don't have to
             // negate its card container creation
-            ViewGroup oldCardContainer = (ViewGroup) cardsuiCard.getView(context);
+            ViewGroup oldCardContainer = (ViewGroup) cardsuiCard.getCardView(context);
             ViewGroup cardsUiCardContent = (ViewGroup) oldCardContainer.getChildAt(0);
             oldCardContainer.removeView(cardsUiCardContent);
             holder.cardView.addView(cardsUiCardContent);

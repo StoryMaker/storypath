@@ -2,6 +2,7 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.EditTextCardView;
 
 public class EditTextCard extends Card {
@@ -15,7 +16,7 @@ public class EditTextCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new EditTextCardView(context, this);
     }
 

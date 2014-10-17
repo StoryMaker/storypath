@@ -12,7 +12,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.Link;
 import scal.io.liger.model.NextUpCard;
 
-public class NextUpCardView extends com.fima.cardsui.objects.Card {
+public class NextUpCardView implements DisplayableCard {
     private NextUpCard mCardModel;
     private Context mContext;
 
@@ -22,7 +22,7 @@ public class NextUpCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

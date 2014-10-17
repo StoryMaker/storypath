@@ -24,7 +24,7 @@ import scal.io.liger.model.PreviewCard;
 import scal.io.liger.R;
 
 
-public class PreviewCardView extends com.fima.cardsui.objects.Card {
+public class PreviewCardView implements DisplayableCard {
 
     private PreviewCard mCardModel;
     private Context mContext;
@@ -38,8 +38,8 @@ public class PreviewCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
-        Log.d("PreviewCardView", "getCardContent");
+    public View getCardView(Context context) {
+        Log.d("PreviewCardView", "getCardView");
         if(mCardModel == null) {
             return null;
         }

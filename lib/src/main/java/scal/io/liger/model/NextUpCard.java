@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.NextUpCardView;
 
 public class NextUpCard extends Card {
@@ -17,7 +18,7 @@ public class NextUpCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) { return new NextUpCardView(context, this); }
+    public DisplayableCard getDisplayableCard(Context context) { return new NextUpCardView(context, this); }
 
     public String getText() {
         return fillReferences(this.text);

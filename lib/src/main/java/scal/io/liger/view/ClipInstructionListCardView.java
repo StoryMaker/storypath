@@ -16,7 +16,7 @@ import scal.io.liger.model.ClipInstructionListCard;
 import scal.io.liger.R;
 
 
-public class ClipInstructionListCardView extends com.fima.cardsui.objects.Card {
+public class ClipInstructionListCardView implements DisplayableCard{
 
     private ClipInstructionListCard mCardModel;
     private Context mContext;
@@ -27,7 +27,7 @@ public class ClipInstructionListCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }
@@ -54,7 +54,7 @@ public class ClipInstructionListCardView extends com.fima.cardsui.objects.Card {
         }
 
 
-        super.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "ClipInstructionList Card click", Toast.LENGTH_SHORT).show();

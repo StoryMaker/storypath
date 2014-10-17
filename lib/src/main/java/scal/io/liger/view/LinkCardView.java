@@ -9,7 +9,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.LinkCard;
 
-public class LinkCardView extends com.fima.cardsui.objects.Card {
+public class LinkCardView implements DisplayableCard {
     private LinkCard mCardModel;
     private Context mContext;
 
@@ -19,7 +19,7 @@ public class LinkCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

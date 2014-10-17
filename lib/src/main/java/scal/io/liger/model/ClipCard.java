@@ -3,12 +3,12 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
-import com.fima.cardsui.objects.Card;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 import scal.io.liger.view.ClipCardView;
+import scal.io.liger.view.DisplayableCard;
 
 
 public class ClipCard extends ExampleCard {
@@ -23,7 +23,7 @@ public class ClipCard extends ExampleCard {
     }
 
     @Override
-    public Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new ClipCardView(context, this);
     }
 

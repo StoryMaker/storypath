@@ -14,7 +14,7 @@ import scal.io.liger.model.MarkdownCard;
 import com.commonsware.cwac.anddown.AndDown;
 
 
-public class MarkdownCardView extends com.fima.cardsui.objects.Card {
+public class MarkdownCardView implements DisplayableCard {
 
     private MarkdownCard mCardModel;
     private Context mContext;
@@ -25,7 +25,7 @@ public class MarkdownCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

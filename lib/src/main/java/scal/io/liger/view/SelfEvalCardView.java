@@ -15,7 +15,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.SelfEvalCard;
 
 
-public class SelfEvalCardView extends com.fima.cardsui.objects.Card {
+public class SelfEvalCardView implements DisplayableCard {
 
     private SelfEvalCard mCardModel;
     private Context mContext;
@@ -27,7 +27,7 @@ public class SelfEvalCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

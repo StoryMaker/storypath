@@ -5,6 +5,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -51,7 +53,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }
@@ -320,7 +322,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
      * Note: zOrder 0 is the bottom of the clip list.
      * @return the view inflated and added to clipCandidatesContainer
      */
-    private View inflateAndAddThumbnailForClip(ViewGroup clipCandidatesContainer, MediaFile mediaFile, int zOrder, int zTop) {
+    private View inflateAndAddThumbnailForClip(@NonNull ViewGroup clipCandidatesContainer, @Nullable MediaFile mediaFile, int zOrder, int zTop) {
         Resources r = clipCandidatesContainer.getContext().getResources();
         int topMarginPerZ = r.getDimensionPixelSize(R.dimen.clip_stack_margin_top);
 
@@ -331,10 +333,15 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         //Log.i("inflate", String.format("Inflating thumbnail for z %d with top margin %d", zOrder, params.topMargin));
         thumbnail.setLayoutParams(params);
 
-        //set up image as preview
-        Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
-        if (null != videoFrame)
-            thumbnail.setImageBitmap(videoFrame);
+        //set clip thumbnail image
+        if (mediaFile != null) {
+            // Clip has media. Get thumbnail from it
+            Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
+            if (null != videoFrame)
+                thumbnail.setImageBitmap(videoFrame);
+        } else {
+            // Clip has no media. Use default based on clip type
+        }
 
         if (zOrder != zTop)
             thumbnail.setAlpha(SECONDARY_CLIP_ALPHA);

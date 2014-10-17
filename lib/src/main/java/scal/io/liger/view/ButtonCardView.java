@@ -10,7 +10,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.R;
 import scal.io.liger.model.StoryPath;
 
-public class ButtonCardView extends com.fima.cardsui.objects.Card {
+public class ButtonCardView implements DisplayableCard{
     private ButtonCard mCardModel;
     private Context mContext;
 
@@ -20,7 +20,7 @@ public class ButtonCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

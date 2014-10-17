@@ -24,7 +24,7 @@ import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ExampleCard;
 
-public class ExampleCardView extends com.fima.cardsui.objects.Card {
+public class ExampleCardView implements DisplayableCard{
 
     public ExampleCard mCardModel;
     public Context mContext;
@@ -42,7 +42,7 @@ public class ExampleCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

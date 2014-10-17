@@ -12,7 +12,7 @@ import scal.io.liger.model.IntroCard;
 import scal.io.liger.R;
 
 
-public class IntroCardView extends com.fima.cardsui.objects.Card {
+public class IntroCardView implements DisplayableCard {
 
     private IntroCard mCardModel;
     private Context mContext;
@@ -23,7 +23,7 @@ public class IntroCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if(mCardModel == null) {
             return null;
         }
@@ -40,7 +40,7 @@ public class IntroCardView extends com.fima.cardsui.objects.Card {
         tvLevel.setText(mCardModel.getLevel());
         tvTime.setText(mCardModel.getTime());
 
-        super.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(mContext, "Intro Card click", Toast.LENGTH_SHORT).show();

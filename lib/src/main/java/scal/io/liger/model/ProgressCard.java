@@ -2,12 +2,14 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Display;
 
 import java.util.ArrayList;
 import java.util.Observable;
 
 import scal.io.liger.Constants;
 import scal.io.liger.ReferenceHelper;
+import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.ProgressCardView;
 
 public class ProgressCard extends Card {
@@ -224,7 +226,7 @@ public class ProgressCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new ProgressCardView(context, this);
     }
 

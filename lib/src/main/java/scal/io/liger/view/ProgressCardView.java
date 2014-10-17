@@ -12,7 +12,7 @@ import scal.io.liger.model.ProgressCard;
 /**
  * Created by josh on 8/8/14.
  */
-public class ProgressCardView extends com.fima.cardsui.objects.Card {
+public class ProgressCardView implements DisplayableCard {
     private ProgressCard mCardModel;
     private Context mContext;
 
@@ -22,7 +22,7 @@ public class ProgressCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         // StoryPath spm = mCardModel.getStoryPathReference();
 
         if (mCardModel == null) {

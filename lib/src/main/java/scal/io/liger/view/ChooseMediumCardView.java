@@ -13,7 +13,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.StoryPath;
 
 
-public class ChooseMediumCardView extends com.fima.cardsui.objects.Card {
+public class ChooseMediumCardView implements DisplayableCard {
     private ChooseMediumCard mCardModel;
     private Context mContext;
 
@@ -27,7 +27,7 @@ public class ChooseMediumCardView extends com.fima.cardsui.objects.Card {
     }
 
     @Override
-    public View getCardContent(Context context) {
+    public View getCardView(Context context) {
         if (mCardModel == null) {
             return null;
         }

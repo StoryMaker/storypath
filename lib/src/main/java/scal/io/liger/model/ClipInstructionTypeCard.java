@@ -1,10 +1,12 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.view.Display;
 
 import java.util.ArrayList;
 
 import scal.io.liger.view.ClipInstructionTypeCardView;
+import scal.io.liger.view.DisplayableCard;
 
 /**
  * Created by mnbogner on 7/17/14.
@@ -21,7 +23,7 @@ public class ClipInstructionTypeCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new ClipInstructionTypeCardView(context, this);
     }
 

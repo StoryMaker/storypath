@@ -8,6 +8,7 @@ import java.util.Observable;
 
 import scal.io.liger.Constants;
 import scal.io.liger.ReferenceHelper;
+import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.OrderMediaCardView;
 
 public class OrderMediaCard extends Card {
@@ -225,7 +226,7 @@ public class OrderMediaCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public DisplayableCard getDisplayableCard(Context context) {
         return new OrderMediaCardView(context, this);
     }
 

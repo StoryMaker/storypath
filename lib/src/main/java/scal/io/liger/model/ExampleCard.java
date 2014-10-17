@@ -17,7 +17,7 @@ public class ExampleCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) {
+    public scal.io.liger.view.DisplayableCard getDisplayableCard(Context context) {
         return new ExampleCardView(context, this);
     }
 

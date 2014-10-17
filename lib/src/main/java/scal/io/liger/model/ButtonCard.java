@@ -3,6 +3,7 @@ package scal.io.liger.model;
 import android.content.Context;
 
 import scal.io.liger.view.ButtonCardView;
+import scal.io.liger.view.DisplayableCard;
 
 public class ButtonCard extends Card {
 
@@ -14,7 +15,7 @@ public class ButtonCard extends Card {
     }
 
     @Override
-    public com.fima.cardsui.objects.Card getCardView(Context context) { return new ButtonCardView(context, this); }
+    public DisplayableCard getDisplayableCard(Context context) { return new ButtonCardView(context, this); }
 
     public String getText() {
         return fillReferences(this.text);

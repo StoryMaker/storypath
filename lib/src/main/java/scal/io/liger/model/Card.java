@@ -2,6 +2,7 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,11 +13,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import scal.io.liger.Constants;
+import scal.io.liger.view.DisplayableCard;
 
 /**
  * Created by mnbogner on 7/10/14.
  */
-public abstract class Card extends Observable implements Observer{  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
+public abstract class Card extends Observable implements Observer {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
 
     protected String type;
     private String id;
@@ -89,7 +91,7 @@ public abstract class Card extends Observable implements Observer{  // REFACTOR 
         // required for JSON/GSON
     }
 
-    public abstract com.fima.cardsui.objects.Card getCardView(Context context);
+    public abstract DisplayableCard getDisplayableCard(Context context);
 
     public String getType() {
         return type;
