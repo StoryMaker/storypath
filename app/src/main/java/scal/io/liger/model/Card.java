@@ -67,6 +67,8 @@ public abstract class Card extends Observable implements Observer{  // REFACTOR 
         }
     }
 
+    // foo
+
     public void registerObservers() {
         if (references != null) {
             for (String reference : references) {
