@@ -5,6 +5,9 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,15 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
@@ -33,6 +39,7 @@ import scal.io.liger.model.MediaFile;
 
 
 public class ClipCardView extends ExampleCardView implements AdapterView.OnItemSelectedListener {
+    public static final String TAG = "ClipCardView";
 
     public ClipCard mCardModel;
 
@@ -334,14 +341,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         thumbnail.setLayoutParams(params);
 
         //set clip thumbnail image
-        if (mediaFile != null) {
-            // Clip has media. Get thumbnail from it
-            Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
-            if (null != videoFrame)
-                thumbnail.setImageBitmap(videoFrame);
-        } else {
-            // Clip has no media. Use default based on clip type
-        }
+        setThumbnailForClip(thumbnail, mediaFile);
 
         if (zOrder != zTop)
             thumbnail.setAlpha(SECONDARY_CLIP_ALPHA);
@@ -350,6 +350,129 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         clipCandidatesContainer.addView(thumbnail);
         return thumbnail;
+    }
+
+    private void setThumbnailForClip(@NonNull ImageView thumbnail, MediaFile media) {
+        String mediaPath = null;
+        if ((mCardModel.getClips() != null) && (mCardModel.getClips().size() > 0)) {
+            if (media == null) {
+                Log.e(TAG, "no media file was found");
+            } else {
+                mediaPath = media.getPath();
+            }
+        }
+
+        final File mediaFile = getValidFile(mediaPath, mCardModel.getExampleMediaPath());
+
+        if (mediaFile == null) {
+            // Clip has no attached media. Show generic drawable based on clip type
+            String clipType = mCardModel.getClipType();
+
+            if (clipType.equals(Constants.CHARACTER)) {
+                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_close));
+            } else if (clipType.equals(Constants.ACTION)) {
+                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
+            } else if (clipType.equals(Constants.RESULT)){
+                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_long));
+            } else {
+                //TODO handle invalid clip type
+                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher));
+            }
+
+            thumbnail.setVisibility(View.VISIBLE);
+        } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
+            // Clip has attached media. Show an appropriate preview
+            // e.g: A thumbnail for video
+            String clipMedium = mCardModel.getClipMedium();
+            if (clipMedium.equals(Constants.VIDEO)) {
+
+                //set up image as preview
+                Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
+                if(null != videoFrame) {
+                    thumbnail.setImageBitmap(videoFrame);
+                }
+
+                thumbnail.setVisibility(View.VISIBLE);
+//                btnMediaPlay.setVisibility(View.VISIBLE);
+//                btnMediaPlay.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Uri video = Uri.parse(mediaFile.getPath());
+//                        vvCardVideo.setVideoURI(video);
+//                        vvCardVideo.seekTo(5);
+//                        vvCardVideo.setMediaController(null);
+//                        vvCardVideo.setVisibility(View.VISIBLE);
+//                        thumbnail.setVisibility(View.GONE);
+//                        btnMediaPlay.setVisibility(View.GONE);
+//                        vvCardVideo.start();
+//                    }
+//                });
+//
+//                //revert back to image on video completion
+//                vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                    public void onCompletion(MediaPlayer mp) {
+//                        vvCardVideo.setVisibility(View.GONE);
+//                        ivCardPhoto.setVisibility(View.VISIBLE);
+//                        btnMediaPlay.setVisibility(View.VISIBLE);
+//                        btnMediaPlay.setChecked(false);
+//                    }
+//                });
+            } else if (clipMedium.equals(Constants.PHOTO)) {
+                Uri uri = Uri.parse(mediaFile.getPath());
+                thumbnail.setImageURI(uri);
+                thumbnail.setVisibility(View.VISIBLE);
+            } else if (clipMedium.equals(Constants.AUDIO)) {
+                Uri myUri = Uri.parse(mediaFile.getPath());
+                final MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                //set background image
+                String clipType = mCardModel.getClipType();
+                int drawable = R.drawable.ic_launcher;
+
+                if (clipType.equals(Constants.CHARACTER)) {
+                    drawable = R.drawable.cliptype_close;
+                } else if (clipType.equals(Constants.ACTION)) {
+                    drawable = R.drawable.cliptype_medium;
+                } else if (clipType.equals(Constants.RESULT)){
+                    drawable = R.drawable.cliptype_long;
+                }
+                thumbnail.setImageDrawable(mContext.getResources().getDrawable(drawable));
+                thumbnail.setVisibility(View.VISIBLE);
+
+//                //set up media player
+//                try {
+//                    mediaPlayer.setDataSource(mContext, myUri);
+//                    mediaPlayer.prepare();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                btnMediaPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                        if (isChecked) {
+//                            mediaPlayer.seekTo(5);
+//                            mediaPlayer.start();
+//                        } else {
+//                            mediaPlayer.pause();
+//                        }
+//                    }
+//                });
+//
+//                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                    @Override
+//                    public void onCompletion(MediaPlayer arg0) {
+//                        btnMediaPlay.setChecked(false);
+//                    }
+//                });
+//
+//                mediaPlayer.seekTo(5);
+//                btnMediaPlay.setVisibility(View.VISIBLE);
+            } else {
+                //TODO handle invalid-medium error
+            }
+        }
+
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;
