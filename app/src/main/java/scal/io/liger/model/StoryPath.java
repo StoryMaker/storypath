@@ -25,9 +25,11 @@ public class StoryPath {
     private String title;
     private String classPackage;
     private ArrayList<Card> cards;
+    private ArrayList<Card> visibleCards;
     private ArrayList<Dependency> dependencies;
     private String fileLocation;
-    private Story storyReference; // not serialized
+    private StoryPathLibrary storyReference; // not serialized
+    private String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -113,6 +115,19 @@ public class StoryPath {
     }
 
     public ArrayList<Card> getValidCards() {
+        if (visibleCards == null) {
+            visibleCards = new ArrayList<Card>();
+
+            for (Card card : cards) {
+                if (card.checkStateVisibility()) {
+                    visibleCards.add(card);
+                }
+            }
+        }
+
+        return visibleCards;
+
+        /*
         ArrayList<Card> validCards = new ArrayList<Card>();
 
         for (Card card : cards) {
@@ -122,6 +137,7 @@ public class StoryPath {
         }
 
         return validCards;
+        */
     }
 
     public ArrayList<Dependency> getDependencies() {
@@ -147,12 +163,20 @@ public class StoryPath {
         this.fileLocation = fileLocation;
     }
 
-    public Story getStoryReference() {
+    public StoryPathLibrary getStoryReference() {
         return storyReference;
     }
 
-    public void setStoryReference(Story storyReference) {
+    public void setStoryReference(StoryPathLibrary storyReference) {
         this.storyReference = storyReference;
+    }
+
+    public String getStoryPathLibraryFile() {
+        return storyPathLibraryFile;
+    }
+
+    public void setStoryPathLibraryFile(String storyPathLibraryFile) {
+        this.storyPathLibraryFile = storyPathLibraryFile;
     }
 
     public Context getContext() {
@@ -180,6 +204,22 @@ public class StoryPath {
             card.setStoryPathReference(null);
         }
     }
+
+    // observers must be initialized after cards are deserialized
+    // observers must be cleared before serializing to prevent
+    // circular references (cards pointing to cards)
+    public void initializeObservers() {
+        for (Card card : cards) {
+            card.registerObservers();
+        }
+    }
+
+    public void clearObservers() {
+        for (Card card : cards) {
+            card.removeObservers();
+        }
+    }
+
 
     public String getReferencedValue(String fullPath) {
         // assumes the format story::card::field::value
@@ -264,14 +304,59 @@ public class StoryPath {
         }
     }
 
-    public void notifyActivity() {
+    public void notifyActivity(Card updatedCard) {
         Log.d("StoryPathModel", "notifyActivity");
+
+        if (updatedCard.getStateVisiblity()) {
+            // new or updated
+
+            int cardIndex = 0;
+
+            if (visibleCards.contains(updatedCard)) {
+                visibleCards.remove(updatedCard);
+            } else {
+                // foo
+            }
+
+            cardIndex = findSpot(updatedCard);
+
+            if (cardIndex >= visibleCards.size()) {
+                visibleCards.add(updatedCard);
+            } else {
+                visibleCards.add(cardIndex, updatedCard);
+            }
+        } else {
+            // deleted
+
+            if (visibleCards.contains(updatedCard)) {
+                visibleCards.remove(updatedCard);
+            } else {
+                // foo
+            }
+        }
+
+        // call refresh for now, card list will be returned
+
         if (context != null) {
             MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a save cast as context can sometimes not be an activity (getApplicationContext())
             mainActivity.refreshCardView();
         } else {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
         }
+    }
+
+    public int findSpot(Card card) {
+        int baseIndex = cards.indexOf(card);
+        int newIndex = 0;
+        for (int i = (baseIndex - 1); i >= 0; i--) {
+            Card previousCard = cards.get(i);
+            if (visibleCards.contains(previousCard)) {
+                newIndex = visibleCards.indexOf(previousCard) + 1;
+                break;
+            }
+        }
+
+        return newIndex;
     }
 
     public void linkNotification(String linkPath) {
@@ -316,7 +401,7 @@ public class StoryPath {
     public void rearrangeCards(int currentIndex, int newIndex) {
         Card card = cards.remove(currentIndex);
         cards.add(newIndex, card);
-        notifyActivity();
+        notifyActivity(card);
     }
 
     public void saveMediaFile(String uuid, MediaFile file) {

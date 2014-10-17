@@ -55,12 +55,9 @@ public class ClipCard extends ExampleCard {
         this.clips.add(0, clip);
 
         // send notification that a clip has been saved so that cards will be refreshed
-        if (storyPathReference != null) {
-            if (notify) {
-                storyPathReference.notifyActivity();
-            }
-        } else {
-            Log.e(this.getClass().getName(), "story path reference not found, cannot sent notification");
+        if (notify) {
+            setChanged();
+            notifyObservers();
         }
     }
 

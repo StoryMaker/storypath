@@ -160,7 +160,6 @@ public class ExampleCardView extends com.fima.cardsui.objects.Card {
         } else if (exampleMediaPath != null) {
             mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
         }
-
         return mediaFile;
     }
 }

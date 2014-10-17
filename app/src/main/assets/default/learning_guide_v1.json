@@ -304,7 +304,7 @@
         {
             "text": "Tweaks & Changes",
             "type": "NextUpCard",
-            "id": "tweaks_and_changes",
+            "id": "tweaks_and_changes_video",
             "links": [
                 {
                     "linkText": "Character clip",
@@ -331,7 +331,7 @@
         {
             "text": "Tweaks & Changes",
             "type": "NextUpCard",
-            "id": "tweaks_and_changes",
+            "id": "tweaks_and_changes_photo",
             "links": [
                 {
                     "linkText": "Character clip",
@@ -358,7 +358,7 @@
         {
             "text": "Tweaks & Changes",
             "type": "NextUpCard",
-            "id": "tweaks_and_changes",
+            "id": "tweaks_and_changes_audio",
             "links": [
                 {
                     "linkText": "Character clip",

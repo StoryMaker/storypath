@@ -16,4 +16,11 @@
     <string name="lbl_record">Record Clip</string>
     <string name="lbl_order_media_desc">Now put your clips in order to present clear beginning, middle, and end.</string>
 
+    <string-array name="clipcard_overflow">
+        <item>Change Goal</item>
+        <item>Duplicate Card</item>
+        <item>Duplicate Clip</item>
+        <item>Remove Card</item>
+    </string-array>
+
 </resources>

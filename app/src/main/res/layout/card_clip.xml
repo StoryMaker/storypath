@@ -1,11 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/selectable_background_cardbank"
-    android:padding="@dimen/padding_xlarge">
+    android:paddingBottom="@dimen/padding_medium">
+
+    <RelativeLayout
+        android:id="@+id/clipCandidates"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </RelativeLayout>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/signature"
+        android:id="@+id/howtoCard"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/card_howto_height"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:padding="@dimen/padding_large"
+        android:text="Tap to select a different clip"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/card_medium_text"
+        android:textStyle="italic"
+        android:alpha="0"/>
+
+    <Spinner
+        android:id="@+id/overflowSpinner"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="16dp"
+        android:layout_below="@id/clipCandidates"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:background="@drawable/ic_overflow"
+        android:textColor="@color/signature"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium" />
+
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/overflowSpinner"
+        android:layout_below="@id/clipCandidates"
+        android:paddingTop="@dimen/padding_medium"
+        android:drawableLeft="@drawable/ic_signature"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="SIGNATURE"
+        android:textColor="@color/signature"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/collapsable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerText"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:orientation="vertical"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/bodyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="8dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:text="Show something important about your character."
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/importBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_whoknows"
+            android:drawablePadding="8dp"
+            android:paddingTop="16dp"
+            android:text="Import"
+            android:textColor="@color/signature" />
+
+        <Button
+            android:id="@+id/captureBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_capture"
+            android:drawablePadding="8dp"
+            android:paddingTop="16dp"
+            android:text="Capture"
+            android:textColor="@color/signature" />
+    </LinearLayout>
+    <!--
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -91,5 +185,5 @@
             style="@style/CardLinkMedium"
             android:text="@string/lbl_record"/>
 
-    </LinearLayout>
-</LinearLayout>
+    </LinearLayout> -->
+</RelativeLayout>

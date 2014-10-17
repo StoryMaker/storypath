@@ -143,7 +143,7 @@ public class Story {
         newPath.importMetadata(metadata);
 
         // should this be done externally?
-        newPath.setStoryReference(this);
+        //newPath.setStoryReference(this);
 
         // update current story path
         this.setCurrentStoryPath(newPath);
