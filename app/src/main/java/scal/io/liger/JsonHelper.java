@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +16,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import scal.io.liger.model.StoryPath;
+import scal.io.liger.model.StoryPathLibrary;
 
 /**
  * Created by mnbogner on 7/14/14.
@@ -172,4 +179,248 @@ public class JsonHelper {
             }
         }
     }
+
+
+
+    // NEW
+
+    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED");
+
+        String storyPathLibraryJson = "";
+        String sdCardState = Environment.getExternalStorageState();
+
+        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                InputStream jsonStream = new FileInputStream(jsonFilePath);
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                storyPathLibraryJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed: " + ioe.getMessage());
+                return null;
+            }
+        } else {
+            Log.e(TAG, "SD card not found");
+            return null;
+        }
+
+        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath);
+
+    }
+
+    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED");
+
+        GsonBuilder gBuild = new GsonBuilder();
+        Gson gson = gBuild.create();
+
+        StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
+
+        // a story path library model must have a file location to manage relative paths
+        // if it is loaded from a saved state, the location should already be set
+        if ((jsonFilePath == null) || (jsonFilePath.length() == 0)) {
+            if ((storyPathLibrary.getFileLocation() == null) || (storyPathLibrary.getFileLocation().length() == 0)) {
+                Log.e(TAG, "file location for story path library " + storyPathLibrary.getId() + " could not be determined");
+                return null;
+            }
+        } else {
+            storyPathLibrary.setFileLocation(jsonFilePath);
+        }
+
+        return storyPathLibrary;
+
+    }
+
+    public static String saveStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED");
+
+        Date timeStamp = new Date();
+        String jsonFilePath = storyPathLibrary.buildPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
+
+        String sdCardState = Environment.getExternalStorageState();
+
+        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File storyPathLibraryFile = new File(jsonFilePath);
+                FileOutputStream storyPathLibraryStream = new FileOutputStream(storyPathLibraryFile);
+                if (!storyPathLibraryFile.exists()) {
+                    storyPathLibraryFile.createNewFile();
+                }
+
+                String storyPathLibraryJson = serializeStoryPathLibrary(storyPathLibrary);
+
+                byte storyPathLibraryData[] = storyPathLibraryJson.getBytes();
+                storyPathLibraryStream.write(storyPathLibraryData);
+                storyPathLibraryStream.flush();
+                storyPathLibraryStream.close();
+            } catch (IOException ioe) {
+                Log.e(TAG, "writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
+                return null;
+            }
+        } else {
+            Log.e(TAG, "SD card not found");
+            return null;
+        }
+
+        // update file location
+        storyPathLibrary.setFileLocation(jsonFilePath);
+
+        return jsonFilePath;
+
+    }
+
+    public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED");
+
+        GsonBuilder gBuild = new GsonBuilder();
+        Gson gson = gBuild.create();
+
+        // set aside references to prevent circular dependencies when serializing
+        StoryPath tempStoryPath = storyPathLibrary.getCurrentStoryPath();
+        storyPathLibrary.setCurrentStoryPath(null);
+
+        String storyPathLibraryJson = gson.toJson(storyPathLibrary);
+
+        // restore references
+        storyPathLibrary.setCurrentStoryPath(tempStoryPath);
+
+        return storyPathLibraryJson;
+
+    }
+
+    public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED");
+
+        String storyPathJson = "";
+        String sdCardState = Environment.getExternalStorageState();
+
+        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                InputStream jsonStream = new FileInputStream(jsonFilePath);
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                storyPathJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed: " + ioe.getMessage());
+                return null;
+            }
+        } else {
+            Log.e(TAG, "SD card not found");
+            return null;
+        }
+
+        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, context);
+
+    }
+
+    public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED");
+
+        GsonBuilder gBuild = new GsonBuilder();
+        gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
+        Gson gson = gBuild.create();
+
+        StoryPath storyPath = gson.fromJson(storyPathJson, StoryPath.class);
+
+        // a story path model must have a file location to manage relative paths
+        // if it is loaded from a saved state, the location should already be set
+        if ((jsonFilePath == null) || (jsonFilePath.length() == 0)) {
+            if ((storyPath.getFileLocation() == null) || (storyPath.getFileLocation().length() == 0)) {
+                Log.e(TAG, "file location for story path " + storyPath.getId() + " could not be determined");
+            }
+        } else {
+            storyPath.setFileLocation(jsonFilePath);
+        }
+
+        storyPath.setCardReferences();
+        storyPath.initializeObservers();
+        storyPath.setStoryReference(storyPathLibrary);
+        storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
+        storyPath.setContext(context);
+
+        return storyPath;
+
+    }
+
+    public static String saveStoryPath(StoryPath storyPath) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPath CALLED");
+
+        Date timeStamp = new Date();
+        String jsonFilePath = storyPath.buildPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
+
+        String sdCardState = Environment.getExternalStorageState();
+
+        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File storyPathFile = new File(jsonFilePath);
+                FileOutputStream storyPathStream = new FileOutputStream(storyPathFile);
+                if (!storyPathFile.exists()) {
+                    storyPathFile.createNewFile();
+                }
+
+                String storyPathJson = serializeStoryPath(storyPath);
+
+                byte storyPathData[] = storyPathJson.getBytes();
+                storyPathStream.write(storyPathData);
+                storyPathStream.flush();
+                storyPathStream.close();
+            } catch (IOException ioe) {
+                Log.e(TAG, "writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
+                return null;
+            }
+        } else {
+            Log.e(TAG, "SD card not found");
+            return null;
+        }
+
+        // update file location
+        storyPath.setFileLocation(jsonFilePath);
+
+        return jsonFilePath;
+
+    }
+
+    public static String serializeStoryPath(StoryPath storyPath) {
+
+        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED");
+
+        GsonBuilder gBuild = new GsonBuilder();
+        Gson gson = gBuild.create();
+
+        // set aside references to prevent circular dependencies when serializing
+        Context tempContext = storyPath.getContext();
+        StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryReference();
+        storyPath.setContext(null);
+        storyPath.setStoryReference(null);
+        storyPath.clearObservers();
+        storyPath.clearCardReferences();
+        //storyPath.clearValidCards();
+
+        String storyPathJson = gson.toJson(storyPath);
+
+        // restore references
+        // valid cards will be reset next time getValidCards() is called
+        storyPath.setCardReferences();
+        storyPath.initializeObservers();
+        storyPath.setStoryReference(tempStoryPathLibrary);
+        storyPath.setContext(tempContext);
+
+        return storyPathJson;
+
+    }
+
 }

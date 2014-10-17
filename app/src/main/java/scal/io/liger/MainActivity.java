@@ -82,34 +82,37 @@ public class MainActivity extends Activity {
         if (mStoryPathLibrary == null) {
             Log.d(TAG, "data not yet loaded, no state to save");
         } else {
-            Gson gson = new Gson();
-            mStoryPathLibrary.getCurrentStoryPath().setStoryReference(null);
-            mStoryPathLibrary.getCurrentStoryPath().clearObservers();
-            mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
-            mStoryPathLibrary.getCurrentStoryPath().setContext(null);
+            //Gson gson = new Gson();
+            //mStoryPathLibrary.getCurrentStoryPath().setStoryReference(null);
+            //mStoryPathLibrary.getCurrentStoryPath().clearObservers();
+            //mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
+            //mStoryPathLibrary.getCurrentStoryPath().setContext(null);
 
             // need to serialize Story as well?
 
-            String json = gson.toJson(mStoryPathLibrary.getCurrentStoryPath());
-            outState.putString("storyPathJson", json);
+            //String json = gson.toJson(mStoryPathLibrary.getCurrentStoryPath());
+            //outState.putString("storyPathJson", json);
 
-            StoryPath sp = mStoryPathLibrary.getCurrentStoryPath();
-            mStoryPathLibrary.setCurrentStoryPath(null);
+            outState.putString("storyPathJson", JsonHelper.serializeStoryPath(mStoryPathLibrary.getCurrentStoryPath()));
+
+            //StoryPath sp = mStoryPathLibrary.getCurrentStoryPath();
+            //mStoryPathLibrary.setCurrentStoryPath(null);
             //mStory.setStoryPathLibrary(null);
 
             //String json2 = gson.toJson(mStory);
             //outState.putString("storyJson", json2);
 
-            String json3 = gson.toJson(mStoryPathLibrary);
-            outState.putString("storyPathLibraryJson", json3);
+            //String json3 = gson.toJson(mStoryPathLibrary);
+            //outState.putString("storyPathLibraryJson", json3);
+            outState.putString("storyPathLibraryJson", JsonHelper.serializeStoryPathLibrary(mStoryPathLibrary));
 
             //mStory.setStoryPathLibrary(mStoryPathLibrary);
-            mStoryPathLibrary.setCurrentStoryPath(sp);
+            //mStoryPathLibrary.setCurrentStoryPath(sp);
 
-            mStoryPathLibrary.getCurrentStoryPath().setContext(this);
-            mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
-            mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
-            mStoryPathLibrary.getCurrentStoryPath().setStoryReference(mStoryPathLibrary);
+            //mStoryPathLibrary.getCurrentStoryPath().setContext(this);
+            //mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
+            //mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
+            //mStoryPathLibrary.getCurrentStoryPath().setStoryReference(mStoryPathLibrary);
 
         }
 
@@ -157,7 +160,7 @@ public class MainActivity extends Activity {
                         // TEMP - unsure how to best determine new story vs. existing story
                         if (jsonFile.getPath().endsWith("TEST_STORY.json")) {
 
-                            loadStoryFile(jsonFile);
+                            // loadStoryFile(jsonFile);
 
                         } else {
                             String json = JsonHelper.loadJSON();
@@ -211,6 +214,14 @@ public class MainActivity extends Activity {
 
     private void initStoryPathLibraryModel(String json, File jsonFile) throws MalformedJsonException {
         Log.d(TAG, "initStoryPathLibraryModel called");
+
+        if (jsonFile != null) {
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonFile.getPath());
+        } else {
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null);
+        }
+
+        /*
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.create();
 
@@ -229,6 +240,7 @@ public class MainActivity extends Activity {
         //if (mStory == null) {
         //    mStory = new Story(mStoryPathLibrary);
         //}
+        */
     }
 
     private void initCardList(String json) {
@@ -254,6 +266,14 @@ public class MainActivity extends Activity {
 
     private void initStoryPathModel(String json, File jsonFile) throws MalformedJsonException {
         Log.d(TAG, "initStoryPathModel called");
+
+        if (jsonFile != null) {
+            mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, jsonFile.getPath(), mStoryPathLibrary, this.mContext));
+        } else {
+            mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, null, mStoryPathLibrary, this.mContext));
+        }
+
+        /*
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
@@ -274,7 +294,10 @@ public class MainActivity extends Activity {
         }
 
         sp.setStoryReference(mStoryPathLibrary);
+
+
         mStoryPathLibrary.setCurrentStoryPath(sp);
+        */
     }
 
     public void refreshCardView () {
@@ -325,6 +348,10 @@ public class MainActivity extends Activity {
             // reference targets a serialized story path
             for (Dependency dependency : mStoryPathLibrary.getCurrentStoryPath().getDependencies()) {
                 if (dependency.getDependencyId().equals(pathParts[0])) {
+
+                    story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), mStoryPathLibrary, this.mContext);
+
+                    /*
                     GsonBuilder gBuild = new GsonBuilder();
                     gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
                     Gson gson = gBuild.create();
@@ -336,6 +363,7 @@ public class MainActivity extends Activity {
                     story.setContext(this.mContext);
                     story.setCardReferences();
                     story.setFileLocation(mStoryPathLibrary.getCurrentStoryPath().buildPath(jsonFile));
+                    */
 
                     newStory = true;
                 }
@@ -525,6 +553,7 @@ public class MainActivity extends Activity {
         mStoryPathLibrary.getCurrentStoryPath().setStoryReference(mStoryPathLibrary);
     }
 
+    /*
     public void loadStoryFile(File jsonFile) {
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.create();
@@ -540,6 +569,7 @@ public class MainActivity extends Activity {
         String pathJson = JsonHelper.loadJSONFromPath(mStoryPathLibrary.getCurrentStoryPathFile());
         initCardList(pathJson);
     }
+    */
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
