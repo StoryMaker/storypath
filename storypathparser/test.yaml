@@ -1,0 +1,51 @@
+---
+    title: Generated Path 1
+    classPackage: scal.io.liger.model
+    id: genpath_1
+    cards:
+        - 
+            card: MarkDownCard
+            body: |
+                Being an effective journalist involves using a variety of communication methods. Standard communication methods leave a trail that can be used by those who threaten you or your sources. In the process of producing a story, you may leave a digital trail that assists those who threaten you or your sources.  
+                Understanding your communications trail is the first step to ensure that those who threaten you cannot take advantage of you or your sources.  
+                &bull; item 1  
+                &bull; second item  
+                &bull; item the third  
+
+        - 
+            card: PreviewCard
+            title: A Preview Card
+            media:
+                - 
+                    media: path/file.format
+                    media_caption: (c) John Smock 2012
+                - 
+                    media: file2.format
+                    media_caption: (c) Josh Steiner 2099  
+        -
+            card: TextCard
+            text: This is the text of the card.  Woohoo.
+        - 
+            card: QuizCard
+            questions:
+                - question:
+                        title: First question
+                        text: the text of the question
+                        answers:
+                            - first answer
+                            - second answer
+                            - third answer
+                        correct_answer:
+                            - 1
+                            - 3
+
+                - question:
+                        title: 2nd Question
+                        text: the text of the second question
+                        answers:
+                            - first answer
+                            - second answer
+                            - third answer
+                        correct_answer:
+                            - 1
+                            - 3

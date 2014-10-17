@@ -1,0 +1,128 @@
+{
+    "cards": [
+        {
+            "header": "Hiro Protagonist", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "1.png", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "# Background\n*A successful shot is more than a well composed image.* A shot with a goal progresses the story and provides specific information that supports the goal of the sequence.  \n## Header 2 Test\nThis is some text to include to indicate that there is a second paragraph.\n### Header 3 Test\nsick text brah\n#### Header 4 Test\ndope story lady\n##### Header 5 Test\ncut it out old man\n###### Header 6 Test\nThis is getting really boring.\n          \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "text": "# Solution\n![Example of a wide shot providing a clear location](2.png)\nEach shot type has specific goals it is best suited to achieve. You may be able to explain your location with other shot types, but the wide shot is the easiest option to do it successfully. For example, wide shots are filmed far away from a subject. This distance often provides a clear image of the area around the subject, which is why it is effective to depict the location.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "header": "Here is my Title", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "3.png", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "Only try to accomplish one goal per shot when you are first learning. A sequence is more successful with two shots that each do a good job of achieving one goal, than to have one shot that does a bad job of achieving two goals.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "text": "It is best to experiment with this at first, and expect to fail more often than it works. Do not get discouraged. It is a challenging skill and each goal you add to a shot makes it significantly harder to be successful.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "text": "Now that we understand why we have shot goals lets review some examples of the shot types. What goal they are best suited to, and give you some tips to help you be successful.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "header": "Wide Shot", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "8.mp4", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "# Goal: Shows the location / scene of a story.  \n  \n## Tips:  \n  \n&bull; Typically used once in a scene, usually at the beginning.  \n&bull; Has a sense of the feel of the location.  \n&bull; To use multiple times you should be showing a dramatic change to the location. For example, an empty town square to a full town square is a successful use of two location shots.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "header": "Long Shot", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "9.mp4", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "# Goal: Showcases the characters and how they interact with the location.  \n  \n## Tips:  \n  \n&bull; Best used to highlight a subject's actions.  \n&bull; Effective for including multiple subjects.  \n&bull; It is common to allow for more headroom than in either medium or close up shots.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "header": "Medium Shot", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "10.mp4", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "# Goal: Directs the audience to focus entirely on one or two characters, may not provide an understanding of the location.  \n\n## Tips:\n\n&bull; Best used to highlight a subject's actions.  \n&bull; Effective for including multiple subjects.  \n&bull; It is common to allow for more headroom than in either medium or close up shots.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "header": "Close up Shot", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "11.mp4", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "# Goal: Forces the audience to focus entirely on a single character, encourages the emotion of the character.  \n\n## Tips:\n\n&bull; Capturing emotion and feeling is your primary objective.  \n&bull; Pay close attention to the eyes of your subject.  \n&bull; Do not worry about incorporating the environment in this shot.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "header": "Audio", 
+            "clipMedium": "video", 
+            "exampleMediaPath": "12.mp3", 
+            "clipType": "character", 
+            "type": "ExampleCard", 
+            "id": "example_card_1"
+        }, 
+        {
+            "text": "# Goal: Showcases audio, because audio is important.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "text": "# Things to Remember  \n  \n![The subject matter should be 50% of the screen focus](13.png)  \nThe subject matter should be 50% of the screen focus.  \n  \nConsider the Hitchcock rule from video basics when you are considering your goal. Ask yourself if the most important element,  the primary goal of your shot is clearly visible.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "text": "![The subject matter should be 50% of the screen focus](14.png)  \n  \nThe rule of thirds is there to help you arrange the elements in your frame so that they are successful. Use the four point system from it to ensure your goals are clear.  \n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }, 
+        {
+            "text": "# QUIZ\n", 
+            "type": "MarkdownCard", 
+            "id": "markdown_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "genpath_1", 
+    "title": "Mad Libs 1"
+}

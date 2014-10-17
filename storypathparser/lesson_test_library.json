@@ -1,0 +1,7 @@
+{
+    "id": "lesson_test_library",
+    "title": "Lesson Test Library",
+    "storyPathTemplateFiles": [
+        "lesson_test.json"
+    ]
+}
