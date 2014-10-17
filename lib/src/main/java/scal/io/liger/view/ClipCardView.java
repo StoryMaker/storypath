@@ -2,12 +2,15 @@ package scal.io.liger.view;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -67,14 +71,46 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_clip, null);
 
-        final ViewGroup collapsableContainer = (ViewGroup) view.findViewById(R.id.collapsable);
+        // Views modified by animation callbacks, and must be final
+        final ViewGroup collapsableContainer    = (ViewGroup) view.findViewById(R.id.collapsable);
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
-        TextView headerText = (TextView) view.findViewById(R.id.headerText);
-        TextView bodyText = (TextView) view.findViewById(R.id.bodyText);
-        Spinner spinner = (Spinner) view.findViewById(R.id.overflowSpinner);
+
+        // Views only modified during initial binding
+        TextView headerText  = (TextView) view.findViewById(R.id.headerText);
+        TextView bodyText    = (TextView) view.findViewById(R.id.bodyText);
+        Spinner spinner      = (Spinner) view.findViewById(R.id.overflowSpinner);
+        Button captureButton = (Button) view.findViewById(R.id.captureBtn);
+
+        /** Capture Media Button Click Listener */
+        captureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                int requestId = -1;
+
+                String clipMedium = mCardModel.getClipMedium();
+                String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
+                if (clipMedium.equals(Constants.VIDEO)) {
+                    intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    requestId = Constants.REQUEST_VIDEO_CAPTURE;
+
+                } else if (clipMedium.equals(Constants.PHOTO)) {
+                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    requestId = Constants.REQUEST_IMAGE_CAPTURE;
+
+                } else if (clipMedium.equals(Constants.AUDIO)) {
+                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
+                }
+
+                if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
+                    mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
+                    ((Activity) mContext).startActivityForResult(intent, requestId);
+                }
+            }
+        });
+
         setupSpinner(spinner);
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         ViewGroup.LayoutParams params = collapsableContainer.getLayoutParams();
         params.height = 0;
         collapsableContainer.setLayoutParams(params);
@@ -84,6 +120,10 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final ArrayList<ClipMetadata> clipsToDisplay = mCardModel.getClips();
         if (clipsToDisplay.size() > 0) clipCandidatesContainer.removeAllViews(); // Remove any prior clip views
 
+        /** Clip Stack Card Click Listener
+         *  Handles click on primary clip (show playback / edit dialog) as well as
+         *  secondary clips and footer (expand clip stack or collapse after new primary clip selection)
+        */
         View.OnClickListener clipCardOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,22 +153,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             }
         };
 
-//        mSecondaryClipCardOnClickListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i("select", "secondary");
-//                if (mClipsExpanded) {
-//                    Log.i("select", "new primary clip selected");
-//                    // If clips expanded, this event means we've been selected as the
-//                    // new primary clip!
-//                    setNewSelectedClip(v);
-//                }
-//
-//                toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
-//                toggleFooterVisibility(collapsableContainer);
-//            }
-//        };
-
+        /** Populate clip stack */
         Log.i("clip", String.format("adding %d clips for cardclip ",clipsToDisplay.size()));
         for (int x = 0; x < clipsToDisplay.size(); x++) {
             // Create view for new clip
@@ -148,6 +173,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         // Expand / Collapse footer on click
         headerText.setOnClickListener(clipCardOnClickListener);
+
+
+        /** Original ClipCard view binding below: */
 
         // Expand / Collapse clip stack on thumbnail click
 //        clipCandidatesContainer.setOnClickListener(new View.OnClickListener() {
@@ -434,7 +462,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     drawable = R.drawable.cliptype_close;
                 } else if (clipType.equals(Constants.ACTION)) {
                     drawable = R.drawable.cliptype_medium;
-                } else if (clipType.equals(Constants.RESULT)){
+                } else if (clipType.equals(Constants.RESULT)) {
                     drawable = R.drawable.cliptype_long;
                 }
                 thumbnail.setImageDrawable(mContext.getResources().getDrawable(drawable));
