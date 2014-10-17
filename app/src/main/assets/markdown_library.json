@@ -1,0 +1,7 @@
+{
+    "id": "markdown_library",
+    "title": "Markdown Library",
+    "storyPathTemplateFiles": [
+        "markdown.json",
+    ]
+}

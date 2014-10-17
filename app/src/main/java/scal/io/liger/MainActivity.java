@@ -237,7 +237,10 @@ public class MainActivity extends Activity {
         try {
             initStoryPathModel(json, jsonFile);
             refreshCardView();
-        } catch (Exception e) {
+        } catch (com.google.gson.stream.MalformedJsonException e) {
+            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
+
+        } catch (com.google.gson.JsonSyntaxException e) {
             Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
         }
     }

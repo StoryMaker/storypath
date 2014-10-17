@@ -1,11 +1,12 @@
 {
     "cards": [
         {
-            "text": "Hello, is markdown  \n**this is bold**  \n*this is italics*  \n# header\n## headdddeerr\n", 
-            "type": "scal.io.liger.model.MarkdownCardModel", 
+            "text": "Hello, is markdown  \n**this is bold**  \n*this is italics*  \n# header  \n## headdddeerr  \n\n &bull; bullet 1  \n  &bull; bullet 2  \n\n  ![blah](img/turnip.jpg)", 
+            "type": "MarkdownCard", 
             "id": "markdown"
         }
     ], 
     "id": "markdown_path_1", 
+    "classPackage": "scal.io.liger.model",
     "title": "Mad Libs 1"
 }

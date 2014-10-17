@@ -1,6 +1,10 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -60,7 +64,16 @@ public class MarkdownCardView extends com.fima.cardsui.objects.Card {
         }
         */
 
-        Spanned htmlSpanned = Html.fromHtml(html);
+        Spanned htmlSpanned = Html.fromHtml(html, new Html.ImageGetter() {
+            @Override
+            public Drawable getDrawable(final String source) {
+                String absPath = mCardModel.getStoryPathReference().buildPath(source);
+                Bitmap myBitmap = BitmapFactory.decodeFile(absPath);
+                Drawable d = new BitmapDrawable(mContext.getResources(), myBitmap);
+                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+                return d;
+            }
+        }, null);
         tvText.setText(htmlSpanned);
 
         // supports automated testing
