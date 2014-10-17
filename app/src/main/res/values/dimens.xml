@@ -12,6 +12,10 @@
     <dimen name="card_small_text">14.0sp</dimen>
     <dimen name="card_action_small_text">12.0sp</dimen>
     <dimen name="card_action_text">16.0sp</dimen>
+    <dimen name="clip_thumb_height">200dp</dimen>
+    <dimen name="clip_stack_margin_top">32dp</dimen> <!-- When multiple clips are stacked in a ClipCard, how much of the partially covered lower clips to show? -->
+    <dimen name="clip_card_footer_height">170dp</dimen>
+    <dimen name="card_howto_height">60dp</dimen>
 
     <dimen name="padding_xxsmall">2.0dip</dimen>
     <dimen name="padding_xsmall">4.0dip</dimen>

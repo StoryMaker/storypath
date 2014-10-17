@@ -66,7 +66,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Card newCard = mDataset.get(position);
 
-        if (false /*holder.boundCard.getType().equals(newCard.getType())*/) {
+        if ( false /*holder.boundCard.getType().equals(newCard.getType())*/) {
             // TODO
             // Recycle the view if possible
         } else {
@@ -225,9 +225,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 //        return fakeResult;
 //    }
 
-    /**
-     * Note: zOrder 0 is the bottom of the clip list.
-     */
+//    /**
+//     * Note: zOrder 0 is the bottom of the clip list.
+//     */
 //    private void inflateAndAddThumbnailForClip(ViewHolder viewHolder, Object clip, int zOrder, int zTop) {
 //        Resources r = viewHolder.bodyText.getContext().getResources();
 //        int topMarginPerZ = r.getDimensionPixelSize(R.dimen.clip_stack_margin_top);
