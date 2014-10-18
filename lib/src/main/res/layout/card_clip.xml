@@ -83,7 +83,7 @@
             android:drawableLeft="@drawable/ic_whoknows"
             android:drawablePadding="8dp"
             android:paddingTop="16dp"
-            android:text="@string/import"
+            android:text="@string/importt"
             android:textColor="@color/signature" />
 
         <Button

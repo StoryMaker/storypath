@@ -2,8 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import scal.io.liger.view.BasicTextCardView;
 import scal.io.liger.view.DisplayableCard;
-import scal.io.liger.view.HowToCardView;
 
 public class BasicTextCard extends Card {
 
@@ -16,7 +16,7 @@ public class BasicTextCard extends Card {
 
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
-        return new HowToCardView(context, this);
+        return new BasicTextCardView(context, this);
     }
 
     public String getText() {

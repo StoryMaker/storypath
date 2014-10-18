@@ -2,7 +2,7 @@
     "id": "learning_guide_v1", 
     "title": "Learning Guide v1",
     "classPackage": "scal.io.liger.model",
-    "storyPathLibraryFile": "learinging_guide_library.json",
+    "storyPathLibraryFile": "learning_guide_library.json",
     "dependencies": [
         {
             "dependencyId": "learning_guide_v2",

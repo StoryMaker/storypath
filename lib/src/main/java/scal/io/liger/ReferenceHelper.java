@@ -90,7 +90,10 @@ public class ReferenceHelper {
             // strip "<<" and ">>"
             cardTarget = cardTarget.substring(2, cardTarget.length()-2);
             for (Card card : story.getCards()) {
-                if (card.getType().equals(cardTarget)) {
+                // need to account for separation of package and class name
+                // or should class "wildcards" for cards ignore package?
+                if ((card.getStoryPathReference().getClassPackage() + "." + card.getType()).equals(cardTarget) ||
+                    (card.getType().equals(cardTarget))) {
                     results.add(card);
                 }
             }
