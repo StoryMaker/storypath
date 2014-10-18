@@ -426,6 +426,8 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Log.d(TAG, "onActivityResult, requestCode:" + requestCode + ", resultCode: " + resultCode);
         if (resultCode == RESULT_OK) {
+            // TODO : Remove this and allow Card View Controllers to be notified of data changes
+            refreshCardView();
 
             if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 
