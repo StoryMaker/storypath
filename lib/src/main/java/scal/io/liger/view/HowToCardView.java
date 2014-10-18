@@ -5,18 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import scal.io.liger.model.BasicTextCard;
+import scal.io.liger.model.HowToCard;
 import scal.io.liger.model.Card;
 import scal.io.liger.R;
 
-public class BasicTextCardView implements DisplayableCard {
+public class HowToCardView implements DisplayableCard {
 
-    private BasicTextCard mCardModel;
+    private HowToCard mCardModel;
     private Context mContext;
 
-    public BasicTextCardView(Context context, Card cardModel) {
+    public HowToCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (BasicTextCard) cardModel;
+        mCardModel = (HowToCard) cardModel;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class BasicTextCardView implements DisplayableCard {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_basic_text, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_how_to, null);
         TextView tvText = ((TextView) view.findViewById(R.id.tv_text));
 
         tvText.setText(mCardModel.getText());

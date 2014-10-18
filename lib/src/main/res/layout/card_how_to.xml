@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/signature"
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/howtoCard"
-    android:layout_alignParentTop="true"
-    android:layout_height="0dp"
-    android:layout_marginBottom="8dp"
-    android:layout_width="match_parent"
-    android:gravity="center_vertical"
-    android:padding="@dimen/padding_xlarge"
-    android:text="Tap to select a different clip"
-    android:textColor="@android:color/white"
-    android:textSize="@dimen/text_medium"
-    android:textStyle="italic" />
+    style="@style/p_italic"
+    android:background="@color/raspberry_wine"
+    android:textColor="@color/white"
+    android:padding="@dimen/padding_large"
+    android:text="Tap to select a different clip"/>
