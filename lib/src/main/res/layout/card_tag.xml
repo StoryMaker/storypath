@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/collapsable"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_large">
+
+    <ImageView
+        android:id="@+id/iv_card_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:baselineAlignBottom="true"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_centerHorizontal="true"/>
+
+    <RelativeLayout
+        android:id="@+id/ll_top_row"
+        android:layout_below="@+id/iv_card_photo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_medium">
+
+        <TextView
+            style="@style/h2"
+            android:textColor="@color/raspberry_wine"
+            android:text="Tag your clip."/>
+
+        <TextView
+            android:id="@+id/tv_progress"
+            style="@style/p"
+            android:text="1 of 3"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_second_row"
+        android:layout_below="@+id/ll_top_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_medium"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_character"
+            style="@style/p"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_clip_character"
+            android:text="Character" />
+
+        <Button
+            android:id="@+id/btn_action"
+            style="@style/p"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_clip_action"
+            android:text="Action" />
+
+        <Button
+            android:id="@+id/btn_result"
+            style="@style/p"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_clip_result"
+            android:text="Result" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_row"
+        android:layout_below="@+id/ll_second_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_medium"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_place"
+            style="@style/p"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_clip_place"
+            android:text="Place" />
+
+        <Button
+            android:id="@+id/btn_signature"
+            style="@style/p"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_clip_signature"
+            android:text="Signature" />
+
+        <Button
+            android:id="@+id/btn_other"
+            style="@style/p"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_clip_other"
+            android:text="Other" />
+    </LinearLayout>
+
+    <View
+        android:layout_below="@id/ll_bottom_row"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke" />
+
+    <Button
+        android:id="@+id/btn_skip"
+        android:layout_below="@id/ll_bottom_row"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        style="@style/p"
+        android:background="@android:color/transparent"
+        android:text="Skip Tagging" />
+
+</RelativeLayout>
