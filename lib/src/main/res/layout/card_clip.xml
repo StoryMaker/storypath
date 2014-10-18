@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_large"
-        android:text="Tap to select a different clip"
+        android:text="@string/card_howto_tap_to_select_clip"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_medium"
         android:textStyle="italic"
@@ -51,7 +51,6 @@
         android:drawableLeft="@drawable/ic_signature"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:text="SIGNATURE"
         android:textColor="@color/signature"
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium"
@@ -74,7 +73,6 @@
             android:drawablePadding="8dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
-            android:text="Show something important about your character."
             android:textSize="22sp" />
 
         <Button
@@ -85,7 +83,7 @@
             android:drawableLeft="@drawable/ic_whoknows"
             android:drawablePadding="8dp"
             android:paddingTop="16dp"
-            android:text="Import"
+            android:text="@string/import"
             android:textColor="@color/signature" />
 
         <Button
@@ -96,7 +94,7 @@
             android:drawableLeft="@drawable/ic_capture"
             android:drawablePadding="8dp"
             android:paddingTop="16dp"
-            android:text="Capture"
+            android:text="@string/capture"
             android:textColor="@color/signature" />
     </LinearLayout>
     <!--

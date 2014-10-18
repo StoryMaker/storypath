@@ -13,7 +13,6 @@
         android:id="@+id/breadCrumb"
         android:layout_width="match_parent"
         android:layout_height="@dimen/card_howto_height"
-        android:layout_alignParentTop="true"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_large"

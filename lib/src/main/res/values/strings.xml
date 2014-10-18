@@ -17,6 +17,9 @@
     <string name="lbl_photo">Photo</string>
     <string name="lbl_record">Record Clip</string>
     <string name="lbl_order_media_desc">Now put your clips in order to present clear beginning, middle, and end.</string>
+    <string name="card_howto_tap_to_select_clip">Tap to select a different clip</string>
+    <string name="import">Import</string>
+    <string name="capture">Capture</string>
 
     <string-array name="clipcard_overflow">
         <item>Change Goal</item>

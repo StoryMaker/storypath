@@ -30,8 +30,10 @@ public class QuizCardView extends ExampleCardView {
 
     private List<QuizCard.Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
     private List<QuizCard.Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
-    private int mExpandedHeight = -42; // The height of the quiz choice container when expanded
+    private int mExpandedHeight = UNSET_HEIGHT; // The height of the quiz choice container when expanded
     private boolean mExpanded = false; // Are the quiz card's possible choices expanded?
+
+    private static final int UNSET_HEIGHT = -42; // placeholder value to indicate quiz choice container not measured
 
     private boolean quizIsPassed() {
         if (mSelectedChoices.size() == mCardModel.getCorrectRequired()) {
@@ -86,7 +88,7 @@ public class QuizCardView extends ExampleCardView {
         choiceContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (mExpandedHeight == -42) {
+                if (mExpandedHeight == UNSET_HEIGHT) {
                     mExpandedHeight = choiceContainer.getHeight();
                     if (mExpandedHeight > 0) mExpanded = true;
                     Log.i("layout", "on quiz choice layout height is " + mExpandedHeight);
