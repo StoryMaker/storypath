@@ -38,16 +38,52 @@ for card in objs['cards']:
         newcard['text'] = card['text']
         
     elif card['card'] == 'QuizCard':
-        pass
+        newcard['type'] = 'QuizCard'
+        newcard['id'] = 'quizcard_1'
 #        newcard['id'] = 'quiz_card_1'
 #        newcard['type'] = 'QuizCard'
 #        newcard['question'] = card['questions'][0] # FIXME for now quiz cards are single page
+
+    elif card['card'] == 'ClipCard':
+        newcard['type'] = 'ClipCard'
+        newcard['id'] = 'clipcard_1'
+        newcard['goals'] = card['goals']
+        newcard['length'] = card['length']
+        newcard['medium'] = card['medium']
+
+    elif card['card'] == 'ReviewCard':
+        newcard['type'] = 'ReviewCard'
+        newcard['id'] = 'review_card_1'
+        newcard['medium'] = card['medium']
+
+    elif card['card'] == 'EvaluationCard':
+        newcard['type'] = 'EvaluationCard'
+        newcard['id'] = 'evaluation_card_1'
+        newcard['text'] = card['text']
+
+    elif card['card'] == 'PublishCard':
+        newcard['type'] = 'PublishCard'
+        newcard['id'] = 'publish_card_1'
+        newcard['medium'] = card['medium']
+
+    elif card['card'] == 'NextUpCard':
+        newcard['type'] = 'NextUpCard'
+        newcard['id'] = 'nextup_card_1'
+        newcard['medium'] = card['medium']
+
+    elif card['card'] == 'TipCard':
+        newcard['type'] = 'TipCard'
+        newcard['id'] = 'tip_card_1'
+        newcard['tags'] = card['tags']
+        
+        
+
     if newcard: cards.append(newcard) 
       
 doc = {
-    'title': 'Mad Libs 1',
+    'title': objs['title'],
     'classPackage': 'scal.io.liger.model',
-    'id': 'genpath_1',
+    'id': objs['id'],
     'cards': cards
 }      
       
