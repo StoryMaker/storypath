@@ -407,7 +407,7 @@
         },
         {
             "id": "publish_your_story",
-            "type": "ButtonCard",
+            "type": "PublishButtonCard",
             "text": "Publish Your Story.",
             "references": [
                 "learning_guide_v1::yup_im_finished::value::true"
