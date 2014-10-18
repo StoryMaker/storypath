@@ -6,17 +6,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import scal.io.liger.R;
+import scal.io.liger.model.BasicTextCard;
 import scal.io.liger.model.Card;
-import scal.io.liger.model.HowToCard;
 
 public class BasicTextCardView implements DisplayableCard {
 
-    private HowToCard mCardModel;
+    private BasicTextCard mCardModel;
     private Context mContext;
 
     public BasicTextCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (HowToCard) cardModel;
+        mCardModel = (BasicTextCard) cardModel;
     }
 
     @Override
