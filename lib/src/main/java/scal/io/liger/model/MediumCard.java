@@ -2,22 +2,22 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
-import scal.io.liger.view.ChooseMediumCardView;
+import scal.io.liger.view.MediumCardView;
 import scal.io.liger.view.DisplayableCard;
 
 
-public class ChooseMediumCard extends Card {
+public class MediumCard extends Card {
 
     private String header;
 
-    public ChooseMediumCard() {
+    public MediumCard() {
         super();
         this.type = this.getClass().getName();
     }
 
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
-        return new ChooseMediumCardView(context, this);
+        return new MediumCardView(context, this);
     }
 
     public String getHeader() {

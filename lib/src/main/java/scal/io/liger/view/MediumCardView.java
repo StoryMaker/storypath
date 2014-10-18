@@ -8,22 +8,22 @@ import android.widget.TextView;
 
 import scal.io.liger.Constants;
 import scal.io.liger.model.Card;
-import scal.io.liger.model.ChooseMediumCard;
+import scal.io.liger.model.MediumCard;
 import scal.io.liger.R;
 import scal.io.liger.model.StoryPath;
 
 
-public class ChooseMediumCardView implements DisplayableCard {
-    private ChooseMediumCard mCardModel;
+public class MediumCardView implements DisplayableCard {
+    private MediumCard mCardModel;
     private Context mContext;
 
     private Button mBtnMediumVideo;
     private Button mBtnMediumAudio;
     private Button mBtnMediumPhoto;
 
-    public ChooseMediumCardView(Context context, Card cardModel) {
+    public MediumCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ChooseMediumCard) cardModel;
+        mCardModel = (MediumCard) cardModel;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ChooseMediumCardView implements DisplayableCard {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_choose_medium, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_medium, null);
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         mBtnMediumVideo = ((Button) view.findViewById(R.id.btn_medium_video));
         mBtnMediumAudio = ((Button) view.findViewById(R.id.btn_medium_audio));
