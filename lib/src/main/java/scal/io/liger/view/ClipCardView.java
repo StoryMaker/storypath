@@ -179,7 +179,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 mDisplayedClips.add(clipThumb);
             }
         } else {
-            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 1);
+            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
             mDisplayedClips.add(clipThumb);
         }
 
