@@ -1,0 +1,54 @@
+{
+    "id": "learning_guide_library",
+    "title": "Learning Guide Library",
+    "classPackage": "scal.io.liger.model",
+    "storyPathTemplateFiles":{
+            "NAME_1":"learning_guide_v1.json",
+            "NAME_2":"learning_guide_v2.json"
+    },
+    "cards": [
+            {
+                "header": "This card tells the maker which clip to capture.",
+                "type": "ChooseMediumCard",
+                "id": "choose_medium_card"
+            },
+            {
+                "id": "example_video",
+                "type": "ExampleCard",
+                "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+                "clipMedium": "video",
+                "clipType": "character",
+                "exampleMediaPath": "video_preview.mp4",
+                "references": [
+                    "learning_guide_library::choose_medium_card::value::video"
+                ]
+            },
+            {
+                "id": "example_audio",
+                "type": "ExampleCard",
+                "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+                "clipMedium": "audio",
+                "clipType": "character",
+                "exampleMediaPath": "video_preview.mp4",
+                "references": [
+                    "learning_guide_library::choose_medium_card::value::audio"
+                ]
+            },
+            {
+                "id": "example_photo",
+                "type": "ExampleCard",
+                "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+                "clipMedium": "photo",
+                "clipType": "character",
+                "exampleMediaPath": "video_preview.mp4",
+                "references": [
+                    "learning_guide_library::choose_medium_card::value::photo"
+                ]
+            },
+            {
+                "id": "ingredients",
+                "type": "MarkdownCard",
+                "text": "**Ingredients**: What you're going to need.  \n\n\\- Character  \n\n\\- Action  \n\n\\- Result"
+            }
+    ]
+}

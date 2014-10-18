@@ -168,10 +168,15 @@ public class MainActivity extends Activity {
 
                             // need to implement selection of story path based on hook
 
-                            jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get(0)));
+                            /*
+                            jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
                             json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
 
                             initCardList(json, jsonFile);
+                            */
+
+                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
+
                         }
                     }
                 });
@@ -192,8 +197,12 @@ public class MainActivity extends Activity {
 
         try {
             initStoryPathLibraryModel(json, jsonFile);
-        } catch (Exception e) {
-            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
+        } catch (com.google.gson.JsonSyntaxException e) {
+            Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } catch (MalformedJsonException e) {
+            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -215,9 +224,9 @@ public class MainActivity extends Activity {
         Log.d(TAG, "initStoryPathLibraryModel called");
 
         if (jsonFile != null) {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonFile.getPath());
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonFile.getPath(), this.mContext);
         } else {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null);
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this.mContext);
         }
 
         /*
@@ -246,7 +255,7 @@ public class MainActivity extends Activity {
         initCardList(json, null);
     }
 
-    private void initCardList(String json, File jsonFile) {
+    public void initCardList(String json, File jsonFile) {
         Log.d(TAG, "initCardList called");
         if (mRecyclerView == null)
             return;
