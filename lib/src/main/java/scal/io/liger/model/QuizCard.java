@@ -16,11 +16,11 @@ public class QuizCard extends Card {
     private String filter;
     private String description;
     private ArrayList<Choice> choices;
-    private ArrayList<String> correct_answers;
+    private ArrayList<String> correct_answers; // Collection of Choice#id
     private int correct_required;
 
     public static class Choice {
-        String id;
+        public String id;
         public String text;
         String filter;
         String filters_or;
@@ -35,6 +35,14 @@ public class QuizCard extends Card {
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
         return new QuizCardView(context, this); //TODO
+    }
+
+    public int getCorrectRequired() {
+        return correct_required;
+    }
+
+    public ArrayList<String> getCorrectAnswers() {
+        return correct_answers;
     }
 
     public String getDescription() {

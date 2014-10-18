@@ -14,14 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/card_howto_height"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
-        android:alpha="0"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_large"
         android:textColor="@color/signature"
-        android:textSize="@dimen/text_medium"
-        android:textStyle="italic" />
+        android:textSize="@dimen/text_medium" />
 
     <!-- choiceContainer contains all quiz response options -->
 
@@ -29,6 +26,7 @@
         android:id="@+id/choiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
         android:orientation="vertical" />
 
 </LinearLayout>

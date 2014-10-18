@@ -48,7 +48,7 @@
          },
         {
             "title": null, 
-            "correct_required": 0, 
+            "correct_required": 1,
             "question": "This is the question text!", 
             "choices": [
                 {

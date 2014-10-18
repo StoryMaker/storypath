@@ -4,13 +4,13 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -24,17 +24,24 @@ import scal.io.liger.model.QuizCard;
 
 
 public class QuizCardView extends ExampleCardView {
-    public static final String TAG = "HookCardView";
+    public static final String TAG = "QuizCardView";
 
     public QuizCard mCardModel;
 
     private List<QuizCard.Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
     private List<QuizCard.Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
-    private int mExpandedHeight; // The height of the quiz choice container when expanded
+    private int mExpandedHeight = -42; // The height of the quiz choice container when expanded
     private boolean mExpanded = false; // Are the quiz card's possible choices expanded?
 
     private boolean quizIsPassed() {
-        // TODO: DO IT
+        if (mSelectedChoices.size() == mCardModel.getCorrectRequired()) {
+            List<String> correctAnswers = mCardModel.getCorrectAnswers();
+            for (QuizCard.Choice choice : mSelectedChoices) {
+                if (!correctAnswers.contains(choice.id))
+                    return false;
+            }
+            return true;
+        }
         return false;
     }
 
@@ -68,6 +75,9 @@ public class QuizCardView extends ExampleCardView {
         breadCrumb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!mExpanded) {
+                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+                }
                 // TODO : If quiz completed, expand cards, collapse all following Quiz cards
             }
         });
@@ -76,8 +86,9 @@ public class QuizCardView extends ExampleCardView {
         choiceContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (mExpanded) {
-                    mExpandedHeight = choiceContainer.getLayoutParams().height;
+                if (mExpandedHeight == -42) {
+                    mExpandedHeight = choiceContainer.getHeight();
+                    if (mExpandedHeight > 0) mExpanded = true;
                     Log.i("layout", "on quiz choice layout height is " + mExpandedHeight);
                 }
             }
@@ -90,16 +101,26 @@ public class QuizCardView extends ExampleCardView {
          *  If required responses are gathered, collapse QuizCard and expand next.
          *  Else, continue marking responses selected until required responses gathered.
          */
-        View.OnClickListener quizCardResponseClickListener = new View.OnClickListener() {
+        View.OnClickListener quizCardChoiceClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setSelected(true);
-                mSelectedChoices.add((QuizCard.Choice) v.getTag(R.id.view_tag_quiz_choice));
+                QuizCard.Choice choice = (QuizCard.Choice) v.getTag(R.id.view_tag_quiz_choice);
+
+                if (v.isSelected()) {
+                    // Choice is selected
+                    mSelectedChoices.remove(choice);
+                } else {
+                    // Choice is unselected
+                    if (!mSelectedChoices.contains(choice)) {
+                        mSelectedChoices.add(choice);
+                    }
+                }
+                v.setSelected(!v.isSelected());
+
                 if (quizIsPassed()) {
                     // We're done!
                     toggleQuizResponseExpansion(breadCrumb, choiceContainer);
-                    // TODO: Expand next quizCard
-                    return;
+                    quizCardComplete();
                 }
             }
         };
@@ -110,7 +131,7 @@ public class QuizCardView extends ExampleCardView {
             for (QuizCard.Choice displayedChoice : mDisplayedChoices) {
                 // Create Quiz choices
                 View quizChoice = inflateAndAddChoiceForQuiz(choiceContainer, displayedChoice);
-                quizChoice.setOnClickListener(quizCardResponseClickListener);
+                quizChoice.setOnClickListener(quizCardChoiceClickListener);
                 quizChoice.setTag(R.id.view_tag_quiz_choice, displayedChoice);
             }
         } else {
@@ -125,11 +146,29 @@ public class QuizCardView extends ExampleCardView {
     }
 
     private void toggleQuizResponseExpansion(final TextView breadCrumb, final ViewGroup choiceContainer) {
-        // Change breadCrumb title
-        breadCrumb.setText(mCardModel.getQuestion());
-        // Animate choiceContainer to height 0
         final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) choiceContainer.getLayoutParams();
-        ValueAnimator animator = ValueAnimator.ofInt(params.height, 0);
+
+        final int finalChoiceContainerHeight;
+        // Breadcrumb background and text color swap
+        final int animFirstColor;
+        final int animSecondColor;
+        if (mExpanded) {
+            // Breadcrumb shows first user response
+            breadCrumb.setText(mSelectedChoices.get(0).text);
+            finalChoiceContainerHeight = 0;
+            animFirstColor = mContext.getResources().getColor(R.color.white);
+            animSecondColor = mContext.getResources().getColor(R.color.signature);
+        } else {
+            // Breadcrumb shows quiz question
+            breadCrumb.setText(mCardModel.getQuestion());
+            finalChoiceContainerHeight = mExpandedHeight;
+            animFirstColor = mContext.getResources().getColor(R.color.signature);
+            animSecondColor = mContext.getResources().getColor(R.color.white);
+        }
+
+        // Animate choiceContainer to height 0
+        //Log.i(TAG, String.format("animating quiz container from %d to %d", choiceContainer.getHeight(), finalChoiceContainerHeight));
+        ValueAnimator animator = ValueAnimator.ofInt(choiceContainer.getHeight(), finalChoiceContainerHeight);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -140,20 +179,20 @@ public class QuizCardView extends ExampleCardView {
         animator.start();
 
         // Animate breadCrumb from colored text on white background to white text on colored background
-        ObjectAnimator backgroundColorFade = ObjectAnimator.ofObject(breadCrumb, "backgroundColor", new ArgbEvaluator(), mContext.getResources().getColor(R.color.white), mContext.getResources().getColor(R.color.signature));
+        ObjectAnimator backgroundColorFade = ObjectAnimator.ofObject(breadCrumb, "backgroundColor", new ArgbEvaluator(), animFirstColor, animSecondColor);
         backgroundColorFade.start();
-        ObjectAnimator textColorFade = ObjectAnimator.ofObject(breadCrumb, "backgroundColor", new ArgbEvaluator(), mContext.getResources().getColor(R.color.signature), mContext.getResources().getColor(R.color.white));
+        ObjectAnimator textColorFade = ObjectAnimator.ofObject(breadCrumb, "textColor", new ArgbEvaluator(), animSecondColor, animFirstColor);
         textColorFade.start();
 
         mExpanded = !mExpanded;
     }
 
     private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, QuizCard.Choice choice) {
-
         LayoutInflater inflater = (LayoutInflater) quizChoiceContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView choiceView = (TextView) (inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, true)).findViewById(R.id.choiceText);
+        TextView choiceView = (TextView) (inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, false)).findViewById(R.id.choiceText);
         choiceView.setText(choice.text);
 
+        quizChoiceContainer.addView(choiceView);
         return choiceView;
     }
 
@@ -169,5 +208,13 @@ public class QuizCardView extends ExampleCardView {
         }
 
         return mediaFile;
+    }
+
+    /**
+     * This quiz card is completed and collapsed into the breadcrumb state.
+     * Expand the next quiz card.
+     */
+    private void quizCardComplete() {
+        // TODO
     }
 }
