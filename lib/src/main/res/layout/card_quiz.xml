@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:tag="noContainer">
+
+    <!-- breadCrumb is the persistent card header. While the quiz response options are expanded it represents
+    the quiz prompt. e.g : "What is your story about?". After quiz response selection it transforms to the
+    selected response. e.g: "An Event" -->
+
+    <TextView
+        android:id="@+id/breadCrumb"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_howto_height"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp"
+        android:alpha="0"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:padding="@dimen/padding_large"
+        android:textColor="@color/signature"
+        android:textSize="@dimen/card_medium_text"
+        android:textStyle="italic" />
+
+    <!-- choiceContainer contains all quiz response options -->
+
+    <LinearLayout
+        android:id="@+id/choiceContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+</LinearLayout>

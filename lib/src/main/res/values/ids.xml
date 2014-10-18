@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- ClipCard View tags -->
     <item
         type="id"
         name="view_tag_clip_primary" />
     <item
         type="id"
         name="view_tag_clip_metadata" />
+
+    <!-- QuizCard View tags -->
+    <item
+        type="id"
+        name="view_tag_quiz_choice" />
+
 </resources>

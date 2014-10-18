@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/card_quiz_response_margin_top"
+        android:background="@color/card_light_text"
+        android:padding="16dp"
+        android:textSize="@dimen/card_medium_text"/>
+
+    <!-- Change to light_grey bg with border-->
+</merge>
