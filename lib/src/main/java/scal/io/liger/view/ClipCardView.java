@@ -4,10 +4,12 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -20,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,7 +137,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View.OnClickListener clipCardOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!hasClips) return;
+                if (!hasClips) {
+                    // This ClipCard is displaying a single item stack with either example or
+                    // fallback drawables. A click should expand the card footer to reveal the Capture / Import feature
+                    toggleFooterVisibility(collapsableContainer);
+                    return;
+                }
 
                 if (v.getTag(R.id.view_tag_clip_primary) != null && (boolean) v.getTag(R.id.view_tag_clip_primary)) {
                     // Clicked clip is primary
@@ -147,7 +156,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         showClipPlaybackAndTrimming();
                     }
                 } else {
-                    // Clicked view is not primary clip
+                    // Clicked clip is not primary clip
                     if (mClipsExpanded &&  v.getTag(R.id.view_tag_clip_primary) != null) {
                         // Clicked view is secondary clip and clips are expanded
                         // This indicates a new secondary clip was selected
@@ -180,6 +189,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             }
         } else {
             View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
+            clipThumb.setOnClickListener(clipCardOnClickListener);
+            clipThumb.setTag(R.id.view_tag_clip_primary, true);
             mDisplayedClips.add(clipThumb);
         }
 
@@ -517,18 +528,42 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     private void showClipPlaybackAndTrimming() {
-        // TODO
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
+        View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.dialog_clip_playback_trim, null);
 
-        View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_clip_playback_trim, null);
+        final VideoView videoView = (VideoView) v.findViewById(R.id.videoView);
+        final ImageView thumbnailView = (ImageView) v.findViewById(R.id.thumbnail);
+        final TextView clipLength = (TextView) v.findViewById(R.id.clipLength);
+        final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                thumbnailView.setVisibility(View.GONE);
+                // TODO : Properly display clip duration
+                clipLength.setText(String.format("Total 0:%d",videoView.getDuration() / 1000));
+                clipEnd.setText(String.format("0:%d",videoView.getDuration() / 1000));
+
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(v)
                 .setPositiveButton("TRIM CLIP", null)
                 .setNegativeButton("CANCEL", null);
-        builder.show();
+        Dialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                setThumbnailForClip(thumbnailView, mCardModel.getSelectedMediaFile());
+
+                Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
+                videoView.setVideoURI(video);
+                videoView.setMediaController(null);
+                videoView.start();
+            }
+        });
+        dialog.show();
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;

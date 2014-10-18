@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextureView
-        android:id="@+id/textureView"
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/clip_thumb_height"
         android:layout_alignParentTop="true" />
@@ -24,8 +24,7 @@
         android:paddingLeft="@dimen/padding_xlarge"
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
-        android:layout_below="@id/textureView"
-        android:text="Total: 2:30"
+        android:layout_below="@id/videoView"
         android:textSize="@dimen/card_xl_text"
         android:fontFamily="sans-serif-light"/>
 
@@ -37,7 +36,7 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
-        android:text="0:14"
+        android:text="0:00"
         android:textSize="@dimen/card_large_text"
         android:fontFamily="sans-serif-light"/>
 
@@ -50,14 +49,22 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
-        android:text="1:43"
         android:textSize="@dimen/card_large_text"
         android:fontFamily="sans-serif-light"/>
 
+    <!-- TODO: Move RangeSeekBar to liger -->
+    <SeekBar
+        android:id="@+id/rangeSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/clipStart"/>
+
+    <!--
     <com.efor18.rangeseekbar.RangeSeekBar
         android:id="@+id/rangeSeekbar"
         android:layout_below="@id/clipStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+        -->
 
 </RelativeLayout>
