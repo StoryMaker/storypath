@@ -14,25 +14,21 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.MalformedJsonException;
 import com.twotoasters.android.support.v7.widget.LinearLayoutManager;
 import com.twotoasters.android.support.v7.widget.RecyclerView;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
+import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.MediaFile;
-import scal.io.liger.model.Story;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
@@ -83,7 +79,7 @@ public class MainActivity extends Activity {
             Log.d(TAG, "data not yet loaded, no state to save");
         } else {
             //Gson gson = new Gson();
-            //mStoryPathLibrary.getCurrentStoryPath().setStoryReference(null);
+            //mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(null);
             //mStoryPathLibrary.getCurrentStoryPath().clearObservers();
             //mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
             //mStoryPathLibrary.getCurrentStoryPath().setContext(null);
@@ -112,7 +108,7 @@ public class MainActivity extends Activity {
             //mStoryPathLibrary.getCurrentStoryPath().setContext(this);
             //mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
             //mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
-            //mStoryPathLibrary.getCurrentStoryPath().setStoryReference(mStoryPathLibrary);
+            //mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(mStoryPathLibrary);
 
         }
 
@@ -307,7 +303,7 @@ public class MainActivity extends Activity {
             sp.setFileLocation(jsonFile.getPath());
         }
 
-        sp.setStoryReference(mStoryPathLibrary);
+        sp.setStoryPathLibraryReference(mStoryPathLibrary);
 
 
         mStoryPathLibrary.setCurrentStoryPath(sp);
@@ -381,7 +377,7 @@ public class MainActivity extends Activity {
                     storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this.mContext);
 
                     // loaded in reverse order, so need to set these references
-                    storyPath.setStoryReference(storyPathLibrary);
+                    storyPath.setStoryPathLibraryReference(storyPathLibrary);
                     storyPathLibrary.setCurrentStoryPath(storyPath);
 
                     /*
@@ -536,7 +532,7 @@ public class MainActivity extends Activity {
         */
 
         // prep and serialize current story path
-        mStoryPathLibrary.getCurrentStoryPath().setStoryReference(null);
+        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(null);
         mStoryPathLibrary.getCurrentStoryPath().clearObservers();
         mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         mStoryPathLibrary.getCurrentStoryPath().setContext(null);
@@ -586,7 +582,7 @@ public class MainActivity extends Activity {
         mStoryPathLibrary.getCurrentStoryPath().setContext(this);
         mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
         mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
-        mStoryPathLibrary.getCurrentStoryPath().setStoryReference(mStoryPathLibrary);
+        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(mStoryPathLibrary);
     }
 
     /*

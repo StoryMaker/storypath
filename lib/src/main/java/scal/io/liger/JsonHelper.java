@@ -1,6 +1,5 @@
 package scal.io.liger;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -10,14 +9,12 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -411,7 +408,7 @@ public class JsonHelper {
 
         storyPath.setCardReferences();
         storyPath.initializeObservers();
-        storyPath.setStoryReference(storyPathLibrary);
+        storyPath.setStoryPathLibraryReference(storyPathLibrary);
         // THIS MAY HAVE UNINTENDED CONSEQUENCES...
         if (storyPath.getStoryPathLibraryFile() == null) {
             storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
@@ -472,9 +469,9 @@ public class JsonHelper {
 
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPath.getContext();
-        StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryReference();
+        StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibraryReference();
         storyPath.setContext(null);
-        storyPath.setStoryReference(null);
+        storyPath.setStoryPathLibraryReference(null);
         storyPath.clearObservers();
         storyPath.clearCardReferences();
         //storyPath.clearValidCards();
@@ -485,7 +482,7 @@ public class JsonHelper {
         // valid cards will be reset next time getValidCards() is called
         storyPath.setCardReferences();
         storyPath.initializeObservers();
-        storyPath.setStoryReference(tempStoryPathLibrary);
+        storyPath.setStoryPathLibraryReference(tempStoryPathLibrary);
         storyPath.setContext(tempContext);
 
         return storyPathJson;

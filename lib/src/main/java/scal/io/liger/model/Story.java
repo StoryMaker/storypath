@@ -123,7 +123,7 @@ public class Story {
         Gson gson = new Gson();
         oldPath.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         oldPath.setContext(null);
-        oldPath.setStoryReference(null);
+        oldPath.setStoryPathLibraryReference(null);
         String json = gson.toJson(oldPath);
 
         try {
@@ -143,7 +143,7 @@ public class Story {
         newPath.importMetadata(metadata);
 
         // should this be done externally?
-        //newPath.setStoryReference(this);
+        //newPath.setStoryPathLibraryReference(this);
 
         // update current story path
         this.setCurrentStoryPath(newPath);

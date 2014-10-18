@@ -28,7 +28,7 @@ public class StoryPath {
     protected ArrayList<Card> visibleCards;
     protected ArrayList<Dependency> dependencies;
     protected String fileLocation;
-    protected StoryPathLibrary storyReference; // not serialized
+    protected StoryPathLibrary storyPathLibraryReference; // not serialized
     protected String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets
@@ -163,12 +163,12 @@ public class StoryPath {
         this.fileLocation = fileLocation;
     }
 
-    public StoryPathLibrary getStoryReference() {
-        return storyReference;
+    public StoryPathLibrary getStoryPathLibraryReference() {
+        return storyPathLibraryReference;
     }
 
-    public void setStoryReference(StoryPathLibrary storyReference) {
-        this.storyReference = storyReference;
+    public void setStoryPathLibraryReference(StoryPathLibrary storyPathLibraryReference) {
+        this.storyPathLibraryReference = storyPathLibraryReference;
     }
 
     public String getStoryPathLibraryFile() {
@@ -407,12 +407,12 @@ public class StoryPath {
         notifyActivity(card);
     }
 
-    public void saveMediaFile(String uuid, MediaFile file) {
-        storyReference.saveMediaFile(uuid, file);
+    public void saveMediaFileSP(String uuid, MediaFile file) {
+        storyPathLibraryReference.saveMediaFileSPL(uuid, file);
     }
 
-    public MediaFile loadMediaFile(String uuid) {
-        return storyReference.loadMediaFile(uuid);
+    public MediaFile loadMediaFileSP(String uuid) {
+        return storyPathLibraryReference.loadMediaFileSPL(uuid);
     }
 
     public ArrayList<ClipMetadata> exportMetadata() {
@@ -455,7 +455,7 @@ public class StoryPath {
         ArrayList<ClipMetadata> metadata = exportMetadata();
         ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
         for (ClipMetadata cm : metadata) {
-            MediaFile mf = loadMediaFile(cm.getUuid());
+            MediaFile mf = loadMediaFileSP(cm.getUuid());
 
             if (mf == null) {
                 Log.e(this.getClass().getName(), "no media file was found for uuid " + cm.getUuid());
