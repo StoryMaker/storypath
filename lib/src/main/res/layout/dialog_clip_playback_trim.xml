@@ -25,8 +25,12 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/textureView"
+<<<<<<< HEAD
         android:text="Total: 2:30"
         android:textSize="@dimen/text_medium"
+=======
+        android:textSize="@dimen/card_xl_text"
+>>>>>>> ce93b90bd64344a5e3d11fcec947a0c41e4f0109
         android:fontFamily="sans-serif-light"/>
 
     <TextView
@@ -37,8 +41,13 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
+<<<<<<< HEAD
         android:text="0:14"
         android:textSize="@dimen/text_medium"
+=======
+        android:text="0:00"
+        android:textSize="@dimen/card_large_text"
+>>>>>>> ce93b90bd64344a5e3d11fcec947a0c41e4f0109
         android:fontFamily="sans-serif-light"/>
 
     <TextView
@@ -50,14 +59,27 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
+<<<<<<< HEAD
         android:text="1:43"
         android:textSize="@dimen/text_medium"
+=======
+        android:textSize="@dimen/card_large_text"
+>>>>>>> ce93b90bd64344a5e3d11fcec947a0c41e4f0109
         android:fontFamily="sans-serif-light"/>
 
+    <!-- TODO: Move RangeSeekBar to liger -->
+    <SeekBar
+        android:id="@+id/rangeSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/clipStart"/>
+
+    <!--
     <com.efor18.rangeseekbar.RangeSeekBar
         android:id="@+id/rangeSeekbar"
         android:layout_below="@id/clipStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+        -->
 
 </RelativeLayout>

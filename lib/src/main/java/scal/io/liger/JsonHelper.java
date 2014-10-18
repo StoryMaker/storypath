@@ -97,8 +97,37 @@ public class JsonHelper {
             try {
                 String[] assets = context.getAssets().list("default");
                 for (String asset: assets) {
-                    String filePath = "/default/" + asset;
-                    InputStream jsonStream = context.getAssets().open("default/" + asset);
+                    if (!asset.contains("LIB")){
+                        String filePath = "/default/" + asset;
+                        InputStream jsonStream = context.getAssets().open("default/" + asset);
+                        addFileToSDCard(jsonStream, filePath);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // HARD CODED FOR TESTING
+            new File( sdLigerFilePath + "/default/LIB_1/").mkdirs();
+
+            try {
+                String[] assets = context.getAssets().list("default/LIB_1");
+                for (String asset: assets) {
+                    String filePath = "/default/LIB_1/" + asset;
+                    InputStream jsonStream = context.getAssets().open("default/LIB_1/" + asset);
+                    addFileToSDCard(jsonStream, filePath);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            new File( sdLigerFilePath + "/default/LIB_2/").mkdirs();
+
+            try {
+                String[] assets = context.getAssets().list("default/LIB_2");
+                for (String asset: assets) {
+                    String filePath = "/default/LIB_2/" + asset;
+                    InputStream jsonStream = context.getAssets().open("default/LIB_2/" + asset);
                     addFileToSDCard(jsonStream, filePath);
                 }
             } catch (IOException e) {
@@ -118,6 +147,21 @@ public class JsonHelper {
         ArrayList<String> jsonFileNamesList = new ArrayList<String>();
         jsonFileList = new ArrayList<File>();
 
+        // HARD CODING LIST
+
+        File ligerFile_1 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
+        File ligerFile_2 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
+        File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
+
+        jsonFileNamesList.add(ligerFile_1.getName());
+        jsonFileNamesList.add(ligerFile_2.getName());
+        jsonFileNamesList.add(ligerFile_3.getName());
+
+        jsonFileList.add(ligerFile_1);
+        jsonFileList.add(ligerFile_2);
+        jsonFileList.add(ligerFile_3);
+
+        /*
         File ligerDir = new File(sdLigerFilePath);
         if (ligerDir != null) {
             for (File file : ligerDir.listFiles()) {
@@ -137,6 +181,7 @@ public class JsonHelper {
                 }
             }
         }
+        */
 
         return jsonFileNamesList.toArray(new String[jsonFileNamesList.size()]);
     }
@@ -191,9 +236,10 @@ public class JsonHelper {
         String storyPathLibraryJson = "";
         String sdCardState = Environment.getExternalStorageState();
 
+        File f = new File(jsonFilePath);
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                InputStream jsonStream = new FileInputStream(jsonFilePath);
+                InputStream jsonStream = new FileInputStream(f);
 
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
@@ -209,7 +255,7 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, context);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, f.getPath(), context);
 
     }
 
@@ -317,9 +363,10 @@ public class JsonHelper {
         String storyPathJson = "";
         String sdCardState = Environment.getExternalStorageState();
 
+        File f = new File(jsonFilePath);
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                InputStream jsonStream = new FileInputStream(jsonFilePath);
+                InputStream jsonStream = new FileInputStream(f);
 
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
@@ -335,7 +382,7 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, context);
+        return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, context);
 
     }
 
@@ -362,7 +409,12 @@ public class JsonHelper {
         storyPath.setCardReferences();
         storyPath.initializeObservers();
         storyPath.setStoryReference(storyPathLibrary);
-        storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
+        // THIS MAY HAVE UNINTENDED CONSEQUENCES...
+        if (storyPath.getStoryPathLibraryFile() == null) {
+            storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
+
+        }
+
         storyPath.setContext(context);
 
         return storyPath;

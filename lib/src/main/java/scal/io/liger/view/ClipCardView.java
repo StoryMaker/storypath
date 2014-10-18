@@ -4,13 +4,12 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -20,12 +19,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -133,7 +133,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View.OnClickListener clipCardOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!hasClips) return;
+                if (!hasClips) {
+                    // This ClipCard is displaying a single item stack with either example or
+                    // fallback drawables. A click should expand the card footer to reveal the Capture / Import feature
+                    toggleFooterVisibility(collapsableContainer);
+                    return;
+                }
 
                 if (v.getTag(R.id.view_tag_clip_primary) != null && (boolean) v.getTag(R.id.view_tag_clip_primary)) {
                     // Clicked clip is primary
@@ -147,7 +152,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         showClipPlaybackAndTrimming();
                     }
                 } else {
-                    // Clicked view is not primary clip
+                    // Clicked clip is not primary clip
                     if (mClipsExpanded &&  v.getTag(R.id.view_tag_clip_primary) != null) {
                         // Clicked view is secondary clip and clips are expanded
                         // This indicates a new secondary clip was selected
@@ -176,10 +181,14 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 } else {
                     clipThumb.setTag(R.id.view_tag_clip_primary, true);
                 }
+                clipThumb.setTag(R.id.view_tag_clip_metadata, clipsToDisplay.get(x));
                 mDisplayedClips.add(clipThumb);
             }
         } else {
-            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 1);
+            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
+            clipThumb.setOnClickListener(clipCardOnClickListener);
+            clipThumb.setTag(R.id.view_tag_clip_primary, true);
+            clipThumb.setTag(R.id.view_tag_clip_metadata, null);
             mDisplayedClips.add(clipThumb);
         }
 
@@ -188,178 +197,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // Expand / Collapse footer on click
         headerText.setOnClickListener(clipCardOnClickListener);
 
-
-        /** Original ClipCard view binding below: */
-
-        // Expand / Collapse clip stack on thumbnail click
-//        clipCandidatesContainer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
-//                toggleFooterVisibility(footerHeight, collapsableContainer);
-//            }
-//        });
         bodyText.setText(mCardModel.getHeader());
-//        final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_video));
-//        final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
-//        TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
-//        TextView tvType = ((TextView) view.findViewById(R.id.tv_type));
-//        Button btnRecord = ((Button) view.findViewById(R.id.btn_record_media));
-//        final ToggleButton btnMediaPlay = ((ToggleButton) view.findViewById(R.id.tb_card_audio));
-//
-//        tvHeader.setText(mCardModel.getHeader());
-//        tvType.setText(mCardModel.getClipType());
-//
-//        final String clipMedium = mCardModel.getClipMedium();
-//        final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
-//
-//        //set up media display
-//        String p = null;
-//
-//        if ((mCardModel.getClips() != null) && (mCardModel.getClips().size() > 0)) {
-//
-//            MediaFile mf = mCardModel.getSelectedMediaFile();
-//
-//            if (mf == null) {
-//                Log.e(this.getClass().getName(), "no media file was found");
-//            } else {
-//                p = mf.getPath();
-//            }
-//        }
-//
-//        final File mediaFile = getValidFile(p, mCardModel.getExampleMediaPath());
-//
-//        if (mediaFile == null) {
-//            String clipType = mCardModel.getClipType();
-//
-//            if (clipType.equals(Constants.CHARACTER)) {
-//                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_close));
-//            } else if (clipType.equals(Constants.ACTION)) {
-//                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
-//            } else if (clipType.equals(Constants.RESULT)){
-//                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_long));
-//            } else {
-//                //TODO handle invalid clip type
-//                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher));
-//            }
-//
-//            ivCardPhoto.setVisibility(View.VISIBLE);
-//        } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
-//            if (clipMedium.equals(Constants.VIDEO)) {
-//
-//                //set up image as preview
-//                Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
-//                if(null != videoFrame) {
-//                    ivCardPhoto.setImageBitmap(videoFrame);
-//                }
-//
-//                ivCardPhoto.setVisibility(View.VISIBLE);
-//                btnMediaPlay.setVisibility(View.VISIBLE);
-//                btnMediaPlay.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Uri video = Uri.parse(mediaFile.getPath());
-//                        vvCardVideo.setVideoURI(video);
-//                        vvCardVideo.seekTo(5);
-//                        vvCardVideo.setMediaController(null);
-//                        vvCardVideo.setVisibility(View.VISIBLE);
-//                        ivCardPhoto.setVisibility(View.GONE);
-//                        btnMediaPlay.setVisibility(View.GONE);
-//                        vvCardVideo.start();
-//                    }
-//                });
-//
-//                //revert back to image on video completion
-//                vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                    public void onCompletion(MediaPlayer mp) {
-//                        vvCardVideo.setVisibility(View.GONE);
-//                        ivCardPhoto.setVisibility(View.VISIBLE);
-//                        btnMediaPlay.setVisibility(View.VISIBLE);
-//                        btnMediaPlay.setChecked(false);
-//                    }
-//                });
-//            } else if (clipMedium.equals(Constants.PHOTO)) {
-//                Uri uri = Uri.parse(mediaFile.getPath());
-//                ivCardPhoto.setImageURI(uri);
-//                ivCardPhoto.setVisibility(View.VISIBLE);
-//            } else if (clipMedium.equals(Constants.AUDIO)) {
-//                Uri myUri = Uri.parse(mediaFile.getPath());
-//                final MediaPlayer mediaPlayer = new MediaPlayer();
-//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//
-//                //set background image
-//                String clipType = mCardModel.getClipType();
-//                int drawable = R.drawable.ic_launcher;
-//
-//                if (clipType.equals(Constants.CHARACTER)) {
-//                    drawable = R.drawable.cliptype_close;
-//                } else if (clipType.equals(Constants.ACTION)) {
-//                    drawable = R.drawable.cliptype_medium;
-//                } else if (clipType.equals(Constants.RESULT)){
-//                    drawable = R.drawable.cliptype_long;
-//                }
-//                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(drawable));
-//                ivCardPhoto.setVisibility(View.VISIBLE);
-//
-//                //set up media player
-//                try {
-//                    mediaPlayer.setDataSource(mContext, myUri);
-//                    mediaPlayer.prepare();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                btnMediaPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                        if (isChecked) {
-//                            mediaPlayer.seekTo(5);
-//                            mediaPlayer.start();
-//                        } else {
-//                            mediaPlayer.pause();
-//                        }
-//                    }
-//                });
-//
-//                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                    @Override
-//                    public void onCompletion(MediaPlayer arg0) {
-//                        btnMediaPlay.setChecked(false);
-//                    }
-//                });
-//
-//                mediaPlayer.seekTo(5);
-//                btnMediaPlay.setVisibility(View.VISIBLE);
-//            } else {
-//                //TODO handle invalid-medium error
-//            }
-//        }
-//
-//        //set correct listener for record button
-//        btnRecord.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = null;
-//                int requestId = -1;
-//
-//                if(clipMedium.equals(Constants.VIDEO)) {
-//                    intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//                    requestId = Constants.REQUEST_VIDEO_CAPTURE;
-//
-//                } else if(clipMedium.equals(Constants.PHOTO)) {
-//                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                    requestId = Constants.REQUEST_IMAGE_CAPTURE;
-//
-//                }  else if(clipMedium.equals(Constants.AUDIO)) {
-//                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-//                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
-//                }
-//
-//                if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
-//                    mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // FIXME should be done off the ui thread
-//                    ((Activity) mContext).startActivityForResult(intent, requestId);
-//                }
-//            }
-//        });
 
         // supports automated testing
         view.setTag(mCardModel.getId());
@@ -481,35 +319,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 }
                 thumbnail.setImageDrawable(mContext.getResources().getDrawable(drawable));
                 thumbnail.setVisibility(View.VISIBLE);
-
-//                //set up media player
-//                try {
-//                    mediaPlayer.setDataSource(mContext, myUri);
-//                    mediaPlayer.prepare();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                btnMediaPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                        if (isChecked) {
-//                            mediaPlayer.seekTo(5);
-//                            mediaPlayer.start();
-//                        } else {
-//                            mediaPlayer.pause();
-//                        }
-//                    }
-//                });
-//
-//                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                    @Override
-//                    public void onCompletion(MediaPlayer arg0) {
-//                        btnMediaPlay.setChecked(false);
-//                    }
-//                });
-//
-//                mediaPlayer.seekTo(5);
-//                btnMediaPlay.setVisibility(View.VISIBLE);
             } else {
                 //TODO handle invalid-medium error
             }
@@ -517,18 +326,59 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     private void showClipPlaybackAndTrimming() {
-        // TODO
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
+        View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.dialog_clip_playback_trim, null);
 
-        View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_clip_playback_trim, null);
+        final TextureView videoView = (TextureView) v.findViewById(R.id.textureView);
+        final ImageView thumbnailView = (ImageView) v.findViewById(R.id.thumbnail);
+        final TextView clipLength = (TextView) v.findViewById(R.id.clipLength);
+        final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
+
+        videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                setThumbnailForClip(thumbnailView, mCardModel.getSelectedMediaFile());
+
+                Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
+                Surface s = new Surface(surface);
+                try {
+                    MediaPlayer player = new MediaPlayer();
+                    player.setDataSource(mContext, video);
+                    player.setSurface(s);
+                    player.prepare();
+                    player.start();
+                    thumbnailView.setVisibility(View.GONE);
+                    // TODO : Properly display clip duration
+                    clipLength.setText(String.format("Total 0:%01d", player.getDuration() / 1000));
+                    clipEnd.setText(String.format("0:%01d", player.getDuration() / 1000));
+                } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+            }
+        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(v)
                 .setPositiveButton("TRIM CLIP", null)
                 .setNegativeButton("CANCEL", null);
-        builder.show();
+        Dialog dialog = builder.create();
+        dialog.show();
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;
@@ -682,6 +532,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // Change view tags indicating primary / secondary status
         oldSelectedClip.setTag(R.id.view_tag_clip_primary, false);
         newSelectedClip.setTag(R.id.view_tag_clip_primary, true);
+
+        // Set new clip as selected
+        mCardModel.selectMediaFile((ClipMetadata) newSelectedClip.getTag(R.id.view_tag_clip_metadata));
     }
 
     private View.OnTouchListener mClipSelectionListener = new View.OnTouchListener() {

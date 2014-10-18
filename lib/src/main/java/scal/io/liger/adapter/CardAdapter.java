@@ -69,11 +69,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             Context context = holder.cardView.getContext();
             DisplayableCard cardsuiCard = newCard.getDisplayableCard(holder.cardView.getContext());
             holder.cardView.removeAllViews();
-            // TODO: Remove CardsUi library entirely so we don't have to
-            // negate its card container creation
             ViewGroup oldCardContainer = (ViewGroup) cardsuiCard.getCardView(context);
-            //ViewGroup cardsUiCardContent = (ViewGroup) oldCardContainer.getChildAt(0);
-            //oldCardContainer.removeView(cardsUiCardContent);
             holder.cardView.addView(oldCardContainer);
         }
 //        // - get element from your dataset at this position

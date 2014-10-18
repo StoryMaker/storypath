@@ -1,0 +1,16 @@
+{
+    "id": "learning_guide_lib_1",
+    "title": "Learning Guide Library",
+    "classPackage": "scal.io.liger.model",
+    "storyPathTemplateFiles":{
+            "NAME_1":"LIB_1_v1.json",
+            "NAME_2":"LIB_1_v2.json"
+    },
+    "cards": [
+            {
+                "id": "ingredients",
+                "type": "MarkdownCard",
+                "text": "LIB _ 1"
+            }
+    ]
+}

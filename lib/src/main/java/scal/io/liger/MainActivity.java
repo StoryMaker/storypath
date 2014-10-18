@@ -320,10 +320,10 @@ public class MainActivity extends Activity {
 
         if (mStoryPathLibrary != null) {
             cards.addAll(mStoryPathLibrary.getValidCards());
-        }
 
-        if (mStoryPathLibrary.getCurrentStoryPath() != null) {
-            cards.addAll(mStoryPathLibrary.getCurrentStoryPath().getValidCards());
+            if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+                cards.addAll(mStoryPathLibrary.getCurrentStoryPath().getValidCards());
+            }
         }
 
         mRecyclerView.setAdapter(new CardAdapter(this, cards));
@@ -334,8 +334,10 @@ public class MainActivity extends Activity {
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
 
-        StoryPath story = null;
-        boolean newStory = false;
+        StoryPath storyPath = null;
+        boolean newStoryPath = false;
+
+        StoryPathLibrary storyPathLibrary = null;
 
         /*
         // TEMP CODE FOR TESTING
@@ -344,7 +346,7 @@ public class MainActivity extends Activity {
             gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
             Gson gson = gBu'ild.create();
 
-            String jsonFile = "learning_guide_v2.json";
+            String jsonFile = "foo";
 
             String json = JsonHelper.loadJSONFromPath(mStory.getStoryPathLibrary().buildPath(jsonFile));
             story = gson.fromJson(json, StoryPath.class);
@@ -362,13 +364,21 @@ public class MainActivity extends Activity {
 
         if (mStoryPathLibrary.getCurrentStoryPath().getId().equals(pathParts[0])) {
             // reference targets this story path
-            story = mStoryPathLibrary.getCurrentStoryPath();
+            storyPath = mStoryPathLibrary.getCurrentStoryPath();
         } else {
             // reference targets a serialized story path
             for (Dependency dependency : mStoryPathLibrary.getCurrentStoryPath().getDependencies()) {
                 if (dependency.getDependencyId().equals(pathParts[0])) {
 
-                    story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), mStoryPathLibrary, this.mContext);
+                    // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
+                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, this.mContext);
+                    newStoryPath = true;
+
+                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this.mContext);
+
+                    // loaded in reverse order, so need to set these references
+                    storyPath.setStoryReference(storyPathLibrary);
+                    storyPathLibrary.setCurrentStoryPath(storyPath);
 
                     /*
                     GsonBuilder gBuild = new GsonBuilder();
@@ -384,38 +394,39 @@ public class MainActivity extends Activity {
                     story.setFileLocation(mStoryPathLibrary.getCurrentStoryPath().buildPath(jsonFile));
                     */
 
-                    newStory = true;
+
                 }
             }
         }
 
-        if (story == null) {
+        if (storyPath == null) {
             System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
             return;
         }
 
-        Card card = story.getCardById(cardPath);
+        Card card = storyPath.getCardById(cardPath);
 
         if (card == null) {
             System.err.println("CARD ID " + pathParts[1] + " WAS NOT FOUND");
             return;
         }
 
-        int cardIndex = story.getValidCardIndex(card);
+        int cardIndex = storyPath.getValidCardIndex(card);
 
         if (cardIndex < 0) {
             System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
             return;
         }
 
-        if (newStory) {
+        if (newStoryPath) {
 
             // TODO: need additional code to save current story path
 
             // serialize current story path
             // add to story path files
 
-            mStoryPathLibrary.setCurrentStoryPath(story);
+            //mStoryPathLibrary.setCurrentStoryPath(storyPath);
+            mStoryPathLibrary = storyPathLibrary;
             refreshCardView();
         }
         // TODO: Scroll to card
@@ -426,6 +437,8 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         Log.d(TAG, "onActivityResult, requestCode:" + requestCode + ", resultCode: " + resultCode);
         if (resultCode == RESULT_OK) {
+            // TODO : Remove this and allow Card View Controllers to be notified of data changes
+            refreshCardView();
 
             if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 

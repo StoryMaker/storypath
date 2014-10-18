@@ -46,6 +46,12 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
         spm.setTitle(title);
         spm.setClassPackage(class_package);
 
+        JsonElement tempObj = jObj.get("storyPathLibraryFile");
+        if (tempObj != null) {
+            String storyPathLibraryFile = jObj.get("storyPathLibraryFile").getAsString();
+            spm.setStoryPathLibraryFile(storyPathLibraryFile);
+        }
+
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(NextUpCardDeserializer.class, new NextUpCardDeserializer());
         gBuild.registerTypeAdapter(VideoCaptureTypeCard.class, new VideoCaptureTypeCardDeserializer());
