@@ -8,7 +8,6 @@
     <dimen name="card_temperature_size">90.0dp</dimen>
     <dimen name="sticky_height">120dp</dimen>
     <dimen name="clip_card_footer_height">170dp</dimen>
-    <dimen name="card_howto_height">60dp</dimen>
     <dimen name="card_quiz_response_margin_top">16dp</dimen>
     <dimen name="clip_thumb_height">200dp</dimen>
 

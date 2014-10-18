@@ -19,9 +19,9 @@ public class QuizCard extends Card {
     private ArrayList<String> correct_answers;
     private int correct_required;
 
-    class Choice {
+    public static class Choice {
         String id;
-        String text;
+        public String text;
         String filter;
         String filters_or;
         String filters_and;

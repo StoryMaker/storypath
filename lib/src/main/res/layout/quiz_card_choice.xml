@@ -7,7 +7,7 @@
         android:layout_marginTop="@dimen/card_quiz_response_margin_top"
         android:background="@color/card_light_text"
         android:padding="16dp"
-        android:textSize="@dimen/card_medium_text"/>
+        android:textSize="@dimen/text_medium"/>
 
     <!-- Change to light_grey bg with border-->
 </merge>

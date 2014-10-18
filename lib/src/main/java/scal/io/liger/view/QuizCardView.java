@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
@@ -29,8 +27,8 @@ public class QuizCardView extends ExampleCardView {
 
     public QuizCard mCardModel;
 
-    private List<QuizCardChoice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
-    private List<QuizCardChoice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
+    private List<QuizCard.Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
+    private List<QuizCard.Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
     private int mExpandedHeight; // The height of the quiz choice container when expanded
     private boolean mExpanded = false; // Are the quiz card's possible choices expanded?
 
@@ -84,7 +82,7 @@ public class QuizCardView extends ExampleCardView {
             }
         });
 
-        mDisplayedChoices = mCardModel.getQuizChoices();
+        mDisplayedChoices = mCardModel.getOptions();
         final boolean hasQuizResponses = mDisplayedChoices != null && mDisplayedChoices.size() > 0;
 
         /** Quiz response selection listener
@@ -95,7 +93,7 @@ public class QuizCardView extends ExampleCardView {
             @Override
             public void onClick(View v) {
                 v.setSelected(true);
-                mSelectedChoices.add((QuizCardChoice) v.getTag(R.id.view_tag_quiz_choice));
+                mSelectedChoices.add((QuizCard.Choice) v.getTag(R.id.view_tag_quiz_choice));
                 if (quizIsPassed()) {
                     // We're done!
                     toggleQuizResponseExpansion(breadCrumb, choiceContainer);
@@ -108,7 +106,7 @@ public class QuizCardView extends ExampleCardView {
         /** Populate Quiz choices stack */
         if (hasQuizResponses) {
             Log.i("quiz", String.format("adding %d choices for quiz card ", mDisplayedChoices.size()));
-            for (QuizCardChoice displayedChoice : mDisplayedChoices) {
+            for (QuizCard.Choice displayedChoice : mDisplayedChoices) {
                 // Create Quiz choices
                 View quizChoice = inflateAndAddChoiceForQuiz(choiceContainer, displayedChoice);
                 quizChoice.setOnClickListener(quizCardResponseClickListener);
@@ -118,7 +116,7 @@ public class QuizCardView extends ExampleCardView {
             throw new IllegalStateException("Quiz has no responses!");
         }
 
-        breadCrumb.setText(mCardModel.getQuizQuestion());
+        breadCrumb.setText(mCardModel.getQuestion());
 
         // supports automated testing
         view.setTag(mCardModel.getId());
@@ -127,7 +125,7 @@ public class QuizCardView extends ExampleCardView {
 
     private void toggleQuizResponseExpansion(final TextView breadCrumb, final ViewGroup choiceContainer) {
         // Change breadCrumb title
-        breadCrumb.setText(mCardModel.getQuizQuestion());
+        breadCrumb.setText(mCardModel.getQuestion());
         // Animate choiceContainer to height 0
         final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) choiceContainer.getLayoutParams();
         ValueAnimator animator = ValueAnimator.ofInt(params.height, 0);
@@ -149,7 +147,7 @@ public class QuizCardView extends ExampleCardView {
         mExpanded = !mExpanded;
     }
 
-    private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, QuizCardChoice choice) {
+    private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, QuizCard.Choice choice) {
 
         LayoutInflater inflater = (LayoutInflater) quizChoiceContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView choiceView = (TextView) inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, true);
