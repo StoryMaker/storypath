@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -39,6 +40,7 @@ import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
+import scal.io.liger.fragment.ClipPlaybackAndTrimDialogFragment;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -143,6 +145,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         toggleFooterVisibility(collapsableContainer);
                     } else {
                         //show trim dialog
+                        showClipPlaybackAndTrimming();
                     }
                 } else {
                     // Clicked view is not primary clip
@@ -519,16 +522,14 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-//        FragmentTransaction ft = mContext.getFragmentManager().beginTransaction();
-//        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        // Create and show the dialog.
-//        DialogFragment newFragment = MyDialogFragment.newInstance(mStackLevel);
-//        newFragment.show(ft, "dialog");
+
+        View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.dialog_clip_playback_trim, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setView(v)
+                .setPositiveButton("TRIM CLIP", null)
+                .setNegativeButton("CANCEL", null);
+        builder.show();
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;
