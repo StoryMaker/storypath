@@ -14,58 +14,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scal.io.liger.JsonHelper;
+import scal.io.liger.MainActivity;
+
 /**
  * Created by mnbogner on 9/29/14.
  */
-public class StoryPathLibrary {
+public class StoryPathLibrary extends StoryPath {
 
-    private String id;
-    private String title;
-    private String fileLocation;
-    private HashMap<List<String>, String> hookMap;
-    private ArrayList<String> storyPathTemplateFiles;
+    private HashMap<String, String> storyPathTemplateFiles;
     private ArrayList<String> storyPathInstanceFiles;
-    private StoryPath currentStoryPath; // not serialized
     private String currentStoryPathFile;
+    private StoryPath currentStoryPath; // not serialized
     private HashMap<String, MediaFile> mediaFiles;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getFileLocation() {
-        return fileLocation;
-    }
-
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
-    }
-
-    public HashMap<List<String>, String> getHookMap() {
-        return hookMap;
-    }
-
-    public void setHookMap(HashMap<List<String>, String> hookMap) {
-        this.hookMap = hookMap;
-    }
-
-    public ArrayList<String> getStoryPathTemplateFiles() {
+    public HashMap<String, String> getStoryPathTemplateFiles() {
         return storyPathTemplateFiles;
     }
 
-    public void setStoryPathTemplateFiles(ArrayList<String> storyPathTemplateFiles) {
+    public void setStoryPathTemplateFiles(HashMap<String, String> storyPathTemplateFiles) {
         this.storyPathTemplateFiles = storyPathTemplateFiles;
     }
 
@@ -85,20 +52,20 @@ public class StoryPathLibrary {
         this.storyPathInstanceFiles.add(file);
     }
 
-    public StoryPath getCurrentStoryPath() {
-        return currentStoryPath;
-    }
-
-    public void setCurrentStoryPath(StoryPath currentStoryPath) {
-        this.currentStoryPath = currentStoryPath;
-    }
-
     public String getCurrentStoryPathFile() {
         return currentStoryPathFile;
     }
 
     public void setCurrentStoryPathFile(String currentStoryPathFile) {
         this.currentStoryPathFile = currentStoryPathFile;
+    }
+
+    public StoryPath getCurrentStoryPath() {
+        return currentStoryPath;
+    }
+
+    public void setCurrentStoryPath(StoryPath currentStoryPath) {
+        this.currentStoryPath = currentStoryPath;
     }
 
     public HashMap<String, MediaFile> getMediaFiles() {
@@ -179,21 +146,24 @@ public class StoryPathLibrary {
         // NOTIFY/REFRESH HERE OR LET THAT BE HANDLED BY WHATEVER CALLS THIS?
     }
 
-    public String buildPath(String originalPath) {
-        if (originalPath.startsWith(File.separator)) {
-            return originalPath;
+    public void loadStoryPathTemplate(String storyPathTemplateKey) {
+        String storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
+
+        if (storyPathTemplateFile == null) {
+            Log.e(this.getClass().getName(), "could not find file name corresponding to " + storyPathTemplateKey);
+            return;
         }
 
-        // construct path relative to location of story path
-        String relativePath = getFileLocation();
+        if (context != null) {
 
-        if ((relativePath != null) && (relativePath.length() != 0)) {
-            relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
-            relativePath = relativePath + File.separator + originalPath;
-            return relativePath;
+            File jsonTemplateFile = new File(buildPath(storyPathTemplateFile));
+            String jsonTemplate = JsonHelper.loadJSONFromPath(jsonTemplateFile.getPath());
+
+            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a save cast as context can sometimes not be an activity (getApplicationContext())
+            mainActivity.initCardList(jsonTemplate, jsonTemplateFile);
+
         } else {
-            Log.e(this.getClass().getName(), "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
-            return originalPath;
+            Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile);
         }
     }
 }

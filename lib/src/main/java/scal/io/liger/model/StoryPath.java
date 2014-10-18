@@ -21,20 +21,20 @@ import scal.io.liger.StoryPathDeserializer;
  */
 public class StoryPath {
 
-    private String id;
-    private String title;
-    private String classPackage;
-    private ArrayList<Card> cards;
-    private ArrayList<Card> visibleCards;
-    private ArrayList<Dependency> dependencies;
-    private String fileLocation;
-    private StoryPathLibrary storyReference; // not serialized
-    private String storyPathLibraryFile;
+    protected String id;
+    protected String title;
+    protected String classPackage;
+    protected ArrayList<Card> cards;
+    protected ArrayList<Card> visibleCards;
+    protected ArrayList<Dependency> dependencies;
+    protected String fileLocation;
+    protected StoryPathLibrary storyReference; // not serialized
+    protected String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
     // also must be cleared before serializing story path
-    private Context context;
+    protected Context context;
 
     public String getId() {
         return id;
