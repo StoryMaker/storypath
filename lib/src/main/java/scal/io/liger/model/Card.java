@@ -27,6 +27,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     protected ArrayList<String> references;
     private HashMap<String, String> values;
 
+    public String toString() {
+        return "card: " + id;
+    }
+
     // NEW
     protected boolean stateVisiblity = false;
 
