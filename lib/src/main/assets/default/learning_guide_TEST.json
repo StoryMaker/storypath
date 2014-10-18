@@ -8,14 +8,14 @@
     },
     "cards": [
             {
-                "header": "This card tells the maker which clip to capture.",
+                "header": "LIBRARY CARD 1",
                 "type": "ChooseMediumCard",
                 "id": "choose_medium_card"
             },
             {
                 "id": "example_video",
                 "type": "ExampleCard",
-                "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+                "header": "LIBRARY CARD V",
                 "clipMedium": "video",
                 "clipType": "character",
                 "exampleMediaPath": "video_preview.mp4",
@@ -26,7 +26,7 @@
             {
                 "id": "example_audio",
                 "type": "ExampleCard",
-                "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+                "header": "LIBRARY CARD A",
                 "clipMedium": "audio",
                 "clipType": "character",
                 "exampleMediaPath": "video_preview.mp4",
@@ -37,7 +37,7 @@
             {
                 "id": "example_photo",
                 "type": "ExampleCard",
-                "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
+                "header": "LIBRARY CARD P",
                 "clipMedium": "photo",
                 "clipType": "character",
                 "exampleMediaPath": "video_preview.mp4",
@@ -48,7 +48,7 @@
             {
                 "id": "ingredients",
                 "type": "MarkdownCard",
-                "text": "**Ingredients**: What you're going to need.  \n\n\\- Character  \n\n\\- Action  \n\n\\- Result"
+                "text": "LIBRARY MARKDOWN"
             }
     ]
 }

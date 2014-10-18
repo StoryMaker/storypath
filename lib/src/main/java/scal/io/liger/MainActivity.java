@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import scal.io.liger.adapter.CardAdapter;
@@ -197,6 +198,7 @@ public class MainActivity extends Activity {
 
         try {
             initStoryPathLibraryModel(json, jsonFile);
+            refreshCardView();
         } catch (com.google.gson.JsonSyntaxException e) {
             Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -313,8 +315,17 @@ public class MainActivity extends Activity {
         if (mRecyclerView == null)
             return;
 
-        //add cardlist to view
-        List<Card> cards = mStoryPathLibrary.getCurrentStoryPath().getValidCards();
+        //add valid cards to view
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        if (mStoryPathLibrary != null) {
+            cards.addAll(mStoryPathLibrary.getValidCards());
+        }
+
+        if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+            cards.addAll(mStoryPathLibrary.getCurrentStoryPath().getValidCards());
+        }
+
         mRecyclerView.setAdapter(new CardAdapter(this, cards));
     }
 
