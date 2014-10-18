@@ -40,7 +40,6 @@ import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
-import scal.io.liger.fragment.ClipPlaybackAndTrimDialogFragment;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
