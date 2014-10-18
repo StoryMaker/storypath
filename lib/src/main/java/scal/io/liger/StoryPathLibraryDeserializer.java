@@ -63,7 +63,7 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         }
 
         GsonBuilder gBuild = new GsonBuilder();
-        gBuild.registerTypeAdapter(NextUpCardDeserializer.class, new NextUpCardDeserializer());
+        gBuild.registerTypeAdapter(MilestoneCardDeserializer.class, new MilestoneCardDeserializer());
         gBuild.registerTypeAdapter(VideoCaptureTypeCard.class, new VideoCaptureTypeCardDeserializer());
         Gson gson = gBuild.create();
 

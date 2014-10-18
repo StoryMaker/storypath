@@ -7,9 +7,11 @@
     <string name="lbl_level">Level:</string>
     <string name="lbl_time">Time:</string>
     <string name="lbl_continue">Continue</string>
-    <string name="lbl_next_up">Next up:</string>
+    <string name="lbl_next">Next</string>
     <string name="lbl_congrats_or">--- or ---</string>
 
+
+    <string name="choose_medium">Choose Medium</string>
     <string name="lbl_video">Video</string>
     <string name="lbl_audio">Audio</string>
     <string name="lbl_photo">Photo</string>

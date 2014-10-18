@@ -12,7 +12,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 import scal.io.liger.model.Link;
-import scal.io.liger.model.NextUpCard;
+import scal.io.liger.model.MilestoneCard;
 
 /**
  * Created by mnbogner on 7/11/14.
@@ -23,10 +23,10 @@ import scal.io.liger.model.NextUpCard;
  * gBuild.registerTypeAdapter(VideoCaptureTypeCardModel.class, new VideoCaptureTypeCardDeserializer());
  * Gson gson = gBuild.create();
  */
-public class NextUpCardDeserializer implements JsonDeserializer<NextUpCard> {
+public class MilestoneCardDeserializer implements JsonDeserializer<MilestoneCard> {
     @Override
-    public NextUpCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        NextUpCard nucm = new NextUpCard();
+    public MilestoneCard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        MilestoneCard nucm = new MilestoneCard();
 
         JsonObject jObj = jsonElement.getAsJsonObject();
 

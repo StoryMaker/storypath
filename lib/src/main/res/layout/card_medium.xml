@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_header"
+            style="@style/h2"
+            android:textColor="@color/raspberry_wine"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="@string/choose_medium"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/btn_medium_video"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            style="@style/p"
+            android:text="@string/lbl_video"/>
+
+        <Button
+            android:id="@+id/btn_medium_audio"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            style="@style/p"
+            android:text="@string/lbl_audio"/>
+
+        <Button
+            android:id="@+id/btn_medium_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            style="@style/p"
+            android:text="@string/lbl_photo"/>
+
+</LinearLayout>
