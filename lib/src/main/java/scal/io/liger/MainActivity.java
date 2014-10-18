@@ -176,7 +176,11 @@ public class MainActivity extends Activity {
                             initCardList(json, jsonFile);
                             */
 
-                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
+//                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
+                            mStoryPathLibrary.loadStoryPathTemplate("learning_guide_v1");
+
+
+
 
                         }
                     }
