@@ -1,6 +1,7 @@
 {
     "title": "Learning Guide 2", 
     "id": "learning_guide_v1_2", 
+    "storyPathLibraryFile": "learinging_guide_library.json",
     "cards": [
         {
             "id": "top",
