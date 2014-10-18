@@ -7,6 +7,8 @@
 
     <style name="CardText">
         <item name="android:ellipsize">end</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="CardLink">
@@ -17,49 +19,56 @@
         <item name="android:background">@drawable/card_link_button_background</item>
     </style>
 
-    <style name="CardLightText" parent="@style/CardText">
-        <item name="android:textColor">@color/card_light_text</item>
+    <style name="h1" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_xlarge</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="CardTitle" parent="@style/CardText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/card_large_text</item>
-        <item name="android:textColor">@color/card_title_text</item>
+    <style name="h2" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textColor">@color/dark_grey</item>
     </style>
 
-    <style name="CardTitleMedium" parent="@style/CardText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/card_medium_text</item>
-        <item name="android:textColor">@color/card_title_text</item>
+    <style name="h3" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textColor">@color/dark_grey</item>
     </style>
 
-    <style name="CardTitleSmall" parent="@style/CardText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/card_small_text</item>
-        <item name="android:textColor">@color/card_title_text</item>
+    <style name="h6" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_xsmall</item>
+        <item name="android:textColor">@color/light_grey</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="CardTitleBold" parent="@style/CardText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/card_large_text</item>
-        <item name="android:textColor">@color/card_title_text</item>
+    <style name="p" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:textColor">@color/dark_grey</item>
     </style>
 
-    <style name="CardLinkSmall" parent="@style/CardLink">
-        <item name="android:textSize">@dimen/card_small_text</item>
+    <style name="p_italic" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
-    <style name="CardLinkMedium" parent="@style/CardLink">
-        <item name="android:textSize">@dimen/card_medium_text</item>
+    <style name="p_emphasis" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:textColor">@color/light_black</item>
     </style>
+
+    <style name="caption" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textColor">@color/light_grey</item>
+    </style>
+
+    <style name="button" parent="@style/CardText">
+        <item name="android:textSize">@dimen/text_xsmall</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 
     <style name="StackTitle" parent="@style/CardText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">27sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/card_title_text</item>

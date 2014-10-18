@@ -5,15 +5,27 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
-import scal.io.liger.view.IntroCardView;
+import scal.io.liger.view.QuizCardView;
 
 /**
- * Created by mnbogner on 7/10/14.
+ * Created by josh@scal.io on 10/17/2014.
  */
 public class QuizCard extends Card {
-
+    private String question;
+    private String caption;
+    private String filter;
     private String description;
-    private ArrayList<Object> options;
+    private ArrayList<Choice> choices;
+    private ArrayList<String> correct_answers;
+    private int correct_required;
+
+    class Choice {
+        String id;
+        String text;
+        String filter;
+        String filters_or;
+        String filters_and;
+    }
 
     public QuizCard() {
         super();
@@ -22,7 +34,7 @@ public class QuizCard extends Card {
 
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
-        return new IntroCardView(context, this); //TODO
+        return new QuizCardView(context, this); //TODO
     }
 
     public String getDescription() {
@@ -33,18 +45,42 @@ public class QuizCard extends Card {
         this.description = description;
     }
 
-    public ArrayList<Object> getOptions() {
-        return options;
+    public ArrayList<Choice> getOptions() {
+        return choices;
     }
 
-    public void setOptions(ArrayList<Object> options) {
-        this.options = options;
+    public void setOptions(ArrayList<Choice> choices) {
+        this.choices = choices;
     }
 
-    public void addOption(Object option) {
-        if (this.options == null)
-            this.options = new ArrayList<Object>();
+    public void addChoice(Choice choice) {
+        if (this.choices == null)
+            this.choices = new ArrayList<Choice>();
 
-        this.options.add(option);
+        this.choices.add(choice);
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 }

@@ -23,7 +23,7 @@
         android:padding="@dimen/padding_large"
         android:text="Tap to select a different clip"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/card_medium_text"
+        android:textSize="@dimen/text_medium"
         android:textStyle="italic"
         android:alpha="0"/>
 

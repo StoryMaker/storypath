@@ -25,7 +25,7 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/textureView"
-        android:textSize="@dimen/card_xl_text"
+        android:textSize="@dimen/text_large"
         android:fontFamily="sans-serif-light"/>
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
         android:text="0:00"
-        android:textSize="@dimen/card_large_text"
+        android:textSize="@dimen/text_medium"
         android:fontFamily="sans-serif-light"/>
 
     <TextView
@@ -49,7 +49,7 @@
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
-        android:textSize="@dimen/card_large_text"
+        android:textSize="@dimen/text_medium"
         android:fontFamily="sans-serif-light"/>
 
     <!-- TODO: Move RangeSeekBar to liger -->

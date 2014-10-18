@@ -4,5 +4,5 @@
     <item android:state_selected="true" android:color="@color/white"/> <!-- selected -->
     <item android:state_pressed="true" android:color="@color/white" /> <!-- pressed -->
     <item android:state_focused="true" android:color="@color/white" /> <!-- focused -->
-    <item android:color="@color/holo_blue_light" /> <!-- default -->
+    <item android:color="@color/dark_grey" /> <!-- default -->
 </selector>

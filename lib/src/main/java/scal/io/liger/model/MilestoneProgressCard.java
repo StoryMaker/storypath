@@ -2,7 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.Display;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -10,9 +9,9 @@ import java.util.Observable;
 import scal.io.liger.Constants;
 import scal.io.liger.ReferenceHelper;
 import scal.io.liger.view.DisplayableCard;
-import scal.io.liger.view.ProgressCardView;
+import scal.io.liger.view.MilestoneProgressCardView;
 
-public class ProgressCard extends Card {
+public class MilestoneProgressCard extends Card {
 
     private String text;
     private ArrayList<String> storyMedium; // why is this an array?
@@ -20,7 +19,7 @@ public class ProgressCard extends Card {
     private ArrayList<String> audioClipCards;
     private ArrayList<String> photoClipCards;
 
-    public ProgressCard() {
+    public MilestoneProgressCard() {
         super();
         this.type = this.getClass().getName();
     }
@@ -227,7 +226,7 @@ public class ProgressCard extends Card {
 
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
-        return new ProgressCardView(context, this);
+        return new MilestoneProgressCardView(context, this);
     }
 
     public String getText() {

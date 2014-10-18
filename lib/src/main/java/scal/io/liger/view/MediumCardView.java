@@ -8,22 +8,22 @@ import android.widget.TextView;
 
 import scal.io.liger.Constants;
 import scal.io.liger.model.Card;
-import scal.io.liger.model.ChooseMediumCard;
+import scal.io.liger.model.MediumCard;
 import scal.io.liger.R;
 import scal.io.liger.model.StoryPath;
 
 
-public class ChooseMediumCardView implements DisplayableCard {
-    private ChooseMediumCard mCardModel;
+public class MediumCardView implements DisplayableCard {
+    private MediumCard mCardModel;
     private Context mContext;
 
     private Button mBtnMediumVideo;
     private Button mBtnMediumAudio;
     private Button mBtnMediumPhoto;
 
-    public ChooseMediumCardView(Context context, Card cardModel) {
+    public MediumCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (ChooseMediumCard) cardModel;
+        mCardModel = (MediumCard) cardModel;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ChooseMediumCardView implements DisplayableCard {
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(R.layout.card_choose_medium, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_medium, null);
         TextView tvHeader = ((TextView) view.findViewById(R.id.tv_header));
         mBtnMediumVideo = ((Button) view.findViewById(R.id.btn_medium_video));
         mBtnMediumAudio = ((Button) view.findViewById(R.id.btn_medium_audio));
@@ -76,13 +76,13 @@ public class ChooseMediumCardView implements DisplayableCard {
         String value = mCardModel.getValueByKey("value");
         if (value != null) {
             if (value.equals(Constants.VIDEO)) {
-                mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+                mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.dark_grey));
                 mBtnMediumVideo.setTextColor(mContext.getResources().getColor(R.color.white));
             } else if (value.equals(Constants.AUDIO)) {
-                mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+                mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.dark_grey));
                 mBtnMediumAudio.setTextColor(mContext.getResources().getColor(R.color.white));
             } else if (value.equals(Constants.PHOTO)) {
-                mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+                mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.dark_grey));
                 mBtnMediumPhoto.setTextColor(mContext.getResources().getColor(R.color.white));
             }
         }
@@ -97,7 +97,7 @@ public class ChooseMediumCardView implements DisplayableCard {
         mBtnMediumVideo.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         mBtnMediumAudio.setBackgroundColor(mContext.getResources().getColor(R.color.white));
         mBtnMediumPhoto.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        button.setBackgroundColor(mContext.getResources().getColor(R.color.holo_blue_light));
+        button.setBackgroundColor(mContext.getResources().getColor(R.color.dark_grey));
         ((Button) button).setTextColor(mContext.getResources().getColor(R.color.white));
     }
 

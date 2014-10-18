@@ -10,15 +10,15 @@ import android.widget.TextView;
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.Link;
-import scal.io.liger.model.NextUpCard;
+import scal.io.liger.model.MilestoneCard;
 
-public class NextUpCardView implements DisplayableCard {
-    private NextUpCard mCardModel;
+public class MilestoneCardView implements DisplayableCard {
+    private MilestoneCard mCardModel;
     private Context mContext;
 
-    public NextUpCardView(Context context, Card cardModel) {
+    public MilestoneCardView(Context context, Card cardModel) {
         mContext = context;
-        mCardModel = (NextUpCard)cardModel;
+        mCardModel = (MilestoneCard)cardModel;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NextUpCardView implements DisplayableCard {
             return null;
         }
 
-        LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.card_next_up, null);
+        LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.card_milestone, null);
         TextView tv = (TextView) ll.findViewById(R.id.tv_text);
         tv.setText(mCardModel.getText());
 
