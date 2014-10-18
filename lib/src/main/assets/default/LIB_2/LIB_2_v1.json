@@ -1,0 +1,50 @@
+{
+    "id": "learning_guide_path_2_1",
+    "title": "Learning Guide v1",
+    "classPackage": "scal.io.liger.model",
+    "storyPathLibraryFile": "LIB_2_TEST.json",
+    "dependencies": [
+        {
+            "dependencyId": "learning_guide_path_2_2",
+            "dependencyFile": "LIB_2_v2.json"
+        },
+        {
+            "dependencyId": "learning_guide_path_1_1",
+            "dependencyFile": "../LIB_1/LIB_1_v1.json"
+        },
+        {
+            "dependencyId": "learning_guide_path_1_2",
+            "dependencyFile": "../LIB_1/LIB_1_v2.json"
+        }
+    ],
+    "cards": [
+        {
+            "id": "ingredients",
+            "type": "MarkdownCard",
+            "text": "LIB _ 2 _ 1"
+        },
+        {
+            "text": "NEXT UP",
+            "type": "NextUpCard",
+            "id": "next_up",
+            "links": [
+                {
+                    "linkText": "LIB_1_1",
+                    "linkPath": "learning_guide_path_1_1::ingredients"
+                },
+                {
+                    "linkText": "LIB_1_2",
+                    "linkPath": "learning_guide_path_1_2::ingredients"
+                },
+                {
+                    "linkText": "LIB_2_1",
+                    "linkPath": "learning_guide_path_2_1::ingredients"
+                },
+                {
+                    "linkText": "LIB_2_2",
+                    "linkPath": "learning_guide_path_2_2::ingredients"
+                }
+            ]
+         }
+    ]
+}
