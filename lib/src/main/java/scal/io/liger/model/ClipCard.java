@@ -72,6 +72,19 @@ public class ClipCard extends ExampleCard {
         return getStoryPathReference().loadMediaFile(cmd.getUuid());
     }
 
+    public void selectMediaFile(ClipMetadata clip) {
+        if ((clips == null) || (clips.size() < 1)) {
+            Log.e(this.getClass().getName(), "no clip metadata was found, cannot select a file");
+            return;
+        }
+
+        if (clips.indexOf(clip) != -1) {
+            selectMediaFile(clips.indexOf(clip));
+        } else {
+            Log.e(this.getClass().getName(), "specified clip not found in clips");
+        }
+    }
+
     public void selectMediaFile(int index) {
         // unsure if selection should be based on index or object
 

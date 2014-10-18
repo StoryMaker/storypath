@@ -183,12 +183,14 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 } else {
                     clipThumb.setTag(R.id.view_tag_clip_primary, true);
                 }
+                clipThumb.setTag(R.id.view_tag_clip_metadata, clipsToDisplay.get(x));
                 mDisplayedClips.add(clipThumb);
             }
         } else {
             View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
             clipThumb.setOnClickListener(clipCardOnClickListener);
             clipThumb.setTag(R.id.view_tag_clip_primary, true);
+            clipThumb.setTag(R.id.view_tag_clip_metadata, null);
             mDisplayedClips.add(clipThumb);
         }
 
@@ -732,6 +734,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // Change view tags indicating primary / secondary status
         oldSelectedClip.setTag(R.id.view_tag_clip_primary, false);
         newSelectedClip.setTag(R.id.view_tag_clip_primary, true);
+
+        // Set new clip as selected
+        mCardModel.selectMediaFile((ClipMetadata) newSelectedClip.getTag(R.id.view_tag_clip_metadata));
     }
 
     private View.OnTouchListener mClipSelectionListener = new View.OnTouchListener() {

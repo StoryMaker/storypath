@@ -3,4 +3,7 @@
     <item
         type="id"
         name="view_tag_clip_primary" />
+    <item
+        type="id"
+        name="view_tag_clip_metadata" />
 </resources>
