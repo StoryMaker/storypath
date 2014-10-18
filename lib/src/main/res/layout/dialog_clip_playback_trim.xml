@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <VideoView
-        android:id="@+id/videoView"
+    <TextureView
+        android:id="@+id/textureView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/clip_thumb_height"
         android:layout_alignParentTop="true" />
@@ -24,7 +24,7 @@
         android:paddingLeft="@dimen/padding_xlarge"
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="16dp"
-        android:layout_below="@id/videoView"
+        android:layout_below="@id/textureView"
         android:textSize="@dimen/card_xl_text"
         android:fontFamily="sans-serif-light"/>
 

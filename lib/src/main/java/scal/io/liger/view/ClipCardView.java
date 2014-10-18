@@ -5,14 +5,12 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -22,13 +20,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -531,18 +529,46 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.dialog_clip_playback_trim, null);
 
-        final VideoView videoView = (VideoView) v.findViewById(R.id.videoView);
+        final TextureView videoView = (TextureView) v.findViewById(R.id.textureView);
         final ImageView thumbnailView = (ImageView) v.findViewById(R.id.thumbnail);
         final TextView clipLength = (TextView) v.findViewById(R.id.clipLength);
         final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
 
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                thumbnailView.setVisibility(View.GONE);
-                // TODO : Properly display clip duration
-                clipLength.setText(String.format("Total 0:%d",videoView.getDuration() / 1000));
-                clipEnd.setText(String.format("0:%d",videoView.getDuration() / 1000));
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                setThumbnailForClip(thumbnailView, mCardModel.getSelectedMediaFile());
+
+                Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
+                Surface s = new Surface(surface);
+                try {
+                    MediaPlayer player = new MediaPlayer();
+                    player.setDataSource(mContext, video);
+                    player.setSurface(s);
+                    player.prepare();
+                    player.start();
+                    thumbnailView.setVisibility(View.GONE);
+                    // TODO : Properly display clip duration
+                    clipLength.setText(String.format("Total 0:%01d", player.getDuration() / 1000));
+                    clipEnd.setText(String.format("0:%01d", player.getDuration() / 1000));
+                } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
             }
         });
@@ -552,17 +578,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 .setPositiveButton("TRIM CLIP", null)
                 .setNegativeButton("CANCEL", null);
         Dialog dialog = builder.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                setThumbnailForClip(thumbnailView, mCardModel.getSelectedMediaFile());
-
-                Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
-                videoView.setVideoURI(video);
-                videoView.setMediaController(null);
-                videoView.start();
-            }
-        });
         dialog.show();
     }
 
