@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         android:layout_below="@id/textureView"
         android:text="Total: 2:30"
-        android:textSize="@dimen/card_xl_text"
+        android:textSize="@dimen/text_medium"
         android:fontFamily="sans-serif-light"/>
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
         android:text="0:14"
-        android:textSize="@dimen/card_large_text"
+        android:textSize="@dimen/text_medium"
         android:fontFamily="sans-serif-light"/>
 
     <TextView
@@ -51,7 +51,7 @@
         android:layout_marginTop="16dp"
         android:layout_below="@id/clipLength"
         android:text="1:43"
-        android:textSize="@dimen/card_large_text"
+        android:textSize="@dimen/text_medium"
         android:fontFamily="sans-serif-light"/>
 
     <com.efor18.rangeseekbar.RangeSeekBar

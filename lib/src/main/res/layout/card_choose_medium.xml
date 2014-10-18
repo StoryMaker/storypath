@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/tv_header"
-            style="@style/CardTitleMedium"
+            style="@style/h2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choose"
@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            style="@style/CardLinkSmall"
+            style="@style/h3"
             android:text="@string/lbl_video"/>
 
         <Button
@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            style="@style/CardLinkSmall"
+            style="@style/h3"
             android:text="@string/lbl_audio"/>
 
         <Button
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            style="@style/CardLinkSmall"
+            style="@style/h3"
             android:text="@string/lbl_photo"/>
 
     </LinearLayout>

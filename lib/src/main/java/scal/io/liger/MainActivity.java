@@ -342,7 +342,7 @@ public class MainActivity extends Activity {
         if (cardPath == "SWITCH") {
             GsonBuilder gBuild = new GsonBuilder();
             gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
-            Gson gson = gBuild.create();
+            Gson gson = gBu'ild.create();
 
             String jsonFile = "learning_guide_v2.json";
 

@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/tv_text"
-            style="@style/CardTitleMedium"
+            style="@style/h3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0 / 3"/>
