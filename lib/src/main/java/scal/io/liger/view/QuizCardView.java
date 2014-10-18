@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -150,10 +151,9 @@ public class QuizCardView extends ExampleCardView {
     private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, QuizCard.Choice choice) {
 
         LayoutInflater inflater = (LayoutInflater) quizChoiceContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TextView choiceView = (TextView) inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, true);
+        TextView choiceView = (TextView) (inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, true)).findViewById(R.id.choiceText);
         choiceView.setText(choice.text);
 
-        quizChoiceContainer.addView(choiceView);
         return choiceView;
     }
 

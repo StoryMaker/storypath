@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/choiceText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/card_quiz_response_margin_top"
@@ -10,4 +10,3 @@
         android:textSize="@dimen/text_medium"/>
 
     <!-- Change to light_grey bg with border-->
-</merge>
