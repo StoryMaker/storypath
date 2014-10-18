@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/clip_thumb_height"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/clip_thumb_height"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/clipLength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_xlarge"
+        android:paddingRight="@dimen/padding_xlarge"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/textureView"
+        android:text="Total: 2:30"
+        android:textSize="@dimen/card_xl_text"
+        android:fontFamily="sans-serif-light"/>
+
+    <TextView
+        android:id="@+id/clipStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_xlarge"
+        android:paddingRight="@dimen/padding_xlarge"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/clipLength"
+        android:text="0:14"
+        android:textSize="@dimen/card_large_text"
+        android:fontFamily="sans-serif-light"/>
+
+    <TextView
+        android:id="@+id/clipEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/padding_xlarge"
+        android:paddingRight="@dimen/padding_xlarge"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/clipLength"
+        android:text="1:43"
+        android:textSize="@dimen/card_large_text"
+        android:fontFamily="sans-serif-light"/>
+
+    <com.efor18.rangeseekbar.RangeSeekBar
+        android:id="@+id/rangeSeekbar"
+        android:layout_below="@id/clipStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

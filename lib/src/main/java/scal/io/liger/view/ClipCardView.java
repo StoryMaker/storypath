@@ -3,6 +3,9 @@ package scal.io.liger.view;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -117,8 +120,10 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
+
         final ArrayList<ClipMetadata> clipsToDisplay = mCardModel.getClips();
-        if (clipsToDisplay.size() > 0) clipCandidatesContainer.removeAllViews(); // Remove any prior clip views
+        final boolean hasClips = (clipsToDisplay != null && clipsToDisplay.size() > 0);
+        if (hasClips) clipCandidatesContainer.removeAllViews(); // Remove any prior clip views
 
         /** Clip Stack Card Click Listener
          *  Handles click on primary clip (show playback / edit dialog) as well as
@@ -127,6 +132,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View.OnClickListener clipCardOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!hasClips) return;
+
                 if (v.getTag(R.id.view_tag_clip_primary) != null && (boolean) v.getTag(R.id.view_tag_clip_primary)) {
                     // Clicked clip is primary
                     Log.i("select", "primary");
@@ -154,18 +161,23 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         };
 
         /** Populate clip stack */
-        Log.i("clip", String.format("adding %d clips for cardclip ",clipsToDisplay.size()));
-        for (int x = 0; x < clipsToDisplay.size(); x++) {
-            // Create view for new clip
-            MediaFile mediaFile = mCardModel.loadMediaFile(clipsToDisplay.get(x));
-            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, mediaFile, x, clipsToDisplay.size() - 1);
-            clipThumb.setOnClickListener(clipCardOnClickListener);
-            if ( x != clipsToDisplay.size() - 1) {
-                // Clicking on any but the top clip triggers expansion
-                clipThumb.setTag(R.id.view_tag_clip_primary, false);
-            } else {
-                clipThumb.setTag(R.id.view_tag_clip_primary, true);
+        if (hasClips) {
+            Log.i("clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
+            for (int x = 0; x < clipsToDisplay.size(); x++) {
+                // Create view for new clip
+                MediaFile mediaFile = mCardModel.loadMediaFile(clipsToDisplay.get(x));
+                View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, mediaFile, x, clipsToDisplay.size() - 1);
+                clipThumb.setOnClickListener(clipCardOnClickListener);
+                if (x != clipsToDisplay.size() - 1) {
+                    // Clicking on any but the top clip triggers expansion
+                    clipThumb.setTag(R.id.view_tag_clip_primary, false);
+                } else {
+                    clipThumb.setTag(R.id.view_tag_clip_primary, true);
+                }
+                mDisplayedClips.add(clipThumb);
             }
+        } else {
+            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 1);
             mDisplayedClips.add(clipThumb);
         }
 
@@ -500,7 +512,23 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 //TODO handle invalid-medium error
             }
         }
+    }
 
+    private void showClipPlaybackAndTrimming() {
+        // TODO
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+//        FragmentTransaction ft = mContext.getFragmentManager().beginTransaction();
+//        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        ft.addToBackStack(null);
+//
+//        // Create and show the dialog.
+//        DialogFragment newFragment = MyDialogFragment.newInstance(mStackLevel);
+//        newFragment.show(ft, "dialog");
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;
