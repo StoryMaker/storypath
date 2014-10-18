@@ -5,20 +5,20 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
-import scal.io.liger.view.NextUpCardView;
+import scal.io.liger.view.MilestoneCardView;
 
-public class NextUpCard extends Card {
+public class MilestoneCard extends Card {
 
     private String text;
     private ArrayList<Link> links;
 
-    public NextUpCard() {
+    public MilestoneCard() {
         super();
         this.type = this.getClass().getName();
     }
 
     @Override
-    public DisplayableCard getDisplayableCard(Context context) { return new NextUpCardView(context, this); }
+    public DisplayableCard getDisplayableCard(Context context) { return new MilestoneCardView(context, this); }
 
     public String getText() {
         return fillReferences(this.text);
