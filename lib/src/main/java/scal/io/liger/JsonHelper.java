@@ -184,7 +184,7 @@ public class JsonHelper {
 
     // NEW
 
-    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath) {
+    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, Context context) {
 
         Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED");
 
@@ -209,15 +209,16 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, context);
 
     }
 
-    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath) {
+    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, Context context) {
 
         Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED");
 
         GsonBuilder gBuild = new GsonBuilder();
+        gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
         Gson gson = gBuild.create();
 
         StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
@@ -232,6 +233,10 @@ public class JsonHelper {
         } else {
             storyPathLibrary.setFileLocation(jsonFilePath);
         }
+
+        storyPathLibrary.setCardReferences();
+        storyPathLibrary.initializeObservers();
+        storyPathLibrary.setContext(context);
 
         return storyPathLibrary;
 
@@ -284,13 +289,22 @@ public class JsonHelper {
         Gson gson = gBuild.create();
 
         // set aside references to prevent circular dependencies when serializing
-        StoryPath tempStoryPath = storyPathLibrary.getCurrentStoryPath();
+        Context tempContext = storyPathLibrary.getContext();
+        StoryPath tempCurrentStoryPath = storyPathLibrary.getCurrentStoryPath();
+
+        storyPathLibrary.setContext(null);
         storyPathLibrary.setCurrentStoryPath(null);
+        storyPathLibrary.clearObservers();
+        storyPathLibrary.clearCardReferences();
 
         String storyPathLibraryJson = gson.toJson(storyPathLibrary);
 
         // restore references
-        storyPathLibrary.setCurrentStoryPath(tempStoryPath);
+
+        storyPathLibrary.setCardReferences();
+        storyPathLibrary.initializeObservers();
+        storyPathLibrary.setCurrentStoryPath(tempCurrentStoryPath);
+        storyPathLibrary.setContext(tempContext);
 
         return storyPathLibraryJson;
 
