@@ -233,6 +233,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     private void setThumbnailForClip(@NonNull ImageView thumbnail, MediaFile media) {
+        // not sure i undertand this logic...
+        /*
         String mediaPath = null;
         if ((mCardModel.getClips() != null) && (mCardModel.getClips().size() > 0)) {
             if (media == null) {
@@ -243,6 +245,16 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         }
 
         final File mediaFile = getValidFile(mediaPath, mCardModel.getExampleMediaPath());
+        */
+
+        MediaFile mediaFile = null;
+        if (media != null) {
+            mediaFile = media;
+        } else {
+            mediaFile = mCardModel.getExampleMediaFile();
+        }
+
+
 
         if (mediaFile == null) {
             // Clip has no attached media. Show generic drawable based on clip type
@@ -260,20 +272,23 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             }
 
             thumbnail.setVisibility(View.VISIBLE);
-        } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
+        } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
             // Clip has attached media. Show an appropriate preview
             // e.g: A thumbnail for video
             String clipMedium = mCardModel.getClipMedium();
             if (clipMedium.equals(Constants.VIDEO)) {
 
                 //set up image as preview
+                /*
                 Bitmap videoFrame = null;
                 if (media != null) {
                     videoFrame = media.getThumbnail();
                 } else {
                     videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
                 }
+                */
 
+                Bitmap videoFrame = mediaFile.getThumbnail();
                 if(null != videoFrame) {
                     thumbnail.setImageBitmap(videoFrame);
                 }
@@ -478,6 +493,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     //returns stored mediaPath (if exists) or exampleMediaPath (if exists)
+    /*
     @Override
     public File getValidFile(String mediaPath, String exampleMediaPath) {
         File mediaFile = null;
@@ -490,6 +506,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         return mediaFile;
     }
+    */
 
     private void setupSpinner(Spinner spinner) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,

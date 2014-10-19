@@ -41,7 +41,6 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
 
     @Override
     public StoryPathLibrary deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        Log.d(" *** TESTING *** ", "LOOK AT ME!");
         StoryPathLibrary spl = new StoryPathLibrary();
 
         JsonObject jObj = jsonElement.getAsJsonObject();
@@ -118,8 +117,6 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
                 }
             }
         }
-
-        Log.d(" *** TESTING *** ", "ALL DONE!");
 
         return spl;
     }

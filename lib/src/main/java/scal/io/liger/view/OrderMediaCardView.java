@@ -89,20 +89,24 @@ public class OrderMediaCardView implements DisplayableCard {
                 mediaPath = mf.getPath();
             }
 
-            File mediaFile = null;
+            //File mediaFile = null;
             Uri mediaURI = null;
 
             if(mediaPath != null) {
+                /*
                 mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPathReference().buildPath(mediaPath));
                 if(mediaFile.exists() && !mediaFile.isDirectory()) {
                     mediaURI = Uri.parse(mediaFile.getPath());
                 }
+                */
+                mediaURI = Uri.parse(mediaPath);
             }
 
             if (medium != null && mediaURI != null) {
                 if (medium.equals(Constants.VIDEO)) {
                     ivTemp = new ImageView(mContext);
-                    Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
+                    //Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
+                    Bitmap videoFrame = mf.getThumbnail();
                     if(null != videoFrame) {
                         ivTemp.setImageBitmap(videoFrame);
                     }

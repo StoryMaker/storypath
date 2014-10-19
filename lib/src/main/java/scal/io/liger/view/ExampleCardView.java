@@ -59,17 +59,19 @@ public class ExampleCardView implements DisplayableCard{
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
 
         //set up media display
-        final File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
+        //final File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
 
-        if (mediaFile == null) {
+        //if (mediaFile == null) {
+        if (mCardModel.getExampleMediaFile() == null) {
             // using medium cliptype image as default in case media file is missing
             ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
             ivCardPhoto.setVisibility(View.VISIBLE);
-        } else if (mediaFile.exists() && !mediaFile.isDirectory()) {
+        } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
             if (clipMedium.equals(Constants.VIDEO)) {
 
                 //set up image as preview
-                Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
+                //Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
+                Bitmap videoFrame = mCardModel.getExampleMediaFile().getThumbnail();
                 if(null != videoFrame) {
                     ivCardPhoto.setImageBitmap(videoFrame);
                 }
@@ -79,7 +81,8 @@ public class ExampleCardView implements DisplayableCard{
                 btnMediaPlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Uri video = Uri.parse(mediaFile.getPath());
+                        //Uri video = Uri.parse(mediaFile.getPath());
+                        Uri video = Uri.parse(mCardModel.getExampleMediaFile().getPath());
                         vvCardVideo.setVideoURI(video);
                         vvCardVideo.seekTo(5);
                         vvCardVideo.setMediaController(null);
@@ -100,11 +103,13 @@ public class ExampleCardView implements DisplayableCard{
                     }
                 });
             } else if (clipMedium.equals(Constants.PHOTO)) {
-                Uri uri = Uri.parse(mediaFile.getPath());
+                //Uri uri = Uri.parse(mediaFile.getPath());
+                Uri uri = Uri.parse(mCardModel.getExampleMediaFile().getPath());
                 ivCardPhoto.setImageURI(uri);
                 ivCardPhoto.setVisibility(View.VISIBLE);
             } else if (clipMedium.equals(Constants.AUDIO)) {
-                Uri myUri = Uri.parse(mediaFile.getPath());
+                //Uri myUri = Uri.parse(mediaFile.getPath());
+                Uri myUri = Uri.parse(mCardModel.getExampleMediaFile().getPath());
                 final MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -152,6 +157,7 @@ public class ExampleCardView implements DisplayableCard{
     }
 
     //returns stored mediaPath (if exists) or exampleMediaPath (if exists)
+    /*
     public File getValidFile(String mediaPath, String exampleMediaPath) {
         File mediaFile = null;
 
@@ -162,4 +168,5 @@ public class ExampleCardView implements DisplayableCard{
         }
         return mediaFile;
     }
+    */
 }

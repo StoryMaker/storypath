@@ -199,6 +199,7 @@ public class QuizCardView extends ExampleCardView {
     }
 
     //returns stored mediaPath (if exists) or exampleMediaPath (if exists)
+    /*
     @Override
     public File getValidFile(String mediaPath, String exampleMediaPath) {
         File mediaFile = null;
@@ -211,6 +212,7 @@ public class QuizCardView extends ExampleCardView {
 
         return mediaFile;
     }
+    */
 
     /**
      * This quiz card is completed and collapsed into the breadcrumb state.
