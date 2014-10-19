@@ -267,7 +267,13 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             if (clipMedium.equals(Constants.VIDEO)) {
 
                 //set up image as preview
-                Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
+                Bitmap videoFrame = null;
+                if (media != null) {
+                    videoFrame = media.getThumbnail();
+                } else {
+                    videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
+                }
+
                 if(null != videoFrame) {
                     thumbnail.setImageBitmap(videoFrame);
                 }
