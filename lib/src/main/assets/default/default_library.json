@@ -1,7 +1,7 @@
 {
     "cards": [
         {
-            "correct_required": 1, 
+            "correct_required": 0, 
             "question": "What is your story about?", 
             "choices": [
                 {
@@ -328,6 +328,9 @@
             "id": "quiz_card_clipquestion"
         }
     ], 
+    "storyPathTemplateFiles": {
+        "learning_guide_v1": "learning_guide_v1.json"
+    }, 
     "classPackage": "scal.io.liger.model", 
     "id": "default_library", 
     "title": "Start a New Story"

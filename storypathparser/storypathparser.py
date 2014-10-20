@@ -86,6 +86,7 @@ doc = {
     'title': objs['title'],
     'classPackage': 'scal.io.liger.model',
     'id': objs['id'],
+    'storyPathTemplateFiles': objs['storyPathTemplateFiles'],
     'cards': cards
 }      
       
