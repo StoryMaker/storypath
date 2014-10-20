@@ -115,15 +115,18 @@ public class QuizCardView extends ExampleCardView {
                     // Choice is unselected
                     if (!mSelectedChoices.contains(choice)) {
                         mSelectedChoices.add(choice);
+                        mCardModel.addValue("choice", choice.id);
+                        toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+                        quizCardComplete();
                     }
                 }
                 v.setSelected(!v.isSelected());
 
-                if (quizIsPassed()) {
-                    // We're done!
-                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
-                    quizCardComplete();
-                }
+//                if (quizIsPassed()) {
+//                    // We're done!
+//                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+//                    quizCardComplete();
+//                }
             }
         };
 
@@ -220,5 +223,6 @@ public class QuizCardView extends ExampleCardView {
      */
     private void quizCardComplete() {
         // TODO
+        mCardModel.addValue("value", mSelectedChoices.get(0).id);
     }
 }

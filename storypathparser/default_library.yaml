@@ -14,21 +14,21 @@
                 - 
                     id: event
                     text: An Event
-                    filters_or: ~
                 - 
                     id: profile
                     text: A Person or People
-                    filters_or: ~
                 - 
                     id: issue
                     text: An Issue
-                    filters_or: ~
                 
         - 
             id: quiz_card_format
             card: QuizCard
             question: What do you want to do?
             correct_required: 0
+            references:
+                - 
+                    default_library::quiz_card_topic::choice
             choices:
                 # filter answer choices based on chosen topic
                 - 
@@ -83,6 +83,9 @@
             card: QuizCard 
             question: Choose a medium.
             correct_required: 0
+            references:
+                - 
+                    default_library::quiz_card_format::choice
             choices:
                 # filter answer choices based on chosen format
                 - 
@@ -120,6 +123,9 @@
             question: What kind of clips would you like to make a series.
             filter: default_library::quiz_card_format::format::series
             correct_required: 0
+            references:
+                - 
+                    default_library::quiz_card_medium::choice
             choices:
                 # filter answer choices based on chosen topic
                 - 
@@ -162,12 +168,11 @@
             id: quiz_card_clipquestion
             card: QuizCard 
             question: Which question would you like to use?
-            title: ~
-            caption: ~
-            type: any-single
             filter: default_library::quiz_card_format::format::discussion
-            correct_answers: ~
             correct_required: 0
+            references:
+                - 
+                    default_library::quiz_card_medium::choice
             choices:
                 # filter answer choices based on chosen topic && medium
                 - 

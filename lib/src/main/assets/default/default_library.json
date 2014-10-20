@@ -6,26 +6,28 @@
             "choices": [
                 {
                     "text": "An Event", 
-                    "id": "event", 
-                    "filters_or": null
+                    "id": "event"
                 }, 
                 {
                     "text": "A Person or People", 
-                    "id": "profile", 
-                    "filters_or": null
+                    "id": "profile"
                 }, 
                 {
                     "text": "An Issue", 
-                    "id": "issue", 
-                    "filters_or": null
+                    "id": "issue"
                 }
             ], 
             "type": "QuizCard", 
             "id": "quiz_card_topic"
         }, 
         {
+            "references": [
+                "default_library::quiz_card_topic::choice"
+            ], 
+            "type": "QuizCard", 
             "correct_required": 0, 
             "question": "What do you want to do?", 
+            "id": "quiz_card_format", 
             "choices": [
                 {
                     "text": "Talk to people, or a person, about...", 
@@ -80,13 +82,16 @@
                         "default_library::quiz_card_topic::topic::issue"
                     ]
                 }
-            ], 
-            "type": "QuizCard", 
-            "id": "quiz_card_format"
+            ]
         }, 
         {
+            "references": [
+                "default_library::quiz_card_format::choice"
+            ], 
+            "type": "QuizCard", 
             "correct_required": 0, 
             "question": "Choose a medium.", 
+            "id": "quiz_card_medium", 
             "choices": [
                 {
                     "text": "Audio", 
@@ -119,12 +124,13 @@
                         "default_library::quiz_card_format::format::highlights"
                     ]
                 }
-            ], 
-            "type": "QuizCard", 
-            "id": "quiz_card_medium"
+            ]
         }, 
         {
             "filter": "default_library::quiz_card_format::format::series", 
+            "references": [
+                "default_library::quiz_card_medium::choice"
+            ], 
             "type": "QuizCard", 
             "correct_required": 0, 
             "question": "What kind of clips would you like to make a series.", 
@@ -172,9 +178,14 @@
             ]
         }, 
         {
-            "title": null, 
+            "filter": "default_library::quiz_card_format::format::discussion", 
+            "references": [
+                "default_library::quiz_card_medium::choice"
+            ], 
+            "type": "QuizCard", 
             "correct_required": 0, 
             "question": "Which question would you like to use?", 
+            "id": "quiz_card_clipquestion", 
             "choices": [
                 {
                     "text": "Why is the event important", 
@@ -320,12 +331,7 @@
                     ], 
                     "id": "question_18"
                 }
-            ], 
-            "filter": "default_library::quiz_card_format::format::discussion", 
-            "caption": null, 
-            "correct_answers": null, 
-            "type": "QuizCard", 
-            "id": "quiz_card_clipquestion"
+            ]
         }
     ], 
     "storyPathTemplateFiles": {
