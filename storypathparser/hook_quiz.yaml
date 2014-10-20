@@ -1,0 +1,296 @@
+---
+    id: hook_test
+    title: Hook Test
+    cards:
+        - 
+            id: quiz_card_topic
+            type: QuizCard
+            question: What is your story about?
+            title: ~
+            caption: ~
+            filter: ~
+            choices:
+                - 
+                    id: event
+                    text: An Event
+                    filters_or: ~
+                - 
+                    id: profile
+                    text: A Person or People
+                    filters_or: ~
+                - 
+                    id: issue
+                    text: An Issue
+                    filters_or: ~
+            correct_answers: ~
+            correct_required: 0
+                
+        - 
+            id: quiz_card_format
+            type: QuizCard
+            question: What do you want to do?
+            title: ~
+            caption: ~
+            filter: ~
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: interview
+                    text: Talk to people, or a person, about...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                
+                - 
+                    id: discussion
+                    text: Ask many peaople...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: report
+                    text: Recap of the important parts
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: process
+                    text: Show the steps taken...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                    
+                - 
+                    id: series
+                    text: Takes pictures of people...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: highlights
+                    text: Show the best moments.
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue 
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
+            
+        -
+            id: quiz_card_medium
+            type: QuizCard 
+            title: ~
+            question: Choose a medium.
+            caption: ~
+            filter: ~
+            choices:
+                # filter answer choices based on chosen format
+                - 
+                    id: audio
+                    text: Audio
+                    filters_or:
+                        - thispath::thiscard::format::interview
+                        - thispath::thiscard::format::discussion
+                        - thispath::thiscard::format::report
+                        - thispath::thiscard::format::process
+                        - thispath::thiscard::format::highlights
+                
+                - 
+                    id: video
+                    text: Video
+                    filters_or:
+                        - thispath::thiscard::format::interview
+                        - thispath::thiscard::format::discussion
+                        - thispath::thiscard::format::report
+                        - thispath::thiscard::format::process
+                        - thispath::thiscard::format::highlights
+                
+                - 
+                    id: photo
+                    text: Photo
+                    filters_or:
+                        - thispath::thiscard::format::process
+                        - thispath::thiscard::format::series
+                        - thispath::thiscard::format::highlights
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
+                
+        # this question only shows up if format == series
+        -
+            id: quiz_card_cliptype
+            type: QuizCard 
+            question: What kind of clips would you like to make a series.
+            title: ~
+            caption: ~
+            filter: thispath::thiscard::format::series
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: character
+                    text: Character
+                    filters_or:        
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: action
+                    text: Action
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                    
+                - 
+                    id: result
+                    text: Result
+                    filters_or:
+                        - thispath::thiscard::topic::event 
+                    
+                - 
+                    id: place
+                    text: Place
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: signature
+                    text: Signature
+                    filters_or:
+                        - thispath::thiscard::topic::issue
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
+
+
+        # this question only shows up only if format == discussion
+        -
+            id: quiz_card_clipquestion
+            type: QuizCard 
+            question: Which question would you like to use?
+            title: ~
+            caption: ~
+            type: any-single
+            filter: thispath::thiscard::format::discussion
+            choices:
+                # filter answer choices based on chosen topic && medium
+                - 
+                    id: question_1
+                    text: Why is the event important
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_2 
+                    text: What is your opinion of the event?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_3
+                    text: What do you think is the most exciting part of the event?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_4
+                    text: Why is the event important?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_5
+                    text: What is your opinion of the event?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_6
+                    text: What do you think is the most exciting part of the event?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_7
+                    text: Why is the issue important?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_8
+                    text: What is your opinion of the issue?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_9
+                    text: What do you think should be done about the issue?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_10
+                    text: Why is the issue important?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_11 
+                    text: What is your opinion of the issue?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_12 
+                    text: What do you think should be done about the issue?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_13
+                    text: Why is the character important?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_14
+                    text: What is your opinion of the character?
+                    filters_and:
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_15
+                    text: What do you think the character should do next?
+                    filters_and:
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_16
+                    text: Why is the character important?
+                    filters_and:
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_17
+                    text: What is your opinion of the character?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_18
+                    text: What do you think the character should do next?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::video
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
