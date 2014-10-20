@@ -22,48 +22,57 @@
     <style name="h1" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_xlarge</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="h2" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_large</item>
         <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="h3" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_large</item>
         <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="h6" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_xsmall</item>
         <item name="android:textColor">@color/light_grey</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="p" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="p_italic" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:textColor">@color/dark_grey</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">italic</item>
     </style>
 
     <style name="p_emphasis" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:textColor">@color/light_black</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="caption" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:textColor">@color/light_grey</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="button" parent="@style/CardText">
         <item name="android:textSize">@dimen/text_xsmall</item>
         <item name="android:textColor">@color/grey</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
