@@ -1,0 +1,334 @@
+{
+    "cards": [
+        {
+            "correct_required": 1, 
+            "question": "What is your story about?", 
+            "choices": [
+                {
+                    "text": "An Event", 
+                    "id": "event", 
+                    "filters_or": null
+                }, 
+                {
+                    "text": "A Person or People", 
+                    "id": "profile", 
+                    "filters_or": null
+                }, 
+                {
+                    "text": "An Issue", 
+                    "id": "issue", 
+                    "filters_or": null
+                }
+            ], 
+            "type": "QuizCard", 
+            "id": "quiz_card_topic"
+        }, 
+        {
+            "correct_required": 0, 
+            "question": "What do you want to do?", 
+            "choices": [
+                {
+                    "text": "Talk to people, or a person, about...", 
+                    "id": "interview", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }, 
+                {
+                    "text": "Ask many peaople...", 
+                    "id": "discussion", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }, 
+                {
+                    "text": "Recap of the important parts", 
+                    "id": "report", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }, 
+                {
+                    "text": "Show the steps taken...", 
+                    "id": "process", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile"
+                    ]
+                }, 
+                {
+                    "text": "Takes pictures of people...", 
+                    "id": "series", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }, 
+                {
+                    "text": "Show the best moments.", 
+                    "id": "highlights", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }
+            ], 
+            "type": "QuizCard", 
+            "id": "quiz_card_format"
+        }, 
+        {
+            "correct_required": 0, 
+            "question": "Choose a medium.", 
+            "choices": [
+                {
+                    "text": "Audio", 
+                    "id": "audio", 
+                    "filters_or": [
+                        "default_library::quiz_card_format::format::interview", 
+                        "default_library::quiz_card_format::format::discussion", 
+                        "default_library::quiz_card_format::format::report", 
+                        "default_library::quiz_card_format::format::process", 
+                        "default_library::quiz_card_format::format::highlights"
+                    ]
+                }, 
+                {
+                    "text": "Video", 
+                    "id": "video", 
+                    "filters_or": [
+                        "default_library::quiz_card_format::format::interview", 
+                        "default_library::quiz_card_format::format::discussion", 
+                        "default_library::quiz_card_format::format::report", 
+                        "default_library::quiz_card_format::format::process", 
+                        "default_library::quiz_card_format::format::highlights"
+                    ]
+                }, 
+                {
+                    "text": "Photo", 
+                    "id": "photo", 
+                    "filters_or": [
+                        "default_library::quiz_card_format::format::process", 
+                        "default_library::quiz_card_format::format::series", 
+                        "default_library::quiz_card_format::format::highlights"
+                    ]
+                }
+            ], 
+            "type": "QuizCard", 
+            "id": "quiz_card_medium"
+        }, 
+        {
+            "filter": "default_library::quiz_card_format::format::series", 
+            "type": "QuizCard", 
+            "correct_required": 0, 
+            "question": "What kind of clips would you like to make a series.", 
+            "id": "quiz_card_cliptype", 
+            "choices": [
+                {
+                    "text": "Character", 
+                    "id": "character", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }, 
+                {
+                    "text": "Action", 
+                    "id": "action", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile"
+                    ]
+                }, 
+                {
+                    "text": "Result", 
+                    "id": "result", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event"
+                    ]
+                }, 
+                {
+                    "text": "Place", 
+                    "id": "place", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }, 
+                {
+                    "text": "Signature", 
+                    "id": "signature", 
+                    "filters_or": [
+                        "default_library::quiz_card_topic::topic::issue"
+                    ]
+                }
+            ]
+        }, 
+        {
+            "title": null, 
+            "correct_required": 0, 
+            "question": "Which question would you like to use?", 
+            "choices": [
+                {
+                    "text": "Why is the event important", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_1"
+                }, 
+                {
+                    "text": "What is your opinion of the event?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_2"
+                }, 
+                {
+                    "text": "What do you think is the most exciting part of the event?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_3"
+                }, 
+                {
+                    "text": "Why is the event important?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_4"
+                }, 
+                {
+                    "text": "What is your opinion of the event?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_5"
+                }, 
+                {
+                    "text": "What do you think is the most exciting part of the event?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_6"
+                }, 
+                {
+                    "text": "Why is the issue important?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::issue", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_7"
+                }, 
+                {
+                    "text": "What is your opinion of the issue?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::issue", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_8"
+                }, 
+                {
+                    "text": "What do you think should be done about the issue?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::issue", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_9"
+                }, 
+                {
+                    "text": "Why is the issue important?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_10"
+                }, 
+                {
+                    "text": "What is your opinion of the issue?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_11"
+                }, 
+                {
+                    "text": "What do you think should be done about the issue?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_12"
+                }, 
+                {
+                    "text": "Why is the character important?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_13"
+                }, 
+                {
+                    "text": "What is your opinion of the character?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_14"
+                }, 
+                {
+                    "text": "What do you think the character should do next?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_medium::medium::audio"
+                    ], 
+                    "id": "question_15"
+                }, 
+                {
+                    "text": "Why is the character important?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::profile", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_16"
+                }, 
+                {
+                    "text": "What is your opinion of the character?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::issue", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_17"
+                }, 
+                {
+                    "text": "What do you think the character should do next?", 
+                    "filters_and": [
+                        "default_library::quiz_card_topic::topic::issue", 
+                        "default_library::quiz_card_medium::medium::video"
+                    ], 
+                    "id": "question_18"
+                }
+            ], 
+            "filter": "default_library::quiz_card_format::format::discussion", 
+            "caption": null, 
+            "correct_answers": null, 
+            "type": "QuizCard", 
+            "id": "quiz_card_clipquestion"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "default_library", 
+    "title": "Start a New Story"
+}

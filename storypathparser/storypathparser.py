@@ -38,10 +38,12 @@ for card in objs['cards']:
         newcard['text'] = card['text']
         
     elif card['card'] == 'QuizCard':
-        newcard['type'] = 'QuizCard'
-        newcard['id'] = 'quizcard_1'
-#        newcard['id'] = 'quiz_card_1'
+        newcard = card
+        del newcard['card']
 #        newcard['type'] = 'QuizCard'
+#        newcard['id'] = 'quizcard_1'
+#        newcard['id'] = 'quiz_card_1'
+        newcard['type'] = 'QuizCard'
 #        newcard['question'] = card['questions'][0] # FIXME for now quiz cards are single page
 
     elif card['card'] == 'ClipCard':
