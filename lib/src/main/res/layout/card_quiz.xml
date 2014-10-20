@@ -13,12 +13,12 @@
     <TextView
         android:id="@+id/breadCrumb"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_howto_height"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_medium"
         android:textColor="@color/signature"
-        android:textSize="@dimen/text_medium" />
+        android:textSize="@dimen/text_medium"/>
 
     <!-- choiceContainer contains all quiz response options -->
 
@@ -27,6 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/padding_xsmall"
-        android:orientation="vertical" />
+        android:orientation="vertical"/>
 
 </LinearLayout>
