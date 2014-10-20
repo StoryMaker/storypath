@@ -140,6 +140,11 @@ public class StoryPath {
         */
     }
 
+    // required for serialization/deserialization
+    public void setValidCards(ArrayList<Card> validCards) {
+        this.visibleCards = visibleCards;
+    }
+
     public ArrayList<Dependency> getDependencies() {
         return dependencies;
     }
@@ -217,6 +222,12 @@ public class StoryPath {
     public void clearObservers() {
         for (Card card : cards) {
             card.removeObservers();
+        }
+    }
+
+    public void resetVisibility() {
+        for (Card card : cards) {
+            card.resetStateVisibility();
         }
     }
 

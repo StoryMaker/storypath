@@ -304,7 +304,7 @@
         }, 
         {
             "text": "Tweaks & Changes",
-            "type": "NextUpCard",
+            "type": "MilestoneCard",
             "id": "tweaks_and_changes_video",
             "links": [
                 {
@@ -331,7 +331,7 @@
         },
         {
             "text": "Tweaks & Changes",
-            "type": "NextUpCard",
+            "type": "MilestoneCard",
             "id": "tweaks_and_changes_photo",
             "links": [
                 {
@@ -358,7 +358,7 @@
         },
         {
             "text": "Tweaks & Changes",
-            "type": "NextUpCard",
+            "type": "MilestoneCard",
             "id": "tweaks_and_changes_audio",
             "links": [
                 {
@@ -415,7 +415,7 @@
         }, 
         {
             "text": "NEXT UP",
-            "type": "NextUpCard",
+            "type": "MilestoneCard",
             "id": "next_up",
             "links": [
                 {

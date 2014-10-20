@@ -165,39 +165,33 @@ public class MainActivity extends Activity {
                 });
         }
         else {
-            builder.setTitle("Choose Story File(SdCard/Liger/)")
-                .setItems(jsonFiles, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int index) {
-                        File jsonFile = JsonHelper.setSelectedJSONFile(index);
+            builder.setTitle("Choose Story File(SdCard/Liger/)").setItems(jsonFiles, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int index) {
+                    File jsonFile = JsonHelper.setSelectedJSONFile(index);
 
-                        // TEMP - unsure how to best determine new story vs. existing story
-                        if (jsonFile.getPath().endsWith("TEST_STORY.json")) {
+                    // TEMP - unsure how to best determine new story vs. existing story
 
-                            // loadStoryFile(jsonFile);
+                    String json = JsonHelper.loadJSON();
 
-                        } else {
-                            String json = JsonHelper.loadJSON();
+                    initHook(json, jsonFile);
 
-                            initHook(json, jsonFile);
+                    // need to implement selection of story path based on hook
 
-                            // need to implement selection of story path based on hook
+                    /*
+                    jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
+                    json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
 
-                            /*
-                            jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
-                            json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
-
-                            initCardList(json, jsonFile);
-                            */
+                    initCardList(json, jsonFile);
+                    */
 
 //                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
-//                            mStoryPathLibrary.loadStoryPathTemplate("learning_guide_v1");
-
-
-
-
-                        }
+                    if (mStoryPathLibrary.getCurrentStoryPathFile() == null) {
+                        mStoryPathLibrary.loadStoryPathTemplate("learning_guide_v1");
+                    } else {
+                        mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
                     }
-                });
+                }
+            });
         }
 
         AlertDialog alert = builder.create();
@@ -524,7 +518,11 @@ public class MainActivity extends Activity {
     }
 
     public void saveStoryFile() {
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
+
+        String savedFilePath = JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath());
+        mStoryPathLibrary.setCurrentStoryPathFile(savedFilePath);
+        JsonHelper.saveStoryPathLibrary(mStoryPathLibrary);
 
         /*
         // prep and serialize story path library
@@ -548,6 +546,7 @@ public class MainActivity extends Activity {
         }
         */
 
+        /*
         // prep and serialize current story path
         mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(null);
         mStoryPathLibrary.getCurrentStoryPath().clearObservers();
@@ -600,6 +599,7 @@ public class MainActivity extends Activity {
         mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
         mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
         mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(mStoryPathLibrary);
+        */
     }
 
     /*

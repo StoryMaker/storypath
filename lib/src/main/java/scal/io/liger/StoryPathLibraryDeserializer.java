@@ -10,6 +10,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         tempElement = jObj.get("mediaFiles");
         if (tempElement != null) {
             tempObj = tempElement.getAsJsonObject();
-            mediaFiles = gson.fromJson(tempObj, mediaFiles.getClass());
+            mediaFiles = gson.fromJson(tempObj, new TypeToken<HashMap<String, MediaFile>>(){}.getType());
             spl.setMediaFiles(mediaFiles);
         }
 

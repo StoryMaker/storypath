@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import scal.io.liger.model.Card;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
@@ -153,6 +154,8 @@ public class JsonHelper {
         File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
         File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_saved1.json");
 
+        File ligerFile_7 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
+
         jsonFileNamesList.add(ligerFile_1.getName());
         jsonFileNamesList.add(ligerFile_2.getName());
         jsonFileNamesList.add(ligerFile_3.getName());
@@ -160,12 +163,16 @@ public class JsonHelper {
         jsonFileNamesList.add(ligerFile_5.getName());
         jsonFileNamesList.add(ligerFile_6.getName());
 
+        jsonFileNamesList.add(ligerFile_7.getName());
+
         jsonFileList.add(ligerFile_1);
         jsonFileList.add(ligerFile_2);
         jsonFileList.add(ligerFile_3);
         jsonFileList.add(ligerFile_4);
         jsonFileList.add(ligerFile_5);
         jsonFileList.add(ligerFile_6);
+
+        jsonFileList.add(ligerFile_7);
 
         /*
         File ligerDir = new File(sdLigerFilePath);
@@ -290,6 +297,9 @@ public class JsonHelper {
         storyPathLibrary.initializeObservers();
         storyPathLibrary.setContext(context);
 
+        // need to reset visibility so that visible cards will update their status properly
+        storyPathLibrary.resetVisibility();
+
         return storyPathLibrary;
 
     }
@@ -343,9 +353,11 @@ public class JsonHelper {
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPathLibrary.getContext();
         StoryPath tempCurrentStoryPath = storyPathLibrary.getCurrentStoryPath();
+        ArrayList<Card> tempValidCards = storyPathLibrary.getValidCards();
 
         storyPathLibrary.setContext(null);
         storyPathLibrary.setCurrentStoryPath(null);
+        storyPathLibrary.setValidCards(null);
         storyPathLibrary.clearObservers();
         storyPathLibrary.clearCardReferences();
 
@@ -355,6 +367,7 @@ public class JsonHelper {
 
         storyPathLibrary.setCardReferences();
         storyPathLibrary.initializeObservers();
+        storyPathLibrary.setValidCards(tempValidCards);
         storyPathLibrary.setCurrentStoryPath(tempCurrentStoryPath);
         storyPathLibrary.setContext(tempContext);
 
@@ -423,6 +436,9 @@ public class JsonHelper {
 
         storyPath.setContext(context);
 
+        // need to reset visibility so that visible cards will update their status properly
+        storyPath.resetVisibility();
+
         return storyPath;
 
     }
@@ -476,8 +492,10 @@ public class JsonHelper {
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPath.getContext();
         StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibraryReference();
+        ArrayList<Card> tempValidCards = storyPath.getValidCards();
         storyPath.setContext(null);
         storyPath.setStoryPathLibraryReference(null);
+        storyPath.setValidCards(null);
         storyPath.clearObservers();
         storyPath.clearCardReferences();
         //storyPath.clearValidCards();
@@ -488,6 +506,7 @@ public class JsonHelper {
         // valid cards will be reset next time getValidCards() is called
         storyPath.setCardReferences();
         storyPath.initializeObservers();
+        storyPath.setValidCards(tempValidCards);
         storyPath.setStoryPathLibraryReference(tempStoryPathLibrary);
         storyPath.setContext(tempContext);
 

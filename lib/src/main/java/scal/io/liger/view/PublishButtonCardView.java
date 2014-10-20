@@ -1,12 +1,15 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import scal.io.liger.JsonHelper;
+import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.PublishButtonCard;
@@ -43,6 +46,11 @@ public class PublishButtonCardView implements DisplayableCard{
         btnCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // TEMP
+                MainActivity mainActivity = (MainActivity) mCardModel.getStoryPathReference().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                mainActivity.saveStoryFile();
+                Log.d(" *** TESTING *** ", "STORY FILES SAVED?");
 
                 StoryPath spm = mCardModel.getStoryPathReference();
                 ArrayList<FullMetadata> exportMetadata = spm.exportAllMetadata();

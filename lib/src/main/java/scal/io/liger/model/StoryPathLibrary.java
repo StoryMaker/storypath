@@ -145,7 +145,13 @@ public class StoryPathLibrary extends StoryPath {
     }
 
     public void loadStoryPathTemplate(String storyPathTemplateKey) {
-        String storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
+        String storyPathTemplateFile = null;
+
+        if (storyPathTemplateKey.equals("CURRENT")) { // ADD TO CONSTANTS
+            storyPathTemplateFile = getCurrentStoryPathFile();
+        } else {
+            storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
+        }
 
         if (storyPathTemplateFile == null) {
             Log.e(this.getClass().getName(), "could not find file name corresponding to " + storyPathTemplateKey);
