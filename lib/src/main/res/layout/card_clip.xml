@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selectable_background_cardbank"
-    android:paddingBottom="@dimen/padding_medium">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:id="@+id/clipCandidates"
@@ -20,7 +19,7 @@
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:padding="@dimen/padding_large"
+        android:padding="@dimen/padding_medium"
         android:text="@string/card_howto_tap_to_select_clip"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_medium"
@@ -34,7 +33,7 @@
         android:padding="16dp"
         android:layout_below="@id/clipCandidates"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_small"
         android:background="@drawable/ic_overflow"
         android:textColor="@color/signature"
         android:paddingLeft="@dimen/padding_medium"
@@ -52,8 +51,8 @@
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:textColor="@color/signature"
-        android:paddingLeft="@dimen/padding_medium"
-        android:paddingRight="@dimen/padding_medium"
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
         android:textSize="20sp" />
 
     <LinearLayout
@@ -61,10 +60,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerText"
-        android:paddingLeft="@dimen/padding_medium"
-        android:paddingRight="@dimen/padding_medium"
-        android:orientation="vertical"
-        android:paddingTop="8dp">
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/bodyText"
@@ -81,8 +79,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/ic_whoknows"
-            android:drawablePadding="8dp"
-            android:paddingTop="16dp"
+            android:drawablePadding="@dimen/padding_xsmall"
+            android:paddingTop="@dimen/padding_small"
             android:text="@string/importt"
             android:textColor="@color/signature" />
 
@@ -92,8 +90,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/ic_capture"
-            android:drawablePadding="8dp"
-            android:paddingTop="16dp"
+            android:drawablePadding="@dimen/padding_xsmall"
+            android:paddingTop="@dimen/padding_small"
             android:text="@string/capture"
             android:textColor="@color/signature" />
     </LinearLayout>

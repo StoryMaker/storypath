@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/padding_large"
-    android:background="@drawable/selectable_background_cardbank">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/iv_card_photo"
@@ -14,7 +13,7 @@
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_small"
         android:layout_centerHorizontal="true"
         android:visibility="visible"/>
 
@@ -29,7 +28,7 @@
     <TextView
         android:id="@+id/tv_text"
         style="@style/h3"
-        android:paddingTop="8dp"
+        android:paddingTop="@dimen/padding_tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lbl_order_media_desc"/>

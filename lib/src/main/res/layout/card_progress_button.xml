@@ -4,10 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="16dp" >
+    android:paddingBottom="@dimen/activity_horizontal_margin" >
 
     <Button
-        android:id="@+id/btn_card_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:id="@+id/btn_card"
+        style="@style/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/raspberry_wine"
+        android:text="Save Text"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/transparent"/>
 </LinearLayout>

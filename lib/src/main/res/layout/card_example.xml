@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/selectable_background_cardbank"
-    android:padding="@dimen/padding_small">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
             android:adjustViewBounds="true"
             android:baselineAlignBottom="true"
             android:scaleType="centerCrop"
-            android:layout_marginBottom="@dimen/padding_medium"
+            android:layout_marginBottom="@dimen/padding_small"
             android:layout_centerHorizontal="true"
             android:visibility="gone"/>
 
@@ -49,7 +48,7 @@
         style="@style/h3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_small"
         android:gravity="center"/>
 
     <View

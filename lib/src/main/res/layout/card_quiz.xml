@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="noContainer">
+    android:tag="noContainer"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <!-- breadCrumb is the persistent card header. While the quiz response options are expanded it represents
     the quiz prompt. e.g : "What is your story about?". After quiz response selection it transforms to the
@@ -15,7 +16,7 @@
         android:layout_height="@dimen/card_howto_height"
         android:background="@color/white"
         android:gravity="center_vertical"
-        android:padding="@dimen/padding_large"
+        android:padding="@dimen/padding_medium"
         android:textColor="@color/signature"
         android:textSize="@dimen/text_medium" />
 
@@ -25,7 +26,7 @@
         android:id="@+id/choiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:paddingTop="@dimen/padding_xsmall"
         android:orientation="vertical" />
 
 </LinearLayout>

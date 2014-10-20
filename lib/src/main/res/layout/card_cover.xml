@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/ll_content_wrapper"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_content_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/padding_large"
+    android:padding="@dimen/activity_horizontal_margin"
     android:background="@color/raspberry_wine">
 
         <TextView
             android:id="@+id/tv_header"
             style="@style/h1"
             android:text="tvheader"
-            android:paddingBottom="@dimen/padding_medium"/>
+            android:paddingBottom="@dimen/padding_small"/>
 
         <TextView
             android:id="@+id/tv_text"

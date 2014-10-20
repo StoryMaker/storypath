@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="16dp" >
+    android:padding="@dimen/activity_horizontal_margin" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
+        android:paddingLeft="@dimen/padding_xsmall"
+        android:paddingRight="@dimen/padding_xsmall" >
         
          <ImageView
             android:id="@+id/iv_card_image"
@@ -34,14 +34,14 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/padding_tiny"
         android:background="@color/stroke" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_cardbank"
-        android:padding="4dp"
+        android:padding="@dimen/padding_small"
         android:gravity="center_horizontal">
 
         <TextView
@@ -49,7 +49,7 @@
             style="@style/CardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="@dimen/padding_xsmall"/>
 
     </LinearLayout>
 

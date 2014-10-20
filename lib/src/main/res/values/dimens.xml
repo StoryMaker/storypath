@@ -17,12 +17,14 @@
     <dimen name="text_large">22.0sp</dimen>
     <dimen name="text_xlarge">32.0sp</dimen>
 
-    <dimen name="padding_xxsmall">2.0dp</dimen>
-    <dimen name="padding_xsmall">4.0dp</dimen>
-    <dimen name="padding_small">8.0dp</dimen>
-    <dimen name="padding_medium">12.0dp</dimen>
-    <dimen name="padding_large">16.0dp</dimen>
-    <dimen name="padding_xlarge">20.0dp</dimen>
-    <dimen name="padding_xxlarge">24.0dp</dimen>
+    <dimen name="padding_xtiny">2.0dp</dimen>
+    <dimen name="padding_tiny">4.0dp</dimen>
+    <dimen name="padding_xsmall">8.0dp</dimen>
+    <dimen name="padding_small">16.0dp</dimen>
+    <dimen name="padding_medium">24.0dp</dimen>
+    <dimen name="padding_large">48.0dp</dimen>
+    <dimen name="padding_xlarge">56.0dp</dimen>
+    <dimen name="padding_huge">72.0dp</dimen>
+    <dimen name="padding_xhuge">80.0dp</dimen>
 
 </resources>

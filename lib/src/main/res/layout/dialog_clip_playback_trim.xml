@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <TextureView
         android:id="@+id/textureView"
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/padding_xlarge"
         android:paddingRight="@dimen/padding_xlarge"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/padding_small"
         android:layout_below="@id/textureView"
         android:textSize="@dimen/text_large"
         android:fontFamily="sans-serif-light"/>
@@ -32,9 +33,9 @@
         android:id="@+id/clipStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding_xlarge"
-        android:paddingRight="@dimen/padding_xlarge"
-        android:layout_marginTop="16dp"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_small"
         android:layout_below="@id/clipLength"
         android:text="0:00"
         android:textSize="@dimen/text_medium"
@@ -45,9 +46,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/padding_xlarge"
-        android:paddingRight="@dimen/padding_xlarge"
-        android:layout_marginTop="16dp"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:layout_marginTop="@dimen/padding_medium"
         android:layout_below="@id/clipLength"
         android:textSize="@dimen/text_medium"
         android:fontFamily="sans-serif-light"/>

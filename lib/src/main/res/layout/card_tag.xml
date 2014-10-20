@@ -4,7 +4,7 @@
     android:id="@+id/collapsable"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_large">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/iv_card_photo"
@@ -13,7 +13,7 @@
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_small"
         android:layout_centerHorizontal="true"/>
 
     <RelativeLayout
@@ -41,12 +41,12 @@
         android:layout_below="@+id/ll_top_row"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_small"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_character"
-            style="@style/p"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -55,7 +55,7 @@
 
         <Button
             android:id="@+id/btn_action"
-            style="@style/p"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -64,7 +64,7 @@
 
         <Button
             android:id="@+id/btn_result"
-            style="@style/p"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -82,7 +82,7 @@
 
         <Button
             android:id="@+id/btn_place"
-            style="@style/p"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -91,7 +91,7 @@
 
         <Button
             android:id="@+id/btn_signature"
-            style="@style/p"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -100,7 +100,7 @@
 
         <Button
             android:id="@+id/btn_other"
-            style="@style/p"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
@@ -116,10 +116,10 @@
 
     <Button
         android:id="@+id/btn_skip"
+        style="@style/button"
         android:layout_below="@id/ll_bottom_row"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        style="@style/p"
         android:background="@android:color/transparent"
         android:text="Skip Tagging" />
 

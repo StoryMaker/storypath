@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="16dp" >
+    android:padding="@dimen/activity_horizontal_margin" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp" >
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small" >
 
         <TextView
             android:id="@+id/tv_header"
@@ -25,7 +25,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="4dp"
         android:background="@color/stroke" />
 
     <LinearLayout
@@ -33,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_cardbank"
-        android:padding="4dp"
+        android:padding="@dimen/padding_xsmall"
         android:orientation="vertical">
 
     </LinearLayout>
@@ -41,15 +40,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selectable_background_cardbank"
-        android:padding="4dp"
         android:gravity="center_horizontal">
 
         <Button
             android:id="@+id/btn_continue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_continue" />
+            style="@style/p"
+            android:textColor="@color/raspberry_wine"
+            android:text="@string/lbl_continue"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"/>
 
     </LinearLayout>
 

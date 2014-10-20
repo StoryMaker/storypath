@@ -33,7 +33,7 @@ public class PublishButtonCardView implements DisplayableCard{
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_progress_button, null);
-        TextView btnCardButton = ((TextView) view.findViewById(R.id.btn_card_button));
+        TextView btnCardButton = ((TextView) view.findViewById(R.id.btn_card));
 
         String btnText = mCardModel.getText();
 

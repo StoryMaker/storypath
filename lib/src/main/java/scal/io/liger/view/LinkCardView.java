@@ -25,7 +25,7 @@ public class LinkCardView implements DisplayableCard {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_progress_button, null);
-        TextView linkCardButton = ((TextView) view.findViewById(R.id.btn_card_button));
+        TextView linkCardButton = ((TextView) view.findViewById(R.id.btn_card));
 
         String btnText = mCardModel.getText();
 

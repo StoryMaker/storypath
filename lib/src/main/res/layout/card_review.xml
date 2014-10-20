@@ -4,7 +4,7 @@
     android:id="@+id/collapsable"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_large"
+    android:padding="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
     <ImageView
@@ -14,7 +14,7 @@
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
         android:scaleType="centerCrop"
-        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_small"
         android:layout_centerHorizontal="true"
         android:visibility="visible"/>
 
@@ -24,46 +24,46 @@
         android:layout_height="320dp"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_small"
         android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_jumble"
-        style="@style/p"
+        style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/raspberry_wine"
         android:drawableLeft="@drawable/ic_whoknows"
-        android:drawablePadding="8dp"
-        android:paddingTop="16dp"
+        android:drawablePadding="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_xsmall"
         android:text="Jumble" />
 
     <Button
         android:id="@+id/btn_order"
-        style="@style/p"
+        style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/raspberry_wine"
         android:drawableLeft="@drawable/ic_capture"
-        android:drawablePadding="8dp"
-        android:paddingTop="16dp"
+        android:drawablePadding="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_xsmall"
         android:text="Order" />
 
     <Button
         android:id="@+id/btn_narrate"
-        style="@style/p"
+        style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/raspberry_wine"
         android:drawableLeft="@drawable/ic_whoknows"
-        android:drawablePadding="8dp"
-        android:paddingTop="16dp"
+        android:drawablePadding="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_xsmall"
         android:text="Narrate" />
 
     <Button
         android:id="@+id/btn_publish"
-        style="@style/p"
+        style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/raspberry_wine"
         android:drawableLeft="@drawable/ic_capture"
-        android:drawablePadding="8dp"
-        android:paddingTop="16dp"
+        android:drawablePadding="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_xsmall"
         android:text="Publish" />
 </LinearLayout>

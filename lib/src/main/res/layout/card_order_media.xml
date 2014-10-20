@@ -4,14 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/padding_medium"
-    android:paddingRight="@dimen/padding_medium"
-    android:background="@drawable/selectable_background_cardbank">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <scal.io.liger.touch.DraggableGridView
         android:id="@+id/dgv_media_clips"
         android:layout_width="fill_parent"
-        android:layout_height="90dp"
+        android:layout_height="100dp"
         android:background="#0000"/>
 
 </LinearLayout>
