@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.LinkCardView;
@@ -35,6 +36,14 @@ public class LinkCard extends Card {
     }
 
     public void linkNotification(String linkPath) {
+
+        // TEMP
+        if (text.equals("LOAD")) {
+            Log.d(" *** TESTING *** ", "LOADING " + link);
+            loadStoryPath(link);
+            return;
+        }
+
         if (storyPathReference != null) {
             storyPathReference.linkNotification(linkPath);
         } else {

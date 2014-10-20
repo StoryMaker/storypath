@@ -36,6 +36,12 @@
             ], 
             "type": "QuizCard", 
             "id": "quiz_card_1"
+        },
+        {
+            "text": "LOAD",
+            "type": "LinkCard",
+            "id": "load_card",
+            "link": "learning_guide_v1"
         }
     ]
 }

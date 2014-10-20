@@ -186,9 +186,7 @@ public class MainActivity extends Activity {
                             */
 
 //                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
-                            if (mStoryPathLibrary.getCurrentStoryPathFile() == null) {
-                                mStoryPathLibrary.loadStoryPathTemplate("learning_guide_v1");
-                            } else {
+                            if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
                                 mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
                             }
 
