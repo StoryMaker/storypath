@@ -50,20 +50,20 @@ public class MainActivity extends Activity {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        if (DEVELOPER_MODE) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork()   // or .detectAll() for all detectable problems
-                    .penaltyLog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
-//        }
+////        if (DEVELOPER_MODE) {
+//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                    .detectDiskReads()
+//                    .detectDiskWrites()
+//                    .detectNetwork()   // or .detectAll() for all detectable problems
+//                    .penaltyLog()
+//                    .build());
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    .detectLeakedSqlLiteObjects()
+//                    .detectLeakedClosableObjects()
+//                    .penaltyLog()
+//                    .penaltyDeath()
+//                    .build());
+////        }
 
         Log.d("MainActivity", "onCreate");
 //        initApp();
@@ -165,37 +165,33 @@ public class MainActivity extends Activity {
                 });
         }
         else {
-            builder.setTitle("Choose Story File(SdCard/Liger/)")
-                .setItems(jsonFiles, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int index) {
-                        File jsonFile = JsonHelper.setSelectedJSONFile(index);
+            builder.setTitle("Choose Story File(SdCard/Liger/)").setItems(jsonFiles, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int index) {
+                    File jsonFile = JsonHelper.setSelectedJSONFile(index);
 
-                        // TEMP - unsure how to best determine new story vs. existing story
+                    // TEMP - unsure how to best determine new story vs. existing story
 
-                            String json = JsonHelper.loadJSON();
+                    String json = JsonHelper.loadJSON();
 
-                            initHook(json, jsonFile);
+                    initHook(json, jsonFile);
 
-                            // need to implement selection of story path based on hook
+                    // need to implement selection of story path based on hook
 
-                            /*
-                            jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
-                            json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
+                    /*
+                    jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
+                    json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
 
-                            initCardList(json, jsonFile);
-                            */
+                    initCardList(json, jsonFile);
+                    */
 
 //                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
+
                             if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
                                 mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
                             }
 
-
-
-
-
-                    }
-                });
+                }
+            });
         }
 
         AlertDialog alert = builder.create();

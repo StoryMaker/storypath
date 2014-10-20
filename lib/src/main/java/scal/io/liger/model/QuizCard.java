@@ -23,8 +23,8 @@ public class QuizCard extends Card {
         public String id;
         public String text;
         String filter;
-        String filters_or;
-        String filters_and;
+        ArrayList<String> filters_or;
+        ArrayList<String> filters_and;
     }
 
     public QuizCard() {
