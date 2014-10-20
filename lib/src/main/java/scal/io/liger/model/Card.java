@@ -39,7 +39,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         return stateVisiblity;
     }
 
-    // no setter, should not be set from outside the class
+    // necessary for setting loaded story paths to a clean state
+    public void resetStateVisibility() {
+        stateVisiblity = false;
+    }
 
     // NEW
     // NOTE: may be sensible to revise this so that it checks references against the card received

@@ -171,11 +171,7 @@ public class MainActivity extends Activity {
                         File jsonFile = JsonHelper.setSelectedJSONFile(index);
 
                         // TEMP - unsure how to best determine new story vs. existing story
-                        if (jsonFile.getPath().endsWith("TEST_STORY.json")) {
 
-                            // loadStoryFile(jsonFile);
-
-                        } else {
                             String json = JsonHelper.loadJSON();
 
                             initHook(json, jsonFile);
@@ -190,12 +186,16 @@ public class MainActivity extends Activity {
                             */
 
 //                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
-                            mStoryPathLibrary.loadStoryPathTemplate("learning_guide_v1");
+                            if (mStoryPathLibrary.getCurrentStoryPathFile() == null) {
+                                mStoryPathLibrary.loadStoryPathTemplate("learning_guide_v1");
+                            } else {
+                                mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
+                            }
 
 
 
 
-                        }
+
                     }
                 });
         }
@@ -524,7 +524,11 @@ public class MainActivity extends Activity {
     }
 
     public void saveStoryFile() {
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
+
+        String savedFilePath = JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath());
+        mStoryPathLibrary.setCurrentStoryPathFile(savedFilePath);
+        JsonHelper.saveStoryPathLibrary(mStoryPathLibrary);
 
         /*
         // prep and serialize story path library
@@ -548,6 +552,7 @@ public class MainActivity extends Activity {
         }
         */
 
+        /*
         // prep and serialize current story path
         mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(null);
         mStoryPathLibrary.getCurrentStoryPath().clearObservers();
@@ -600,6 +605,7 @@ public class MainActivity extends Activity {
         mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
         mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
         mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(mStoryPathLibrary);
+        */
     }
 
     /*
