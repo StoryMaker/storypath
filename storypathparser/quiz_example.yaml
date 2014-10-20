@@ -1,0 +1,35 @@
+---
+    id: quiz_test
+    title: Quiz Example
+    cards:
+        - 
+            id: quiz_card_1
+            type: QuizCard
+            question: This is the question text!
+            title: ~
+            caption: ~
+            filter: ~
+            choices:
+                - 
+                    id: event
+                    text: An Event
+                    filters_or: ~
+                - 
+                    id: profile
+                    text: A Person or People
+                    filters_or: ~
+                - 
+                    id: issue
+                    text: An Issue
+                    filters_or: ~
+                    
+            correct_answers: 
+                - event
+                - profile
+                
+            correct_required: 0
+                
+             
+             
+             
+             

@@ -1,0 +1,233 @@
+---
+    id: hook_test
+    title: Hook Test
+    cards:
+        - 
+            id: quiz_card_topic
+            type: QuizCard
+            question: What is your story about?
+            title: ~
+            caption: ~
+            filter: ~
+            choices:
+                - 
+                    id: event
+                    text: An Event
+                    filters_or: ~
+                - 
+                    id: profile
+                    text: A Person or People
+                    filters_or: ~
+                - 
+                    id: issue
+                    text: An Issue
+                    filters_or: ~
+            correct_answers: ~
+            correct_required: 0
+                
+        - 
+            id: quiz_card_format
+            type: QuizCard
+            question: What do you want to do?
+            title: ~
+            caption: ~
+            filter: ~
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: interview
+                    text: Talk to people, or a person, about...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                
+                - 
+                    id: discussion
+                    text: Ask many peaople...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: report
+                    text: Recap of the important parts
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: process
+                    text: Show the steps taken...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                    
+                - 
+                    id: series
+                    text: Takes pictures of people...
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: highlights
+                    text: Show the best moments.
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue 
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
+            
+        -
+            id: quiz_card_medium
+            type: QuizCard 
+            title: ~
+            question: Choose a medium.
+            caption: ~
+            filter: ~
+            choices:
+                # filter answer choices based on chosen format
+                - 
+                    id: audio
+                    text: Audio
+                    filters_or:
+                        - thispath::thiscard::format::interview
+                        - thispath::thiscard::format::discussion
+                        - thispath::thiscard::format::report
+                        - thispath::thiscard::format::process
+                        - thispath::thiscard::format::highlights
+                
+                - 
+                    id: video
+                    text: Video
+                    filters_or:
+                        - thispath::thiscard::format::interview
+                        - thispath::thiscard::format::discussion
+                        - thispath::thiscard::format::report
+                        - thispath::thiscard::format::process
+                        - thispath::thiscard::format::highlights
+                
+                - 
+                    id: photo
+                    text: Photo
+                    filters_or:
+                        - thispath::thiscard::format::process
+                        - thispath::thiscard::format::series
+                        - thispath::thiscard::format::highlights
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
+                
+        # this question only shows up if format == series
+        -
+            id: quiz_card_cliptype
+            type: QuizCard 
+            question: What kind of clips would you like to make a series.
+            title: ~
+            caption: ~
+            filter: thispath::thiscard::format::series
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: character
+                    text: Character
+                    filters_or:        
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: action
+                    text: Action
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::profile
+                    
+                - 
+                    id: result
+                    text: Result
+                    filters_or:
+                        - thispath::thiscard::topic::event 
+                    
+                - 
+                    id: place
+                    text: Place
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::topic::issue
+                    
+                - 
+                    id: signature
+                    text: Signature
+                    filters_or:
+                        - thispath::thiscard::topic::issue
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
+
+
+        # this question only shows up only if format == discussion
+        -
+            id: quiz_card_clipquestion
+            type: QuizCard 
+            question: Which question would you like to use?
+            title: ~
+            caption: ~
+            type: any-single
+            filter: thispath::thiscard::format::discussion
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: question_1
+                    text: This is Question 1
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                - 
+                    id: question_2 
+                    text: This is Question 2
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                - 
+                    id: question_3
+                    text: This is Question 3
+                    filters_or:
+                        - thispath::thiscard::topic::event
+                - 
+                    id: question_4
+                    text: This is Question 4
+                    filters_or:
+                        - thispath::thiscard::topic::profile
+                - 
+                    id: question_5
+                    text: This is Question 5
+                    filters_or:
+                        - thispath::thiscard::topic::profile
+                - 
+                    id: question_6
+                    text: This is Question 6
+                    filters_or:
+                        - thispath::thiscard::topic::profile
+                - 
+                    id: question_7
+                    text: This is Question 7
+                    filters_or:
+                        - thispath::thiscard::topic::issue
+                - 
+                    id: question_8
+                    text: This is Question 8
+                    filters_or:
+                        - thispath::thiscard::topic::issue
+                - 
+                    id: question_9
+                    text: This is Question 9
+                    filters_or:
+                        - thispath::thiscard::topic::issue
+            answers: ~
+            correct_answers: ~
+            correct_required: 0
