@@ -1,0 +1,41 @@
+{
+    "id": "learning_guide_library",
+    "title": "Learning Guide Library",
+    "classPackage": "scal.io.liger.model",
+    "storyPathTemplateFiles": {
+        "learning_guide_v1": "learning_guide_v1_saved1.json",
+        "learning_guide_v2": "learning_guide_v2.json"
+    },
+    "cards": [
+        {
+            "title": null, 
+            "correct_required": 0, 
+            "question": "This is the question text!", 
+            "choices": [
+                {
+                    "text": "An Event", 
+                    "id": "event", 
+                    "filters_or": null
+                }, 
+                {
+                    "text": "A Person or People", 
+                    "id": "profile", 
+                    "filters_or": null
+                }, 
+                {
+                    "text": "An Issue", 
+                    "id": "issue", 
+                    "filters_or": null
+                }
+            ], 
+            "filter": null, 
+            "caption": null, 
+            "correct_answers": [
+                "event", 
+                "profile"
+            ], 
+            "type": "QuizCard", 
+            "id": "quiz_card_1"
+        }
+    ]
+}
