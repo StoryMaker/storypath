@@ -182,52 +182,115 @@
             type: any-single
             filter: thispath::thiscard::format::discussion
             choices:
-                # filter answer choices based on chosen topic
+                # filter answer choices based on chosen topic && medium
                 - 
                     id: question_1
-                    text: This is Question 1
-                    filters_or:
+                    text: Why is the event important
+                    filters_and:
                         - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
                 - 
                     id: question_2 
-                    text: This is Question 2
-                    filters_or:
+                    text: What is your opinion of the event?
+                    filters_and:
                         - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
                 - 
                     id: question_3
-                    text: This is Question 3
-                    filters_or:
+                    text: What do you think is the most exciting part of the event?
+                    filters_and:
                         - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
                 - 
                     id: question_4
-                    text: This is Question 4
-                    filters_or:
-                        - thispath::thiscard::topic::profile
+                    text: Why is the event important?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
                 - 
                     id: question_5
-                    text: This is Question 5
-                    filters_or:
-                        - thispath::thiscard::topic::profile
+                    text: What is your opinion of the event?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
                 - 
                     id: question_6
-                    text: This is Question 6
-                    filters_or:
-                        - thispath::thiscard::topic::profile
+                    text: What do you think is the most exciting part of the event?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
                 - 
                     id: question_7
-                    text: This is Question 7
-                    filters_or:
+                    text: Why is the issue important?
+                    filters_and:
                         - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::audio
                 - 
                     id: question_8
-                    text: This is Question 8
-                    filters_or:
+                    text: What is your opinion of the issue?
+                    filters_and:
                         - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::audio
                 - 
                     id: question_9
-                    text: This is Question 9
-                    filters_or:
+                    text: What do you think should be done about the issue?
+                    filters_and:
                         - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_10
+                    text: Why is the issue important?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_11 
+                    text: What is your opinion of the issue?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_12 
+                    text: What do you think should be done about the issue?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_13
+                    text: Why is the character important?
+                    filters_and:
+                        - thispath::thiscard::topic::event
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_14
+                    text: What is your opinion of the character?
+                    filters_and:
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_15
+                    text: What do you think the character should do next?
+                    filters_and:
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::medium::audio
+                - 
+                    id: question_16
+                    text: Why is the character important?
+                    filters_and:
+                        - thispath::thiscard::topic::profile
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_17
+                    text: What is your opinion of the character?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::video
+                - 
+                    id: question_18
+                    text: What do you think the character should do next?
+                    filters_and:
+                        - thispath::thiscard::topic::issue
+                        - thispath::thiscard::medium::video
             answers: ~
             correct_answers: ~
             correct_required: 0
