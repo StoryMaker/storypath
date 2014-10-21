@@ -152,9 +152,7 @@ public class JsonHelper {
         File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
         File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
         File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
-        File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_saved1.json");
-
-        File ligerFile_7 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
+        File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
 
         jsonFileNamesList.add(ligerFile_1.getName());
         jsonFileNamesList.add(ligerFile_2.getName());
@@ -163,16 +161,12 @@ public class JsonHelper {
         jsonFileNamesList.add(ligerFile_5.getName());
         jsonFileNamesList.add(ligerFile_6.getName());
 
-        jsonFileNamesList.add(ligerFile_7.getName());
-
         jsonFileList.add(ligerFile_1);
         jsonFileList.add(ligerFile_2);
         jsonFileList.add(ligerFile_3);
         jsonFileList.add(ligerFile_4);
         jsonFileList.add(ligerFile_5);
         jsonFileList.add(ligerFile_6);
-
-        jsonFileList.add(ligerFile_7);
 
         /*
         File ligerDir = new File(sdLigerFilePath);
