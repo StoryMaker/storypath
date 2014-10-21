@@ -109,7 +109,7 @@ public class QuizCardView extends ExampleCardView {
             @Override
             public void onClick(View v) {
                 QuizCard.Choice choice = (QuizCard.Choice) v.getTag(R.id.view_tag_quiz_choice);
-                markQuizChoiceSelected(v, !v.isSelected());
+                markQuizChoiceSelected(v, !v.isSelected(), true);
                 if (quizIsPassed()) {
                     // We're done!
                     toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
@@ -128,7 +128,7 @@ public class QuizCardView extends ExampleCardView {
                 quizChoiceView.setOnClickListener(quizCardChoiceClickListener);
                 quizChoiceView.setTag(R.id.view_tag_quiz_choice, displayedChoice);
                 if (choiceId != null && displayedChoice.id.equals(choiceId)) {
-                    markQuizChoiceSelected(quizChoiceView, true);
+                    markQuizChoiceSelected(quizChoiceView, true, false); // Don't notify since we're responding to initial state
                 }
             }
             boolean quizIsPassed = quizIsPassed();
@@ -147,7 +147,7 @@ public class QuizCardView extends ExampleCardView {
         return view;
     }
 
-    private void markQuizChoiceSelected(View quizChoiceView, boolean isSelected) {
+    private void markQuizChoiceSelected(View quizChoiceView, boolean isSelected, boolean doNotify) {
         quizChoiceView.setSelected(isSelected);
         QuizCard.Choice choice = (QuizCard.Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
         StringBuilder logString = new StringBuilder();
@@ -155,13 +155,13 @@ public class QuizCardView extends ExampleCardView {
         if (isSelected) {
             logString.append(" Selected ");
             if (!mSelectedChoices.contains(choice)) {
-                mCardModel.addValue(VALUES_CHOICE_TAG, choice.id);
+                mCardModel.addValue(VALUES_CHOICE_TAG, choice.id, doNotify);
                 mSelectedChoices.add(choice);
             }
         } else {
             logString.append(" Unselected ");
             mSelectedChoices.remove(choice);
-            mCardModel.addValue(VALUES_CHOICE_TAG, "");
+            mCardModel.addValue(VALUES_CHOICE_TAG, "", doNotify);
         }
         logString.append(" selected choice " + mSelectedChoices.size() + " correct_required " + mCardModel.getCorrectRequired());
         logString.append(" passed: " + quizIsPassed());
