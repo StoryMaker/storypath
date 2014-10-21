@@ -73,6 +73,22 @@ public class StoryPath {
             this.cards = new ArrayList<Card>();
 
         this.cards.add(card);
+        // add it to the adapter
+    }
+
+    public void activateCard(Card card) {
+//        if (this.visibleCards == null)
+//            this.visibleCards = new ArrayList<Card>();
+
+//        this.visibleCards.add(card);
+        // add it to the adapter
+        ((MainActivity) context).activateCard(card, findSpot(card)); // FIXME unsafe case
+    }
+
+    public void inactivateCard(Card card) {
+//        this.visibleCards.remove(card);
+        // remove it from the adapter
+        ((MainActivity) context).inactivateCard(card); // FIXME unsafe case
     }
 
     public Card getCardById(String fullPath) {
@@ -117,11 +133,11 @@ public class StoryPath {
     public ArrayList<Card> getValidCards() {
         if (visibleCards == null) {
             visibleCards = new ArrayList<Card>();
+        }
 
-            for (Card card : cards) {
-                if (card.checkStateVisibility()) {
-                    visibleCards.add(card);
-                }
+        for (Card card : cards) {
+            if (card.checkStateVisibility()) {
+                visibleCards.add(card);
             }
         }
 
@@ -327,23 +343,26 @@ public class StoryPath {
             int cardIndex = 0;
 
             if (visibleCards.contains(updatedCard)) {
-                visibleCards.remove(updatedCard);
+//                visibleCards.remove(updatedCard);
+                inactivateCard(updatedCard);
             } else {
                 // foo
             }
 
-            cardIndex = findSpot(updatedCard);
+//            cardIndex = findSpot(updatedCard);
 
-            if (cardIndex >= visibleCards.size()) {
-                visibleCards.add(updatedCard);
-            } else {
-                visibleCards.add(cardIndex, updatedCard);
-            }
+//            if (cardIndex >= visibleCards.size()) {
+//                visibleCards.add(updatedCard);
+                activateCard(updatedCard);
+//            } else {
+//                visibleCards.add(cardIndex, updatedCard);
+//            }
         } else {
             // deleted
 
             if (visibleCards.contains(updatedCard)) {
-                visibleCards.remove(updatedCard);
+//                visibleCards.remove(updatedCard);
+                inactivateCard(updatedCard);
             } else {
                 // foo
             }
@@ -351,12 +370,12 @@ public class StoryPath {
 
         // call refresh for now, card list will be returned
 
-        if (context != null) {
-            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a save cast as context can sometimes not be an activity (getApplicationContext())
-            mainActivity.refreshCardView();
-        } else {
-            System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
-        }
+//        if (context != null) {
+//            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+//            mainActivity.refreshCardView();
+//        } else {
+//            System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+//        }
     }
 
     public int findSpot(Card card) {

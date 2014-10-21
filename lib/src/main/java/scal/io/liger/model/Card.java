@@ -32,7 +32,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     }
 
     // NEW
-    protected boolean stateVisiblity = false;
+    protected boolean stateVisiblity = false; // FIXME
 
     // NEW
     public boolean getStateVisiblity() {
@@ -60,14 +60,29 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         Card card = (Card)observable;
 
-        if (checkStateVisibility()) {
-            storyPathReference.notifyActivity(this);
+        changeCardVisibilityState();
+//        if (checkStateVisibility()) {
+//            storyPathReference.notifyActivity(this);
+//        }
+    }
+
+    public void changeCardVisibilityState() {
+        if (stateVisiblity) {
+            if (checkReferencedValues() != stateVisiblity) {
+                // therefore, we went from visible to invisible, remove
+                getStoryPathReference().inactivateCard(this);
+            }
+        } else {
+            if (checkReferencedValues() != stateVisiblity) {
+                // therefore, we went from invisible to visible, add it
+                getStoryPathReference().activateCard(this);
+            }
         }
     }
 
     // NEW
     public boolean checkStateVisibility() {
-        boolean newVisibility = checkReferencedValues();
+        boolean newVisibility = checkReferencedValues(); // FIXME "references" is just "visibility" right?
         if (stateVisiblity != newVisibility) {
             stateVisiblity = newVisibility;
             return true;

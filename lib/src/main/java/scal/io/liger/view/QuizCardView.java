@@ -235,6 +235,6 @@ public class QuizCardView extends ExampleCardView {
      */
     private void quizCardComplete() {
         // TODO
-        mCardModel.addValue(VALUES_CHOICE_TAG, mSelectedChoices.get(0).id);
+//        mCardModel.addValue(VALUES_CHOICE_TAG, mSelectedChoices.get(0).id);
     }
 }
