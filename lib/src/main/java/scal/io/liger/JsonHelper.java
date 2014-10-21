@@ -292,7 +292,7 @@ public class JsonHelper {
         storyPathLibrary.setContext(context);
 
         // need to reset visibility so that visible cards will update their status properly
-        storyPathLibrary.resetVisibility();
+        //storyPathLibrary.resetVisibility();
 
         return storyPathLibrary;
 
@@ -431,7 +431,7 @@ public class JsonHelper {
         storyPath.setContext(context);
 
         // need to reset visibility so that visible cards will update their status properly
-        storyPath.resetVisibility();
+        //storyPath.resetVisibility();
 
         return storyPath;
 

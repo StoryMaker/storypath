@@ -136,7 +136,7 @@ public class StoryPath {
             visibleCards = new ArrayList<Card>();
 
             for (Card card : cards) {
-                if (card.checkStateVisibility()) {
+                if (card.checkVisibilityChanged()) {
                     visibleCards.add(card);
                 }
             }
@@ -464,6 +464,9 @@ public class StoryPath {
     public void rearrangeCards(int currentIndex, int newIndex) {
         Card card = cards.remove(currentIndex);
         cards.add(newIndex, card);
+
+        // Log.d(" *** REARRANGE *** ", "MOVED " + card.getId() + " FROM " + currentIndex + " TO " + newIndex);
+
         notifyActivity(card);
     }
 
