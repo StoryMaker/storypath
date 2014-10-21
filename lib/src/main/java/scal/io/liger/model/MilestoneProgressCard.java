@@ -122,7 +122,7 @@ public class MilestoneProgressCard extends Card {
 
         Card card = (Card)observable;
 
-        if (checkStateVisibility() ||
+        if (checkVisibilityChanged() ||
             checkStateMedium() ||
             checkStateVideo() ||
             checkStateAudio() ||
