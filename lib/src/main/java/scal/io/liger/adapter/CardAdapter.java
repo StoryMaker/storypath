@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.twotoasters.android.support.v7.widget.CardView;
 import com.twotoasters.android.support.v7.widget.RecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import scal.io.liger.R;
@@ -20,6 +21,7 @@ import scal.io.liger.view.DisplayableCard;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private List<Card> mDataset;
+    private HashMap<String, Integer> mCardIdToPosition; // Keep track of Card position by Card#id
     private Activity mHostActivity;
 
     // Provide a reference to the type of views that you are using
@@ -42,6 +44,34 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public CardAdapter(Activity host, List<Card> myDataset) {
         mDataset = myDataset;
         mHostActivity = host;
+        populateCardIdMap();
+    }
+
+    private void populateCardIdMap() {
+        for (int x = 0; x < mDataset.size(); x++) {
+            mCardIdToPosition.put(mDataset.get(x).getId(), x);
+        }
+    }
+
+    public void appendCard(Card cardToAdd) {
+        mDataset.add(cardToAdd);
+        notifyItemInserted(mDataset.size()-1);
+    }
+
+    /**
+     * Add a card to this adapter at a position relative to
+     * the list passed to this adapter's constructor
+     * see {@link #CardAdapter(android.app.Activity, java.util.List)}
+    */
+    public void addCardAtPosition(Card cardToAdd, int position) {
+        mDataset.add(position, cardToAdd);
+        notifyItemInserted(position);
+    }
+
+    public void removeCard(Card cardToRemove) {
+        int indexToRemove = mDataset.indexOf(cardToRemove);
+        mDataset.remove(indexToRemove);
+        notifyItemRemoved(indexToRemove);
     }
 
     // Create new views (invoked by the layout manager)
