@@ -88,8 +88,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void activateCard(Card card, int position) {
-        mCardAdapter.addCardAtPosition(card, position);
+    public void activateCard(Card card) {
+        mCardAdapter.addCardAtPosition(card, findSpot(card));
     }
 
     public void inactivateCard(Card card) {
@@ -367,7 +367,7 @@ public class MainActivity extends Activity {
                 StoryPath storyPath = mStoryPathLibrary.getCurrentStoryPath();
                 if (storyPath != null) {
                     cards.addAll(storyPath.getValidCards());
-                    storyPath.setValidCards(cards);
+                    //storyPath.setValidCards(cards);
                 }
             }
             mCardAdapter = new CardAdapter(this, cards);
@@ -410,7 +410,7 @@ public class MainActivity extends Activity {
             StoryPath storyPath = mStoryPathLibrary.getCurrentStoryPath();
             if (storyPath != null) {
                 cards.addAll(storyPath.getValidCards());
-                storyPath.setValidCards(cards);
+                //storyPath.setValidCards(cards);
             }
         }
         mCardAdapter = new CardAdapter(this, cards);
@@ -727,5 +727,56 @@ public class MainActivity extends Activity {
         }
 
         return imagePath;
+    }
+
+    public int findSpot(Card card) {
+        int newIndex = 0;
+
+        if (mStoryPathLibrary.getCards().contains(card)) {
+            int baseIndex = mStoryPathLibrary.getCards().indexOf(card);
+            for (int i = (baseIndex - 1); i >= 0; i--) {
+                Card previousCard = mStoryPathLibrary.getCards().get(i);
+                if (mCardAdapter.mDataset.contains(previousCard)) {
+                    newIndex = mCardAdapter.mDataset.indexOf(previousCard) + 1;
+
+                    break;
+                }
+            }
+        }
+
+        if ((mStoryPathLibrary.getCurrentStoryPath() != null) && (mStoryPathLibrary.getCurrentStoryPath().getCards().contains(card))) {
+            int baseIndex = mStoryPathLibrary.getCurrentStoryPath().getCards().indexOf(card);
+            for (int i = (baseIndex - 1); i >= 0; i--) {
+                Card previousCard = mStoryPathLibrary.getCurrentStoryPath().getCards().get(i);
+                if (mCardAdapter.mDataset.contains(previousCard)) {
+                    newIndex = mCardAdapter.mDataset.indexOf(previousCard) + 1;
+
+                    break;
+                }
+            }
+        }
+
+        return newIndex;
+    }
+
+    public String checkCard(Card updatedCard) {
+
+        if (updatedCard.getStateVisiblity()) {
+            // new or updated
+
+            if (mCardAdapter.mDataset.contains(updatedCard)) {
+                return "UPDATE";
+            } else {
+                return "ADD";
+            }
+        } else {
+            // deleted
+
+            if (mCardAdapter.mDataset.contains(updatedCard)) {
+                return "DELETE";
+            }
+        }
+
+        return "ERROR";
     }
 }

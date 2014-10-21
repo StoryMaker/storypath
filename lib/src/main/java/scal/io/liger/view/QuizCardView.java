@@ -17,6 +17,7 @@ import java.util.List;
 
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
+import scal.io.liger.model.Choice;
 import scal.io.liger.model.QuizCard;
 
 // TODO:
@@ -27,8 +28,8 @@ public class QuizCardView extends ExampleCardView {
 
     public QuizCard mCardModel;
 
-    private List<QuizCard.Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
-    private List<QuizCard.Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
+    private List<Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
+    private List<Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
     private int mExpandedHeight = UNSET_HEIGHT; // The height of the quiz choice container when expanded
     private boolean mExpanded = true; // Are the quiz card's possible choices expanded?
 
@@ -38,7 +39,7 @@ public class QuizCardView extends ExampleCardView {
         if (mSelectedChoices.size() >= mCardModel.getCorrectRequired()) {
             List<String> correctAnswers = mCardModel.getCorrectAnswers();
             if (correctAnswers == null) return true; // null from getCorrectAnswers means proceed no matter what
-            for (QuizCard.Choice choice : mSelectedChoices) {
+            for (Choice choice : mSelectedChoices) {
                 if (!correctAnswers.contains(choice.id))
                     return false;
             }
@@ -108,7 +109,7 @@ public class QuizCardView extends ExampleCardView {
         View.OnClickListener quizCardChoiceClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QuizCard.Choice choice = (QuizCard.Choice) v.getTag(R.id.view_tag_quiz_choice);
+                Choice choice = (Choice) v.getTag(R.id.view_tag_quiz_choice);
                 markQuizChoiceSelected(v, !v.isSelected(), true);
                 if (quizIsPassed()) {
                     // We're done!
@@ -122,7 +123,7 @@ public class QuizCardView extends ExampleCardView {
         if (hasQuizResponses) {
             String choiceId = mCardModel.getValueByKey(VALUES_CHOICE_TAG);
             Log.i("quiz", String.format("adding %d choices for quiz card ", mDisplayedChoices.size()));
-            for (QuizCard.Choice displayedChoice : mDisplayedChoices) {
+            for (Choice displayedChoice : mDisplayedChoices) {
                 // Create Quiz choices
                 View quizChoiceView = inflateAndAddChoiceForQuiz(choiceContainer, displayedChoice);
                 quizChoiceView.setOnClickListener(quizCardChoiceClickListener);
@@ -149,7 +150,7 @@ public class QuizCardView extends ExampleCardView {
 
     private void markQuizChoiceSelected(View quizChoiceView, boolean isSelected, boolean doNotify) {
         quizChoiceView.setSelected(isSelected);
-        QuizCard.Choice choice = (QuizCard.Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
+        Choice choice = (Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
         StringBuilder logString = new StringBuilder();
         logString.append(choice.text);
         if (isSelected) {
@@ -217,7 +218,7 @@ public class QuizCardView extends ExampleCardView {
         mExpanded = !mExpanded;
     }
 
-    private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, QuizCard.Choice choice) {
+    private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, Choice choice) {
         LayoutInflater inflater = (LayoutInflater) quizChoiceContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView choiceView = (TextView) (inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, false)).findViewById(R.id.choiceText);
         choiceView.setText(choice.text);

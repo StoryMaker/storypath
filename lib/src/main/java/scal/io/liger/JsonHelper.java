@@ -353,11 +353,11 @@ public class JsonHelper {
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPathLibrary.getContext();
         StoryPath tempCurrentStoryPath = storyPathLibrary.getCurrentStoryPath();
-        ArrayList<Card> tempValidCards = storyPathLibrary.getValidCards();
+        //ArrayList<Card> tempValidCards = storyPathLibrary.getValidCards();
 
         storyPathLibrary.setContext(null);
         storyPathLibrary.setCurrentStoryPath(null);
-        storyPathLibrary.setValidCards(null);
+        //storyPathLibrary.setValidCards(null);
         storyPathLibrary.clearObservers();
         storyPathLibrary.clearCardReferences();
 
@@ -367,7 +367,7 @@ public class JsonHelper {
 
         storyPathLibrary.setCardReferences();
         storyPathLibrary.initializeObservers();
-        storyPathLibrary.setValidCards(tempValidCards);
+        //storyPathLibrary.setValidCards(tempValidCards);
         storyPathLibrary.setCurrentStoryPath(tempCurrentStoryPath);
         storyPathLibrary.setContext(tempContext);
 
@@ -492,10 +492,10 @@ public class JsonHelper {
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPath.getContext();
         StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibraryReference();
-        ArrayList<Card> tempValidCards = storyPath.getValidCards();
+        //ArrayList<Card> tempValidCards = storyPath.getValidCards();
         storyPath.setContext(null);
         storyPath.setStoryPathLibraryReference(null);
-        storyPath.setValidCards(null);
+        //storyPath.setValidCards(null);
         storyPath.clearObservers();
         storyPath.clearCardReferences();
         //storyPath.clearValidCards();
@@ -506,7 +506,7 @@ public class JsonHelper {
         // valid cards will be reset next time getValidCards() is called
         storyPath.setCardReferences();
         storyPath.initializeObservers();
-        storyPath.setValidCards(tempValidCards);
+        //storyPath.setValidCards(tempValidCards);
         storyPath.setStoryPathLibraryReference(tempStoryPathLibrary);
         storyPath.setContext(tempContext);
 

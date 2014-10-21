@@ -25,7 +25,7 @@ public class StoryPath {
     protected String title;
     protected String classPackage;
     protected ArrayList<Card> cards;
-    protected ArrayList<Card> visibleCards;
+    //protected ArrayList<Card> visibleCards;
     protected ArrayList<Dependency> dependencies;
     protected String fileLocation;
     protected StoryPathLibrary storyPathLibraryReference; // not serialized
@@ -82,7 +82,7 @@ public class StoryPath {
 
 //        this.visibleCards.add(card);
         // add it to the adapter
-        ((MainActivity) context).activateCard(card, findSpot(card)); // FIXME unsafe cast
+        ((MainActivity) context).activateCard(card); // FIXME unsafe cast
     }
 
     public void inactivateCard(Card card) {
@@ -131,19 +131,21 @@ public class StoryPath {
     }
 
     public ArrayList<Card> getValidCards() {
+        /*
         if (visibleCards == null) {
             visibleCards = new ArrayList<Card>();
-        }
 
-        for (Card card : cards) {
-            if (card.checkStateVisibility()) {
-                visibleCards.add(card);
+            for (Card card : cards) {
+                if (card.checkStateVisibility()) {
+                    visibleCards.add(card);
+                }
             }
         }
 
         return visibleCards;
+        */
 
-        /*
+
         ArrayList<Card> validCards = new ArrayList<Card>();
 
         for (Card card : cards) {
@@ -153,13 +155,15 @@ public class StoryPath {
         }
 
         return validCards;
-        */
+
     }
 
     // required for serialization/deserialization
+    /*
     public void setValidCards(ArrayList<Card> validCards) {
         this.visibleCards = visibleCards;
     }
+    */
 
     public ArrayList<Dependency> getDependencies() {
         return dependencies;
@@ -335,6 +339,23 @@ public class StoryPath {
     }
 
     public void notifyActivity(Card updatedCard) {
+
+        String action = ((MainActivity)context).checkCard(updatedCard);
+
+        if (action.equals("ADD")) {
+            activateCard(updatedCard);
+        }
+        if (action.equals("UPDATE")) {
+            inactivateCard(updatedCard);
+            activateCard(updatedCard);
+        }
+        if (action.equals("DELETE")) {
+            inactivateCard(updatedCard);
+        }
+    }
+
+    /*
+    public void notifyActivity(Card updatedCard) {
         Log.d("StoryPathModel", "notifyActivity");
 
         if (updatedCard.getStateVisiblity()) {
@@ -343,25 +364,25 @@ public class StoryPath {
             int cardIndex = 0;
 
             if (visibleCards.contains(updatedCard)) {
-//                visibleCards.remove(updatedCard);
+                visibleCards.remove(updatedCard);
                 inactivateCard(updatedCard);
             } else {
                 // foo
             }
 
-//            cardIndex = findSpot(updatedCard);
+            cardIndex = findSpot(updatedCard);
 
-//            if (cardIndex >= visibleCards.size()) {
-//                visibleCards.add(updatedCard);
+            if (cardIndex >= visibleCards.size()) {
+                visibleCards.add(updatedCard);
                 activateCard(updatedCard);
-//            } else {
-//                visibleCards.add(cardIndex, updatedCard);
-//            }
+            } else {
+                visibleCards.add(cardIndex, updatedCard);
+            }
         } else {
             // deleted
 
             if (visibleCards.contains(updatedCard)) {
-//                visibleCards.remove(updatedCard);
+                visibleCards.remove(updatedCard);
                 inactivateCard(updatedCard);
             } else {
                 // foo
@@ -377,20 +398,29 @@ public class StoryPath {
 //            System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
 //        }
     }
+    */
 
+    /*
     public int findSpot(Card card) {
         int baseIndex = cards.indexOf(card);
+        Log.d(" *** FINDSPOT *** ", "CARD " + card.getId() + " - DEFAULT POSITION " + baseIndex);
         int newIndex = 0;
         for (int i = (baseIndex - 1); i >= 0; i--) {
             Card previousCard = cards.get(i);
+            Log.d(" *** FINDSPOT *** ", "LOOKING FOR " + previousCard.getId());
             if (visibleCards.contains(previousCard)) {
                 newIndex = visibleCards.indexOf(previousCard) + 1;
+                Log.d(" *** FINDSPOT *** ", "CARD " + previousCard.getId() + " FOUND AT POSITION " + visibleCards.indexOf(previousCard));
+
                 break;
             }
         }
 
+        Log.d(" *** FINDSPOT *** ", "INSERTING " + card.getId() + " AT POSITION " + newIndex);
+
         return newIndex;
     }
+    */
 
     public void linkNotification(String linkPath) {
         if (context != null) {

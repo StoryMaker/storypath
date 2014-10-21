@@ -21,13 +21,6 @@ public class QuizCard extends Card {
     private ArrayList<String> correct_answers; // Collection of Choice#id
     private int correct_required;
 
-    public static class Choice {
-        public String id;
-        public String text;
-        String filter;
-        ArrayList<String> filters_or;
-        ArrayList<String> filters_and;
-    }
 
     public QuizCard() {
         super();
@@ -97,5 +90,29 @@ public class QuizCard extends Card {
 
     public void setFilter(String filter) {
         this.filter = filter;
+    }
+
+    public ArrayList<Choice> getChoices() {
+        return choices;
+    }
+
+    public void setChoices(ArrayList<Choice> choices) {
+        this.choices = choices;
+    }
+
+    public ArrayList<String> getCorrect_answers() {
+        return correct_answers;
+    }
+
+    public void setCorrect_answers(ArrayList<String> correct_answers) {
+        this.correct_answers = correct_answers;
+    }
+
+    public int getCorrect_required() {
+        return correct_required;
+    }
+
+    public void setCorrect_required(int correct_required) {
+        this.correct_required = correct_required;
     }
 }

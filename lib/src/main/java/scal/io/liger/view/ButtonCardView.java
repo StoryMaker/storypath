@@ -41,14 +41,15 @@ public class ButtonCardView implements DisplayableCard{
             public void onClick(View v) {
 
                 StoryPath spm = mCardModel.getStoryPathReference();
-                Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
+                //Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
 
                 mCardModel.clearValues();
                 mCardModel.addValue("value", "true");
                 // moveToNextCard();
 
-                String linkPath = spm.getId() + "::" + cm.getId();
-                spm.linkNotification(linkPath);
+                // currently broken in several places
+                //String linkPath = spm.getId() + "::" + cm.getId();
+                //spm.linkNotification(linkPath);
             }
         });
 

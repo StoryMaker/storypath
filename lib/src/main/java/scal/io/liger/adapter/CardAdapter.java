@@ -20,7 +20,7 @@ import scal.io.liger.view.DisplayableCard;
  * Created by davidbrodsky on 10/12/14.
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
-    private List<Card> mDataset;
+    public List<Card> mDataset;
     private HashMap<String, Integer> mCardIdToPosition; // Keep track of Card position by Card#id
     private Activity mHostActivity;
 
