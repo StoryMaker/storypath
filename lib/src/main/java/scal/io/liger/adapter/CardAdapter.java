@@ -50,13 +50,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private void populateCardIdMap() {
         mCardIdToPosition = new HashMap<>();
         for (int x = 0; x < mDataset.size(); x++) {
-            mCardIdToPosition.put(mDataset.get(x).getId(), x);
+            addCardToMap(mDataset.get(x), x);
         }
+    }
+
+    private void addCardToMap(Card card, int pos) {
+        mCardIdToPosition.put(card.getId(), pos);
     }
 
     public void appendCard(Card cardToAdd) {
         mDataset.add(cardToAdd);
-        notifyItemInserted(mDataset.size()-1);
+        int newCardPosition = mDataset.size() - 1;
+        addCardToMap(cardToAdd, newCardPosition);
+        notifyItemInserted(newCardPosition);
     }
 
     /**
@@ -66,13 +72,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     */
     public void addCardAtPosition(Card cardToAdd, int position) {
         mDataset.add(position, cardToAdd);
+        addCardToMap(cardToAdd, position);
         notifyItemInserted(position);
     }
 
     public void removeCard(Card cardToRemove) {
-        int indexToRemove = mDataset.indexOf(cardToRemove);
+        int indexToRemove = mCardIdToPosition.get(cardToRemove.getId());
         mDataset.remove(indexToRemove);
         notifyItemRemoved(indexToRemove);
+        mCardIdToPosition.remove(cardToRemove.getId());
     }
 
     // Create new views (invoked by the layout manager)
