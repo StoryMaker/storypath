@@ -9,7 +9,7 @@
             id: quiz_card_topic
             card: QuizCard
             question: What is your story about?
-            correct_required: 0
+            correct_required: 1
             choices:
                 - 
                     id: event
@@ -25,7 +25,7 @@
             id: quiz_card_format
             card: QuizCard
             question: What do you want to do?
-            correct_required: 0
+            correct_required: 1
             references:
                 - 
                     default_library::quiz_card_topic::choice
@@ -82,7 +82,7 @@
             id: quiz_card_medium
             card: QuizCard 
             question: Choose a medium.
-            correct_required: 0
+            correct_required: 1
             references:
                 - 
                     default_library::quiz_card_format::choice
@@ -122,7 +122,7 @@
             card: QuizCard 
             question: What kind of clips would you like to make a series.
             filter: default_library::quiz_card_format::format::series
-            correct_required: 0
+            correct_required: 1
             references:
                 - 
                     default_library::quiz_card_medium::choice
@@ -169,7 +169,7 @@
             card: QuizCard 
             question: Which question would you like to use?
             filter: default_library::quiz_card_format::format::discussion
-            correct_required: 0
+            correct_required: 1
             references:
                 - 
                     default_library::quiz_card_medium::choice
