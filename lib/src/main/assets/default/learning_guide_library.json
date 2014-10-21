@@ -9,7 +9,7 @@
     "cards": [
         {
             "title": null, 
-            "correct_required": 0, 
+            "correct_required": 1, 
             "question": "This is the question text!", 
             "choices": [
                 {
@@ -36,6 +36,14 @@
             ], 
             "type": "QuizCard", 
             "id": "quiz_card_1"
+        },
+        {
+            "id": "clip_video_character",
+            "type": "ClipCard",
+            "header": "Introduce the audience to a person important to your story",
+            "clipMedium": "video",
+            "clipType": "character",
+            "exampleMediaPath": "video_sample1.mp4"
         },
         {
             "text": "LOAD",
