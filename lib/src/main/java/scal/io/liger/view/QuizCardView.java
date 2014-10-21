@@ -38,8 +38,9 @@ public class QuizCardView extends ExampleCardView {
     private static final int UNSET_HEIGHT = -42; // placeholder value to indicate quiz choice container not measured
 
     private boolean quizIsPassed() {
-        if (mSelectedChoices.size() == mCardModel.getCorrectRequired()) {
+        if (mSelectedChoices.size() >= mCardModel.getCorrectRequired()) {
             List<String> correctAnswers = mCardModel.getCorrectAnswers();
+            if (correctAnswers == null) return true; // null from getCorrectAnswers means proceed no matter what
             for (QuizCard.Choice choice : mSelectedChoices) {
                 if (!correctAnswers.contains(choice.id))
                     return false;

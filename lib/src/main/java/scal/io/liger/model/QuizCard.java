@@ -1,6 +1,8 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -33,14 +35,19 @@ public class QuizCard extends Card {
     }
 
     @Override
-    public DisplayableCard getDisplayableCard(Context context) {
+    public DisplayableCard getDisplayableCard(@NonNull Context context) {
         return new QuizCardView(context, this); //TODO
     }
 
+    @Nullable
     public int getCorrectRequired() {
         return correct_required;
     }
 
+    /**
+     * Return the correct choice ids for this QuizCard or null
+     * if any first selection should render the card complete.
+     */
     public ArrayList<String> getCorrectAnswers() {
         return correct_answers;
     }
