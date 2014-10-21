@@ -2,9 +2,9 @@
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/choiceText"
+    style="@style/p"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/card_quiz_response_margin_top"
-    android:background="@drawable/quiz_card_selectable_bg"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:textSize="@dimen/text_medium"/>
+    android:background="@color/ultra_light_grey"
+    android:padding="@dimen/padding_small"
+    android:layout_margin="@dimen/padding_tiny"/>
