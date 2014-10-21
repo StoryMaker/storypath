@@ -37,11 +37,11 @@ import scal.io.liger.model.StoryPathLibrary;
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
-    Context mContext = this;
     RecyclerView mRecyclerView;
     //CardUI mCardView;
     StoryPathLibrary mStoryPathLibrary;
     //Story mStory;
+    CardAdapter mCardAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,14 @@ public class MainActivity extends Activity {
                 initCardList(json3);
             }
         }
+    }
+
+    public void activateCard(Card card, int position) {
+        mCardAdapter.addCardAtPosition(card, position);
+    }
+
+    public void inactivateCard(Card card) {
+        mCardAdapter.removeCard(card);
     }
 
     @Override
@@ -237,9 +245,9 @@ public class MainActivity extends Activity {
         Log.d(TAG, "initStoryPathLibraryModel called");
 
         if (jsonFile != null) {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonFile.getPath(), this.mContext);
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonFile.getPath(), this);
         } else {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this.mContext);
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
         }
 
         /*
@@ -289,9 +297,9 @@ public class MainActivity extends Activity {
         Log.d(TAG, "initStoryPathModel called");
 
         if (jsonFile != null) {
-            mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, jsonFile.getPath(), mStoryPathLibrary, this.mContext));
+            mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, jsonFile.getPath(), mStoryPathLibrary, this));
         } else {
-            mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, null, mStoryPathLibrary, this.mContext));
+            mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, null, mStoryPathLibrary, this));
         }
 
         /*
@@ -300,7 +308,7 @@ public class MainActivity extends Activity {
         Gson gson = gBuild.create();
 
         StoryPath sp = gson.fromJson(json, StoryPath.class);
-        sp.setContext(this.mContext);
+        sp.setContext(this);
         sp.setCardReferences();
         sp.initializeObservers();
 
@@ -326,18 +334,39 @@ public class MainActivity extends Activity {
         if (mRecyclerView == null)
             return;
 
-        //add valid cards to view
-        ArrayList<Card> cards = new ArrayList<Card>();
+        if (mCardAdapter == null) {
 
-        if (mStoryPathLibrary != null) {
-            cards.addAll(mStoryPathLibrary.getValidCards());
+            //add valid cards to view
+            ArrayList<Card> cards = new ArrayList<Card>();
 
-            if (mStoryPathLibrary.getCurrentStoryPath() != null) {
-                cards.addAll(mStoryPathLibrary.getCurrentStoryPath().getValidCards());
+            if (mStoryPathLibrary != null) {
+//                cards.addAll(mStoryPathLibrary.getValidCards());
+                cards = mStoryPathLibrary.getValidCards();
+                StoryPath storyPath = mStoryPathLibrary.getCurrentStoryPath();
+                if (storyPath != null) {
+                    cards.addAll(storyPath.getValidCards());
+                    storyPath.setValidCards(cards);
+                }
             }
+            mCardAdapter = new CardAdapter(this, cards);
+            mRecyclerView.setAdapter(mCardAdapter);
         }
 
-        mRecyclerView.setAdapter(new CardAdapter(this, cards));
+//        if (mCardAdapter == null) {
+//
+//            //add valid cards to view
+//            ArrayList<Card> cards = new ArrayList<Card>();
+//
+//            if (mStoryPathLibrary != null) {
+//                cards.addAll(mStoryPathLibrary.getValidCards());
+//
+//                if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+//                    cards.addAll(mStoryPathLibrary.getCurrentStoryPath().getValidCards());
+//                }
+//            }
+//            mCardAdapter = new CardAdapter(this, cards);
+//            mRecyclerView.setAdapter(mCardAdapter);
+//        }
     }
 
     public void goToCard(String cardPath) throws MalformedJsonException {
@@ -361,7 +390,7 @@ public class MainActivity extends Activity {
 
             String json = JsonHelper.loadJSONFromPath(mStory.getStoryPathLibrary().buildPath(jsonFile));
             story = gson.fromJson(json, StoryPath.class);
-            story.context = this.mContext;
+            story.context = this;
             story.setCardReferences();
             story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
 
@@ -382,10 +411,10 @@ public class MainActivity extends Activity {
                 if (dependency.getDependencyId().equals(pathParts[0])) {
 
                     // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
-                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, this.mContext);
+                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, this);
                     newStoryPath = true;
 
-                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this.mContext);
+                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this);
 
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibraryReference(storyPathLibrary);
@@ -400,7 +429,7 @@ public class MainActivity extends Activity {
                     String json = JsonHelper.loadJSONFromPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(jsonFile));
                     story = gson.fromJson(json, StoryPath.class);
 
-                    story.setContext(this.mContext);
+                    story.setContext(this);
                     story.setCardReferences();
                     story.setFileLocation(mStoryPathLibrary.getCurrentStoryPath().buildPath(jsonFile));
                     */
@@ -456,7 +485,7 @@ public class MainActivity extends Activity {
                 Uri uri = intent.getData();
                 String path = getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, video path:" + path);
-                String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
                     return;
@@ -476,7 +505,7 @@ public class MainActivity extends Activity {
 
                 String path = getLastImagePath();
                 Log.d(TAG, "onActivityResult, path:" + path);
-                String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == path) {
                     return;
@@ -497,7 +526,7 @@ public class MainActivity extends Activity {
                 Uri uri = intent.getData();
                 String path = getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, audio path:" + path);
-                String pathId = mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
                     return;
