@@ -19,7 +19,7 @@
         android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:padding="@dimen/padding_medium"
+        android:padding="@dimen/padding_small"
         android:text="@string/card_howto_tap_to_select_clip"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_medium"
