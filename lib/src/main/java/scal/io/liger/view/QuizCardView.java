@@ -22,9 +22,11 @@ import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.QuizCard;
 
-
+// TODO:
 public class QuizCardView extends ExampleCardView {
     public static final String TAG = "QuizCardView";
+
+    private static final String VALUES_CHOICE_TAG = "choice"; // Key for mCardModel#addValue(String, String)
 
     public QuizCard mCardModel;
 
@@ -107,38 +109,33 @@ public class QuizCardView extends ExampleCardView {
             @Override
             public void onClick(View v) {
                 QuizCard.Choice choice = (QuizCard.Choice) v.getTag(R.id.view_tag_quiz_choice);
-
-                if (v.isSelected()) {
-                    // Choice is selected
-                    mSelectedChoices.remove(choice);
-                } else {
-                    // Choice is unselected
-                    if (!mSelectedChoices.contains(choice)) {
-                        mSelectedChoices.add(choice);
-                        mCardModel.addValue("choice", choice.id);
-                        toggleQuizResponseExpansion(breadCrumb, choiceContainer);
-                        quizCardComplete();
-                    }
+                markQuizChoiceSelected(v, !v.isSelected());
+                if (quizIsPassed()) {
+                    // We're done!
+                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+                    quizCardComplete();
                 }
-                v.setSelected(!v.isSelected());
-
-//                if (quizIsPassed()) {
-//                    // We're done!
-//                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
-//                    quizCardComplete();
-//                }
             }
         };
 
         /** Populate Quiz choices stack */
         if (hasQuizResponses) {
+            String choiceId = mCardModel.getValueByKey(VALUES_CHOICE_TAG);
             Log.i("quiz", String.format("adding %d choices for quiz card ", mDisplayedChoices.size()));
             for (QuizCard.Choice displayedChoice : mDisplayedChoices) {
                 // Create Quiz choices
-                View quizChoice = inflateAndAddChoiceForQuiz(choiceContainer, displayedChoice);
-                quizChoice.setOnClickListener(quizCardChoiceClickListener);
-                quizChoice.setTag(R.id.view_tag_quiz_choice, displayedChoice);
+                View quizChoiceView = inflateAndAddChoiceForQuiz(choiceContainer, displayedChoice);
+                quizChoiceView.setOnClickListener(quizCardChoiceClickListener);
+                quizChoiceView.setTag(R.id.view_tag_quiz_choice, displayedChoice);
+                if (choiceId != null && displayedChoice.id.equals(choiceId)) {
+                    markQuizChoiceSelected(quizChoiceView, true);
+                }
             }
+            if (quizIsPassed()) {
+                // We're done! Don't fire QuizCardComplete() as the quiz's initial state was complete
+                toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+            }
+
         } else {
             throw new IllegalStateException("Quiz has no responses!");
         }
@@ -148,6 +145,20 @@ public class QuizCardView extends ExampleCardView {
         // supports automated testing
         view.setTag(mCardModel.getId());
         return view;
+    }
+
+    private void markQuizChoiceSelected(View quizChoiceView, boolean isSelected) {
+        quizChoiceView.setSelected(isSelected);
+        QuizCard.Choice choice = (QuizCard.Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
+        if (isSelected) {
+            if (!mSelectedChoices.contains(choice)) {
+                mCardModel.addValue(VALUES_CHOICE_TAG, choice.id);
+                mSelectedChoices.add(choice);
+            }
+        } else {
+            mSelectedChoices.remove(quizChoiceView.getTag(R.id.view_tag_quiz_choice));
+            mCardModel.addValue(VALUES_CHOICE_TAG, "");
+        }
     }
 
     private void toggleQuizResponseExpansion(final TextView breadCrumb, final ViewGroup choiceContainer) {
@@ -223,6 +234,6 @@ public class QuizCardView extends ExampleCardView {
      */
     private void quizCardComplete() {
         // TODO
-        mCardModel.addValue("value", mSelectedChoices.get(0).id);
+        mCardModel.addValue(VALUES_CHOICE_TAG, mSelectedChoices.get(0).id);
     }
 }

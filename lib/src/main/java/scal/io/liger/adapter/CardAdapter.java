@@ -48,6 +48,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     private void populateCardIdMap() {
+        mCardIdToPosition = new HashMap<>();
         for (int x = 0; x < mDataset.size(); x++) {
             mCardIdToPosition.put(mDataset.get(x).getId(), x);
         }
