@@ -163,8 +163,8 @@ public class StoryPathLibrary extends StoryPath {
             File jsonTemplateFile = new File(buildPath(storyPathTemplateFile));
             String jsonTemplate = JsonHelper.loadJSONFromPath(jsonTemplateFile.getPath());
 
-            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a save cast as context can sometimes not be an activity (getApplicationContext())
-            mainActivity.initCardList(jsonTemplate, jsonTemplateFile);
+            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+            mainActivity.refreshCardList(jsonTemplate, jsonTemplateFile);
 
         } else {
             Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile);

@@ -39,7 +39,7 @@ public class LinkCardView implements DisplayableCard {
             @Override
             public void onClick(View v) {
                 mCardModel.linkNotification(mCardModel.getLink());
-            }
+                }
         });
 
         // supports automated testing

@@ -97,7 +97,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         if (references != null) {
             for (String reference : references) {
                 Card card = storyPathReference.getCardById(reference);
-                card.addObserver(this);
+                 card.addObserver(this);
             }
         }
     }

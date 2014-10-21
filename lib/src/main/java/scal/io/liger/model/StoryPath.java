@@ -82,13 +82,13 @@ public class StoryPath {
 
 //        this.visibleCards.add(card);
         // add it to the adapter
-        ((MainActivity) context).activateCard(card, findSpot(card)); // FIXME unsafe case
+        ((MainActivity) context).activateCard(card, findSpot(card)); // FIXME unsafe cast
     }
 
     public void inactivateCard(Card card) {
 //        this.visibleCards.remove(card);
         // remove it from the adapter
-        ((MainActivity) context).inactivateCard(card); // FIXME unsafe case
+        ((MainActivity) context).inactivateCard(card); // FIXME unsafe cast
     }
 
     public Card getCardById(String fullPath) {

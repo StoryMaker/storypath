@@ -63,7 +63,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     public void appendCard(Card cardToAdd) {
-        if (hasCard(cardToAdd)) return; // Hack to avoid duplicate card insertion
+//        if (hasCard(cardToAdd)) return; // Hack to avoid duplicate card insertion
         mDataset.add(cardToAdd);
         int newCardPosition = mDataset.size() - 1;
         addCardToMap(cardToAdd, newCardPosition);
@@ -76,7 +76,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
      * see {@link #CardAdapter(android.app.Activity, java.util.List)}
     */
     public void addCardAtPosition(Card cardToAdd, int position) {
-        if (hasCard(cardToAdd)) return; // Hack to avoid duplicate card insertion
+//        if (hasCard(cardToAdd)) return; // Hack to avoid duplicate card insertion
         mDataset.add(position, cardToAdd);
         addCardToMap(cardToAdd, position);
         notifyItemInserted(position);

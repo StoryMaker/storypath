@@ -206,6 +206,7 @@ public class MainActivity extends Activity {
         alert.show();
     }
 
+    // FIXME rename this to init initial cards or something
     private void initHook(String json) {
         initHook(json, null);
     }
@@ -217,7 +218,7 @@ public class MainActivity extends Activity {
 
         try {
             initStoryPathLibraryModel(json, jsonFile);
-            refreshCardView();
+            setupCardView();
         } catch (com.google.gson.JsonSyntaxException e) {
             Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -285,7 +286,28 @@ public class MainActivity extends Activity {
 
         try {
             initStoryPathModel(json, jsonFile);
-            refreshCardView();
+            setupCardView();
+        } catch (com.google.gson.JsonSyntaxException e) {
+            Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (MalformedJsonException e) {
+            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void refreshCardList(String json) {
+        refreshCardList(json, null);
+    }
+
+    public void refreshCardList(String json, File jsonFile) {
+        Log.d(TAG, "refreshCardList called");
+        if (mRecyclerView == null)
+            return;
+
+        //mCardView.setSwipeable(false);
+
+        try {
+            initStoryPathModel(json, jsonFile);
+            refreshCardViewXXX();
         } catch (com.google.gson.JsonSyntaxException e) {
             Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (MalformedJsonException e) {
@@ -329,7 +351,7 @@ public class MainActivity extends Activity {
         */
     }
 
-    public void refreshCardView () {
+    public void setupCardView () {
         Log.d(TAG, "refreshCardview called");
         if (mRecyclerView == null)
             return;
@@ -367,6 +389,32 @@ public class MainActivity extends Activity {
 //            mCardAdapter = new CardAdapter(this, cards);
 //            mRecyclerView.setAdapter(mCardAdapter);
 //        }
+    }
+
+    public void refreshCardViewXXX () {
+        Log.d(TAG, "refreshCardViewXXX called");
+        if (mRecyclerView == null)
+            return;
+
+        if (mCardAdapter == null) {
+            setupCardView();
+            return;
+        }
+
+        //add valid cards to view
+        ArrayList<Card> cards = new ArrayList<Card>();
+
+        if (mStoryPathLibrary != null) {
+//                cards.addAll(mStoryPathLibrary.getValidCards());
+            cards = mStoryPathLibrary.getValidCards();
+            StoryPath storyPath = mStoryPathLibrary.getCurrentStoryPath();
+            if (storyPath != null) {
+                cards.addAll(storyPath.getValidCards());
+                storyPath.setValidCards(cards);
+            }
+        }
+        mCardAdapter = new CardAdapter(this, cards);
+        mRecyclerView.setAdapter(mCardAdapter);
     }
 
     public void goToCard(String cardPath) throws MalformedJsonException {
@@ -467,7 +515,7 @@ public class MainActivity extends Activity {
 
             //mStoryPathLibrary.setCurrentStoryPath(storyPath);
             mStoryPathLibrary = storyPathLibrary;
-            refreshCardView();
+            setupCardView();
         }
         // TODO: Scroll to card
         //mCardView.scrollToCard(cardIndex);
@@ -478,7 +526,7 @@ public class MainActivity extends Activity {
         Log.d(TAG, "onActivityResult, requestCode:" + requestCode + ", resultCode: " + resultCode);
         if (resultCode == RESULT_OK) {
             // TODO : Remove this and allow Card View Controllers to be notified of data changes
-            refreshCardView();
+//            setupCardView();
 
             if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 
@@ -492,6 +540,7 @@ public class MainActivity extends Activity {
                 }
 
                 Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+//                Card c = mStoryPathLibrary.getCardById(pathId); // FIXME temporarily routing around this to test clipcard
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
