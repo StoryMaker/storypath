@@ -1,7 +1,7 @@
 {
     "cards": [
         {
-            "correct_required": 0, 
+            "correct_required": 1, 
             "question": "What is your story about?", 
             "choices": [
                 {
@@ -25,7 +25,7 @@
                 "default_library::quiz_card_topic::choice"
             ], 
             "type": "QuizCard", 
-            "correct_required": 0, 
+            "correct_required": 1, 
             "question": "What do you want to do?", 
             "id": "quiz_card_format", 
             "choices": [
@@ -89,7 +89,7 @@
                 "default_library::quiz_card_format::choice"
             ], 
             "type": "QuizCard", 
-            "correct_required": 0, 
+            "correct_required": 1, 
             "question": "Choose a medium.", 
             "id": "quiz_card_medium", 
             "choices": [
@@ -132,7 +132,7 @@
                 "default_library::quiz_card_medium::choice"
             ], 
             "type": "QuizCard", 
-            "correct_required": 0, 
+            "correct_required": 1, 
             "question": "What kind of clips would you like to make a series.", 
             "id": "quiz_card_cliptype", 
             "choices": [
@@ -183,7 +183,7 @@
                 "default_library::quiz_card_medium::choice"
             ], 
             "type": "QuizCard", 
-            "correct_required": 0, 
+            "correct_required": 1, 
             "question": "Which question would you like to use?", 
             "id": "quiz_card_clipquestion", 
             "choices": [
