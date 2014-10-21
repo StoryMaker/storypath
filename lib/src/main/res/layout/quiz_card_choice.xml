@@ -5,6 +5,6 @@
     style="@style/p"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/ultra_light_grey"
+    android:background="@drawable/quiz_card_selectable_bg"
     android:padding="@dimen/padding_small"
     android:layout_margin="@dimen/padding_tiny"/>

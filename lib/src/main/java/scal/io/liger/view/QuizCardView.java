@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +12,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.QuizCard;
@@ -33,7 +30,7 @@ public class QuizCardView extends ExampleCardView {
     private List<QuizCard.Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
     private List<QuizCard.Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
     private int mExpandedHeight = UNSET_HEIGHT; // The height of the quiz choice container when expanded
-    private boolean mExpanded = false; // Are the quiz card's possible choices expanded?
+    private boolean mExpanded = true; // Are the quiz card's possible choices expanded?
 
     private static final int UNSET_HEIGHT = -42; // placeholder value to indicate quiz choice container not measured
 
@@ -76,12 +73,14 @@ public class QuizCardView extends ExampleCardView {
         final TextView breadCrumb = (TextView) view.findViewById(R.id.breadCrumb);
         final ViewGroup choiceContainer = (ViewGroup) view.findViewById(R.id.choiceContainer);
 
+        breadCrumb.setText(mCardModel.getQuestion());
+
         /** Quiz Header (breadCrumb) Click Listener */
         breadCrumb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!mExpanded) {
-                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+                    toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
                 }
                 // TODO : If quiz completed, expand cards, collapse all following Quiz cards
             }
@@ -113,7 +112,7 @@ public class QuizCardView extends ExampleCardView {
                 markQuizChoiceSelected(v, !v.isSelected());
                 if (quizIsPassed()) {
                     // We're done!
-                    toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+                    toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
                     quizCardComplete();
                 }
             }
@@ -132,16 +131,16 @@ public class QuizCardView extends ExampleCardView {
                     markQuizChoiceSelected(quizChoiceView, true);
                 }
             }
-            if (quizIsPassed()) {
+            boolean quizIsPassed = quizIsPassed();
+            Log.i(TAG, "Quiz is initially passed " + quizIsPassed);
+            if (quizIsPassed) {
                 // We're done! Don't fire QuizCardComplete() as the quiz's initial state was complete
-                toggleQuizResponseExpansion(breadCrumb, choiceContainer);
+                toggleQuizResponseExpansion(breadCrumb, choiceContainer, false);
             }
 
         } else {
             throw new IllegalStateException("Quiz has no responses!");
         }
-
-        breadCrumb.setText(mCardModel.getQuestion());
 
         // supports automated testing
         view.setTag(mCardModel.getId());
@@ -151,18 +150,25 @@ public class QuizCardView extends ExampleCardView {
     private void markQuizChoiceSelected(View quizChoiceView, boolean isSelected) {
         quizChoiceView.setSelected(isSelected);
         QuizCard.Choice choice = (QuizCard.Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
+        StringBuilder logString = new StringBuilder();
+        logString.append(choice.text);
         if (isSelected) {
+            logString.append(" Selected ");
             if (!mSelectedChoices.contains(choice)) {
                 mCardModel.addValue(VALUES_CHOICE_TAG, choice.id);
                 mSelectedChoices.add(choice);
             }
         } else {
-            mSelectedChoices.remove(quizChoiceView.getTag(R.id.view_tag_quiz_choice));
+            logString.append(" Unselected ");
+            mSelectedChoices.remove(choice);
             mCardModel.addValue(VALUES_CHOICE_TAG, "");
         }
+        logString.append(" selected choice " + mSelectedChoices.size() + " correct_required " + mCardModel.getCorrectRequired());
+        logString.append(" passed: " + quizIsPassed());
+        Log.i(TAG, logString.toString());
     }
 
-    private void toggleQuizResponseExpansion(final TextView breadCrumb, final ViewGroup choiceContainer) {
+    private void toggleQuizResponseExpansion(final TextView breadCrumb, final ViewGroup choiceContainer, boolean doAnimate) {
         final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) choiceContainer.getLayoutParams();
 
         final int finalChoiceContainerHeight;
@@ -182,24 +188,31 @@ public class QuizCardView extends ExampleCardView {
             animFirstColor = mContext.getResources().getColor(R.color.signature);
             animSecondColor = mContext.getResources().getColor(R.color.white);
         }
+        if (doAnimate) {
+            // Animate choiceContainer to height 0
+            //Log.i(TAG, String.format("animating quiz container from %d to %d", choiceContainer.getHeight(), finalChoiceContainerHeight));
+            ValueAnimator animator = ValueAnimator.ofInt(choiceContainer.getHeight(), finalChoiceContainerHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    params.height = (int) valueAnimator.getAnimatedValue();
+                    choiceContainer.setLayoutParams(params);
+                }
+            });
+            animator.start();
 
-        // Animate choiceContainer to height 0
-        //Log.i(TAG, String.format("animating quiz container from %d to %d", choiceContainer.getHeight(), finalChoiceContainerHeight));
-        ValueAnimator animator = ValueAnimator.ofInt(choiceContainer.getHeight(), finalChoiceContainerHeight);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                params.height = (int) valueAnimator.getAnimatedValue();
-                choiceContainer.setLayoutParams(params);
-            }
-        });
-        animator.start();
-
-        // Animate breadCrumb from colored text on white background to white text on colored background
-        ObjectAnimator backgroundColorFade = ObjectAnimator.ofObject(breadCrumb, "backgroundColor", new ArgbEvaluator(), animFirstColor, animSecondColor);
-        backgroundColorFade.start();
-        ObjectAnimator textColorFade = ObjectAnimator.ofObject(breadCrumb, "textColor", new ArgbEvaluator(), animSecondColor, animFirstColor);
-        textColorFade.start();
+            // Animate breadCrumb from colored text on white background to white text on colored background
+            ObjectAnimator backgroundColorFade = ObjectAnimator.ofObject(breadCrumb, "backgroundColor", new ArgbEvaluator(), animFirstColor, animSecondColor);
+            backgroundColorFade.start();
+            ObjectAnimator textColorFade = ObjectAnimator.ofObject(breadCrumb, "textColor", new ArgbEvaluator(), animSecondColor, animFirstColor);
+            textColorFade.start();
+        } else {
+            // do not animate
+            params.height = finalChoiceContainerHeight;
+            choiceContainer.setLayoutParams(params);
+            breadCrumb.setBackgroundColor(animSecondColor);
+            breadCrumb.setTextColor(animFirstColor);
+        }
 
         mExpanded = !mExpanded;
     }
@@ -235,6 +248,5 @@ public class QuizCardView extends ExampleCardView {
      */
     private void quizCardComplete() {
         // TODO
-        mCardModel.addValue(VALUES_CHOICE_TAG, mSelectedChoices.get(0).id);
     }
 }

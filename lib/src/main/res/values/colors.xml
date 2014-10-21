@@ -18,6 +18,7 @@
 
     <color name="ultra_ultra_light_grey">#fff5f5f5</color> <!-- for quiz card choice bg -->
     <color name="ultra_light_grey">#ffe6e6e6</color> <!-- for quiz card choice bg stroke -->
+    <color name="extra_light_grey">#ffbebebe</color>
     <color name="light_grey">#9e9e9e</color>
     <color name="grey">#757575</color>
     <color name="dark_grey">#424242</color>
