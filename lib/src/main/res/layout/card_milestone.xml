@@ -9,6 +9,8 @@
 
     <TextView
         style="@style/p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:text="@string/lbl_next"
         android:paddingBottom="@dimen/padding_xsmall"
@@ -17,6 +19,8 @@
 
     <TextView
         android:id="@+id/tv_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         style="@style/h2"
         android:textColor="@color/white"
         android:text="Take The Quiz"
