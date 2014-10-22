@@ -123,7 +123,7 @@ public class OrderMediaCard extends Card {
 
         Card card = (Card)observable;
 
-        if (checkStateVisibility() ||
+        if (checkVisibilityChanged() ||
             checkStateMedium() ||
             checkStateVideo() ||
             checkStateAudio() ||

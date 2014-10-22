@@ -2,7 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -60,28 +59,28 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         Card card = (Card)observable;
 
-        changeCardVisibilityState();
-//        if (checkStateVisibility()) {
-//            storyPathReference.notifyActivity(this);
-//        }
+        //changeCardVisibilityState();
+        if (checkVisibilityChanged()) {
+            storyPathReference.notifyActivity(this);
+        }
     }
 
     public void changeCardVisibilityState() {
         if (stateVisiblity) {
             if (checkReferencedValues() != stateVisiblity) {
                 // therefore, we went from visible to invisible, remove
-                getStoryPathReference().inactivateCard(this);
+                //getStoryPathReference().inactivateCard(this);
             }
         } else {
             if (checkReferencedValues() != stateVisiblity) {
                 // therefore, we went from invisible to visible, add it
-                getStoryPathReference().activateCard(this);
+                //getStoryPathReference().activateCard(this);
             }
         }
     }
 
     // NEW
-    public boolean checkStateVisibility() {
+    public boolean checkVisibilityChanged() {
         boolean newVisibility = checkReferencedValues(); // FIXME "references" is just "visibility" right?
         if (stateVisiblity != newVisibility) {
             stateVisiblity = newVisibility;
