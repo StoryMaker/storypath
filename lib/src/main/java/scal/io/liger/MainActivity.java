@@ -9,26 +9,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.stream.MalformedJsonException;
 import com.twotoasters.android.support.v7.widget.LinearLayoutManager;
 import com.twotoasters.android.support.v7.widget.RecyclerView;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
-import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -546,6 +541,7 @@ public class MainActivity extends Activity {
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.VIDEO);
                     cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
@@ -566,6 +562,7 @@ public class MainActivity extends Activity {
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.PHOTO);
                     cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
                 }
@@ -587,6 +584,7 @@ public class MainActivity extends Activity {
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.AUDIO);
                     cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
                 }
