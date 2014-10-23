@@ -10,12 +10,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
-import com.twotoasters.android.support.v7.widget.LinearLayoutManager;
-import com.twotoasters.android.support.v7.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;

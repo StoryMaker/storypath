@@ -5,7 +5,7 @@
     android:padding="@dimen/activity_horizontal_margin"
     tools:context=".MainActivity">
 
-    <com.twotoasters.android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
