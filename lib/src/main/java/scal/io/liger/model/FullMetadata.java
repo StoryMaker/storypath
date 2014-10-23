@@ -1,9 +1,12 @@
 package scal.io.liger.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by mnbogner on 10/10/14.
  */
-public class FullMetadata {
+public class FullMetadata implements Parcelable {
 
     // class used for export, not serialized
 
@@ -23,6 +26,51 @@ public class FullMetadata {
         this.type = cm.getType();
         this.medium = mf.getMedium();
         this.filePath = mf.getPath();
+    }
+
+    public FullMetadata(Parcel in) {
+        String[] data = new String[7];
+
+        in.readStringArray(data);
+
+        this.startTime = Integer.parseInt(data[0]);
+        this.stopTime = Integer.parseInt(data[1]);
+        this.volume = Integer.parseInt(data[2]);
+        this.effect = data[3];
+        this.type = data[4];
+        this.medium = data[5];
+        this.filePath = data[6];
+    }
+
+    public static final Parcelable.Creator<FullMetadata> CREATOR
+            = new Parcelable.Creator<FullMetadata>() {
+        public FullMetadata createFromParcel(Parcel in) {
+            return new FullMetadata(in);
+        }
+
+        public FullMetadata[] newArray(int size) {
+            return new FullMetadata[size];
+        }
+    };
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        String[] data = new String[7];
+        out.writeStringArray(new String[]{
+                "" + this.startTime,
+                "" + this.stopTime,
+                "" + this.volume,
+                this.effect,
+                this.type,
+                this.medium,
+                this.filePath
+        });
     }
 
     public int getStartTime() {
