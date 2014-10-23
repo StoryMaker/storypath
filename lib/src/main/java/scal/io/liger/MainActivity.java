@@ -347,7 +347,7 @@ public class MainActivity extends Activity {
     }
 
     public void setupCardView () {
-        Log.d(TAG, "refreshCardview called");
+        Log.d(TAG, "setupCardView called");
         if (mRecyclerView == null)
             return;
 
@@ -388,8 +388,9 @@ public class MainActivity extends Activity {
 
     public void refreshCardViewXXX () {
         Log.d(TAG, "refreshCardViewXXX called");
-        if (mRecyclerView == null)
+        if (mRecyclerView == null) {
             return;
+        }
 
         if (mCardAdapter == null) {
             setupCardView();
@@ -417,10 +418,9 @@ public class MainActivity extends Activity {
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
 
+        StoryPathLibrary storyPathLibrary = null;
         StoryPath storyPath = null;
         boolean newStoryPath = false;
-
-        StoryPathLibrary storyPathLibrary = null;
 
         /*
         // TEMP CODE FOR TESTING
@@ -462,6 +462,7 @@ public class MainActivity extends Activity {
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibraryReference(storyPathLibrary);
                     storyPathLibrary.setCurrentStoryPath(storyPath);
+                    storyPathLibrary.setCurrentStoryPathFile(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()));
 
                     /*
                     GsonBuilder gBuild = new GsonBuilder();
@@ -494,13 +495,6 @@ public class MainActivity extends Activity {
             return;
         }
 
-        int cardIndex = storyPath.getValidCardIndex(card);
-
-        if (cardIndex < 0) {
-            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
-            return;
-        }
-
         if (newStoryPath) {
 
             // TODO: need additional code to save current story path
@@ -510,10 +504,17 @@ public class MainActivity extends Activity {
 
             //mStoryPathLibrary.setCurrentStoryPath(storyPath);
             mStoryPathLibrary = storyPathLibrary;
-            setupCardView();
+            refreshCardViewXXX();
         }
-        // TODO: Scroll to card
-        //mCardView.scrollToCard(cardIndex);
+
+        int cardIndex = mCardAdapter.mDataset.indexOf(card);
+
+        if (cardIndex < 0) {
+            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
+            return;
+        }
+
+        mRecyclerView.scrollToPosition(cardIndex);
     }
 
     @Override
