@@ -472,6 +472,22 @@ public class StoryPath {
         // Log.d(" *** REARRANGE *** ", "MOVED " + card.getId() + " FROM " + currentIndex + " TO " + newIndex);
 
         notifyActivity(card);
+        // We should also notify the other affected card, right?
+        // e.g: The one that was at newIndex when the op started?
+    }
+
+    /**
+     * Swap the cards at the given indexes.
+     * This is like {@link #rearrangeCards(int, int)} but also supports
+     * operations where cards aren't moving to adjacent positions
+     */
+    public void swapCards(int firstIndex, int secondIndex) {
+        Card tempCard = cards.get(firstIndex);
+        cards.set(firstIndex, cards.get(secondIndex));
+        cards.set(secondIndex, tempCard);
+
+        notifyActivity(tempCard);
+        notifyActivity(cards.get(firstIndex));
     }
 
     public void saveMediaFileSP(String uuid, MediaFile file) {
