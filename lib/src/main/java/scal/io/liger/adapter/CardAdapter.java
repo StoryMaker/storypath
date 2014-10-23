@@ -89,6 +89,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         mCardIdToPosition.remove(cardToRemove.getId());
     }
 
+    public void changeCard(Card cardToChange) {
+        int cardIndex = mCardIdToPosition.get(cardToChange.getId());
+        if (cardIndex != -1)
+            notifyItemChanged(cardIndex);
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public CardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,

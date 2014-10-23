@@ -46,10 +46,21 @@
             "exampleMediaPath": "video_sample1.mp4"
         },
         {
-            "text": "LOAD",
-            "type": "LinkCard",
-            "id": "load_card",
-            "link": "learning_guide_v1"
-        }
+            "id": "load_button",
+            "type": "ButtonCard",
+            "text": "LOAD IT!",
+            "values": {
+                "value": "false"
+            }
+        },
+                 {
+                     "type": "HeadlessCard",
+                     "id": "headless_card",
+                     "action": "LOAD",
+                     "target": "learning_guide_v1",
+                                                              "references": [
+                                                                  "learning_guide_library::load_button::value::true"
+                                                              ]
+                 }
     ]
 }

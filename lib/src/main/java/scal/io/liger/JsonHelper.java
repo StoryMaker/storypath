@@ -238,7 +238,7 @@ public class JsonHelper {
 
     public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
         String storyPathLibraryJson = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -268,7 +268,7 @@ public class JsonHelper {
 
     public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
@@ -300,7 +300,7 @@ public class JsonHelper {
 
     public static String saveStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         Date timeStamp = new Date();
         String jsonFilePath = storyPathLibrary.buildPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
@@ -339,7 +339,7 @@ public class JsonHelper {
 
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.create();
@@ -371,7 +371,7 @@ public class JsonHelper {
 
     public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
 
         String storyPathJson = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -401,7 +401,7 @@ public class JsonHelper {
 
     public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
@@ -439,7 +439,7 @@ public class JsonHelper {
 
     public static String saveStoryPath(StoryPath storyPath) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPath CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPath CALLED FOR " + storyPath.getId());
 
         Date timeStamp = new Date();
         String jsonFilePath = storyPath.buildPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
@@ -478,7 +478,7 @@ public class JsonHelper {
 
     public static String serializeStoryPath(StoryPath storyPath) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED");
+        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.create();

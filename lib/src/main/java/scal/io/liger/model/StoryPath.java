@@ -150,7 +150,11 @@ public class StoryPath {
 
         for (Card card : cards) {
             if (card.checkReferencedValues()) {
-                validCards.add(card);
+                if (card instanceof HeadlessCard) {
+                    Log.d(this.getClass().getName(), "headless card " + card.getId() + " should not return " + card.checkReferencedValues() + " for checkReferencedValues()");
+                } else {
+                    validCards.add(card);
+                }
             }
         }
 

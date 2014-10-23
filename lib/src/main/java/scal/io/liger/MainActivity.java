@@ -9,26 +9,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.stream.MalformedJsonException;
 import com.twotoasters.android.support.v7.widget.LinearLayoutManager;
 import com.twotoasters.android.support.v7.widget.RecyclerView;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
-import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -352,7 +347,7 @@ public class MainActivity extends Activity {
     }
 
     public void setupCardView () {
-        Log.d(TAG, "refreshCardview called");
+        Log.d(TAG, "setupCardView called");
         if (mRecyclerView == null)
             return;
 
@@ -393,8 +388,9 @@ public class MainActivity extends Activity {
 
     public void refreshCardViewXXX () {
         Log.d(TAG, "refreshCardViewXXX called");
-        if (mRecyclerView == null)
+        if (mRecyclerView == null) {
             return;
+        }
 
         if (mCardAdapter == null) {
             setupCardView();
@@ -422,10 +418,9 @@ public class MainActivity extends Activity {
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
 
+        StoryPathLibrary storyPathLibrary = null;
         StoryPath storyPath = null;
         boolean newStoryPath = false;
-
-        StoryPathLibrary storyPathLibrary = null;
 
         /*
         // TEMP CODE FOR TESTING
@@ -467,6 +462,7 @@ public class MainActivity extends Activity {
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibraryReference(storyPathLibrary);
                     storyPathLibrary.setCurrentStoryPath(storyPath);
+                    storyPathLibrary.setCurrentStoryPathFile(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()));
 
                     /*
                     GsonBuilder gBuild = new GsonBuilder();
@@ -499,13 +495,6 @@ public class MainActivity extends Activity {
             return;
         }
 
-        int cardIndex = storyPath.getValidCardIndex(card);
-
-        if (cardIndex < 0) {
-            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
-            return;
-        }
-
         if (newStoryPath) {
 
             // TODO: need additional code to save current story path
@@ -515,10 +504,17 @@ public class MainActivity extends Activity {
 
             //mStoryPathLibrary.setCurrentStoryPath(storyPath);
             mStoryPathLibrary = storyPathLibrary;
-            setupCardView();
+            refreshCardViewXXX();
         }
-        // TODO: Scroll to card
-        //mCardView.scrollToCard(cardIndex);
+
+        int cardIndex = mCardAdapter.mDataset.indexOf(card);
+
+        if (cardIndex < 0) {
+            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
+            return;
+        }
+
+        mRecyclerView.scrollToPosition(cardIndex);
     }
 
     @Override
@@ -546,6 +542,7 @@ public class MainActivity extends Activity {
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.VIDEO);
                     cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
@@ -566,6 +563,7 @@ public class MainActivity extends Activity {
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.PHOTO);
                     cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
                 }
@@ -587,6 +585,7 @@ public class MainActivity extends Activity {
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.AUDIO);
                     cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
                 }
