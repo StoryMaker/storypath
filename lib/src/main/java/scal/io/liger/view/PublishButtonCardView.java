@@ -1,6 +1,8 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
@@ -48,26 +51,27 @@ public class PublishButtonCardView implements DisplayableCard{
             public void onClick(View v) {
 
                 // TEMP
-                MainActivity mainActivity = (MainActivity) mCardModel.getStoryPathReference().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
-                mainActivity.saveStoryFile();
-                Log.d(" *** TESTING *** ", "STORY FILES SAVED?");
+                final MainActivity mainActivity = (MainActivity) mCardModel.getStoryPathReference().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                Handler h = new Handler();
 
-                StoryPath spm = mCardModel.getStoryPathReference();
-                ArrayList<FullMetadata> exportMetadata = spm.exportAllMetadata();
-                int i = 0;
-//                Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
-//
-//                mCardModel.clearValues();
-//                mCardModel.addValue("value", "true");
-//                // moveToNextCard();
-//
-//                String linkPath = spm.getId() + "::" + cm.getId();
-//                spm.linkNotification(linkPath);
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        StoryPath spm = mCardModel.getStoryPathReference();
+                        ArrayList<FullMetadata> exportMetadata = spm.exportAllMetadata();
+                        Intent i = new Intent();
+                        i.setAction(Constants.ACTION_PUBLISH);
+                        i.putParcelableArrayListExtra("export_metadata", exportMetadata);
+                        mainActivity.startActivity(i);
+                        int iasdfasd = 0;
+                        mainActivity.finish();
+                    }
+                }, 0);
             }
         });
 
         // supports automated testing
-        view.setTag(mCardModel.getId());
+        view.setTag(mCardModel.getId()); // FIXME move this into the base class
 
         return view;
     }
