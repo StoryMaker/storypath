@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,11 +21,25 @@ import scal.io.liger.MainActivity;
  */
 public class StoryPathLibrary extends StoryPath {
 
-    private HashMap<String, String> storyPathTemplateFiles;
-    private ArrayList<String> storyPathInstanceFiles;
-    private String currentStoryPathFile;
+    @Expose private HashMap<String, String> storyPathTemplateFiles;
+    @Expose private ArrayList<String> storyPathInstanceFiles;
+    @Expose private String currentStoryPathFile;
     private StoryPath currentStoryPath; // not serialized
-    private HashMap<String, MediaFile> mediaFiles;
+    @Expose private HashMap<String, MediaFile> mediaFiles;
+
+    StoryPathLibraryListener mListener;
+
+    public static interface StoryPathLibraryListener {
+        public void onCardAdded(Card newCard);
+        public void onCardChanged(Card changedCard);
+        public void onCardsSwapped(Card cardOne, Card cardTwo);
+        public void onCardRemoved(Card removedCard);
+    }
+
+    public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {
+        mListener = listener;
+    }
+
 
     public HashMap<String, String> getStoryPathTemplateFiles() {
         return storyPathTemplateFiles;

@@ -61,7 +61,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         //changeCardVisibilityState();
         if (checkVisibilityChanged()) {
-            storyPathReference.notifyActivity(this);
+            storyPathReference.notifyCardChanged(this);
         }
     }
 
@@ -81,6 +81,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
     // NEW
     public boolean checkVisibilityChanged() {
+        // TODO return visibility state
         boolean newVisibility = checkReferencedValues(); // FIXME "references" is just "visibility" right?
         if (stateVisiblity != newVisibility) {
             stateVisiblity = newVisibility;
@@ -211,7 +212,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
             /*
             // send notification that a value has been saved so that cards can re-check references
             if (storyPathReference != null) {
-                storyPathReference.notifyActivity();
+                storyPathReference.notifyCardChanged();
             } else {
                 System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             }

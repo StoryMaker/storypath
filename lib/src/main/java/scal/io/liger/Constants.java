@@ -18,4 +18,6 @@ public class Constants {
     public static final String RESULT = "result";
 
     public static final String EXTERNAL = "value_from_external_story_path";
+
+    public static final String ACTION_PUBLISH = "io.scal.liger.PUBLISH";
 }

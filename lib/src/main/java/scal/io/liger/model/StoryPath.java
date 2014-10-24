@@ -1,11 +1,14 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,16 +23,17 @@ import scal.io.liger.StoryPathDeserializer;
  * Created by mnbogner on 7/10/14.
  */
 public class StoryPath {
+    public static final String TAG = "StoryPath";
 
-    protected String id;
-    protected String title;
-    protected String classPackage;
-    protected ArrayList<Card> cards;
+    @Expose protected String id;
+    @Expose protected String title;
+    @Expose protected String classPackage;
+    @Expose ArrayList<Card> cards;
     //protected ArrayList<Card> visibleCards;
-    protected ArrayList<Dependency> dependencies;
-    protected String fileLocation;
-    protected StoryPathLibrary storyPathLibraryReference; // not serialized
-    protected String storyPathLibraryFile;
+    @Expose protected ArrayList<Dependency> dependencies;
+    @Expose protected String fileLocation;
+    @Expose protected StoryPathLibrary storyPathLibraryReference; // not serialized
+    @Expose protected String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -130,6 +134,12 @@ public class StoryPath {
         return foundCards;
     }
 
+    /**
+     * Get all the cards that should be displayed to the user for this StoryPath
+     *
+     * Note this method only needs to be called once. Updates to this list can be received
+     * by calling {@link StoryPathLibrary#setStoryPathLibraryListener(scal.io.liger.model.StoryPathLibrary.StoryPathLibraryListener)}
+     */
     public ArrayList<Card> getValidCards() {
         /*
         if (visibleCards == null) {
@@ -342,25 +352,47 @@ public class StoryPath {
         }
     }
 
-    public void notifyActivity(Card updatedCard) {
+    /**
+     * This method tracks changes to cards within this StoryPath
+     *
+     * A client wishing to maintain a view controller
+     * for this StoryPath need only call {@link #getValidCards()} once. This method is responsible
+     * for propagating events affecting the value of {@link #getValidCards()} to the listener set in
+     * {@link scal.io.liger.model.StoryPathLibrary#setStoryPathLibraryListener(scal.io.liger.model.StoryPathLibrary.StoryPathLibraryListener)}
+     */
+    public void notifyCardChanged(@NonNull Card firstCard) {
+        Log.i(TAG, "notifyCardChanged of update to card " + firstCard.getId());
+        if (storyPathLibraryReference == null || storyPathLibraryReference.mListener == null) {
+            return;
+        }
 
-        String action = ((MainActivity)context).checkCard(updatedCard);
+        String action = ((MainActivity)context).checkCard(firstCard);
 
         if (action.equals("ADD")) {
-            activateCard(updatedCard);
+            storyPathLibraryReference.mListener.onCardAdded(firstCard);
         }
         if (action.equals("UPDATE")) {
-            inactivateCard(updatedCard);
-            activateCard(updatedCard);
+            storyPathLibraryReference.mListener.onCardChanged(firstCard);
         }
         if (action.equals("DELETE")) {
-            inactivateCard(updatedCard);
+            storyPathLibraryReference.mListener.onCardRemoved(firstCard);
         }
     }
 
+    /**
+     * This method tracks swapping events between two cards
+     * currently in this StoryPath
+     */
+    public void notifyCardsSwapped(Card cardOne, Card cardTwo) {
+        if (storyPathLibraryReference == null || storyPathLibraryReference.mListener == null) {
+            return;
+        }
+        storyPathLibraryReference.mListener.onCardsSwapped(cardOne, cardTwo);
+    }
+
     /*
-    public void notifyActivity(Card updatedCard) {
-        Log.d("StoryPathModel", "notifyActivity");
+    public void notifyCardChanged(Card updatedCard) {
+        Log.d("StoryPathModel", "notifyCardChanged");
 
         if (updatedCard.getStateVisiblity()) {
             // new or updated
@@ -471,7 +503,22 @@ public class StoryPath {
 
         // Log.d(" *** REARRANGE *** ", "MOVED " + card.getId() + " FROM " + currentIndex + " TO " + newIndex);
 
-        notifyActivity(card);
+        notifyCardChanged(card);
+        // We should also notify the other affected card, right?
+        // e.g: The one that was at newIndex when the op started?
+    }
+
+    /**
+     * Swap the cards at the given indexes.
+     * This is like {@link #rearrangeCards(int, int)} but also supports
+     * operations where cards aren't moving to adjacent positions
+     */
+    public void swapCards(int firstIndex, int secondIndex) {
+        Card tempCard = cards.get(firstIndex);
+        cards.set(firstIndex, cards.get(secondIndex));
+        cards.set(secondIndex, tempCard);
+
+        notifyCardsSwapped(tempCard, cards.get(firstIndex));
     }
 
     public void saveMediaFileSP(String uuid, MediaFile file) {

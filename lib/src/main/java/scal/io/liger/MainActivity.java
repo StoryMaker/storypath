@@ -10,12 +10,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
-import com.twotoasters.android.support.v7.widget.LinearLayoutManager;
-import com.twotoasters.android.support.v7.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements StoryPathLibrary.StoryPathLibraryListener{
     private static final String TAG = "MainActivity";
 
     RecyclerView mRecyclerView;
@@ -245,6 +245,7 @@ public class MainActivity extends Activity {
         } else {
             mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
         }
+        mStoryPathLibrary.setStoryPathLibraryListener(this);
 
         /*
         GsonBuilder gBuild = new GsonBuilder();
@@ -347,7 +348,7 @@ public class MainActivity extends Activity {
     }
 
     public void setupCardView () {
-        Log.d(TAG, "refreshCardview called");
+        Log.d(TAG, "setupCardView called");
         if (mRecyclerView == null)
             return;
 
@@ -365,7 +366,7 @@ public class MainActivity extends Activity {
                     //storyPath.setValidCards(cards);
                 }
             }
-            mCardAdapter = new CardAdapter(this, cards);
+            mCardAdapter = new CardAdapter(cards);
             mRecyclerView.setAdapter(mCardAdapter);
         }
 
@@ -388,8 +389,9 @@ public class MainActivity extends Activity {
 
     public void refreshCardViewXXX () {
         Log.d(TAG, "refreshCardViewXXX called");
-        if (mRecyclerView == null)
+        if (mRecyclerView == null) {
             return;
+        }
 
         if (mCardAdapter == null) {
             setupCardView();
@@ -408,7 +410,7 @@ public class MainActivity extends Activity {
                 //storyPath.setValidCards(cards);
             }
         }
-        mCardAdapter = new CardAdapter(this, cards);
+        mCardAdapter = new CardAdapter(cards);
         mRecyclerView.setAdapter(mCardAdapter);
     }
 
@@ -417,10 +419,9 @@ public class MainActivity extends Activity {
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
 
+        StoryPathLibrary storyPathLibrary = null;
         StoryPath storyPath = null;
         boolean newStoryPath = false;
-
-        StoryPathLibrary storyPathLibrary = null;
 
         /*
         // TEMP CODE FOR TESTING
@@ -462,6 +463,7 @@ public class MainActivity extends Activity {
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibraryReference(storyPathLibrary);
                     storyPathLibrary.setCurrentStoryPath(storyPath);
+                    storyPathLibrary.setCurrentStoryPathFile(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()));
 
                     /*
                     GsonBuilder gBuild = new GsonBuilder();
@@ -494,13 +496,6 @@ public class MainActivity extends Activity {
             return;
         }
 
-        int cardIndex = storyPath.getValidCardIndex(card);
-
-        if (cardIndex < 0) {
-            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
-            return;
-        }
-
         if (newStoryPath) {
 
             // TODO: need additional code to save current story path
@@ -510,10 +505,17 @@ public class MainActivity extends Activity {
 
             //mStoryPathLibrary.setCurrentStoryPath(storyPath);
             mStoryPathLibrary = storyPathLibrary;
-            setupCardView();
+            refreshCardViewXXX();
         }
-        // TODO: Scroll to card
-        //mCardView.scrollToCard(cardIndex);
+
+        int cardIndex = mCardAdapter.mDataset.indexOf(card);
+
+        if (cardIndex < 0) {
+            System.err.println("CARD ID " + pathParts[1] + " IS NOT VISIBLE");
+            return;
+        }
+
+        mRecyclerView.scrollToPosition(cardIndex);
     }
 
     @Override
@@ -776,5 +778,29 @@ public class MainActivity extends Activity {
         }
 
         return "ERROR";
+    }
+
+    @Override
+    public void onCardAdded(Card newCard) {
+        Log.i(TAG, "Card added " + newCard.getId());
+        mCardAdapter.appendCard(newCard);
+    }
+
+    @Override
+    public void onCardChanged(Card changedCard) {
+        Log.i(TAG, "Card changed " + changedCard.getId());
+        mCardAdapter.changeCard(changedCard);
+    }
+
+    @Override
+    public void onCardsSwapped(Card cardOne, Card cardTwo) {
+        Log.i(TAG, String.format("Cards swapped %s <-> %s ", cardOne.getId(), cardTwo.getId()));
+        mCardAdapter.swapCards(cardOne, cardTwo);
+    }
+
+    @Override
+    public void onCardRemoved(Card removedCard) {
+        Log.i(TAG, "Card removed " + removedCard.getId());
+        mCardAdapter.removeCard(removedCard);
     }
 }

@@ -1,11 +1,13 @@
 {
     "title": "Make a New Story", 
-    "id": "make_a_new_story", 
+    "id": "make_a_new_story",
+    "classPackage": "scal.io.liger.model",
+    "storyPathLibraryFile": "learning_guide_library.json",
     "cards": [
         {
             "id": "top",
             "text": "This is **Make a New Story**.  *Ohh yeaaaa*.", 
-            "type": "scal.io.liger.model.MarkdownCard"
+            "type": "MarkdownCard"
         }
     ]
 }
