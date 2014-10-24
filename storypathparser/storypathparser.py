@@ -12,69 +12,76 @@ import json
 #infile = sys.argv[1]
 #stream = open(infile, 'r')
 
+cardcounts = {}
+
+def get_count(key):
+    if not cardcounts.has_key(key):
+        cardcounts[key] = 0
+    cardcounts[key] = cardcounts[key] + 1
+    return cardcounts[key]
+
+def set_id(key, card):
+    if not card.has_key('id'):
+        card['id'] = "%s_%s" % (key, get_count(key))
 
 def parse_file(stream):
     objs = yaml.load(stream)
     cards = []
     for card in objs['cards']:
-        newcard = {}
-        if card['card'] == 'MarkDownCard':
-            newcard['id'] = 'markdown_card_1'
+        #newcard = {}
+        newcard = card
+        if card['type'  ] == 'MarkDownCard':
+            set_id("markdown_card", newcard)
             newcard['type'] = 'MarkdownCard'
             newcard['text'] = card['body']
             
-        elif card['card'] == 'PreviewCard':
-            newcard['id'] = 'example_card_1'
+        elif card['type'] == 'PreviewCard':
+            set_id("preview_card", newcard)
             newcard['type'] = 'ExampleCard'
             newcard['header'] = card['title']
             newcard['clipMedium'] = 'video'     # FIXME should be deduced from the mimetype of the file
             newcard['clipType'] = 'character'   # FIXME not needed at all?
             newcard['exampleMediaPath'] = card['media'][0]['media'] # for now we only grab the first media
             
-        elif card['card'] == 'TextCard':
-            newcard['id'] = 'text_card_1'
+        elif card['type'] == 'TextCard':
+            set_id("text_card", newcard)
             newcard['type'] = 'TextCard'
             newcard['text'] = card['text']
             
-        elif card['card'] == 'QuizCard':
-            newcard = card
-            del newcard['card']
-    #        newcard['type'] = 'QuizCard'
-    #        newcard['id'] = 'quizcard_1'
-    #        newcard['id'] = 'quiz_card_1'
-            newcard['type'] = 'QuizCard'
+        elif card['type'] == 'QuizCard':
+            set_id("quiz_card", newcard)
     #        newcard['question'] = card['questions'][0] # FIXME for now quiz cards are single page
 
-        elif card['card'] == 'ClipCard':
+        elif card['type'] == 'ClipCard':
             newcard['type'] = 'ClipCard'
-            newcard['id'] = 'clipcard_1'
+            set_id("clip_card", newcard)
             newcard['goals'] = card['goals']
             newcard['length'] = card['length']
             newcard['medium'] = card['medium']
 
-        elif card['card'] == 'ReviewCard':
+        elif card['type'] == 'ReviewCard':
             newcard['type'] = 'ReviewCard'
-            newcard['id'] = 'review_card_1'
+            set_id("review_card", newcard)
             newcard['medium'] = card['medium']
 
-        elif card['card'] == 'EvaluationCard':
+        elif card['type'] == 'EvaluationCard':
             newcard['type'] = 'EvaluationCard'
-            newcard['id'] = 'evaluation_card_1'
+            set_id("evaluation_card", newcard)
             newcard['text'] = card['text']
 
-        elif card['card'] == 'PublishCard':
+        elif card['type'] == 'PublishCard':
             newcard['type'] = 'PublishCard'
             newcard['id'] = 'publish_card_1'
             newcard['medium'] = card['medium']
 
-        elif card['card'] == 'NextUpCard':
+        elif card['type'] == 'NextUpCard':
             newcard['type'] = 'NextUpCard'
-            newcard['id'] = 'nextup_card_1'
+            set_id("nextup_card", newcard)
             newcard['medium'] = card['medium']
 
-        elif card['card'] == 'TipCard':
+        elif card['type'] == 'TipCard':
             newcard['type'] = 'TipCard'
-            newcard['id'] = 'tip_card_1'
+            set_id("tip_card", newcard)
             newcard['tags'] = card['tags']
             
             
@@ -101,7 +108,7 @@ def parse_file(stream):
     
 for name in os.listdir(os.getcwd()):
     #print name
-
+    cardcounts = {}
     fileName, fileExtension = os.path.splitext(name)
     if fileExtension == ".yaml":
         print "parsing %s" % name
