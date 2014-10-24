@@ -29,7 +29,7 @@ import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements StoryPathLibrary.StoryPathLibraryListener{
     private static final String TAG = "MainActivity";
 
     RecyclerView mRecyclerView;
@@ -245,6 +245,7 @@ public class MainActivity extends Activity {
         } else {
             mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
         }
+        mStoryPathLibrary.setStoryPathLibraryListener(this);
 
         /*
         GsonBuilder gBuild = new GsonBuilder();
@@ -365,7 +366,7 @@ public class MainActivity extends Activity {
                     //storyPath.setValidCards(cards);
                 }
             }
-            mCardAdapter = new CardAdapter(this, cards);
+            mCardAdapter = new CardAdapter(cards);
             mRecyclerView.setAdapter(mCardAdapter);
         }
 
@@ -409,7 +410,7 @@ public class MainActivity extends Activity {
                 //storyPath.setValidCards(cards);
             }
         }
-        mCardAdapter = new CardAdapter(this, cards);
+        mCardAdapter = new CardAdapter(cards);
         mRecyclerView.setAdapter(mCardAdapter);
     }
 
@@ -777,5 +778,29 @@ public class MainActivity extends Activity {
         }
 
         return "ERROR";
+    }
+
+    @Override
+    public void onCardAdded(Card newCard) {
+        Log.i(TAG, "Card added " + newCard.getId());
+        mCardAdapter.appendCard(newCard);
+    }
+
+    @Override
+    public void onCardChanged(Card changedCard) {
+        Log.i(TAG, "Card changed " + changedCard.getId());
+        mCardAdapter.changeCard(changedCard);
+    }
+
+    @Override
+    public void onCardsSwapped(Card cardOne, Card cardTwo) {
+        Log.i(TAG, String.format("Cards swapped %s <-> %s ", cardOne.getId(), cardTwo.getId()));
+        mCardAdapter.swapCards(cardOne, cardTwo);
+    }
+
+    @Override
+    public void onCardRemoved(Card removedCard) {
+        Log.i(TAG, "Card removed " + removedCard.getId());
+        mCardAdapter.removeCard(removedCard);
     }
 }

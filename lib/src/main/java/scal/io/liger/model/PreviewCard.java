@@ -127,7 +127,7 @@ public class PreviewCard extends Card {
             checkStateVideo() ||
             checkStateAudio() ||
             checkStatePhoto()) {
-            storyPathReference.notifyActivity(this);
+            storyPathReference.notifyCardChanged(this);
         }
     }
 

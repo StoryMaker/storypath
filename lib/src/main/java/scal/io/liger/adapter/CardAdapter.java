@@ -21,7 +21,6 @@ import scal.io.liger.view.DisplayableCard;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public List<Card> mDataset;
     private HashMap<String, Integer> mCardIdToPosition; // Keep track of Card position by Card#id
-    private Activity mHostActivity;
 
     // Provide a reference to the type of views that you are using
     // (custom viewholder)
@@ -40,9 +39,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CardAdapter(Activity host, List<Card> myDataset) {
+    public CardAdapter(List<Card> myDataset) {
         mDataset = myDataset;
-        mHostActivity = host;
         populateCardIdMap();
     }
 
@@ -94,6 +92,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             notifyItemChanged(cardIndex);
     }
 
+    public void swapCards(Card cardOne, Card cardTwo) {
+        int indexOne = mCardIdToPosition.get(cardOne.getId());
+        int indexTwo = mCardIdToPosition.get(cardTwo.getId());
+        mDataset.set(indexTwo, cardOne);
+        mDataset.set(indexOne, cardTwo);
+        mCardIdToPosition.put(cardOne.getId(), mDataset.indexOf(cardOne));
+        mCardIdToPosition.put(cardTwo.getId(), mDataset.indexOf(cardTwo));
+        notifyItemMoved(indexOne, indexTwo);
+        notifyItemMoved(indexTwo+1, indexOne); // TODO verify this
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public CardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
@@ -116,9 +125,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         } else {
             // Rebuild the view
             Context context = holder.cardView.getContext();
-            DisplayableCard cardsuiCard = newCard.getDisplayableCard(holder.cardView.getContext());
+            DisplayableCard displayableCard = newCard.getDisplayableCard(holder.cardView.getContext());
             holder.cardView.removeAllViews();
-            ViewGroup oldCardContainer = (ViewGroup) cardsuiCard.getCardView(context);
+            ViewGroup oldCardContainer = (ViewGroup) displayableCard.getCardView(context);
             holder.cardView.addView(oldCardContainer);
         }
     }
