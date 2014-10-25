@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -34,6 +35,26 @@ public class StoryPathLibrary extends StoryPath {
         public void onCardChanged(Card changedCard);
         public void onCardsSwapped(Card cardOne, Card cardTwo);
         public void onCardRemoved(Card removedCard);
+    }
+
+    @Override
+    public void notifyCardChanged(@NonNull Card firstCard) {
+        Log.i(TAG, "(LIBRARY) notifyCardChanged of update to card " + firstCard.getId());
+        if (mListener == null) {
+            return;
+        }
+
+        String action = ((MainActivity)context).checkCard(firstCard);
+
+        if (action.equals("ADD")) {
+            mListener.onCardAdded(firstCard);
+        }
+        if (action.equals("UPDATE")) {
+            mListener.onCardChanged(firstCard);
+        }
+        if (action.equals("DELETE")) {
+            mListener.onCardRemoved(firstCard);
+        }
     }
 
     public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {
