@@ -21,7 +21,7 @@
     "cards": [
         {
             "title": null, 
-            "correct_required": 0, 
+            "correctRequired": 0, 
             "question": "This is the question text!", 
             "choices": [
                 {
@@ -42,7 +42,7 @@
             ], 
             "filter": null, 
             "caption": null, 
-            "correct_answers": [
+            "correctAnswers": [
                 "event", 
                 "profile"
             ], 

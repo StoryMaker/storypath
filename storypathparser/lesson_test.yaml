@@ -3,7 +3,7 @@
     title: Shot Goals
     cards:
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Hiro Protagonist
             media: 
                 - 
@@ -13,7 +13,7 @@
             text: My shots are well composed, but when I watch them together they are repetitive and do not tell me a complete story. What am I missing?
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Background
               *A successful shot is more than a well composed image.* A shot with a goal progresses the story and provides specific information that supports the goal of the sequence.  
@@ -29,14 +29,14 @@
               This is getting really boring.
                         
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Solution
               ![Example of a wide shot providing a clear location](2.png)
               Each shot type has specific goals it is best suited to achieve. You may be able to explain your location with other shot types, but the wide shot is the easiest option to do it successfully. For example, wide shots are filmed far away from a subject. This distance often provides a clear image of the area around the subject, which is why it is effective to depict the location.  
 
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Here is my Title
             media: 
                 - 
@@ -57,19 +57,19 @@
             text: Each type of shot has a goal that also answers a specific question about the story as well. By shooting a complete set of shot types, you can allow yourself to focus on a separate part of the story with each shot, and as a group they will tell a complete story.  
             
         - 
-            card: TextCard
+            type: TextCard
             text: Only try to accomplish one goal per shot when you are first learning. A sequence is more successful with two shots that each do a good job of achieving one goal, than to have one shot that does a bad job of achieving two goals.  
 
         - 
-            card: TextCard
+            type: TextCard
             text: It is best to experiment with this at first, and expect to fail more often than it works. Do not get discouraged. It is a challenging skill and each goal you add to a shot makes it significantly harder to be successful.
             
         - 
-            card: TextCard
+            type: TextCard
             text: Now that we understand why we have shot goals lets review some examples of the shot types. What goal they are best suited to, and give you some tips to help you be successful.
 
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Wide Shot
             media: 
                 - 
@@ -78,7 +78,7 @@
             text: 
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Goal: Shows the location / scene of a story.  
                 
@@ -89,7 +89,7 @@
               &bull; To use multiple times you should be showing a dramatic change to the location. For example, an empty town square to a full town square is a successful use of two location shots.  
 
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Long Shot
             media: 
                 - 
@@ -98,7 +98,7 @@
             text: 
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Goal: Showcases the characters and how they interact with the location.  
                 
@@ -109,7 +109,7 @@
               &bull; It is common to allow for more headroom than in either medium or close up shots.  
               
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Medium Shot
             media: 
                 - 
@@ -118,7 +118,7 @@
             text: 
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Goal: Directs the audience to focus entirely on one or two characters, may not provide an understanding of the location.  
               
@@ -129,7 +129,7 @@
               &bull; It is common to allow for more headroom than in either medium or close up shots.  
               
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Close up Shot
             media: 
                 - 
@@ -138,7 +138,7 @@
             text: 
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Goal: Forces the audience to focus entirely on a single character, encourages the emotion of the character.  
               
@@ -149,7 +149,7 @@
               &bull; Do not worry about incorporating the environment in this shot.  
 
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: Audio
             media: 
                 - 
@@ -158,12 +158,12 @@
             text: 
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Goal: Showcases audio, because audio is important.  
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # Things to Remember  
                 
@@ -173,19 +173,19 @@
               Consider the Hitchcock rule from video basics when you are considering your goal. Ask yourself if the most important element,  the primary goal of your shot is clearly visible.  
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |           
               ![The subject matter should be 50% of the screen focus](14.png)  
                 
               The rule of thirds is there to help you arrange the elements in your frame so that they are successful. Use the four point system from it to ensure your goals are clear.  
 
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |  
               # QUIZ
 
         - 
-            card: QuizCard
+            type: QuizCard
             questions:
                 - question:
                         title: Question 1
@@ -199,7 +199,7 @@
                             - 4
 
         - 
-            card: QuizCard
+            type: QuizCard
             questions:
                 - question:
                         title: Question 2
@@ -213,7 +213,7 @@
                             - 2
 
         - 
-            card: QuizCard
+            type: QuizCard
             questions:
                 - question:
                         title: Question 2
@@ -227,7 +227,7 @@
                             - 2
 
         - 
-            card: QuizCard
+            type: QuizCard
             questions:
                 - question:
                         title: Question 3
@@ -241,7 +241,7 @@
                             - 2
 
         - 
-            card: QuizCard
+            type: QuizCard
             questions:
                 - question:
                         title: Question 4

@@ -15,7 +15,8 @@ import scal.io.liger.Constants;
 import scal.io.liger.view.DisplayableCard;
 
 /**
- * Created by mnbogner on 7/10/14.
+ * @author Matthew Bogner
+ * @author Josh Steiner
  */
 public abstract class Card extends Observable implements Observer {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
 
@@ -162,29 +163,38 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         this.references.add(reference);
     }
 
+    // FIXME we should extend this to allow 1 and 2 part ids for local checks only (key::value or key)
+    public boolean checkReferencedValueMatches(String reference) {
+        boolean result = true;
+
+        String[] pathParts = reference.split("::");
+        String referencedValue = storyPathReference.getReferencedValue(reference);
+
+        if ((referencedValue != null) && (referencedValue.equals(Constants.EXTERNAL))) {
+            referencedValue = storyPathReference.getExternalReferencedValue(reference);
+        }
+
+        if (pathParts.length == 3) {
+            // just check that the value is not null
+            if (referencedValue == null) { // FIXME this cold be simplified
+                result = false;
+            }
+        } else { // if length == 4, check its not null and it matches
+            if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
+                result = false;
+            }
+        }
+
+        return result;
+    }
+
     public boolean checkReferencedValues() {
         boolean result = true;
 
         if (references != null) {
             for (String reference : references) {
                 // assumes the format story::card::field::value
-                String[] pathParts = reference.split("::");
-                String referencedValue = storyPathReference.getReferencedValue(reference);
-
-                if ((referencedValue != null) && (referencedValue.equals(Constants.EXTERNAL))) {
-                    referencedValue = storyPathReference.getExternalReferencedValue(reference);
-                }
-
-                if (pathParts.length == 3) {
-                    // just check that the value is not null
-                    if (referencedValue == null) { // FIXME this cold be simplified
-                        result = false;
-                    }
-                } else {
-                    if ((referencedValue == null) || (!referencedValue.equals(pathParts[3]))) {
-                        result = false;
-                    }
-                }
+                result = checkReferencedValueMatches(reference);
             }
         }
 

@@ -160,8 +160,8 @@ public class JsonHelper {
 
         // HARD CODING LIST
 
-//        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
-        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library.json");
+        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
+//        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library.json");
         File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
         File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
         File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");

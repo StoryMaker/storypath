@@ -18,8 +18,8 @@ public class QuizCard extends Card {
     private String filter;
     private String description;
     private ArrayList<Choice> choices;
-    private ArrayList<String> correct_answers; // Collection of Choice#id
-    private int correct_required;
+    private ArrayList<String> correctAnswers; // Collection of Choice#id   // FIXME camelCase this
+    private int correctRequired; // FIXME camelCase this
 
 
     public QuizCard() {
@@ -34,7 +34,7 @@ public class QuizCard extends Card {
 
     @Nullable
     public int getCorrectRequired() {
-        return correct_required;
+        return correctRequired;
     }
 
     /**
@@ -42,8 +42,8 @@ public class QuizCard extends Card {
      * if any first selection should render the card complete.
      */
     public ArrayList<String> getCorrectAnswers() {
-        return correct_answers;
-    }
+        return correctAnswers;
+    } // FIXME we need to filter down correctAnswers to only include choices that passed our filters
 
     public String getDescription() {
         return fillReferences(description);
@@ -53,8 +53,42 @@ public class QuizCard extends Card {
         this.description = description;
     }
 
+    // FIXME rename to getChoices
     public ArrayList<Choice> getOptions() {
         return choices;
+    }
+
+    // FIXME a generalized version of this should probably be brought down to base class and used all over the place
+    public ArrayList<Choice> getFilteredChoices() {
+        ArrayList<Choice> filtered = new ArrayList<Choice>();
+        for (Choice choice: choices) {
+            if (choice.filter != null) {
+                if (checkReferencedValueMatches(choice.filter)) {
+                    filtered.add(choice);
+                }
+            } else if (choice.filters_and != null) {
+                boolean andPassed = true;
+                for (String filter: choice.filters_and) {
+                    if (!checkReferencedValueMatches(filter)) {
+                        andPassed = false;
+                        break;
+                    }
+                }
+                if (andPassed) filtered.add(choice);
+            } else if (choice.filters_or != null) {
+                boolean orPassed = false;
+                for (String filter: choice.filters_or) {
+                    if (checkReferencedValueMatches(filter)) {
+                        orPassed = true;
+                        break;
+                    }
+                }
+                if (orPassed) filtered.add(choice);
+            } else { // if there are no filters, we just add it to the good list
+                filtered.add(choice);
+            }
+        }
+        return filtered;
     }
 
     public void setOptions(ArrayList<Choice> choices) {
@@ -100,19 +134,11 @@ public class QuizCard extends Card {
         this.choices = choices;
     }
 
-    public ArrayList<String> getCorrect_answers() {
-        return correct_answers;
+    public void setCorrectAnswers(ArrayList<String> correctAnswers) {
+        this.correctAnswers = correctAnswers;
     }
 
-    public void setCorrect_answers(ArrayList<String> correct_answers) {
-        this.correct_answers = correct_answers;
-    }
-
-    public int getCorrect_required() {
-        return correct_required;
-    }
-
-    public void setCorrect_required(int correct_required) {
-        this.correct_required = correct_required;
+    public void setCorrectRequired(int correctRequired) {
+        this.correctRequired = correctRequired;
     }
 }

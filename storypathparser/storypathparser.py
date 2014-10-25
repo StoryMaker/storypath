@@ -30,7 +30,7 @@ def parse_file(stream):
     for card in objs['cards']:
         #newcard = {}
         newcard = card
-        if card['type'  ] == 'MarkDownCard':
+        if card['type'] == 'MarkDownCard':
             set_id("markdown_card", newcard)
             newcard['type'] = 'MarkdownCard'
             newcard['text'] = card['body']

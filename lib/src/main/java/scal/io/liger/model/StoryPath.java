@@ -20,7 +20,8 @@ import scal.io.liger.ReferenceHelper;
 import scal.io.liger.StoryPathDeserializer;
 
 /**
- * Created by mnbogner on 7/10/14.
+ * @author Matthew Bogner
+ * @author Josh Steiner
  */
 public class StoryPath {
     public static final String TAG = "StoryPath";
@@ -271,7 +272,7 @@ public class StoryPath {
         String[] pathParts = fullPath.split("::");
 
         if (!this.getId().equals(pathParts[0])) {
-            return Constants.EXTERNAL;
+            return Constants.EXTERNAL; // FIXME we should probably use an exception instead of overloading the return value
         }
 
         Card card = this.getCardById(fullPath);

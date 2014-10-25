@@ -7,9 +7,9 @@
     cards:
         - 
             id: quiz_card_topic
-            card: QuizCard
+            type: QuizCard
             question: What is your story about?
-            correct_required: 1
+            correctRequired: 1
             choices:
                 - 
                     id: event
@@ -23,144 +23,142 @@
                 
         - 
             id: quiz_card_format
-            card: QuizCard
+            type: QuizCard
             question: What do you want to do?
-            correct_required: 1
+            correctRequired: 1
             references:
-                - 
-                    default_library::quiz_card_topic::choice
+                - default_library::quiz_card_topic::choice
             choices:
                 # filter answer choices based on chosen topic
                 - 
                     id: interview
                     text: Talk to people, or a person, about...
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
                 
                 - 
                     id: discussion
                     text: Ask many people...
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
                     
                 - 
                     id: report
                     text: Recap of the important parts
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
                     
                 - 
                     id: process
                     text: Show the steps taken...
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
                     
                 - 
                     id: series
                     text: Takes pictures of people...
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
                     
                 - 
                     id: highlights
                     text: Show the best moments.
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_topic::topic::issue 
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue 
             
         -
             id: quiz_card_medium
-            card: QuizCard 
+            type: QuizCard 
             question: Choose a medium.
-            correct_required: 1
+            correctRequired: 1
             references:
-                - 
-                    default_library::quiz_card_format::choice
+                - default_library::quiz_card_format::choice
             choices:
                 # filter answer choices based on chosen format
                 - 
                     id: audio
                     text: Audio
                     filters_or:
-                        - default_library::quiz_card_format::format::interview
-                        - default_library::quiz_card_format::format::discussion
-                        - default_library::quiz_card_format::format::report
-                        - default_library::quiz_card_format::format::process
-                        - default_library::quiz_card_format::format::highlights
+                        - default_library::quiz_card_format::choice::interview
+                        - default_library::quiz_card_format::choice::discussion
+                        - default_library::quiz_card_format::choice::report
+                        - default_library::quiz_card_format::choice::process
+                        - default_library::quiz_card_format::choice::highlights
                 
                 - 
                     id: video
                     text: Video
                     filters_or:
-                        - default_library::quiz_card_format::format::interview
-                        - default_library::quiz_card_format::format::discussion
-                        - default_library::quiz_card_format::format::report
-                        - default_library::quiz_card_format::format::process
-                        - default_library::quiz_card_format::format::highlights
+                        - default_library::quiz_card_format::choice::interview
+                        - default_library::quiz_card_format::choice::discussion
+                        - default_library::quiz_card_format::choice::report
+                        - default_library::quiz_card_format::choice::process
+                        - default_library::quiz_card_format::choice::highlights
                 
                 - 
                     id: photo
                     text: Photo
                     filters_or:
-                        - default_library::quiz_card_format::format::process
-                        - default_library::quiz_card_format::format::series
-                        - default_library::quiz_card_format::format::highlights
+                        - default_library::quiz_card_format::choice::process
+                        - default_library::quiz_card_format::choice::series
+                        - default_library::quiz_card_format::choice::highlights
                 
         # this question only shows up if format == series
         -
             id: quiz_card_cliptype
-            card: QuizCard 
+            type: QuizCard 
             question: What kind of clips would you like to make a series.
-            filter: default_library::quiz_card_format::format::series
-            correct_required: 1
+            filter: default_library::quiz_card_format::choice::series
+            correctRequired: 1
             references:
-                - 
-                    default_library::quiz_card_medium::choice
+                - default_library::quiz_card_medium::choice
+                - default_library::quiz_card_format::choice::series
             choices:
                 # filter answer choices based on chosen topic
                 - 
                     id: character
                     text: Character
                     filters_or:        
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
                     
                 - 
                     id: action
                     text: Action
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::profile
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
                     
                 - 
                     id: result
                     text: Result
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event 
+                        - default_library::quiz_card_topic::choice::event 
                     
                 - 
                     id: place
                     text: Place
                     filters_or:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::issue
                     
                 - 
                     id: signature
                     text: Signature
                     filters_or:
-                        - default_library::quiz_card_topic::topic::issue
+                        - default_library::quiz_card_topic::choice::issue
 
 
         # this question only shows up only if format == discussion
@@ -168,121 +166,121 @@
             id: quiz_card_clipquestion
             type: QuizCard 
             question: Which question would you like to use?
-            filter: default_library::quiz_card_format::format::discussion
-            correct_required: 1
+            filter: default_library::quiz_card_format::choice::discussion
+            correctRequired: 1
             references:
-                - 
-                    default_library::quiz_card_medium::choice
+                - default_library::quiz_card_medium::choice
+                - default_library::quiz_card_format::choice::discussion
             choices:
                 # filter answer choices based on chosen topic && medium
                 - 
                     id: question_1
-                    text: Why is the event important
+                    text: Why is the event important?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_2 
                     text: What is your opinion of the event?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_3
                     text: What do you think is the most exciting part of the event?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_4
                     text: Why is the event important?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_5
                     text: What is your opinion of the event?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_6
                     text: What do you think is the most exciting part of the event?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_7
                     text: Why is the issue important?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::issue
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_8
                     text: What is your opinion of the issue?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::issue
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_9
                     text: What do you think should be done about the issue?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::issue
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_10
                     text: Why is the issue important?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_11 
                     text: What is your opinion of the issue?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_12 
                     text: What do you think should be done about the issue?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_13
                     text: Why is the character important?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::event
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_14
                     text: What is your opinion of the character?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_15
                     text: What do you think the character should do next?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_medium::medium::audio
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_medium::choice::audio
                 - 
                     id: question_16
                     text: Why is the character important?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::profile
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_17
                     text: What is your opinion of the character?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::issue
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_18
                     text: What do you think the character should do next?
                     filters_and:
-                        - default_library::quiz_card_topic::topic::issue
-                        - default_library::quiz_card_medium::medium::video
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
                         
         -   
             type: HeadlessCard

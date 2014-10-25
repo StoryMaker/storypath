@@ -4,7 +4,7 @@
     id: genpath_1
     cards:
         - 
-            card: MarkDownCard
+            type: MarkDownCard
             body: |
                 Being an effective journalist involves using a variety of communication methods. Standard communication methods leave a trail that can be used by those who threaten you or your sources. In the process of producing a story, you may leave a digital trail that assists those who threaten you or your sources.  
                 Understanding your communications trail is the first step to ensure that those who threaten you cannot take advantage of you or your sources.  
@@ -13,7 +13,7 @@
                 &bull; item the third  
 
         - 
-            card: PreviewCard
+            type: PreviewCard
             title: A Preview Card
             media:
                 - 
@@ -23,10 +23,10 @@
                     media: file2.format
                     media_caption: (c) Josh Steiner 2099  
         -
-            card: TextCard
+            type: TextCard
             text: This is the text of the card.  Woohoo.
         - 
-            card: QuizCard
+            type: QuizCard
             questions:
                 - question:
                         title: First question

@@ -99,7 +99,7 @@ public class QuizCardView extends ExampleCardView {
             }
         });
 
-        mDisplayedChoices = mCardModel.getOptions();
+        mDisplayedChoices = mCardModel.getFilteredChoices();
         final boolean hasQuizResponses = mDisplayedChoices != null && mDisplayedChoices.size() > 0;
 
         /** Quiz response selection listener
@@ -140,7 +140,7 @@ public class QuizCardView extends ExampleCardView {
             }
 
         } else {
-            throw new IllegalStateException("Quiz has no responses!");
+            throw new IllegalStateException("Quiz has no responses!"); // FIXME instead of dying, we should just mark this card as not active?
         }
 
         // supports automated testing
@@ -164,7 +164,7 @@ public class QuizCardView extends ExampleCardView {
             mSelectedChoices.remove(choice);
             mCardModel.addValue(VALUES_CHOICE_TAG, "", doNotify);
         }
-        logString.append(" selected choice " + mSelectedChoices.size() + " correct_required " + mCardModel.getCorrectRequired());
+        logString.append(" selected choice " + mSelectedChoices.size() + " correctRequired " + mCardModel.getCorrectRequired());
         logString.append(" passed: " + quizIsPassed());
         Log.i(TAG, logString.toString());
     }
