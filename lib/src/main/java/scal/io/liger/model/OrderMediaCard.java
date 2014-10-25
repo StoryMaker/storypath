@@ -128,7 +128,7 @@ public class OrderMediaCard extends Card {
             checkStateVideo() ||
             checkStateAudio() ||
             checkStatePhoto()) {
-            storyPathReference.notifyActivity(this);
+            storyPathReference.notifyCardChanged(this);
         }
     }
 

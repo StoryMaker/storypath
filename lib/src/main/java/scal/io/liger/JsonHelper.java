@@ -272,7 +272,7 @@ public class JsonHelper {
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
-        Gson gson = gBuild.create();
+        Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
 
@@ -342,28 +342,28 @@ public class JsonHelper {
         Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
-        Gson gson = gBuild.create();
+        Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         // set aside references to prevent circular dependencies when serializing
-        Context tempContext = storyPathLibrary.getContext();
-        StoryPath tempCurrentStoryPath = storyPathLibrary.getCurrentStoryPath();
+        //Context tempContext = storyPathLibrary.getContext();
+        //StoryPath tempCurrentStoryPath = storyPathLibrary.getCurrentStoryPath();
         //ArrayList<Card> tempValidCards = storyPathLibrary.getValidCards();
 
-        storyPathLibrary.setContext(null);
-        storyPathLibrary.setCurrentStoryPath(null);
+//        storyPathLibrary.setContext(null);
+//        storyPathLibrary.setCurrentStoryPath(null);
         //storyPathLibrary.setValidCards(null);
-        storyPathLibrary.clearObservers();
-        storyPathLibrary.clearCardReferences();
+//        storyPathLibrary.clearObservers();
+//        storyPathLibrary.clearCardReferences();
 
         String storyPathLibraryJson = gson.toJson(storyPathLibrary);
 
         // restore references
 
-        storyPathLibrary.setCardReferences();
-        storyPathLibrary.initializeObservers();
+//        storyPathLibrary.setCardReferences();
+//        storyPathLibrary.initializeObservers();
         //storyPathLibrary.setValidCards(tempValidCards);
-        storyPathLibrary.setCurrentStoryPath(tempCurrentStoryPath);
-        storyPathLibrary.setContext(tempContext);
+//        storyPathLibrary.setCurrentStoryPath(tempCurrentStoryPath);
+//        storyPathLibrary.setContext(tempContext);
 
         return storyPathLibraryJson;
 
@@ -405,7 +405,7 @@ public class JsonHelper {
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
-        Gson gson = gBuild.create();
+        Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         StoryPath storyPath = gson.fromJson(storyPathJson, StoryPath.class);
 
@@ -481,7 +481,7 @@ public class JsonHelper {
         Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
-        Gson gson = gBuild.create();
+        Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPath.getContext();

@@ -127,7 +127,7 @@ public class MilestoneProgressCard extends Card {
             checkStateVideo() ||
             checkStateAudio() ||
             checkStatePhoto()) {
-            storyPathReference.notifyActivity(this);
+            storyPathReference.notifyCardChanged(this);
         }
     }
 
