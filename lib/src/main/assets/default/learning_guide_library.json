@@ -53,14 +53,14 @@
                 "value": "false"
             }
         },
-                 {
-                     "type": "HeadlessCard",
-                     "id": "headless_card",
-                     "action": "LOAD",
-                     "target": "learning_guide_v1",
-                                                              "references": [
-                                                                  "learning_guide_library::load_button::value::true"
-                                                              ]
-                 }
+        {
+            "type": "HeadlessCard",
+            "id": "headless_card",
+            "action": "LOAD",
+            "target": "learning_guide_v1",
+            "references": [
+                "learning_guide_library::load_button::value::true"
+            ]
+        }
     ]
 }

@@ -39,7 +39,7 @@
                     ]
                 }, 
                 {
-                    "text": "Ask many peaople...", 
+                    "text": "Ask many people...", 
                     "id": "discussion", 
                     "filters_or": [
                         "default_library::quiz_card_topic::topic::event", 
@@ -331,6 +331,15 @@
                     ], 
                     "id": "question_18"
                 }
+            ]
+        },
+        {
+            "type": "HeadlessCard",
+            "id": "headless_card",
+            "action": "LOAD",
+            "target": "event_highlights_audio",
+            "references": [
+                "default_library::quiz_card_clipquestion::choice"
             ]
         }
     ], 

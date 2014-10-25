@@ -41,7 +41,7 @@
                 
                 - 
                     id: discussion
-                    text: Ask many peaople...
+                    text: Ask many people...
                     filters_or:
                         - default_library::quiz_card_topic::topic::event
                         - default_library::quiz_card_topic::topic::profile
@@ -166,7 +166,7 @@
         # this question only shows up only if format == discussion
         -
             id: quiz_card_clipquestion
-            card: QuizCard 
+            type: QuizCard 
             question: Which question would you like to use?
             filter: default_library::quiz_card_format::format::discussion
             correct_required: 1
@@ -283,3 +283,12 @@
                     filters_and:
                         - default_library::quiz_card_topic::topic::issue
                         - default_library::quiz_card_medium::medium::video
+                        
+        -   
+            type: HeadlessCard
+            id: headless_card
+            action: LOAD
+            target: event_highlights_audio
+            references: 
+                - 
+                    default_library::quiz_card_clipquestion::choice
