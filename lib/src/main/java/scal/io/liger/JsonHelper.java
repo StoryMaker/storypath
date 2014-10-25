@@ -131,6 +131,19 @@ public class JsonHelper {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            new File( sdLigerFilePath + "/default/default_library/").mkdirs();
+
+            try {
+                String[] assets = context.getAssets().list("default/default_library");
+                for (String asset: assets) {
+                    String filePath = "/default/default_library/" + asset;
+                    InputStream jsonStream = context.getAssets().open("default/default_library/" + asset);
+                    addFileToSDCard(jsonStream, filePath);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             Log.e(TAG, "SD CARD NOT FOUND");
         }
@@ -147,7 +160,7 @@ public class JsonHelper {
 
         // HARD CODING LIST
 
-        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library.json");
+        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
         File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
         File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
         File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");

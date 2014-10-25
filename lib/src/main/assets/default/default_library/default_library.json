@@ -188,7 +188,7 @@
             "id": "quiz_card_clipquestion", 
             "choices": [
                 {
-                    "text": "Why is the event important", 
+                    "text": "Why is the event important?", 
                     "filters_and": [
                         "default_library::quiz_card_topic::topic::event", 
                         "default_library::quiz_card_medium::medium::audio"
@@ -286,7 +286,7 @@
                 {
                     "text": "Why is the character important?", 
                     "filters_and": [
-                        "default_library::quiz_card_topic::topic::event", 
+                        "default_library::quiz_card_topic::topic::profile", 
                         "default_library::quiz_card_medium::medium::audio"
                     ], 
                     "id": "question_13"
@@ -335,7 +335,7 @@
         }
     ], 
     "storyPathTemplateFiles": {
-        "learning_guide_v1": "learning_guide_v1.json"
+        "event_highlights_audio": "event_highlights_audio.json"
     }, 
     "classPackage": "scal.io.liger.model", 
     "id": "default_library", 
