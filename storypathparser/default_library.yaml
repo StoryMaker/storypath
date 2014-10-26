@@ -231,19 +231,19 @@
                     id: question_10
                     text: Why is the issue important?
                     filters_and:
-                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::issue
                         - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_11 
                     text: What is your opinion of the issue?
                     filters_and:
-                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::issue
                         - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_12 
                     text: What do you think should be done about the issue?
                     filters_and:
-                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::issue
                         - default_library::quiz_card_medium::choice::video
                 - 
                     id: question_13
