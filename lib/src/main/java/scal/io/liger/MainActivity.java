@@ -61,10 +61,22 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 ////        }
 
         Log.d("MainActivity", "onCreate");
-//        initApp();
+
         if (savedInstanceState == null) {
             Log.d(TAG, "onSaveInstanceState called with savedInstanceState");
-            initApp();
+
+            JsonHelper.setupFileStructure(this);
+            MediaHelper.setupFileStructure(this);
+
+            Intent i = getIntent();
+            if (i.hasExtra("storypathlibrary_json")) {
+                String splJsonFilename = i.getExtras().getString("storypathlibrary_json");
+                File jsonFile = new File(JsonHelper.getSdLigerFilePath() + splJsonFilename);
+                String json = JsonHelper.loadJSON(jsonFile);
+                initHook(json, jsonFile);
+            } else {
+                showJsonSelectorPopup();
+            }
         } else {
             Log.d(TAG, "onSaveInstanceState called with no saved state");
             Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
@@ -135,7 +147,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         super.onSaveInstanceState(outState);
     }
 
-    private void initApp() {
+    private void showJsonSelectorPopup() {
         SharedPreferences sp = getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
 
         /*
@@ -149,9 +161,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             e.commit();
         }
         */
-
-        JsonHelper.setupFileStructure(this);
-        MediaHelper.setupFileStructure(this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] jsonFiles = JsonHelper.getJSONFileList();

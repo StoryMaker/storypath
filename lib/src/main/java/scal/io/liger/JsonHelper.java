@@ -56,7 +56,11 @@ public class JsonHelper {
     }
 
     public static String loadJSON() {
-        if(null == selectedJSONFile) {
+        return loadJSON(selectedJSONFile);
+    }
+
+    public static String loadJSON(File file) {
+        if(null == file) {
             return null;
         }
 
@@ -65,7 +69,7 @@ public class JsonHelper {
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                InputStream jsonStream = new FileInputStream(selectedJSONFile);
+                InputStream jsonStream = new FileInputStream(file);
 
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
@@ -80,6 +84,10 @@ public class JsonHelper {
         }
 
         return jsonString;
+    }
+
+    public static String getSdLigerFilePath() {
+        return sdLigerFilePath;
     }
 
     public static void setupFileStructure(Context context) {
