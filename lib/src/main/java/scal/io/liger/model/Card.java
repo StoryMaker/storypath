@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import scal.io.liger.Constants;
+import scal.io.liger.ReferenceHelper;
 import scal.io.liger.view.DisplayableCard;
 
 /**
@@ -299,6 +300,27 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         }
 
         return null;
+    }
+
+    public ArrayList<Card> getCardsByClass (String fullPath) {
+        // helper method takes a collection of references
+        ArrayList<String> pathArray = new ArrayList<String>();
+        pathArray.add(fullPath);
+
+        ArrayList<Card> matchingCards = new ArrayList<Card>();
+        matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPathReference(), pathArray));
+
+        // check for attached story path/story path library
+        if (this.getStoryPathReference().getStoryPathLibraryReference() != null) {
+            matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPathReference().getStoryPathLibraryReference(), pathArray));
+        }
+        if (this.getStoryPathReference() instanceof StoryPathLibrary) {
+            if (((StoryPathLibrary)this.getStoryPathReference()).getCurrentStoryPath() != null) {
+                matchingCards.addAll(ReferenceHelper.getCards(((StoryPathLibrary) this.getStoryPathReference()).getCurrentStoryPath(), pathArray));
+            }
+        }
+
+        return matchingCards;
     }
 
     public String fillReferences(String originalString) { // <- need to integrate with observer/update process
