@@ -19,7 +19,8 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Created by micahlucas on 10/6/14.
+ * @author Micah Lucas
+ * @author Josh Steiner
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
     private MainActivity mMainActivity;

@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasToString;
 
 /**
- * Created by micahlucas on 10/6/14.
+ * @author Josh Steiner
  */
 public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainActivity> {
     private MainActivity mMainActivity;

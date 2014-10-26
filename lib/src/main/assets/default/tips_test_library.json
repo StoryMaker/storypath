@@ -1,0 +1,51 @@
+{
+    "cards": [
+        {
+            "tips": [
+                {
+                    "text": "This is the first tip", 
+                    "tags": [
+                        "tag1", 
+                        "tag2"
+                    ]
+                }, 
+                {
+                    "text": "second tip", 
+                    "tags": [
+                        "tag3", 
+                        "tag4"
+                    ]
+                }, 
+                {
+                    "text": "Oh yes, this is the 3rd tip.", 
+                    "tags": [
+                        "tag1", 
+                        "tag4"
+                    ]
+                }
+            ], 
+            "type": "TipCollectionHeadlessCard", 
+            "id": "tip_collection"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "tag1"
+            ]
+        },
+        {
+            "type": "TipCard", 
+            "id": "tip_card_2", 
+            "tags": [
+                "tag2"
+            ]
+        }
+    ], 
+    "storyPathTemplateFiles": {
+        "learning_guide_v1": "learning_guide_v1.json"
+    }, 
+    "classPackage": "scal.io.liger.model", 
+    "id": "tips_test_library", 
+    "title": "Tips test"
+}

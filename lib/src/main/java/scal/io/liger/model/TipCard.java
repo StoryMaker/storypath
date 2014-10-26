@@ -9,9 +9,12 @@ import java.util.Random;
  */
 public class TipCard extends MarkdownCard {
 
-    // FIXME make sure random isnt being serizlized
+    // FIXME make sure this isn't being serialized
     private Random random;
     private ArrayList<String> tags;
+
+    // FIXME make sure this isn't being serialized
+    private ArrayList<String> tips = null;
 
     public TipCard() {
         super();
@@ -22,32 +25,30 @@ public class TipCard extends MarkdownCard {
     @Override
     public String getText() {
         if (text == null)
-            text = randomTag();
+            text = randomTip();
         return super.getText();
     }
 
-    public ArrayList<String> getTags() {
-        ArrayList<String> a = new ArrayList<String>();
-        if (tags != null) {
-            for (String s : tags) {
-                a.add(fillReferences(s));
+    public ArrayList<String> getTips() {
+        if (tips == null) {
+            ArrayList<Card> cards = getCardsByClass("thispath::<<scal.io.liger.model.TipCollectionHeadlessCard>>");
+            if (cards.size() > 0) {
+                TipCollectionHeadlessCard tipCollection = (TipCollectionHeadlessCard) cards.get(0);
+                tips = tipCollection.getTipsTextByTags(tags);
+            } else {
+                return null;
             }
         }
-        return a;
+        return tips;
     }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
-
-    public void addTag(String tag) {
-        if (this.tags == null)
-            this.tags = new ArrayList<String>();
-
-        this.tags.add(tag);
-    }
-
-    public String randomTag() {
-        return tags.get(random.nextInt(tags.size()));
+    public String randomTip() {
+        ArrayList<String> ts = getTips();
+        if (ts != null && (ts.size() > 0)) {
+            int r = random.nextInt(ts.size());
+            return ts.get(r);
+        } else {
+            return "(no tips match)"; // FIXME this is probably the wrong thing to do
+        }
     }
 }

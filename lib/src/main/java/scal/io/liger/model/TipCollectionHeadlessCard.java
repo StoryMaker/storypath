@@ -15,13 +15,50 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
 
     private ArrayList<Tip> tips;
 
-    public class Tip {
-        private String text;
-        private ArrayList<String> tags;
+    public TipCollectionHeadlessCard(ArrayList<Tip> tips) {
+        super();
+        this.tips = tips;
     }
 
+    public static class Tip {
+        protected String text;
+        protected ArrayList<String> tags;
+
+        public Tip(String text, ArrayList<String> tags) {
+            this.text = text;
+            this.tags = tags;
+        }
+    }
+
+    // FIXME opt: this can probably be more efficient
     public ArrayList<Tip> getTipsByTags(ArrayList<String> tags) {
-        return tips; // FIXME filter based on tags
+        ArrayList<Tip> matchingTips = new ArrayList<Tip>();
+        for (Tip tip: tips) {
+            boolean match = false;
+            for (String tipTag: tip.tags) {
+                for (String tag: tags) {
+                    if (tag.equals(tipTag)) {
+                        matchingTips.add(tip);
+                        match = true;
+                        break;
+                    }
+                }
+                if (match) break;
+            }
+        }
+        return matchingTips;
+    }
+
+    public ArrayList<String> getTipsTextByTags(ArrayList<String> tags) {
+        ArrayList<Tip> _tips = getTipsByTags(tags);
+        ArrayList<String> texts = null;
+        if (_tips.size() > 0) {
+            texts = new ArrayList<String>();
+            for (Tip tip : _tips) {
+                texts.add(tip.text);
+            }
+        }
+        return texts;
     }
 
     public TipCollectionHeadlessCard() {

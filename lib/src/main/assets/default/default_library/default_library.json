@@ -1,33 +1,6 @@
 {
     "cards": [
         {
-            "tips": [
-                {
-                    "text": "This is the first tip", 
-                    "tags": [
-                        "tag1", 
-                        "tag2"
-                    ]
-                }, 
-                {
-                    "text": "second tip", 
-                    "tags": [
-                        "tag3", 
-                        "tag4"
-                    ]
-                }, 
-                {
-                    "text": "Oh yes, this is the 3rd tip.", 
-                    "tags": [
-                        "tag1", 
-                        "tag4"
-                    ]
-                }
-            ], 
-            "type": "TipCollectionHeadlessCard", 
-            "id": "tip_collection"
-        }, 
-        {
             "type": "QuizCard", 
             "correctRequired": 1, 
             "question": "What is your story about?", 
