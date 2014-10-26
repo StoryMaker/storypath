@@ -60,10 +60,10 @@ spl_template = """
     "cards": [
         {
             "action": "LOAD", 
-            "type": "HeadlessCard", 
+            "type": "LoaderHeadlessCard", 
             "references": [
             ], 
-            "id": "headless_card", 
+            "id": "loader_card", 
             "target": "%s"
         }
     ], 
