@@ -1,0 +1,129 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "photo"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the location. This might be a wide shot of the location or of the entrance to the event."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show us people attending the event or reacting to something happening at the event. The more animated your subjects are the better."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "photo", 
+                "photo essay"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Shoot one picture that sums up what the event is about. This might be a single image that captures its energy and its purpose."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Pay attention to the people in attendance, capture what makes them unique as best you can."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Look for people putting on the event, look for moments when they interact with other people."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Something drew you personally to this event, be sure to photograph it as well as you can."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Photograph any significant people at the event. This might be the main performer or speaker. This might be a dignitary or politician or celebrity in attendance."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "portraits"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Look for a climax or dramatic finish, photograph it. The end of a game or a performance or even a speech, for example."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "photo"
+            ]
+        }, 
+        {
+            "medium": "photo", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_highlights_photo", 
+    "title": "Event Highlights"
+}

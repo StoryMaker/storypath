@@ -1,0 +1,126 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "audio"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record something that introduces the issue.", 
+                "Capture a clear sound that represents the issue."
+            ]
+        }, 
+        {
+            "length": "0:09", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Capture people affected by the issue talking.", 
+                "Record the sounds of where the issue happens."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the issue important?"
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the issue important?"
+            ]
+        }, 
+        {
+            "length": "0:09", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Capture important sounds of a place important to the event.", 
+                "Record sounds of where the issue occurs."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the issue important?"
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the issue important?"
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the issue important?"
+            ]
+        }, 
+        {
+            "length": "0:09", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show a place important to the issue."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "audio"
+            ]
+        }, 
+        {
+            "medium": "audio", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "Does your story tell us why the issue is important?", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_discussion_audio_question1", 
+    "title": "Issue Discussion - Why"
+}

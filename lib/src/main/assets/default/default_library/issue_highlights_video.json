@@ -1,0 +1,143 @@
+{
+    "cards": [
+        {
+            "length": "0:08", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show a location or the community that your issue is about."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "video"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show people affected by the issue."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "video"
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show something that sums up the the issue and its impact."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the most important example that illustrates the issue and its impact."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show another important but different example that illustrates the issue and its impact."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "video"
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show another important but different example that illustrate the issue and its impact."
+            ]
+        }, 
+        {
+            "text": "If there are more than three, you should add clips to include them.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Talk to any significant people at the event. This might be the main performer or speaker. This might be a dignitary or politician or celebrity in attendance."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the effect of the issue. Show how it impacts the community."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Has anything been done about the issue? Show the change.", 
+                "If nothing has changed, show that."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "video"
+            ]
+        }, 
+        {
+            "medium": "video", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_highlights_video", 
+    "title": "Issue Highlights"
+}

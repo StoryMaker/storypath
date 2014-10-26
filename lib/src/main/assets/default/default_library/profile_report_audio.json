@@ -1,0 +1,35 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "audio"
+            ]
+        }, 
+        {
+            "medium": "audio", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "profile_report_audio", 
+    "title": "Profile Report"
+}

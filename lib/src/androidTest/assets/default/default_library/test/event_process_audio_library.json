@@ -1,0 +1,19 @@
+
+{
+    "cards": [
+        {
+            "action": "LOAD", 
+            "type": "HeadlessCard", 
+            "references": [
+            ], 
+            "id": "headless_card", 
+            "target": "event_process_audio"
+        }
+    ], 
+    "storyPathTemplateFiles": {
+        "event_process_audio": "../event_process_audio.json"
+    }, 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_process_audio_library", 
+    "title": "Start a New Story"
+}

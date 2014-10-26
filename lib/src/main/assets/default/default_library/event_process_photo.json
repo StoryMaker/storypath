@@ -1,0 +1,155 @@
+{
+    "cards": [
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the place where the process you wish to illustrate will happen before it starts"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the very beginning of the process."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "portrait"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the first significant step in the event."
+            ]
+        }, 
+        {
+            "text": "Do not record every step. Just the significant steps to show the progression from beginning to end.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the second significant step in the event."
+            ]
+        }, 
+        {
+            "text": "Be sure to get a variety of compositions when illustrating the process. Some wide shots, close-ups and medium shots.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the third significant step in the event."
+            ]
+        }, 
+        {
+            "text": "If there are more than four steps involved, add more clip cards with the + button.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the final significant step in the event."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Take a picture of an especially dramatic moment that is a summary of the event."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Take a photograph significant people doing the activity."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "photo", 
+                "photo essay"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Take a photograph of people watching or reacting to the process. The more animated your subjects are the better."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the finished product or the result of the completed process -- the dramatic finish."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "photo"
+            ]
+        }, 
+        {
+            "medium": "photo", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_process_photo", 
+    "title": "Event Process"
+}

@@ -1,0 +1,137 @@
+{
+    "cards": [
+        {
+            "length": "0:08", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds where the event will happen before it starts."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Introduce the beginning of the event.", 
+                "Stand near the entrance and record the sounds of people walking by.", 
+                "Capture the sounds of the crowd inside the event."
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the first significant step in the event."
+            ]
+        }, 
+        {
+            "text": "Do not record every step. Just the significant steps to show the progression from beginning to end.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the second significant step in the event."
+            ]
+        }, 
+        {
+            "length": "0:11", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the third significant step in the event."
+            ]
+        }, 
+        {
+            "text": "If there are more than four steps involved, add more clip cards with the + button.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the final significant step in the event."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record an especially dramatic moment that is a summary of the event."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the character doing the activity."
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record people watching or reacting to the event. Engaged and animated watchers are best."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record the finished product or the event concluding - the dramatic finish."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "audio"
+            ]
+        }, 
+        {
+            "medium": "audio", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_process_audio", 
+    "title": "Event Process"
+}

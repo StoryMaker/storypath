@@ -1,0 +1,19 @@
+
+{
+    "cards": [
+        {
+            "action": "LOAD", 
+            "type": "HeadlessCard", 
+            "references": [
+            ], 
+            "id": "headless_card", 
+            "target": "issue_discussion_video_question_12"
+        }
+    ], 
+    "storyPathTemplateFiles": {
+        "issue_discussion_video_question_12": "../issue_discussion_video_question_12.json"
+    }, 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_discussion_video_question_12_library", 
+    "title": "Start a New Story"
+}

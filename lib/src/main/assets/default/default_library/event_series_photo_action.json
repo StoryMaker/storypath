@@ -1,0 +1,94 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "series"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "You might photograph a person performing a common action at the event."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Replicate the composition of the first photo with a different person."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Replicate the composition of the first photo with a different person."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "series"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Replicate the composition of the first photo with a different person."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Replicate the composition of the first photo with a different person."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "photo"
+            ]
+        }, 
+        {
+            "medium": "photo", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_series_photo_action", 
+    "title": "Event Series - Action"
+}

@@ -1,0 +1,19 @@
+
+{
+    "cards": [
+        {
+            "action": "LOAD", 
+            "type": "HeadlessCard", 
+            "references": [
+            ], 
+            "id": "headless_card", 
+            "target": "issue_series_photo_signature"
+        }
+    ], 
+    "storyPathTemplateFiles": {
+        "issue_series_photo_signature": "../issue_series_photo_signature.json"
+    }, 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_series_photo_signature_library", 
+    "title": "Start a New Story"
+}

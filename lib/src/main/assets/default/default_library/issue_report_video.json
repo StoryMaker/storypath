@@ -1,0 +1,184 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "video"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show where the issue occurs."
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show something introducing the issue."
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Introduce the issue."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: How does the issue impact individuals or the community?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show how the issue affects people."
+            ]
+        }, 
+        {
+            "length": "0:14", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show something important about the issue."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask an expert source: How can others help solve the issue?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show where the expert works."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show what people are doing about the issue."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask an informational source: When did the issue first start?"
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the character interacting with those affected."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask someone affected: What would you like to see happen regarding the issue?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the result of what people are doing about the issue."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: What is being done about the issue?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show how the character is solving the issue."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "video"
+            ]
+        }, 
+        {
+            "medium": "video", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "narration"
+            ]
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_report_video", 
+    "title": "Issue Report"
+}

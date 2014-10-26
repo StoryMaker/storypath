@@ -1,0 +1,177 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "audio"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of where the character works."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of people working on the issue."
+            ]
+        }, 
+        {
+            "length": "0:08", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Introduce the issue."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of the impact of the issue on people."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: How does the issue impact individuals or the community?"
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of the most important thing about the issue."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "When did the issue first start?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of where the issue happens."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: What is being done about the issue?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of the character interacting with those affected."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of how the character is solving the issue."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "How can others help solve the issue?"
+            ]
+        }, 
+        {
+            "length": "0:13", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of what people are doing about the issue."
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sound of something notable about the issue."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What would you like to see happen regarding the issue?"
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "audio"
+            ]
+        }, 
+        {
+            "medium": "audio", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_interview_audio", 
+    "title": "Issue Interview"
+}

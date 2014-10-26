@@ -1,0 +1,19 @@
+
+{
+    "cards": [
+        {
+            "action": "LOAD", 
+            "type": "HeadlessCard", 
+            "references": [
+            ], 
+            "id": "headless_card", 
+            "target": "issue_interview_video"
+        }
+    ], 
+    "storyPathTemplateFiles": {
+        "issue_interview_video": "../issue_interview_video.json"
+    }, 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_interview_video_library", 
+    "title": "Start a New Story"
+}

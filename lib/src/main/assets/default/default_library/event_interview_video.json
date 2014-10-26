@@ -1,0 +1,170 @@
+{
+    "cards": [
+        {
+            "length": "0:08", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show where the event happens."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Introduce the event."
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show something important to the beginning of the event."
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show preparation for the event."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: When did the event first start?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show a place important to the event."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: What is the purpose of the event?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show people interacting at the event."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: what do you do at the event?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the most important thing the character does at the event."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: How does the event impact individuals or the community?"
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the result of people interacting at the event."
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show something happening at the event."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: What will happen at the event in the future?"
+            ]
+        }, 
+        {
+            "length": "0:08", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the end of the event."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "video"
+            ]
+        }, 
+        {
+            "medium": "video", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_interview_video", 
+    "title": "Event Interview"
+}

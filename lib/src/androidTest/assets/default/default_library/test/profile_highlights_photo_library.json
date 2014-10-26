@@ -1,0 +1,19 @@
+
+{
+    "cards": [
+        {
+            "action": "LOAD", 
+            "type": "HeadlessCard", 
+            "references": [
+            ], 
+            "id": "headless_card", 
+            "target": "profile_highlights_photo"
+        }
+    ], 
+    "storyPathTemplateFiles": {
+        "profile_highlights_photo": "../profile_highlights_photo.json"
+    }, 
+    "classPackage": "scal.io.liger.model", 
+    "id": "profile_highlights_photo_library", 
+    "title": "Start a New Story"
+}

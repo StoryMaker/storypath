@@ -1,0 +1,140 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "video"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show us something that introduces the issue."
+            ]
+        }, 
+        {
+            "length": "0:08", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show where people are affected by the issue."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What do you think should be done about the issue?"
+            ]
+        }, 
+        {
+            "text": "Talk to different people for each clip to give your story a range of voices.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What do you think should be done about the issue?"
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "interview"
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What do you think should be done about the issue?"
+            ]
+        }, 
+        {
+            "text": "If you get a bad answer, it's smart to try again with a new clip.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What do you think should be done about the issue?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show a place important to the issue."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What do you think should be done about the issue?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show where the issue happens."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "video"
+            ]
+        }, 
+        {
+            "medium": "video", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_discussion_video_question3", 
+    "title": "Issue Discussion - Resolving"
+}

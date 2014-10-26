@@ -1,0 +1,139 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "video"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show us something that represents the event."
+            ]
+        }, 
+        {
+            "length": "0:08", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show where the event happens."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the event important?"
+            ]
+        }, 
+        {
+            "text": "Talk to different people for each clip to give your story a range of voices.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the event important?"
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "interview"
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the event important?"
+            ]
+        }, 
+        {
+            "text": "If you get a bad answer, it's smart to try again with a new clip.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the event important?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show a place important to the event."
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Why is the event important?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "video", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show how the event ends."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit"
+            ]
+        }, 
+        {
+            "medium": "video", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "Does your story tell us why the issue is important?", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "video", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_discussion_video_question1", 
+    "title": "Event Discussion - Why"
+}

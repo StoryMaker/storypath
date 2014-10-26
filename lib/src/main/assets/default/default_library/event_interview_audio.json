@@ -1,0 +1,204 @@
+{
+    "cards": [
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "audio"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sound introducing the event."
+            ]
+        }, 
+        {
+            "length": "0:15", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Introduce the event."
+            ]
+        }, 
+        {
+            "length": "0:08", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of where the event happens."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: What is the purpose of the event?"
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of preparation for the event."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: When did the event first start?"
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of what happens at the event."
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sound of something notable about the event."
+            ]
+        }, 
+        {
+            "length": "0:08", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of a place important to the event."
+            ]
+        }, 
+        {
+            "length": "0:30", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: what do you do at the event?"
+            ]
+        }, 
+        {
+            "length": "0:25", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of the most important thing the character does at the event."
+            ]
+        }, 
+        {
+            "length": "0:13", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sound people interacting at the event."
+            ]
+        }, 
+        {
+            "length": "0:13", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of the result of people interacting at the event."
+            ]
+        }, 
+        {
+            "length": "0:12", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Ask: How does the event impact individuals or the community?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of how the event ends."
+            ]
+        }, 
+        {
+            "length": "0:13", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record another sound of something happening at the event."
+            ]
+        }, 
+        {
+            "length": "0:20", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "What will happen at the event in the future?"
+            ]
+        }, 
+        {
+            "length": "0:10", 
+            "medium": "audio", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Record sounds of the end of the event."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "audio"
+            ]
+        }, 
+        {
+            "medium": "audio", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "event_interview_audio", 
+    "title": "Event Interview"
+}

@@ -1,0 +1,128 @@
+{
+    "cards": [
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show a location or the community that your issue is about."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "photo", 
+                "photo essay"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show people affected by the issue."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "portrait"
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Shoot a photo that sums up the the issue and its impact."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Photograph the most important example that illustrates the issue and its impact."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Photograph another important but different example that illustrate the issue and its impact."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Photograph another important but different example that illustrate the issue and its impact."
+            ]
+        }, 
+        {
+            "text": "If there are more than three, you should add cards to include them.", 
+            "type": "TextCard", 
+            "id": "text_card_1"
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Show the effect of the issue. Show how it impacts the community."
+            ]
+        }, 
+        {
+            "length": "0:00", 
+            "medium": "photo", 
+            "type": "ClipCard", 
+            "id": "clipcard_1", 
+            "goals": [
+                "Has anything been done about the issue? Show the change.", 
+                "If nothing has changed, show that."
+            ]
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "edit", 
+                "photo"
+            ]
+        }, 
+        {
+            "medium": "photo", 
+            "type": "ReviewCard", 
+            "id": "review_card_1"
+        }, 
+        {
+            "text": "--------", 
+            "type": "EvaluationCard", 
+            "id": "evaluation_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "PublishCard", 
+            "id": "publish_card_1"
+        }, 
+        {
+            "medium": "photo", 
+            "type": "NextUpCard", 
+            "id": "nextup_card_1"
+        }
+    ], 
+    "classPackage": "scal.io.liger.model", 
+    "id": "issue_highlights_photo", 
+    "title": "Issue Highlights"
+}
