@@ -146,8 +146,25 @@ public class JsonHelper {
                 String[] assets = context.getAssets().list("default/default_library");
                 for (String asset: assets) {
                     String filePath = "/default/default_library/" + asset;
-                    InputStream jsonStream = context.getAssets().open("default/default_library/" + asset);
-                    addFileToSDCard(jsonStream, filePath);
+                    if (!new File(filePath).isDirectory()) {
+                        InputStream jsonStream = context.getAssets().open("default/default_library/" + asset);
+                        addFileToSDCard(jsonStream, filePath);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            new File( sdLigerFilePath + "/default/default_library/test/").mkdirs(); // FIXME this should only happen in test builds
+
+            try {
+                String[] assets = context.getAssets().list("default/default_library/test");
+                for (String asset: assets) {
+                    String filePath = "/default/default_library/test/" + asset;
+                    if (!new File(filePath).isDirectory()) {
+                        InputStream jsonStream = context.getAssets().open("default/default_library/test/" + asset);
+                        addFileToSDCard(jsonStream, filePath);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
