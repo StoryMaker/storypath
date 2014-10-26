@@ -1,6 +1,7 @@
 package scal.io.liger;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 
@@ -90,87 +91,81 @@ public class JsonHelper {
         return sdLigerFilePath;
     }
 
+    private static void copyFilesToSdCard(Context context, String basePath) {
+        copyFileOrDir(context, basePath, ""); // copy all files in assets folder in my project
+    }
+
+    private static void copyFileOrDir(Context context, String basePath, String path) {
+        AssetManager assetManager = context.getAssets();
+        String assets[] = null;
+        try {
+            Log.i("tag", "copyFileOrDir() "+path);
+            assets = assetManager.list(path);
+            if (assets.length == 0) {
+                copyFile(context, basePath, path);
+            } else {
+                String fullPath =  basePath + path;
+                Log.i("tag", "path="+fullPath);
+                File dir = new File(fullPath);
+                if (!dir.exists() && !path.startsWith("images") && !path.startsWith("sounds") && !path.startsWith("webkit"))
+                    if (!dir.mkdirs())
+                        Log.i("tag", "could not create dir "+fullPath);
+                for (int i = 0; i < assets.length; ++i) {
+                    String p;
+                    if (path.equals(""))
+                        p = "";
+                    else
+                        p = path + "/";
+
+                    if (!path.startsWith("images") && !path.startsWith("sounds") && !path.startsWith("webkit"))
+                        copyFileOrDir(context, basePath, p + assets[i]);
+                }
+            }
+        } catch (IOException ex) {
+            Log.e("tag", "I/O Exception", ex);
+        }
+    }
+
+    private static void copyFile(Context context, String basePath, String filename) {
+        AssetManager assetManager = context.getAssets();
+
+        InputStream in = null;
+        OutputStream out = null;
+        String newFileName = null;
+        try {
+            Log.i("tag", "copyFile() "+filename);
+            in = assetManager.open(filename);
+            if (filename.endsWith(".jpg")) // extension was added to avoid compression on APK file
+                newFileName = basePath + filename.substring(0, filename.length()-4);
+            else
+                newFileName = basePath + filename;
+            out = new FileOutputStream(newFileName);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+        } catch (Exception e) {
+            Log.e("tag", "Exception in copyFile() of "+newFileName);
+            Log.e("tag", "Exception in copyFile() "+e.toString());
+        }
+
+    }
+
     public static void setupFileStructure(Context context) {
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
-            Log.d(TAG, "sdLigerFilePath: " + sdLigerFilePath);
-            //create folder if first app launch
-            new File( sdLigerFilePath + "/default/").mkdirs();
-
-            try {
-                String[] assets = context.getAssets().list("default");
-                for (String asset: assets) {
-                    if (!asset.contains("LIB")){
-                        String filePath = "/default/" + asset;
-                        InputStream jsonStream = context.getAssets().open("default/" + asset);
-                        addFileToSDCard(jsonStream, filePath);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // HARD CODED FOR TESTING
-            new File( sdLigerFilePath + "/default/LIB_1/").mkdirs();
-
-            try {
-                String[] assets = context.getAssets().list("default/LIB_1");
-                for (String asset: assets) {
-                    String filePath = "/default/LIB_1/" + asset;
-                    InputStream jsonStream = context.getAssets().open("default/LIB_1/" + asset);
-                    addFileToSDCard(jsonStream, filePath);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            new File( sdLigerFilePath + "/default/LIB_2/").mkdirs();
-
-            try {
-                String[] assets = context.getAssets().list("default/LIB_2");
-                for (String asset: assets) {
-                    String filePath = "/default/LIB_2/" + asset;
-                    InputStream jsonStream = context.getAssets().open("default/LIB_2/" + asset);
-                    addFileToSDCard(jsonStream, filePath);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            new File( sdLigerFilePath + "/default/default_library/").mkdirs();
-
-            try {
-                String[] assets = context.getAssets().list("default/default_library");
-                for (String asset: assets) {
-                    String filePath = "/default/default_library/" + asset;
-                    if (!new File(filePath).isDirectory()) {
-                        InputStream jsonStream = context.getAssets().open("default/default_library/" + asset);
-                        addFileToSDCard(jsonStream, filePath);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-                String[] assets = context.getAssets().list("default/default_library/test");
-                if ((assets != null) && (assets.length > 0)) {
-                    new File( sdLigerFilePath + "/default/default_library/test/").mkdirs(); // FIXME this should only happen in test builds
-                    for (String asset : assets) {
-                        String filePath = "/default/default_library/test/" + asset;
-                        if (!new File(filePath).isDirectory()) {
-                            InputStream jsonStream = context.getAssets().open("default/default_library/test/" + asset);
-                            addFileToSDCard(jsonStream, filePath);
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
+            copyFilesToSdCard(context, sdLigerFilePath);
         } else {
             Log.e(TAG, "SD CARD NOT FOUND");
         }
