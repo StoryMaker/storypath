@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by mnbogner on 8/13/14.
+ * @author Matthew Bogner
+ * @author Josh Steiner
  */
 public class TipCard extends MarkdownCard {
 
+    // FIXME make sure random isnt being serizlized
     private Random random;
-    private ArrayList<String> tips;
+    private ArrayList<String> tags;
 
     public TipCard() {
         super();
@@ -20,32 +22,32 @@ public class TipCard extends MarkdownCard {
     @Override
     public String getText() {
         if (text == null)
-            text = randomTip();
+            text = randomTag();
         return super.getText();
     }
 
-    public ArrayList<String> getTips() {
+    public ArrayList<String> getTags() {
         ArrayList<String> a = new ArrayList<String>();
-        if (tips != null) {
-            for (String s : tips) {
+        if (tags != null) {
+            for (String s : tags) {
                 a.add(fillReferences(s));
             }
         }
         return a;
     }
 
-    public void setTips(ArrayList<String> tips) {
-        this.tips = tips;
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
     }
 
-    public void addTip(String tip) {
-        if (this.tips == null)
-            this.tips = new ArrayList<String>();
+    public void addTag(String tag) {
+        if (this.tags == null)
+            this.tags = new ArrayList<String>();
 
-        this.tips.add(tip);
+        this.tags.add(tag);
     }
 
-    public String randomTip() {
-        return tips.get(random.nextInt(tips.size()));
+    public String randomTag() {
+        return tags.get(random.nextInt(tags.size()));
     }
 }

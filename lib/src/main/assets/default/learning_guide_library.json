@@ -54,8 +54,8 @@
             }
         },
         {
-            "type": "HeadlessCard",
-            "id": "headless_card",
+            "type": "LoaderHeadlessCard",
+            "id": "loader_card",
             "action": "LOAD",
             "target": "learning_guide_v1",
             "references": [

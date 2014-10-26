@@ -1,6 +1,33 @@
 {
     "cards": [
         {
+            "tips": [
+                {
+                    "text": "This is the first tip", 
+                    "tags": [
+                        "tag1", 
+                        "tag2"
+                    ]
+                }, 
+                {
+                    "text": "second tip", 
+                    "tags": [
+                        "tag3", 
+                        "tag4"
+                    ]
+                }, 
+                {
+                    "text": "Oh yes, this is the 3rd tip.", 
+                    "tags": [
+                        "tag1", 
+                        "tag4"
+                    ]
+                }
+            ], 
+            "type": "TipCollectionHeadlessCard", 
+            "id": "tip_collection"
+        }, 
+        {
             "type": "QuizCard", 
             "correctRequired": 1, 
             "question": "What is your story about?", 
@@ -21,11 +48,11 @@
             ]
         }, 
         {
+            "correctRequired": 1, 
             "references": [
                 "default_library::quiz_card_topic::choice"
             ], 
             "type": "QuizCard", 
-            "correctRequired": 1, 
             "question": "What do you want to do?", 
             "id": "quiz_card_format", 
             "choices": [
@@ -85,11 +112,11 @@
             ]
         }, 
         {
+            "correctRequired": 1, 
             "references": [
                 "default_library::quiz_card_format::choice"
             ], 
             "type": "QuizCard", 
-            "correctRequired": 1, 
             "question": "Choose a medium.", 
             "id": "quiz_card_medium", 
             "choices": [
@@ -128,12 +155,12 @@
         }, 
         {
             "filter": "default_library::quiz_card_format::choice::series", 
+            "correctRequired": 1, 
             "references": [
                 "default_library::quiz_card_medium::choice", 
                 "default_library::quiz_card_format::choice::series"
             ], 
             "type": "QuizCard", 
-            "correctRequired": 1, 
             "question": "What kind of clips would you like to make a series.", 
             "id": "quiz_card_cliptype", 
             "choices": [
@@ -180,17 +207,17 @@
         }, 
         {
             "filter": "default_library::quiz_card_format::choice::discussion", 
+            "correctRequired": 1, 
             "references": [
                 "default_library::quiz_card_medium::choice", 
                 "default_library::quiz_card_format::choice::discussion"
             ], 
             "type": "QuizCard", 
-            "correctRequired": 1, 
             "question": "Which question would you like to use?", 
             "id": "quiz_card_clipquestion", 
             "choices": [
                 {
-                    "text": "Why is the event important", 
+                    "text": "Why is the event important?", 
                     "filters_and": [
                         "default_library::quiz_card_topic::choice::event", 
                         "default_library::quiz_card_medium::choice::audio"
@@ -264,7 +291,7 @@
                 {
                     "text": "Why is the issue important?", 
                     "filters_and": [
-                        "default_library::quiz_card_topic::choice::event", 
+                        "default_library::quiz_card_topic::choice::issue", 
                         "default_library::quiz_card_medium::choice::video"
                     ], 
                     "id": "question_10"
@@ -272,7 +299,7 @@
                 {
                     "text": "What is your opinion of the issue?", 
                     "filters_and": [
-                        "default_library::quiz_card_topic::choice::event", 
+                        "default_library::quiz_card_topic::choice::issue", 
                         "default_library::quiz_card_medium::choice::video"
                     ], 
                     "id": "question_11"
@@ -280,7 +307,7 @@
                 {
                     "text": "What do you think should be done about the issue?", 
                     "filters_and": [
-                        "default_library::quiz_card_topic::choice::event", 
+                        "default_library::quiz_card_topic::choice::issue", 
                         "default_library::quiz_card_medium::choice::video"
                     ], 
                     "id": "question_12"
@@ -337,11 +364,11 @@
         }, 
         {
             "action": "LOAD", 
-            "type": "HeadlessCard", 
+            "type": "LoaderHeadlessCard", 
             "references": [
                 "default_library::quiz_card_clipquestion::choice"
             ], 
-            "id": "headless_card", 
+            "id": "loader_card", 
             "target": "event_highlights_audio"
         }
     ], 
