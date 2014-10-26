@@ -69,7 +69,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             MediaHelper.setupFileStructure(this);
 
             Intent i = getIntent();
-            i.putExtra("storypathlibrary_json", "default/default_library/test/event_discussion_audio_question_1_library.json");
             if (i.hasExtra("storypathlibrary_json")) {
                 String splJsonFilename = i.getExtras().getString("storypathlibrary_json");
                 File jsonFile = new File(JsonHelper.getSdLigerFilePath() + splJsonFilename);
