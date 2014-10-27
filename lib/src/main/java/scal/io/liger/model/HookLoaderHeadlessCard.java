@@ -89,9 +89,17 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
             (!checkReferencedValueMatches("default_library::quiz_card_medium::choice"))) {
             result = false;
         }
-        if ((!checkReferencedValueMatches("default_library::quiz_card_cliptype::choice")) &&
-            (!checkReferencedValueMatches("default_library::quiz_card_clipquestion::choice"))) {
-            result = false;
+
+        // cards 4 and 5 appear under specific conditions
+        // if the conditions are met but the cards have no values, the check fails
+        String format = getStoryPathReference().getReferencedValue("default_library::quiz_card_format::choice");
+        if (format != null) {
+            if (format.equals("series") && !checkReferencedValueMatches("default_library::quiz_card_cliptype::choice")) {
+                result = false;
+            }
+            if (format.equals("discussion") && !checkReferencedValueMatches("default_library::quiz_card_clipquestion::choice")) {
+                result = false;
+            }
         }
 
         return result;

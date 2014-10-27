@@ -980,6 +980,7 @@
                 "default_library::quiz_card_topic::choice", 
                 "default_library::quiz_card_format::choice", 
                 "default_library::quiz_card_medium::choice", 
+                "default_library::quiz_card_cliptype::choice",
                 "default_library::quiz_card_clipquestion::choice"
             ], 
             "id": "hook_loader_card"
