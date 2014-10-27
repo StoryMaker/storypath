@@ -43,20 +43,22 @@ public class GenericCardView implements DisplayableCard {
         LinearLayout llTextWrapper = (LinearLayout) view.findViewById(R.id.ll_text_wrapper);
 
         //TODO find better way of checking file is valid
-        File mediaFile = new File(mCardModel.getMediaPath());
-        if(mediaFile.exists() && !mediaFile.isDirectory()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMediaPath());
-            ivCardImage.setImageBitmap(bitmap);
-            ivCardImage.setVisibility(View.VISIBLE);
+        if (mCardModel.getMediaPath() != null) {
+            File mediaFile = new File(mCardModel.getMediaPath());
+            if (mediaFile.exists() && !mediaFile.isDirectory()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(mCardModel.getMediaPath());
+                ivCardImage.setImageBitmap(bitmap);
+                ivCardImage.setVisibility(View.VISIBLE);
+            }
         }
 
         String txtHeader = mCardModel.getHeader();
-        if(!txtHeader.isEmpty()) {
+        if(txtHeader != null && !txtHeader.isEmpty()) {
             tvHeader.setText(txtHeader);
         }
 
         String txtText = mCardModel.getText();
-        if(!txtHeader.isEmpty()) {
+        if(txtText != null && !txtText.isEmpty()) {
             tvText.setText(txtText);
             llTextWrapper.setVisibility(View.VISIBLE);
         }
