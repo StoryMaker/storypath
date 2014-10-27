@@ -3,7 +3,7 @@
     <solid android:color="#ffffff" />
     <stroke
         android:width="4dp"
-        android:color="@color/signature" />
+        android:color="@color/raspberry_wine" />
     <corners android:radius="3dp" />
     <padding
         android:bottom="4dp"

@@ -12,7 +12,7 @@
     </RelativeLayout>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@color/signature"
+        android:background="@color/raspberry_wine"
         android:id="@+id/howtoCard"
         android:layout_alignParentTop="true"
         android:layout_height="@dimen/card_howto_height"
@@ -35,7 +35,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/padding_small"
         android:background="@drawable/ic_overflow"
-        android:textColor="@color/signature"
+        android:textColor="@color/raspberry_wine"
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium" />
 
@@ -50,7 +50,7 @@
         android:drawableLeft="@drawable/ic_signature"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:textColor="@color/signature"
+        android:textColor="@color/raspberry_wine"
         android:paddingLeft="@dimen/padding_small"
         android:paddingRight="@dimen/padding_small"
         android:textSize="20sp" />
@@ -82,7 +82,7 @@
             android:drawablePadding="@dimen/padding_xsmall"
             android:paddingTop="@dimen/padding_small"
             android:text="@string/importt"
-            android:textColor="@color/signature" />
+            android:textColor="@color/raspberry_wine" />
 
         <Button
             android:id="@+id/captureBtn"
@@ -93,7 +93,8 @@
             android:drawablePadding="@dimen/padding_xsmall"
             android:paddingTop="@dimen/padding_small"
             android:text="@string/capture"
-            android:textColor="@color/signature" />
+            android:textColor="@color/raspberry_wine" />
+
     </LinearLayout>
     <!--
 
