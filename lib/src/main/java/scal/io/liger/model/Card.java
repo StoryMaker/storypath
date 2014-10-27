@@ -195,7 +195,9 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         if (references != null) {
             for (String reference : references) {
                 // assumes the format story::card::field::value
-                result = checkReferencedValueMatches(reference);
+                if (!checkReferencedValueMatches(reference)) {
+                    result = false;
+                }
             }
         }
 
