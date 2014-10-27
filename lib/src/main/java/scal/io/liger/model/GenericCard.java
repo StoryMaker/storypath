@@ -12,10 +12,10 @@ import scal.io.liger.view.GenericCardView;
  */
 public class GenericCard extends Card {
 
-    private String mediaPath; // FIXME provide a default if they don't specify
-    private String header;
-    private String text;
-    private ArrayList<String> storyPaths;
+    protected String mediaPath; // FIXME provide a default if they don't specify
+    protected String header;
+    protected String text;
+    protected ArrayList<String> storyPaths;
 
     public GenericCard() {
         super();

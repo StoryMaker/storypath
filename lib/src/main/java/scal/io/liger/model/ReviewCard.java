@@ -14,8 +14,6 @@ import scal.io.liger.view.PreviewCardView;
 
 public class ReviewCard extends GenericCard {
 
-    private String mediaPath;
-
     public ReviewCard() {
         super();
         this.type = this.getClass().getName();
