@@ -40,6 +40,8 @@ public class TipCollectionHeadlessCardTest extends TestCase {
     final static String TIP_NONE = "Tip that matches none";
     final static String TIP_ALL_3 = "Tip that matches all 3";
 
+    // TODO test case sensitivity
+
     public TipCollectionHeadlessCardTest() {
         super();
 //        super("scal.io.liger.model", TipCollectionHeadlessCard.class);

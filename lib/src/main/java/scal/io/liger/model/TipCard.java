@@ -48,7 +48,7 @@ public class TipCard extends MarkdownCard {
             int r = random.nextInt(ts.size());
             return ts.get(r);
         } else {
-            return "(no tips match)"; // FIXME this is probably the wrong thing to do
+            return "(no tips match for tags: " + tags + ")"; // FIXME this is probably the wrong thing to do
         }
     }
 }

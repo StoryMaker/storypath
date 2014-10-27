@@ -37,7 +37,7 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
             boolean match = false;
             for (String tipTag: tip.tags) {
                 for (String tag: tags) {
-                    if (tag.equals(tipTag)) {
+                    if (tag.toLowerCase().equals(tipTag.toLowerCase())) {
                         matchingTips.add(tip);
                         match = true;
                         break;
