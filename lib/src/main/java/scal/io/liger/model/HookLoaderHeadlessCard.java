@@ -77,4 +77,23 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
             }
         }
     }
+
+    @Override
+    public boolean checkReferencedValues() {
+        // need to accomodate and/or logic
+        boolean result = true;
+
+        // already hard coded in update(), so hard coding them here for simplicity
+        if ((!checkReferencedValueMatches("default_library::quiz_card_topic::choice")) ||
+            (!checkReferencedValueMatches("default_library::quiz_card_format::choice")) ||
+            (!checkReferencedValueMatches("default_library::quiz_card_medium::choice"))) {
+            result = false;
+        }
+        if ((!checkReferencedValueMatches("default_library::quiz_card_cliptype::choice")) &&
+            (!checkReferencedValueMatches("default_library::quiz_card_clipquestion::choice"))) {
+            result = false;
+        }
+
+        return result;
+    }
 }
