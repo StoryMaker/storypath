@@ -12,7 +12,7 @@ import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.GenericCardView;
 import scal.io.liger.view.PreviewCardView;
 
-public class ReviewCard extends Card {
+public class ReviewCard extends GenericCard {
 
     private String mediaPath;
 

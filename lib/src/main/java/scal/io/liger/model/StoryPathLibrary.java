@@ -190,7 +190,7 @@ public class StoryPathLibrary extends StoryPath {
         }
 
         if (storyPathTemplateFile == null) {
-            Log.e(this.getClass().getName(), "could not find file name corresponding to " + storyPathTemplateKey);
+            Log.e(this.getClass().getName(), "could not find file name corresponding to " + storyPathTemplateKey); // FIXME at least toast the user
             return;
         }
 
@@ -203,7 +203,7 @@ public class StoryPathLibrary extends StoryPath {
             mainActivity.refreshCardList(jsonTemplate, jsonTemplateFile);
 
         } else {
-            Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile);
+            Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
         }
     }
 }
