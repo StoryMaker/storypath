@@ -8,31 +8,34 @@
             ]
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show us something that represents the event."
-            ]
+            ], 
+            "clipType": "Signature", 
+            "type": "ClipCard", 
+            "id": "clip_card_1"
         }, 
         {
-            "length": "0:08", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:08", 
             "goals": [
                 "Show where the event happens."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_2"
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Why is the event important?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_3"
         }, 
         {
             "text": "Talk to different people for each clip to give your story a range of voices.", 
@@ -40,74 +43,80 @@
             "id": "text_card_1"
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Why is the event important?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_4"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_2", 
             "tags": [
                 "interview"
             ]
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Why is the event important?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_5"
         }, 
         {
             "text": "If you get a bad answer, it's smart to try again with a new clip.", 
             "type": "TextCard", 
-            "id": "text_card_1"
+            "id": "text_card_2"
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Why is the event important?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_6"
         }, 
         {
-            "length": "0:12", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:12", 
             "goals": [
                 "Show a place important to the event."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_7"
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Why is the event important?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_8"
         }, 
         {
-            "length": "0:12", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:12", 
             "goals": [
                 "Show how the event ends."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_9"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_3", 
             "tags": [
                 "edit"
             ]

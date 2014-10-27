@@ -8,84 +8,94 @@
             ]
         }, 
         {
+            "medium": "audio", 
             "length": "0:10", 
-            "medium": "audio", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
             "goals": [
                 "Record sounds of where the event happens.", 
                 "Record sounds of a place important to the event."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_1"
         }, 
         {
+            "medium": "audio", 
             "length": "0:07", 
-            "medium": "audio", 
+            "goals": "Record sounds that introduce your discussion.", 
+            "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "Record sounds that introduce your discussion."
+            "id": "clip_card_2"
         }, 
         {
+            "medium": "audio", 
             "length": "0:30", 
-            "medium": "audio", 
+            "goals": "What do you think is the most exciting part of the event?", 
+            "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "What do you think is the most exciting part of the event??"
+            "id": "clip_card_3"
         }, 
         {
+            "medium": "audio", 
             "length": "0:30", 
-            "medium": "audio", 
+            "goals": "What do you think is the most exciting part of the event?", 
+            "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "What do you think is the most exciting part of the event??"
+            "id": "clip_card_4"
         }, 
         {
+            "medium": "audio", 
             "length": "0:09", 
-            "medium": "audio", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
             "goals": [
                 "Record sounds of where the event happens.", 
                 "Record sounds of a place important to the event."
-            ]
-        }, 
-        {
-            "length": "0:30", 
-            "medium": "audio", 
+            ], 
+            "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "What do you think is the most exciting part of the event??"
+            "id": "clip_card_5"
         }, 
         {
-            "length": "0:30", 
             "medium": "audio", 
+            "length": "0:30", 
+            "goals": "What do you think is the most exciting part of the event?", 
+            "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "What do you think is the most exciting part of the event??"
+            "id": "clip_card_6"
         }, 
         {
+            "medium": "audio", 
+            "length": "0:30", 
+            "goals": "What do you think is the most exciting part of the event?", 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_7"
+        }, 
+        {
+            "medium": "audio", 
             "length": "0:12", 
-            "medium": "audio", 
+            "goals": "Capture people reacting to an exciting part of the event.", 
+            "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "Capture people reacting to an exciting part of the event."
+            "id": "clip_card_8"
         }, 
         {
+            "medium": "audio", 
             "length": "0:30", 
-            "medium": "audio", 
+            "goals": "What do you think is the most exciting part of the event?", 
+            "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "What do you think is the most exciting part of the event??"
+            "id": "clip_card_9"
         }, 
         {
-            "length": "0:09", 
             "medium": "audio", 
+            "length": "0:09", 
+            "goals": "Record sounds of how the event ends.", 
+            "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clipcard_1", 
-            "goals": "Record sounds of how the event ends."
+            "id": "clip_card_10"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_2", 
             "tags": [
                 "edit", 
                 "audio"

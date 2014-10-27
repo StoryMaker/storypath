@@ -8,95 +8,103 @@
             ]
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Show the location. This might be a wide shot of the location or of the entrance to the event."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_1"
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Show us people attending the event or reacting to something happening at the event. The more animated your subjects are the better."
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_2"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_2", 
             "tags": [
                 "photo", 
                 "photo essay"
             ]
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Shoot one picture that sums up what the event is about. This might be a single image that captures its energy and its purpose."
-            ]
+            ], 
+            "clipType": "Signature", 
+            "type": "ClipCard", 
+            "id": "clip_card_3"
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Pay attention to the people in attendance, capture what makes them unique as best you can."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_4"
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Look for people putting on the event, look for moments when they interact with other people."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_5"
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Something drew you personally to this event, be sure to photograph it as well as you can."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_6"
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Photograph any significant people at the event. This might be the main performer or speaker. This might be a dignitary or politician or celebrity in attendance."
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_7"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_3", 
             "tags": [
                 "portraits"
             ]
         }, 
         {
-            "length": "0:00", 
             "medium": "photo", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:00", 
             "goals": [
                 "Look for a climax or dramatic finish, photograph it. The end of a game or a performance or even a speech, for example."
-            ]
+            ], 
+            "clipType": "Result", 
+            "type": "ClipCard", 
+            "id": "clip_card_8"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_4", 
             "tags": [
                 "edit", 
                 "photo"

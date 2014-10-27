@@ -1,31 +1,34 @@
 {
     "cards": [
         {
-            "length": "0:08", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:08", 
             "goals": [
                 "Show where the event will happen before it starts."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_1"
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Show the very beginning of the event."
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_2"
         }, 
         {
-            "length": "0:12", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:12", 
             "goals": [
                 "Show the first significant step in the event."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_3"
         }, 
         {
             "text": "Do not shoot every step. Just the significant steps to show the progression from beginning to end.", 
@@ -33,72 +36,79 @@
             "id": "text_card_1"
         }, 
         {
-            "length": "0:15", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:15", 
             "goals": [
                 "Show the second significant step in the event."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_4"
         }, 
         {
-            "length": "0:11", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:11", 
             "goals": [
                 "Show the third significant step in the event."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_5"
         }, 
         {
             "text": "If there are more than four steps involved, add more clip cards with the + button.", 
             "type": "TextCard", 
-            "id": "text_card_1"
+            "id": "text_card_2"
         }, 
         {
-            "length": "0:15", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:15", 
             "goals": [
                 "Show the final significant step in the event."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_6"
         }, 
         {
-            "length": "0:20", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:20", 
             "goals": [
                 "Show an especially dramatic moment that is a summary of the event."
-            ]
+            ], 
+            "clipType": "Signature", 
+            "type": "ClipCard", 
+            "id": "clip_card_7"
         }, 
         {
-            "length": "0:15", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:15", 
             "goals": [
                 "Show the character doing the activity."
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_8"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show people watching or reacting to the event. Engaged and animated watchers are best."
-            ]
+            ], 
+            "clipType": "Result", 
+            "type": "ClipCard", 
+            "id": "clip_card_9"
         }, 
         {
-            "length": "0:15", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:15", 
             "goals": [
                 "Show the finished product or the event concluding - the dramatic finish."
-            ]
+            ], 
+            "clipType": "Result", 
+            "type": "ClipCard", 
+            "id": "clip_card_10"
         }, 
         {
             "type": "TipCard", 

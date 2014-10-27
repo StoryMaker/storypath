@@ -1,139 +1,154 @@
 {
     "cards": [
         {
-            "length": "0:08", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:08", 
             "goals": [
                 "Show where the event happens."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_1"
         }, 
         {
-            "length": "0:15", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:15", 
             "goals": [
                 "Introduce the event."
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_2"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show something important to the beginning of the event."
-            ]
+            ], 
+            "clipType": "Signature", 
+            "type": "ClipCard", 
+            "id": "clip_card_3"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show preparation for the event."
-            ]
+            ], 
+            "clipType": "Result", 
+            "type": "ClipCard", 
+            "id": "clip_card_4"
         }, 
         {
-            "length": "0:25", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:25", 
             "goals": [
                 "Ask: When did the event first start?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_5"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show a place important to the event."
-            ]
+            ], 
+            "clipType": "Place", 
+            "type": "ClipCard", 
+            "id": "clip_card_6"
         }, 
         {
-            "length": "0:30", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:30", 
             "goals": [
                 "Ask: What is the purpose of the event?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_7"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show people interacting at the event."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_8"
         }, 
         {
-            "length": "0:30", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:30", 
             "goals": [
                 "Ask: what do you do at the event?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_9"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show the most important thing the character does at the event."
-            ]
+            ], 
+            "clipType": "Signature", 
+            "type": "ClipCard", 
+            "id": "clip_card_10"
         }, 
         {
-            "length": "0:30", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:30", 
             "goals": [
                 "Ask: How does the event impact individuals or the community?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_11"
         }, 
         {
-            "length": "0:15", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:15", 
             "goals": [
                 "Show the result of people interacting at the event."
-            ]
+            ], 
+            "clipType": "Result", 
+            "type": "ClipCard", 
+            "id": "clip_card_12"
         }, 
         {
-            "length": "0:10", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:10", 
             "goals": [
                 "Show something happening at the event."
-            ]
+            ], 
+            "clipType": "Action", 
+            "type": "ClipCard", 
+            "id": "clip_card_13"
         }, 
         {
-            "length": "0:30", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:30", 
             "goals": [
                 "Ask: What will happen at the event in the future?"
-            ]
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_14"
         }, 
         {
-            "length": "0:08", 
             "medium": "video", 
-            "type": "ClipCard", 
-            "id": "clipcard_1", 
+            "length": "0:08", 
             "goals": [
                 "Show the end of the event."
-            ]
+            ], 
+            "clipType": "Result", 
+            "type": "ClipCard", 
+            "id": "clip_card_15"
         }, 
         {
             "type": "TipCard", 
