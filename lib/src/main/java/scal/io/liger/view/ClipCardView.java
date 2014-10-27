@@ -527,7 +527,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     private int getRangeBarIndexForMs(int positionMs, int max, int clipDurationMs) {
-        int idx = (int) ((positionMs * max) / (float) clipDurationMs);
+        int idx = (int) Math.min(((positionMs * max) / (float) clipDurationMs), max - 1); // Range bar goes from 0 to (max - 1)
         Log.i(TAG, String.format("Converted %d ms to rangebar position %d", positionMs, idx));
         return idx;
     }
