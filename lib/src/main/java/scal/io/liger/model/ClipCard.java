@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.media.MediaMetadata;
 import android.util.Log;
 
 
@@ -104,6 +105,15 @@ public class ClipCard extends ExampleCard {
         }
 
         return loadMediaFile(clips.get(0));
+    }
+
+    public ClipMetadata getSelectedClip() {
+        if ((clips == null) || (clips.size() < 1)) {
+            Log.e(this.getClass().getName(), "no clip metadata was found, cannot get a selected file");
+            return null;
+        }
+
+        return clips.get(0);
     }
 
     // the card-level delete method only deletes the local reference, not the actual media file
