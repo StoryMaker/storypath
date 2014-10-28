@@ -122,9 +122,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         });
 
         setupSpinner(spinner);
-        ViewGroup.LayoutParams params = collapsableContainer.getLayoutParams();
-        params.height = 0;
-        collapsableContainer.setLayoutParams(params);
 
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
@@ -176,6 +173,11 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         /** Populate clip stack */
         if (hasClips) {
+            // Begin in the collapsed state
+            ViewGroup.LayoutParams params = collapsableContainer.getLayoutParams();
+            params.height = 0;
+            collapsableContainer.setLayoutParams(params);
+
             Log.i("clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
             for (int x = 0; x < clipsToDisplay.size(); x++) {
                 // Create view for new clip
@@ -192,6 +194,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 mDisplayedClips.add(clipThumb);
             }
         } else {
+            // Begin in the expanded state
             View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
             clipThumb.setOnClickListener(clipCardOnClickListener);
             clipThumb.setTag(R.id.view_tag_clip_primary, true);
