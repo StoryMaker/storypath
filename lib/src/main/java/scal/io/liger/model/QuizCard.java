@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
@@ -13,13 +15,13 @@ import scal.io.liger.view.QuizCardView;
  * Created by josh@scal.io on 10/17/2014.
  */
 public class QuizCard extends Card {
-    private String question;
-    private String caption;
-    private String filter;
-    private String description;
-    private ArrayList<Choice> choices;
-    private ArrayList<String> correctAnswers; // Collection of Choice#id   // FIXME camelCase this
-    private int correctRequired; // FIXME camelCase this
+    @Expose private String question;
+    @Expose private String caption;
+    @Expose private String filter;
+    @Expose private String description;
+    @Expose private ArrayList<Choice> choices;
+    @Expose private ArrayList<String> correctAnswers; // Collection of Choice#id
+    @Expose private int correctRequired;
 
 
     public QuizCard() {

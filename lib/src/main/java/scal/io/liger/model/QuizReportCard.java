@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
@@ -12,8 +14,8 @@ import scal.io.liger.view.IntroCardView;
  */
 public class QuizReportCard extends Card {
 
-    private String description;
-    private ArrayList<Object> results;
+    @Expose private String description;
+    @Expose private ArrayList<Object> results;
 
     public QuizReportCard() {
         super();

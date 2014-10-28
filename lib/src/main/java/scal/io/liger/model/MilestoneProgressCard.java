@@ -3,6 +3,8 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -13,22 +15,22 @@ import scal.io.liger.view.MilestoneProgressCardView;
 
 public class MilestoneProgressCard extends Card {
 
-    private String text;
-    private ArrayList<String> storyMedium; // why is this an array?
-    private ArrayList<String> videoClipCards;
-    private ArrayList<String> audioClipCards;
-    private ArrayList<String> photoClipCards;
+    @Expose private String text;
+    @Expose private ArrayList<String> storyMedium; // why is this an array?
+    @Expose private ArrayList<String> videoClipCards;
+    @Expose private ArrayList<String> audioClipCards;
+    @Expose private ArrayList<String> photoClipCards;
 
     public MilestoneProgressCard() {
         super();
         this.type = this.getClass().getName();
     }
 
-    // NEW
-    private String stateMedium;
-    private int stateVideo;
-    private int stateAudio;
-    private int statePhoto;
+    // NEW - SHOULD THESE BE SERIALIZED?
+    @Expose private String stateMedium;
+    @Expose private int stateVideo;
+    @Expose private int stateAudio;
+    @Expose private int statePhoto;
 
     // NEW
     public String getStateMedium() {

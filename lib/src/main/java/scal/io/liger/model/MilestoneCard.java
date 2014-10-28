@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
@@ -9,8 +11,8 @@ import scal.io.liger.view.MilestoneCardView;
 
 public class MilestoneCard extends Card {
 
-    private String text;
-    private ArrayList<Link> links;
+    @Expose private String text;
+    @Expose private ArrayList<Link> links;
 
     public MilestoneCard() {
         super();

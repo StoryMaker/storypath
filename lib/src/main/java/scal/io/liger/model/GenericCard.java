@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
@@ -12,10 +14,10 @@ import scal.io.liger.view.GenericCardView;
  */
 public class GenericCard extends Card {
 
-    protected String mediaPath; // FIXME provide a default if they don't specify
-    protected String header;
-    protected String text;
-    protected ArrayList<String> storyPaths;
+    @Expose protected String mediaPath; // FIXME provide a default if they don't specify
+    @Expose protected String header;
+    @Expose protected String text;
+    @Expose protected ArrayList<String> storyPaths;
 
     public GenericCard() {
         super();

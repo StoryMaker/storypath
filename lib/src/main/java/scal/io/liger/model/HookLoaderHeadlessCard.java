@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -10,8 +12,8 @@ import java.util.Observable;
  * @author Josh Steiner
  */
 public class HookLoaderHeadlessCard extends HeadlessCard {
-    private String action;
-    private String target;
+    @Expose private String action;
+    @Expose private String target;
 
     public HookLoaderHeadlessCard() {
         super();

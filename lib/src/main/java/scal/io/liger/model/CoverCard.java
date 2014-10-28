@@ -2,14 +2,16 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.CoverCardView;
 
 public class CoverCard extends Card {
 
-    private String header;
-    private String text;
-    private String mediaPath;
+    @Expose private String header;
+    @Expose private String text;
+    @Expose private String mediaPath;
 
     public CoverCard() {
         super();

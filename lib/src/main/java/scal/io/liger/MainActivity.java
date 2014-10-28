@@ -80,17 +80,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         } else {
             Log.d(TAG, "onSaveInstanceState called with no saved state");
             Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
-            if (savedInstanceState.containsKey("storyPathJson")) {
+            if (savedInstanceState.containsKey("storyPathLibraryJson")) {
+                String jsonSPL = savedInstanceState.getString("storyPathLibraryJson");
+                initHook(jsonSPL);
 
-                //String json1 = savedInstanceState.getString("storyJson");
-                //initStory(json1);
-
-                String json2 = savedInstanceState.getString("storyPathLibraryJson");
-                initHook(json2);
-                // maybe just initStoryPathLibraryModel?
-
-                String json3 = savedInstanceState.getString("storyPathJson");
-                initCardList(json3);
+                if (savedInstanceState.containsKey("storyPathJson")) {
+                    String jsonSP = savedInstanceState.getString("storyPathJson");
+                    initCardList(jsonSP);
+                }
             }
         }
     }
@@ -110,38 +107,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         if (mStoryPathLibrary == null) {
             Log.d(TAG, "data not yet loaded, no state to save");
         } else {
-            //Gson gson = new Gson();
-            //mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(null);
-            //mStoryPathLibrary.getCurrentStoryPath().clearObservers();
-            //mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
-            //mStoryPathLibrary.getCurrentStoryPath().setContext(null);
-
-            // need to serialize Story as well?
-
-            //String json = gson.toJson(mStoryPathLibrary.getCurrentStoryPath());
-            //outState.putString("storyPathJson", json);
-
-            outState.putString("storyPathJson", JsonHelper.serializeStoryPath(mStoryPathLibrary.getCurrentStoryPath()));
-
-            //StoryPath sp = mStoryPathLibrary.getCurrentStoryPath();
-            //mStoryPathLibrary.setCurrentStoryPath(null);
-            //mStory.setStoryPathLibrary(null);
-
-            //String json2 = gson.toJson(mStory);
-            //outState.putString("storyJson", json2);
-
-            //String json3 = gson.toJson(mStoryPathLibrary);
-            //outState.putString("storyPathLibraryJson", json3);
             outState.putString("storyPathLibraryJson", JsonHelper.serializeStoryPathLibrary(mStoryPathLibrary));
 
-            //mStory.setStoryPathLibrary(mStoryPathLibrary);
-            //mStoryPathLibrary.setCurrentStoryPath(sp);
-
-            //mStoryPathLibrary.getCurrentStoryPath().setContext(this);
-            //mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
-            //mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
-            //mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(mStoryPathLibrary);
-
+            if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+                outState.putString("storyPathJson", JsonHelper.serializeStoryPath(mStoryPathLibrary.getCurrentStoryPath()));
+            }
         }
 
         super.onSaveInstanceState(outState);
@@ -254,6 +224,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         } else {
             mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
         }
+
         mStoryPathLibrary.setStoryPathLibraryListener(this);
 
         /*

@@ -3,6 +3,8 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,19 +23,19 @@ import scal.io.liger.view.DisplayableCard;
  */
 public abstract class Card extends Observable implements Observer {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
 
-    protected String type;
-    private String id;
-    private String title;
+    @Expose protected String type;
+    @Expose private String id;
+    @Expose private String title;
     protected StoryPath storyPathReference; // not serialized
-    protected ArrayList<String> references;
-    private HashMap<String, String> values;
+    @Expose protected ArrayList<String> references;
+    @Expose private HashMap<String, String> values;
 
     public String toString() {
         return "card: " + id;
     }
 
     // NEW
-    protected boolean stateVisiblity = false; // FIXME
+    @Expose protected boolean stateVisiblity = false; // SHOULD THIS BE SERIALIZED?
 
     // NEW
     public boolean getStateVisiblity() {

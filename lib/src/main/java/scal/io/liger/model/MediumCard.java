@@ -2,13 +2,15 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.MediumCardView;
 import scal.io.liger.view.DisplayableCard;
 
 
 public class MediumCard extends Card {
 
-    private String header;
+    @Expose private String header;
 
     public MediumCard() {
         super();

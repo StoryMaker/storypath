@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -13,8 +15,8 @@ import scal.io.liger.view.DisplayableCard;
 
 public class ClipCard extends ExampleCard {
 
-    private String clipType;
-    private ArrayList<ClipMetadata> clips;
+    @Expose private String clipType;
+    @Expose private ArrayList<ClipMetadata> clips;
     // need length, medium, type restrictions, etc
 
     public ClipCard() {

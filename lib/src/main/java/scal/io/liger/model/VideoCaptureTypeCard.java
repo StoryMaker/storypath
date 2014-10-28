@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
@@ -12,7 +14,7 @@ import scal.io.liger.view.IntroCardView;
  */
 public class VideoCaptureTypeCard extends Card {
 
-    private ArrayList<Object> body;
+    @Expose private ArrayList<Object> body;
 
     public VideoCaptureTypeCard() {
         super();

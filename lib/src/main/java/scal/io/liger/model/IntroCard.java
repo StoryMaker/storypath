@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.IntroCardView;
 
@@ -10,9 +12,9 @@ import scal.io.liger.view.IntroCardView;
  */
 public class IntroCard extends Card {
 
-    private String headline;
-    private String level;
-    private String time;
+    @Expose private String headline;
+    @Expose private String level;
+    @Expose private String time;
 
     public IntroCard() {
         super();

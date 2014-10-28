@@ -2,12 +2,14 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.BasicTextCardView;
 import scal.io.liger.view.DisplayableCard;
 
 public class BasicTextCard extends Card {
 
-    private String text;
+    @Expose private String text;
 
     public BasicTextCard() {
         super();

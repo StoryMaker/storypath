@@ -3,15 +3,17 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.ExampleCardView;
 
 
 public class ExampleCard extends Card {
 
-    private String header;
-    private String clipMedium;
-    private String exampleMediaPath;
-    private MediaFile exampleMediaFile;
+    @Expose private String header;
+    @Expose private String clipMedium;
+    @Expose private String exampleMediaPath;
+    @Expose private MediaFile exampleMediaFile;
 
     public ExampleCard() {
         super();

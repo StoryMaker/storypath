@@ -3,6 +3,8 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.view.Display;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.ClipInstructionTypeCardView;
@@ -13,9 +15,9 @@ import scal.io.liger.view.DisplayableCard;
  */
 public class ClipInstructionTypeCard extends Card {
 
-    private String mediaPath;
-    private String header;
-    private ArrayList<String> clipTypes;
+    @Expose private String mediaPath;
+    @Expose private String header;
+    @Expose private ArrayList<String> clipTypes;
 
     public ClipInstructionTypeCard() {
         super();

@@ -1,16 +1,18 @@
 package scal.io.liger.model;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by mnbogner on 9/29/14.
  */
 public class ClipMetadata {
 
-    private int startTime;
-    private int stopTime;
-    private int volume;
-    private String effect;
-    private String type;
-    private String uuid; // key to mediaFiles map in StoryModel
+    @Expose private int startTime;
+    @Expose private int stopTime;
+    @Expose private int volume;
+    @Expose private String effect;
+    @Expose private String type;
+    @Expose private String uuid; // key to mediaFiles map in StoryModel
 
     public ClipMetadata() {
         // required for JSON/GSON

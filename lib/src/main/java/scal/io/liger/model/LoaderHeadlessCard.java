@@ -3,6 +3,8 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Observable;
 
 import scal.io.liger.view.DisplayableCard;
@@ -12,8 +14,8 @@ import scal.io.liger.view.DisplayableCard;
  * @author Josh Steiner
  */
 public class LoaderHeadlessCard extends HeadlessCard {
-    private String action;
-    private String target;
+    @Expose private String action;
+    @Expose private String target;
 
     public LoaderHeadlessCard() {
         super();

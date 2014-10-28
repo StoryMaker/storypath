@@ -2,6 +2,8 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 import scal.io.liger.view.DisplayableCard;
@@ -12,8 +14,8 @@ import scal.io.liger.view.SelfEvalCardView;
  */
 public class SelfEvalCard extends Card {
 
-    private String header;
-    private ArrayList<String> checklist;
+    @Expose private String header;
+    @Expose private ArrayList<String> checklist;
 
     public SelfEvalCard() {
         super();

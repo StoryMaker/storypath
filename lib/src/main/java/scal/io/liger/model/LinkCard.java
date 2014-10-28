@@ -3,13 +3,15 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.LinkCardView;
 
 public class LinkCard extends Card {
 
-    private String text;
-    private String link;
+    @Expose private String text;
+    @Expose private String link;
 
     public LinkCard() {
         super();

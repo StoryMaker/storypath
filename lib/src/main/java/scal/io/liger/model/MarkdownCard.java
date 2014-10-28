@@ -2,12 +2,14 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.MarkdownCardView;
 
 public class MarkdownCard extends Card {
 
-    protected String text;
+    @Expose protected String text;
 
     public MarkdownCard() {
         super();

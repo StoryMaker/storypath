@@ -2,12 +2,14 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.PublishButtonCardView;
 import scal.io.liger.view.DisplayableCard;
 
 public class PublishButtonCard extends Card {
 
-    private String text;
+    @Expose private String text;
 
     public PublishButtonCard() {
         super();

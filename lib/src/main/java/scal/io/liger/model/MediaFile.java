@@ -6,6 +6,8 @@ import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,9 +20,9 @@ import scal.io.liger.Constants;
  */
 public class MediaFile {
 
-    private String path;
-    private String medium; // mime type?
-    private String thumbnailFilePath;
+    @Expose private String path;
+    @Expose private String medium; // mime type?
+    @Expose private String thumbnailFilePath;
 
     public MediaFile() {
       // required for JSON/GSON

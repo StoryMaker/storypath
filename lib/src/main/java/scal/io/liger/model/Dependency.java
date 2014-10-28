@@ -1,12 +1,14 @@
 package scal.io.liger.model;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by mnbogner on 7/14/14.
  */
 public class Dependency {
 
-    private String dependencyId;
-    private String dependencyFile;
+    @Expose private String dependencyId;
+    @Expose private String dependencyFile;
 
     public Dependency() {
         // required for JSON/GSON

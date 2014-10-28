@@ -30,10 +30,9 @@ public class StoryPath {
     @Expose protected String title;
     @Expose protected String classPackage;
     @Expose ArrayList<Card> cards;
-    //protected ArrayList<Card> visibleCards;
     @Expose protected ArrayList<Dependency> dependencies;
     @Expose protected String fileLocation;
-    @Expose protected StoryPathLibrary storyPathLibraryReference; // not serialized
+    protected StoryPathLibrary storyPathLibraryReference; // not serialized
     @Expose protected String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets

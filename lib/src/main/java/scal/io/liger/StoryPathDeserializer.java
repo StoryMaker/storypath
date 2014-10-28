@@ -46,7 +46,15 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
         spm.setTitle(title);
         spm.setClassPackage(class_package);
 
-        JsonElement tempObj = jObj.get("storyPathLibraryFile");
+        JsonElement tempObj = null;
+
+        tempObj = jObj.get("fileLocation");
+        if (tempObj != null) {
+            String fileLocation = jObj.get("fileLocation").getAsString();
+            spm.setFileLocation(fileLocation);
+        }
+
+        tempObj = jObj.get("storyPathLibraryFile");
         if (tempObj != null) {
             String storyPathLibraryFile = jObj.get("storyPathLibraryFile").getAsString();
             spm.setStoryPathLibraryFile(storyPathLibraryFile);
@@ -55,7 +63,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(MilestoneCardDeserializer.class, new MilestoneCardDeserializer());
         gBuild.registerTypeAdapter(VideoCaptureTypeCard.class, new VideoCaptureTypeCardDeserializer());
-        Gson gson = gBuild.create();
+        Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         JsonElement jEle = jObj.get("dependencies");
         if (jEle != null) {

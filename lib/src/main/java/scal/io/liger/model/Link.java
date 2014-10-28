@@ -1,12 +1,14 @@
 package scal.io.liger.model;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Created by mnbogner on 7/14/14.
  */
 public class Link {
 
-    private String linkText;
-    private String linkPath;
+    @Expose private String linkText;
+    @Expose private String linkPath;
 
     public Link() {
         // required for JSON/GSON

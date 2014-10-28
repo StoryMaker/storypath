@@ -2,13 +2,15 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.EditTextCardView;
 
 public class EditTextCard extends Card {
 
-    private String hintText;
-    private String header;
+    @Expose private String hintText;
+    @Expose private String header;
 
     public EditTextCard() {
         super();

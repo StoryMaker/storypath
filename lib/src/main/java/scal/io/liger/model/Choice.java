@@ -1,16 +1,18 @@
 package scal.io.liger.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 /**
  * Created by mnbogner on 10/21/14.
  */
 public class Choice {
-    public String id;
-    public String text;
-    String filter;
-    ArrayList<String> filters_or;
-    ArrayList<String> filters_and;
+    @Expose public String id;
+    @Expose public String text;
+    @Expose String filter;
+    @Expose ArrayList<String> filters_or;
+    @Expose ArrayList<String> filters_and;
 
     public String getId() {
         return id;

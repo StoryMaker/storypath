@@ -2,12 +2,14 @@ package scal.io.liger.model;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.GenericCardView;
 
 public class TagCard extends Card {
 
-    private String mediaPath;
+    @Expose private String mediaPath;
 
     public TagCard() {
         super();

@@ -3,6 +3,8 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -13,21 +15,12 @@ import scal.io.liger.view.DisplayableCard;
  */
 public class TipCollectionHeadlessCard extends HeadlessCard {
 
-    private ArrayList<Tip> tips;
+    @Expose private ArrayList<Tip> tips; // NOT SURE THIS WILL WORK WITH INNER CLASS...
 
     public TipCollectionHeadlessCard(ArrayList<Tip> tips) {
         super();
+        this.type = this.getClass().getName();
         this.tips = tips;
-    }
-
-    public static class Tip {
-        protected String text;
-        protected ArrayList<String> tags;
-
-        public Tip(String text, ArrayList<String> tags) {
-            this.text = text;
-            this.tags = tags;
-        }
     }
 
     // FIXME opt: this can probably be more efficient
