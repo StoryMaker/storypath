@@ -391,3 +391,43 @@ Then you can push this to your phone for testing:
 ```
 adb push my.json  /sdcard/Liger/
 ```
+
+## Android Iconify
+
+Liger utilizes icon webfonts instead of the traditional path of generating multiple drawables per screen resolution.
+Here are the steps to creating/editing icons:
+
+1. Generate your desired icons in SVG format
+2. Convert your SVG files to a .TTF file
+  * There are several ways to do this online.  We use the command line tool [Font Custom](http://fontcustom.com/)
+3. After generating your .TFF file, you need to make 3 changes:
+  * Add your .TFF file to the android-iconify folder "src/main/assets/"
+  * In "Iconify.java", change the 'TFF_FILE' variable to reflect your new file
+    
+    ```java
+    private static final String TTF_FILE = "YOUR_FILE_NAME.ttf";
+    ```
+  * Still in "Iconify.java", change 'IconValue' variable to include your font names and unicode values
+    
+    ```java
+    public static enum IconValue {
+        fa_clip_ex_action('\uf145'),
+        fa_clip_ex_character('\uf146');
+    }
+    ```
+    *Note: Your enum keys* **must** *begin with "fa"*
+4. You are now ready to use your new icons
+  
+    ```xml
+    <IconTextView
+    android:text="{fa-clip_ex_action}"
+    android:shadowColor="#22000000"
+    android:shadowDx="3"
+    android:shadowDy="3"
+    android:shadowRadius="1"
+    android:textSize="90dp"
+    android:textColor="#FF33B5E5"
+    ... />
+    ```
+
+
