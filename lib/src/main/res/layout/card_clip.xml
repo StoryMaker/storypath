@@ -42,6 +42,8 @@
         android:id="@+id/overflowSpinner"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:padding="@dimen/padding_small"
+        android:background="@color/storymaker_blue"
         android:layout_below="@id/clipCandidates"
         android:layout_alignParentEnd="true"/>
 
@@ -63,7 +65,7 @@
             style="@style/TextImage"
             android:id="@+id/itvImport"
             android:layout_below="@+id/tvBody"
-            android:text="{fa-ic_card_jumble}" />
+            android:text="{fa-ic_card_import}" />
 
         <TextView
             style="@style/p"
@@ -77,7 +79,7 @@
             style="@style/TextImage"
             android:id="@+id/itvCapture"
             android:layout_below="@+id/itvImport"
-            android:text="{fa-ic_card_jumble}" />
+            android:text="{fa-ic_card_capture_photo}" />
 
         <TextView
             style="@style/p"
