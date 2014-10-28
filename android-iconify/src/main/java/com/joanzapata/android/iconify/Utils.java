@@ -71,7 +71,7 @@ class Utils {
         BufferedOutputStream bos = null;
         InputStream inputStream = null;
         try {
-            inputStream = Iconify.class.getClassLoader().getResourceAsStream(resourceName);
+            inputStream = context.getAssets().open(resourceName);
             byte[] buffer = new byte[inputStream.available()];
             bos = new BufferedOutputStream(new FileOutputStream(outPath));
             int l = 0;
