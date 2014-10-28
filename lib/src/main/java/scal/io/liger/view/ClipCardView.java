@@ -204,7 +204,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // Expand / Collapse footer on click
         tvHeader.setOnClickListener(clipCardOnClickListener);
 
-        tvHeader.setText(mCardModel.getHeader());
+        if (mCardModel.getFirstGoal() != null) {
+            tvBody.setText(mCardModel.getFirstGoal());
+        }
 
         // supports automated testing
         view.setTag(mCardModel.getId());

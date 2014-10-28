@@ -18,6 +18,7 @@ public class ClipCard extends ExampleCard {
 
     @Expose private String clipType;
     @Expose private ArrayList<ClipMetadata> clips;
+    @Expose private ArrayList<String> goals;
 
     public ClipCard() {
         super();
@@ -31,6 +32,21 @@ public class ClipCard extends ExampleCard {
 
     public String getClipType() {
         return fillReferences(clipType);
+    }
+
+    public String getFirstGoal() {
+        if (goals != null) {
+            return goals.get(0);
+        }
+        return null;
+    }
+
+    public ArrayList<String> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(ArrayList<String> goals) {
+        this.goals = goals;
     }
 
     public void setClipType(String clipType) {
