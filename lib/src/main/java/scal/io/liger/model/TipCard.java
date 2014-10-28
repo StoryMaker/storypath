@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,11 +11,9 @@ import java.util.Random;
  */
 public class TipCard extends MarkdownCard {
 
-    // FIXME make sure this isn't being serialized
     private Random random;
-    private ArrayList<String> tags;
+    @Expose private ArrayList<String> tags;
 
-    // FIXME make sure this isn't being serialized
     private ArrayList<String> tips = null;
 
     public TipCard() {
