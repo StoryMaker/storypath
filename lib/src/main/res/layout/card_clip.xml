@@ -64,28 +64,38 @@
         <IconTextView
             style="@style/TextImage"
             android:id="@+id/itvImport"
+            android:paddingTop="8dp"
             android:layout_below="@+id/tvBody"
+            android:gravity="center_vertical"
             android:text="{fa-ic_card_import}" />
 
         <TextView
             style="@style/p"
             android:id="@+id/tvImport"
-            android:layout_below="@+id/tvBody"
+            android:paddingLeft="8dp"
             android:layout_toEndOf="@+id/itvImport"
+            android:layout_alignTop="@id/itvImport"
+            android:layout_alignBottom="@id/itvImport"
+            android:gravity="center_vertical"
             android:text="@string/lbl_import"
             android:textColor="@color/storymaker_highlight"/>
 
         <IconTextView
             style="@style/TextImage"
             android:id="@+id/itvCapture"
+            android:paddingTop="8dp"
+            android:gravity="center_vertical"
             android:layout_below="@+id/itvImport"
             android:text="{fa-ic_card_capture_photo}" />
 
         <TextView
             style="@style/p"
             android:id="@+id/tvCapture"
+            android:paddingLeft="8dp"
             android:layout_toEndOf="@+id/itvCapture"
-            android:layout_below="@+id/itvImport"
+            android:layout_alignTop="@id/itvCapture"
+            android:layout_alignBottom="@id/itvCapture"
+            android:gravity="center_vertical"
             android:text="@string/lbl_capture"
             android:textColor="@color/storymaker_highlight"/>
 

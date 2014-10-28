@@ -96,7 +96,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         IconTextView itvCapture = (IconTextView) view.findViewById(R.id.itvCapture);
 
         /** Capture Media Button Click Listener */
-        itvCapture.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener captureClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
@@ -122,7 +122,11 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     ((Activity) mContext).startActivityForResult(intent, requestId);
                 }
             }
-        });
+        };
+
+        // Set the capture click listener on icon and text label
+        itvCapture.setOnClickListener(captureClickListener);
+        view.findViewById(R.id.tvCapture).setOnClickListener(captureClickListener);
 
         setupSpinner(spinner);
 
@@ -283,7 +287,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             itvClipTypeIcon.setText("{fa-ic_clip_place}");
         } else {
             //TODO handle invalid clip type
-            Log.d(this.getClass().getName(), "No clipType matching '" + clipType + "' found.");
+            Log.d(TAG, "No clipType matching '" + clipType + "' found.");
             drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
             itvClipTypeIcon.setText("{fa-card_capture_photo}");
         }
