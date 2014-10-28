@@ -64,6 +64,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     private final float PRIMARY_CLIP_ALPHA = 1.0f;
     private final float SECONDARY_CLIP_ALPHA = .7f;
 
+    private IconTextView itvHeader;
+
     public ClipCardView(Context context, Card cardModel) {
         super();
         mContext = context;
@@ -86,6 +88,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
+        itvHeader = (IconTextView) view.findViewById(R.id.itvHeader);
         TextView tvHeader  = (TextView) view.findViewById(R.id.tvHeader);
         TextView tvBody    = (TextView) view.findViewById(R.id.tvBody);
         Spinner spinner      = (Spinner) view.findViewById(R.id.overflowSpinner);
@@ -274,18 +277,24 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
             if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
                 thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character));
+                itvHeader.setText("{fa-ic_clip_character}");
             } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
                 thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_action));
+                itvHeader.setText("{fa-ic_clip_action}");
             } else if (clipType.equalsIgnoreCase(Constants.RESULT)){
                 thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_result));
+                itvHeader.setText("{fa-ic_clip_result}");
             } else if (clipType.equalsIgnoreCase(Constants.SIGNATURE)){
                 thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_signature));
+                itvHeader.setText("{fa-ic_clip_signature}");
             } else if (clipType.equalsIgnoreCase(Constants.PLACE)){
                 thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place));
+                itvHeader.setText("{fa-ic_clip_place}");
             } else {
                 //TODO handle invalid clip type
                 Log.d(this.getClass().getName(), "No clipType matching '" + clipType + "' found.");
                 thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher)); // FIXME replace with a sensible placeholder image
+                itvHeader.setText("{fa-card_capture_photo}");
             }
 
             thumbnail.setVisibility(View.VISIBLE);
@@ -557,7 +566,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         Resources r = clipCandidatesContainer.getContext().getResources();
         int topMargin  = r.getDimensionPixelSize(R.dimen.clip_stack_margin_top);    // Margin between clip thumbs
         int clipHeight = r.getDimensionPixelSize(R.dimen.clip_thumb_height);        // Height of each clip thumb
-        int howtoHeight = r.getDimensionPixelSize(R.dimen.card_howto_height);       // Height of howto card that appears at stack top
+        int howtoHeight = r.getDimensionPixelSize(R.dimen.card_tap_height);       // Height of howto card that appears at stack top
 
         final View howtoCard = ((View) clipCandidatesContainer.getParent()).findViewById(R.id.howtoCard);
         float finalHowToOpacity = mClipsExpanded ?  0f : 1f;
@@ -655,6 +664,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        spinner.setBackground(new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert));
     }
 
     /** Spinner OnItemSelectedListener */

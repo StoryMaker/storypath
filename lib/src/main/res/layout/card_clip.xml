@@ -5,6 +5,18 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_horizontal_margin">
 
+    <TextView
+        style="@style/h3"
+        android:id="@+id/tvTapToContinue"
+        android:layout_height="@dimen/card_tap_height"
+        android:background="@color/raspberry_wine"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:text="@string/lbl_card_tap"
+        android:textColor="@color/white"
+        android:textStyle="italic"
+        android:alpha="0"/>
+
     <RelativeLayout
         android:id="@+id/clipCandidates"
         android:layout_alignParentTop="true"
@@ -12,76 +24,51 @@
         android:layout_height="wrap_content">
     </RelativeLayout>
 
+    <IconTextView
+        style="@style/TextImage"
+        android:id="@+id/itvHeader"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/clipCandidates" />
+
     <TextView
-        android:id="@+id/howtoCard"
-        android:background="@color/raspberry_wine"
-        android:layout_alignParentTop="true"
-        android:layout_height="@dimen/card_howto_height"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:padding="@dimen/padding_small"
-        android:text="@string/card_howto_tap_to_select_clip"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_medium"
-        android:textStyle="italic"
-        android:alpha="0"/>
+        style="@style/p"
+        android:id="@+id/tvHeader"
+        android:textAllCaps="true"
+        android:textColor="@color/raspberry_wine"
+        android:layout_toEndOf="@+id/itvHeader"
+        android:layout_below="@id/clipCandidates"/>
 
     <Spinner
         android:id="@+id/overflowSpinner"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_below="@id/clipCandidates"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/padding_small"
-        android:background="@drawable/ic_overflow"
-        android:textColor="@color/raspberry_wine"
-        android:paddingLeft="@dimen/padding_medium"
-        android:paddingRight="@dimen/padding_medium" />
-
-    <TextView
-        android:id="@+id/tvHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/overflowSpinner"
-        android:layout_below="@id/clipCandidates"
-        android:paddingTop="@dimen/padding_medium"
-        android:drawableLeft="@drawable/ic_signature"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical"
-        android:textColor="@color/raspberry_wine"
-        android:paddingLeft="@dimen/padding_small"
-        android:paddingRight="@dimen/padding_small"
-        android:textSize="20sp" />
+        android:layout_alignParentEnd="true"/>
 
     <RelativeLayout
         android:id="@+id/collapsable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvHeader"
-        android:paddingLeft="@dimen/padding_small"
-        android:paddingRight="@dimen/padding_small"
-        android:layout_marginBottom="@dimen/padding_medium">
+        android:layout_below="@id/tvHeader">
 
         <TextView
+            style="@style/h2"
             android:id="@+id/tvBody"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/raspberry_wine" />
+            android:paddingTop="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_medium"/>
 
         <IconTextView
             style="@style/TextImage"
             android:id="@+id/itvImport"
             android:layout_below="@+id/tvBody"
-            android:layout_marginBottom="@dimen/padding_small"
-            android:layout_marginEnd="@dimen/padding_small"
             android:text="{fa-ic_card_jumble}" />
 
         <TextView
-            style="@style/h3"
+            style="@style/p"
             android:id="@+id/tvImport"
+            android:layout_below="@+id/tvBody"
             android:layout_toEndOf="@+id/itvImport"
             android:text="@string/lbl_import"
             android:textColor="@color/raspberry_wine"/>
@@ -90,14 +77,16 @@
             style="@style/TextImage"
             android:id="@+id/itvCapture"
             android:layout_below="@+id/itvImport"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:text="{fa-ic_card_capture_photo}" />
+            android:text="{fa-ic_card_jumble}" />
 
         <TextView
-            style="@style/h3"
+            style="@style/p"
             android:id="@+id/tvCapture"
             android:layout_toEndOf="@+id/itvCapture"
-            android:text="@string/lbl_import"
+            android:layout_below="@+id/itvImport"
+            android:text="@string/lbl_capture"
             android:textColor="@color/raspberry_wine"/>
+
     </RelativeLayout>
 </RelativeLayout>
+
