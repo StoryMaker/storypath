@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "scal.io.liger"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
@@ -33,7 +33,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.0'
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.commonsware.cwac:anddown:0.2.0'
-    androidTestCompile files('libs/espresso-1.1-bundled.jar')
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.edmodo:rangebar:1.0.0'
+    androidTestCompile files('libs/espresso-1.1-bundled.jar')
+    compile project(':android-iconify')
 }

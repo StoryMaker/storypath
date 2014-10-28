@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.IconTextView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -87,13 +88,13 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
-        TextView headerText  = (TextView) view.findViewById(R.id.headerText);
-        TextView bodyText    = (TextView) view.findViewById(R.id.bodyText);
+        TextView tvHeader  = (TextView) view.findViewById(R.id.tvHeader);
+        TextView tvBody    = (TextView) view.findViewById(R.id.tvBody);
         Spinner spinner      = (Spinner) view.findViewById(R.id.overflowSpinner);
-        Button captureButton = (Button) view.findViewById(R.id.captureBtn);
+        IconTextView itvCapture = (IconTextView) view.findViewById(R.id.itvCapture);
 
         /** Capture Media Button Click Listener */
-        captureButton.setOnClickListener(new View.OnClickListener() {
+        itvCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
@@ -202,12 +203,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             mDisplayedClips.add(clipThumb);
         }
 
-        headerText.setText(mCardModel.getClipType().toUpperCase());
+        tvHeader.setText(mCardModel.getClipType().toUpperCase());
 
         // Expand / Collapse footer on click
-        headerText.setOnClickListener(clipCardOnClickListener);
+        tvHeader.setOnClickListener(clipCardOnClickListener);
 
-        bodyText.setText(mCardModel.getHeader());
+        tvHeader.setText(mCardModel.getHeader());
 
         // supports automated testing
         view.setTag(mCardModel.getId());
