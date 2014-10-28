@@ -43,7 +43,7 @@ public class ExampleCard extends Card {
 
     public MediaFile getExampleMediaFile() {
         if (exampleMediaPath == null) {
-            Log.e(this.getClass().getName(), "no example media path for card " + this.getId());
+            Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
             return null;
         }
 

@@ -34,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -224,6 +226,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         LayoutInflater inflater = (LayoutInflater) clipCandidatesContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ImageView thumbnail = (ImageView) inflater.inflate(R.layout.clip_thumbnail, clipCandidatesContainer, false);
+//        TextView example = (TextView) inflater.inflate(R.layout.clip_example, clipCandidatesContainer, false);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) thumbnail.getLayoutParams();
         params.topMargin = topMarginPerZ * (zTop - zOrder);
         //Log.i("inflate", String.format("Inflating thumbnail for z %d with top margin %d", zOrder, params.topMargin));
@@ -269,15 +272,20 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType();
 
-            if (clipType.equals(Constants.CHARACTER)) {
-                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_close));
-            } else if (clipType.equals(Constants.ACTION)) {
-                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
-            } else if (clipType.equals(Constants.RESULT)){
-                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_long));
+            if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character));
+            } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
+                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_action));
+            } else if (clipType.equalsIgnoreCase(Constants.RESULT)){
+                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_result));
+            } else if (clipType.equalsIgnoreCase(Constants.SIGNATURE)){
+                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_signature));
+            } else if (clipType.equalsIgnoreCase(Constants.PLACE)){
+                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place));
             } else {
                 //TODO handle invalid clip type
-                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher));
+                Log.d(this.getClass().getName(), "No clipType matching '" + clipType + "' found.");
+                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher)); // FIXME replace with a sensible placeholder image
             }
 
             thumbnail.setVisibility(View.VISIBLE);

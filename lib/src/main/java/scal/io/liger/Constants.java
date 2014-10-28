@@ -16,6 +16,8 @@ public class Constants {
     public static final String CHARACTER = "character";
     public static final String ACTION = "action";
     public static final String RESULT = "result";
+    public static final String PLACE = "place";
+    public static final String SIGNATURE = "signature";
 
     public static final String EXTERNAL = "value_from_external_story_path";
 
