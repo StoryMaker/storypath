@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+    <!-- QuizCardView must be able to calculate the height of this view
+         for its expand / contract animation. Therefore if you change the height
+         or margin attributes, be sure to update QuizCarView#calculateExpandedChoiceContainerHeightPx -->
+
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/choiceText"
     style="@style/p"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/card_quiz_response_height"
     android:background="@drawable/quiz_card_selectable_bg"
+    android:gravity="center_vertical"
+    android:text="An Event"
     android:padding="@dimen/padding_small"
     android:layout_margin="@dimen/padding_tiny"/>
