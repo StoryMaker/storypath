@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,15 +27,22 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.IconTextView;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.edmodo.rangebar.RangeBar;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
@@ -80,13 +88,13 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
-        TextView headerText  = (TextView) view.findViewById(R.id.headerText);
-        TextView bodyText    = (TextView) view.findViewById(R.id.bodyText);
+        TextView tvHeader  = (TextView) view.findViewById(R.id.tvHeader);
+        TextView tvBody    = (TextView) view.findViewById(R.id.tvBody);
         Spinner spinner      = (Spinner) view.findViewById(R.id.overflowSpinner);
-        Button captureButton = (Button) view.findViewById(R.id.captureBtn);
+        IconTextView itvCapture = (IconTextView) view.findViewById(R.id.itvCapture);
 
         /** Capture Media Button Click Listener */
-        captureButton.setOnClickListener(new View.OnClickListener() {
+        itvCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
@@ -115,9 +123,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         });
 
         setupSpinner(spinner);
-        ViewGroup.LayoutParams params = collapsableContainer.getLayoutParams();
-        params.height = 0;
-        collapsableContainer.setLayoutParams(params);
 
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
@@ -169,6 +174,11 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         /** Populate clip stack */
         if (hasClips) {
+            // Begin in the collapsed state
+            ViewGroup.LayoutParams params = collapsableContainer.getLayoutParams();
+            params.height = 0;
+            collapsableContainer.setLayoutParams(params);
+
             Log.i("clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
             for (int x = 0; x < clipsToDisplay.size(); x++) {
                 // Create view for new clip
@@ -185,6 +195,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 mDisplayedClips.add(clipThumb);
             }
         } else {
+            // Begin in the expanded state
             View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
             clipThumb.setOnClickListener(clipCardOnClickListener);
             clipThumb.setTag(R.id.view_tag_clip_primary, true);
@@ -192,12 +203,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             mDisplayedClips.add(clipThumb);
         }
 
-        headerText.setText(mCardModel.getClipType().toUpperCase());
+        tvHeader.setText(mCardModel.getClipType().toUpperCase());
 
         // Expand / Collapse footer on click
-        headerText.setOnClickListener(clipCardOnClickListener);
+        tvHeader.setOnClickListener(clipCardOnClickListener);
 
-        bodyText.setText(mCardModel.getHeader());
+        tvHeader.setText(mCardModel.getHeader());
 
         // supports automated testing
         view.setTag(mCardModel.getId());
@@ -350,10 +361,74 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.dialog_clip_playback_trim, null);
 
+        /** Trim dialog views */
         final TextureView videoView = (TextureView) v.findViewById(R.id.textureView);
         final ImageView thumbnailView = (ImageView) v.findViewById(R.id.thumbnail);
         final TextView clipLength = (TextView) v.findViewById(R.id.clipLength);
+        final TextView clipStart = (TextView) v.findViewById(R.id.clipStart);
         final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
+        final RangeBar rangeBar = (RangeBar) v.findViewById(R.id.rangeSeekbar);
+        final SeekBar playbackBar = (SeekBar) v.findViewById(R.id.playbackProgress);
+        final int tickCount = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
+
+        /** Media player and media */
+        final MediaPlayer player = new MediaPlayer();
+        final ClipMetadata selectedClip = mCardModel.getSelectedClip();
+        final AtomicInteger clipDurationMs = new AtomicInteger();
+
+        /** Values modified by RangeBar listener. Used by Dialog trim listener to
+         *  set final trim selections on ClipMetadata */
+        final AtomicInteger clipStartMs = new AtomicInteger(selectedClip.getStartTime());
+        final AtomicInteger clipStopMs = new AtomicInteger(selectedClip.getStopTime());
+
+        /** Setup initial values that don't require media loaded */
+        clipStart.setText(makeTimeString(selectedClip.getStartTime()));
+        clipEnd.setText(makeTimeString(selectedClip.getStopTime()));
+
+        Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
+
+        rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            int lastLeftIdx;
+            int lastRightIdx;
+
+            @Override
+            public void onIndexChangeListener(RangeBar rangeBar, int leftIdx, int rightIdx) {
+                //Log.i(TAG, String.format("Seek to leftIdx %d rightIdx %d. left: %d. right: %d", leftIdx, rightIdx, rangeBar.getLeft(), rangeBar.getRight()));
+
+                if (lastLeftIdx != leftIdx) {
+                    // Left seek was adjusted, seek to it
+                    clipStartMs.set(getMsFromRangeBarIndex(leftIdx, tickCount, clipDurationMs.get()));
+                    player.seekTo(clipStartMs.get());
+                    clipStart.setText(makeTimeString(clipStartMs.get()));
+                    //Log.i(TAG, String.format("Left seek to %d ms", clipStartMs.get()));
+                    if (playbackBar.getProgress() < leftIdx) playbackBar.setProgress(leftIdx);
+
+
+                } else if (lastRightIdx != rightIdx) {
+                    // Right seek was adjusted, seek to it
+                    clipStopMs.set(getMsFromRangeBarIndex(rightIdx, tickCount, clipDurationMs.get()));
+                    player.seekTo(clipStopMs.get());
+                    clipEnd.setText(makeTimeString(clipStopMs.get()));
+
+                    if (playbackBar.getProgress() > rightIdx) playbackBar.setProgress(rightIdx);
+                    //Log.i(TAG, String.format("Right seek to %d ms", clipStopMs.get()));
+                }
+                lastLeftIdx = leftIdx;
+                lastRightIdx = rightIdx;
+            }
+        });
+
+        videoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player.isPlaying()) {
+                    player.pause();
+                } else {
+                    player.seekTo(clipStartMs.get());
+                    player.start();
+                }
+            }
+        });
 
         videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -363,17 +438,28 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
                 Surface s = new Surface(surface);
                 try {
-                    MediaPlayer player = new MediaPlayer();
                     player.setDataSource(mContext, video);
                     player.setSurface(s);
                     player.prepare();
-                    player.start();
+                    player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            player.seekTo(clipStartMs.get());
+                        }
+                    });
                     thumbnailView.setVisibility(View.GONE);
-                    // TODO : Properly display clip duration
-                    clipLength.setText(String.format("Total 0:%01d", player.getDuration() / 1000));
-                    clipEnd.setText(String.format("0:%01d", player.getDuration() / 1000));
+                    clipDurationMs.set(player.getDuration());
+                    if (clipStopMs.get() == 0) clipStopMs.set(clipDurationMs.get()); // If no stop point set, play whole clip
+
+                    // Setup initial views requiring knowledge of clip media
+                    if (selectedClip.getStopTime() == 0) selectedClip.setStopTime(clipDurationMs.get());
+                    player.seekTo(selectedClip.getStartTime());
+                    rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipDurationMs.get()),
+                                              getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipDurationMs.get()));
+                    clipLength.setText("Total : " + makeTimeString(clipDurationMs.get()));
+                    clipEnd.setText(makeTimeString(selectedClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -392,14 +478,62 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
             }
+
         });
+
+        // Poll MediaPlayer for position, ensuring it never exceeds clipStopMs
+        final Timer timer = new Timer("mplayer");
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (player.isPlaying()) {
+                    if (player.getCurrentPosition() > clipStopMs.get()) {
+                        player.pause();
+                        Log.i(TAG, "stopping playback at clip end selection");
+                    }
+                    playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
+                }
+            }
+        }, 100, 100);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(v)
-                .setPositiveButton("TRIM CLIP", null)
-                .setNegativeButton("CANCEL", null);
+                .setPositiveButton("TRIM CLIP", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mCardModel.getSelectedClip().setStartTime(clipStartMs.get());
+                        mCardModel.getSelectedClip().setStopTime(clipStopMs.get());
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        player.release();
+                        timer.cancel();
+                    }
+                });
         Dialog dialog = builder.create();
         dialog.show();
+    }
+
+    private String makeTimeString(int timeMs) {
+        long second = (timeMs / 1000) % 60;
+        long minute = (timeMs / (1000 * 60)) % 60;
+
+        return String.format("%02d:%02d", minute, second);
+    }
+
+    private int getMsFromRangeBarIndex(int tick, int max, int clipDurationMs) {
+        int seekMs =  (int) (clipDurationMs * Math.min(1, ((float) tick / max)));
+        //Log.i(TAG, String.format("Seek to index %d equals %d ms. Duration: %d ms", idx, seekMs, clipDurationMs.get()));
+        return seekMs;
+    }
+
+    private int getRangeBarIndexForMs(int positionMs, int max, int clipDurationMs) {
+        int idx = (int) Math.min(((positionMs * max) / (float) clipDurationMs), max - 1); // Range bar goes from 0 to (max - 1)
+        Log.i(TAG, String.format("Converted %d ms to rangebar position %d", positionMs, idx));
+        return idx;
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_horizontal_margin">
@@ -11,9 +12,9 @@
         android:layout_height="wrap_content">
     </RelativeLayout>
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:background="@color/signature"
+    <TextView
         android:id="@+id/howtoCard"
+        android:background="@color/raspberry_wine"
         android:layout_alignParentTop="true"
         android:layout_height="@dimen/card_howto_height"
         android:layout_marginBottom="8dp"
@@ -35,12 +36,12 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/padding_small"
         android:background="@drawable/ic_overflow"
-        android:textColor="@color/signature"
+        android:textColor="@color/raspberry_wine"
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium" />
 
     <TextView
-        android:id="@+id/headerText"
+        android:id="@+id/tvHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -50,136 +51,53 @@
         android:drawableLeft="@drawable/ic_signature"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:textColor="@color/signature"
+        android:textColor="@color/raspberry_wine"
         android:paddingLeft="@dimen/padding_small"
         android:paddingRight="@dimen/padding_small"
         android:textSize="20sp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/collapsable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/headerText"
+        android:layout_below="@id/tvHeader"
         android:paddingLeft="@dimen/padding_small"
         android:paddingRight="@dimen/padding_small"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/padding_medium">
 
         <TextView
-            android:id="@+id/bodyText"
+            android:id="@+id/tvBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawablePadding="8dp"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_vertical"
-            android:textSize="22sp" />
+            android:textColor="@color/raspberry_wine" />
 
-        <Button
-            android:id="@+id/importBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/ic_whoknows"
-            android:drawablePadding="@dimen/padding_xsmall"
-            android:paddingTop="@dimen/padding_small"
-            android:text="@string/importt"
-            android:textColor="@color/signature" />
+        <IconTextView
+            style="@style/TextImage"
+            android:id="@+id/itvImport"
+            android:layout_below="@+id/tvBody"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:text="{fa-ic_card_jumble}" />
 
-        <Button
-            android:id="@+id/captureBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/ic_capture"
-            android:drawablePadding="@dimen/padding_xsmall"
-            android:paddingTop="@dimen/padding_small"
-            android:text="@string/capture"
-            android:textColor="@color/signature" />
-    </LinearLayout>
-    <!--
+        <TextView
+            style="@style/h3"
+            android:id="@+id/tvImport"
+            android:layout_toEndOf="@+id/itvImport"
+            android:text="@string/lbl_import"
+            android:textColor="@color/raspberry_wine"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <IconTextView
+            style="@style/TextImage"
+            android:id="@+id/itvCapture"
+            android:layout_below="@+id/itvImport"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:text="{fa-ic_card_capture_photo}" />
 
-        <ImageView
-            android:id="@+id/iv_card_photo"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:adjustViewBounds="true"
-            android:baselineAlignBottom="true"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="@dimen/padding_medium"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
-
-        <ToggleButton
-            android:background="@drawable/play_stop"
-            android:id="@+id/tb_card_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOn=""
-            android:textOff=""
-
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"/>
-
+        <TextView
+            style="@style/h3"
+            android:id="@+id/tvCapture"
+            android:layout_toEndOf="@+id/itvCapture"
+            android:text="@string/lbl_import"
+            android:textColor="@color/raspberry_wine"/>
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <VideoView
-            android:id="@+id/vv_card_video"
-            android:layout_width="fill_parent"
-            android:layout_height="180dp"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_type"
-            style="@style/CardTitleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"/>
-
-        <TextView
-            android:id="@+id/tv_header"
-            style="@style/CardTitleMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_medium"
-            android:gravity="center"/>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/stroke"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btn_record_media"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            style="@style/CardLinkMedium"
-            android:text="@string/lbl_record"/>
-
-    </LinearLayout> -->
 </RelativeLayout>

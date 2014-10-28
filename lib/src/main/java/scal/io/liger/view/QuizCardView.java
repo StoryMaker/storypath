@@ -181,12 +181,12 @@ public class QuizCardView extends ExampleCardView {
             breadCrumb.setText(mSelectedChoices.get(0).text);
             finalChoiceContainerHeight = 0;
             animFirstColor = mContext.getResources().getColor(R.color.white);
-            animSecondColor = mContext.getResources().getColor(R.color.signature);
+            animSecondColor = mContext.getResources().getColor(R.color.raspberry_wine);
         } else {
             // Breadcrumb shows quiz question
             breadCrumb.setText(mCardModel.getQuestion());
             finalChoiceContainerHeight = mExpandedHeight;
-            animFirstColor = mContext.getResources().getColor(R.color.signature);
+            animFirstColor = mContext.getResources().getColor(R.color.raspberry_wine);
             animSecondColor = mContext.getResources().getColor(R.color.white);
         }
         if (doAnimate) {

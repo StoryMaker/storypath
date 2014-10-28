@@ -22,18 +22,17 @@
         android:id="@+id/clipLength"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding_xlarge"
         android:paddingRight="@dimen/padding_xlarge"
         android:layout_marginTop="@dimen/padding_small"
         android:layout_below="@id/textureView"
         android:textSize="@dimen/text_large"
+        android:text="Total 1:25"
         android:fontFamily="sans-serif-light"/>
 
     <TextView
         android:id="@+id/clipStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding_large"
         android:paddingRight="@dimen/padding_large"
         android:layout_marginTop="@dimen/padding_small"
         android:layout_below="@id/clipLength"
@@ -46,16 +45,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/padding_small"
         android:paddingLeft="@dimen/padding_large"
-        android:paddingRight="@dimen/padding_large"
-        android:layout_marginTop="@dimen/padding_medium"
         android:layout_below="@id/clipLength"
         android:textSize="@dimen/text_medium"
+        android:text="1:23"
         android:fontFamily="sans-serif-light"/>
 
-    <!-- TODO: Move RangeSeekBar to liger -->
     <SeekBar
+        android:id="@+id/playbackProgress"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/clipStart"
+        android:thumb="@drawable/ic_seek"
+        android:enabled="false"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:progressDrawable="@android:color/transparent"
+        android:max="@integer/trim_bar_tick_count" />
+
+    <com.edmodo.rangebar.RangeBar
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:id="@+id/rangeSeekbar"
+        custom:tickCount="@integer/trim_bar_tick_count"
+        custom:tickHeight="0dp"
+        custom:connectingLineColor="@color/raspberry_wine"
+        custom:thumbImageNormal="@drawable/scrubber_control_normal_holo"
+        custom:thumbImagePressed="@drawable/scrubber_control_pressed_holo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/clipStart"/>

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:padding="@dimen/padding_medium"
-        android:textColor="@color/signature"
+        android:textColor="@color/raspberry_wine"
         android:textSize="@dimen/text_medium"/>
 
     <!-- choiceContainer contains all quiz response options -->
