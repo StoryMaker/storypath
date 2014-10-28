@@ -70,7 +70,7 @@
         android:id="@+id/rangeSeekbar"
         custom:tickCount="@integer/trim_bar_tick_count"
         custom:tickHeight="0dp"
-        custom:connectingLineColor="@color/raspberry_wine"
+        custom:connectingLineColor="@color/storymaker_highlight"
         custom:thumbImageNormal="@drawable/scrubber_control_normal_holo"
         custom:thumbImagePressed="@drawable/scrubber_control_pressed_holo"
         android:layout_width="match_parent"

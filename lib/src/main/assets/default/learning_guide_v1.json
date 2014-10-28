@@ -23,7 +23,7 @@
             "id": "example_video",
             "type": "ExampleCard",
             "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
-            "clipMedium": "video",
+            "medium": "video",
             "clipType": "character",
             "exampleMediaPath": "video_preview.mp4",
             "references": [
@@ -34,7 +34,7 @@
             "id": "example_audio",
             "type": "ExampleCard",
             "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
-            "clipMedium": "audio",
+            "medium": "audio",
             "clipType": "character",
             "exampleMediaPath": "video_preview.mp4",
             "references": [
@@ -45,7 +45,7 @@
             "id": "example_photo",
             "type": "ExampleCard",
             "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
-            "clipMedium": "photo",
+            "medium": "photo",
             "clipType": "character",
             "exampleMediaPath": "video_preview.mp4",
             "references": [
@@ -73,7 +73,7 @@
             "id": "clip_video_character",
             "type": "ClipCard",
             "header": "Introduce the audience to a person important to your story",
-            "clipMedium": "video",
+            "medium": "video",
             "clipType": "character",
             "exampleMediaPath": "video_sample1.mp4",
             "references": [
@@ -85,7 +85,7 @@
             "id": "clip_video_action",
             "type": "ClipCard",
             "header": "Introduce the audience to an action important to your story",
-            "clipMedium": "video",
+            "medium": "video",
             "clipType": "action",
             "exampleMediaPath": "video_sample2.mp4",
             "references": [
@@ -97,7 +97,7 @@
             "id": "clip_video_result",
             "type": "ClipCard",
             "header": "Introduce the audience to a result important to your story", 
-            "clipMedium": "video",
+            "medium": "video",
             "clipType": "result",
             "exampleMediaPath": "video_sample3.mp4",
             "references": [
@@ -113,7 +113,7 @@
                 "learning_guide_v1::medium_card::value::audio",
                 "learning_guide_v1::got_it::value::true"
             ], 
-            "clipMedium": "audio",
+            "medium": "audio",
             "clipType": "character"
         }, 
         {
@@ -124,7 +124,7 @@
                 "learning_guide_v1::medium_card::value::audio",
                 "learning_guide_v1::got_it::value::true"
             ], 
-            "clipMedium": "audio",
+            "medium": "audio",
             "clipType": "action"
             
         }, 
@@ -136,7 +136,7 @@
                 "learning_guide_v1::medium_card::value::audio",
                 "learning_guide_v1::got_it::value::true"
             ], 
-            "clipMedium": "audio",
+            "medium": "audio",
             "clipType": "result"
         },
         {
@@ -147,14 +147,14 @@
                 "learning_guide_v1::medium_card::value::photo",
                 "learning_guide_v1::got_it::value::true"
             ], 
-            "clipMedium": "photo",
+            "medium": "photo",
             "clipType": "character"
         }, 
         { 
             "id": "clip_photo_action", 
             "type": "ClipCard",
             "header": "Introduce the audience to an action important to your story",
-            "clipMedium": "photo",
+            "medium": "photo",
             "references": [
                 "learning_guide_v1::medium_card::value::photo",
                 "learning_guide_v1::got_it::value::true"
@@ -169,7 +169,7 @@
                 "learning_guide_v1::medium_card::value::photo",
                 "learning_guide_v1::got_it::value::true"
             ], 
-            "clipMedium": "photo",
+            "medium": "photo",
             "clipType": "result"
         }, 
         {

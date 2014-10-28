@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/raspberry_wine">
+    android:background="@color/storymaker_highlight">
 
         <TextView
             android:id="@+id/tv_header"

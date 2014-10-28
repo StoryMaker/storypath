@@ -68,7 +68,7 @@
             "id": "clip_video_character",
             "type": "ClipCard",
             "header": "Introduce the audience to a person important to your story",
-            "clipMedium": "video",
+            "medium": "video",
             "clipType": "character",
             "exampleMediaPath": "video_sample1.mp4"
         },

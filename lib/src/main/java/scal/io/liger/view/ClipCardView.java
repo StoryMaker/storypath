@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -64,7 +65,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     private final float PRIMARY_CLIP_ALPHA = 1.0f;
     private final float SECONDARY_CLIP_ALPHA = .7f;
 
-    private IconTextView itvHeader;
+    private IconTextView itvClipTypeIcon;
 
     public ClipCardView(Context context, Card cardModel) {
         super();
@@ -88,7 +89,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
-        itvHeader = (IconTextView) view.findViewById(R.id.itvHeader);
+        itvClipTypeIcon = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
         TextView tvHeader  = (TextView) view.findViewById(R.id.tvHeader);
         TextView tvBody    = (TextView) view.findViewById(R.id.tvBody);
         Spinner spinner      = (Spinner) view.findViewById(R.id.overflowSpinner);
@@ -101,17 +102,17 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 Intent intent = null;
                 int requestId = -1;
 
-                String clipMedium = mCardModel.getMedium();
+                String medium = mCardModel.getMedium();
                 String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
-                if (clipMedium.equals(Constants.VIDEO)) {
+                if (medium.equals(Constants.VIDEO)) {
                     intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                     requestId = Constants.REQUEST_VIDEO_CAPTURE;
 
-                } else if (clipMedium.equals(Constants.PHOTO)) {
+                } else if (medium.equals(Constants.PHOTO)) {
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     requestId = Constants.REQUEST_IMAGE_CAPTURE;
 
-                } else if (clipMedium.equals(Constants.AUDIO)) {
+                } else if (medium.equals(Constants.AUDIO)) {
                     intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
                     requestId = Constants.REQUEST_AUDIO_CAPTURE;
                 }
@@ -205,6 +206,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         }
 
         tvHeader.setText(mCardModel.getClipType().toUpperCase());
+        tvHeader.setTextColor(getClipTypeColor(mCardModel.getClipType()));
 
         // Expand / Collapse footer on click
         tvHeader.setOnClickListener(clipCardOnClickListener);
@@ -247,6 +249,48 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         return thumbnail;
     }
 
+    private int getClipTypeColor(String clipType) {
+        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+            return mContext.getResources().getColor(R.color.storymaker_blue);
+        } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
+            return mContext.getResources().getColor(R.color.storymaker_orange);
+        } else if (clipType.equalsIgnoreCase(Constants.RESULT)) {
+            return mContext.getResources().getColor(R.color.storymaker_lime);
+        } else if (clipType.equalsIgnoreCase(Constants.SIGNATURE)) {
+            return mContext.getResources().getColor(R.color.storymaker_magenta);
+        } else if (clipType.equalsIgnoreCase(Constants.PLACE)) {
+            return mContext.getResources().getColor(R.color.storymaker_slate);
+        }
+        return mContext.getResources().getColor(R.color.storymaker_highlight);
+    }
+
+    private void setClipExampleDrawables(String clipType, ImageView imageView) {
+        Drawable drawable;
+        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+            drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character);
+            itvClipTypeIcon.setText("{fa-ic_clip_character}");
+        } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
+            drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_action);
+            itvClipTypeIcon.setText("{fa-ic_clip_action}");
+        } else if (clipType.equalsIgnoreCase(Constants.RESULT)){
+            drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_result);
+            itvClipTypeIcon.setText("{fa-ic_clip_result}");
+        } else if (clipType.equalsIgnoreCase(Constants.SIGNATURE)){
+            drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_signature);
+            itvClipTypeIcon.setText("{fa-ic_clip_signature}");
+        } else if (clipType.equalsIgnoreCase(Constants.PLACE)){
+            drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place);
+            itvClipTypeIcon.setText("{fa-ic_clip_place}");
+        } else {
+            //TODO handle invalid clip type
+            Log.d(this.getClass().getName(), "No clipType matching '" + clipType + "' found.");
+            drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
+            itvClipTypeIcon.setText("{fa-card_capture_photo}");
+        }
+        imageView.setImageDrawable(drawable);
+        itvClipTypeIcon.setTextColor(getClipTypeColor(clipType));
+    }
+
     private void setThumbnailForClip(@NonNull ImageView thumbnail, MediaFile media) {
         // not sure i undertand this logic...
         /*
@@ -275,34 +319,13 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType();
 
-            if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
-                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character));
-                itvHeader.setText("{fa-ic_clip_character}");
-            } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
-                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_action));
-                itvHeader.setText("{fa-ic_clip_action}");
-            } else if (clipType.equalsIgnoreCase(Constants.RESULT)){
-                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_result));
-                itvHeader.setText("{fa-ic_clip_result}");
-            } else if (clipType.equalsIgnoreCase(Constants.SIGNATURE)){
-                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_signature));
-                itvHeader.setText("{fa-ic_clip_signature}");
-            } else if (clipType.equalsIgnoreCase(Constants.PLACE)){
-                thumbnail.setImageDrawable(new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place));
-                itvHeader.setText("{fa-ic_clip_place}");
-            } else {
-                //TODO handle invalid clip type
-                Log.d(this.getClass().getName(), "No clipType matching '" + clipType + "' found.");
-                thumbnail.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher)); // FIXME replace with a sensible placeholder image
-                itvHeader.setText("{fa-card_capture_photo}");
-            }
-
+            setClipExampleDrawables(clipType, thumbnail);
             thumbnail.setVisibility(View.VISIBLE);
         } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
             // Clip has attached media. Show an appropriate preview
             // e.g: A thumbnail for video
-            String clipMedium = mCardModel.getMedium();
-            if (clipMedium.equals(Constants.VIDEO)) {
+            String medium = mCardModel.getMedium();
+            if (medium.equals(Constants.VIDEO)) {
 
                 //set up image as preview
                 /*
@@ -344,27 +367,18 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 //                        btnMediaPlay.setChecked(false);
 //                    }
 //                });
-            } else if (clipMedium.equals(Constants.PHOTO)) {
+            } else if (medium.equals(Constants.PHOTO)) {
                 Uri uri = Uri.parse(mediaFile.getPath());
                 thumbnail.setImageURI(uri);
                 thumbnail.setVisibility(View.VISIBLE);
-            } else if (clipMedium.equals(Constants.AUDIO)) {
+            } else if (medium.equals(Constants.AUDIO)) {
                 Uri myUri = Uri.parse(mediaFile.getPath());
                 final MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
                 //set background image
                 String clipType = mCardModel.getClipType();
-                int drawable = R.drawable.ic_launcher;
-
-                if (clipType.equals(Constants.CHARACTER)) {
-                    drawable = R.drawable.cliptype_close;
-                } else if (clipType.equals(Constants.ACTION)) {
-                    drawable = R.drawable.cliptype_medium;
-                } else if (clipType.equals(Constants.RESULT)) {
-                    drawable = R.drawable.cliptype_long;
-                }
-                thumbnail.setImageDrawable(mContext.getResources().getDrawable(drawable));
+                setClipExampleDrawables(clipType, thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
             } else {
                 //TODO handle invalid-medium error

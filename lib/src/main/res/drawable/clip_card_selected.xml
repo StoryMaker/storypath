@@ -3,7 +3,7 @@
     <solid android:color="@color/white" />
     <stroke
         android:width="4dp"
-        android:color="@color/raspberry_wine" />
+        android:color="@color/storymaker_highlight" />
     <corners android:radius="3dp" />
     <padding
         android:bottom="4dp"

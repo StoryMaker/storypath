@@ -9,7 +9,7 @@
         style="@style/h3"
         android:id="@+id/tvTapToContinue"
         android:layout_height="@dimen/card_tap_height"
-        android:background="@color/raspberry_wine"
+        android:background="@color/storymaker_highlight"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical"
         android:text="@string/lbl_card_tap"
@@ -26,7 +26,7 @@
 
     <IconTextView
         style="@style/TextImage"
-        android:id="@+id/itvHeader"
+        android:id="@+id/itvClipTypeIcon"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/clipCandidates" />
 
@@ -34,8 +34,8 @@
         style="@style/p"
         android:id="@+id/tvHeader"
         android:textAllCaps="true"
-        android:textColor="@color/raspberry_wine"
-        android:layout_toEndOf="@+id/itvHeader"
+        android:textColor="@color/storymaker_highlight"
+        android:layout_toEndOf="@+id/itvClipTypeIcon"
         android:layout_below="@id/clipCandidates"/>
 
     <Spinner
@@ -43,7 +43,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="@dimen/padding_small"
-        android:background="@color/storymaker_blue"
+        android:background="@color/storymaker_highlight"
         android:layout_below="@id/clipCandidates"
         android:layout_alignParentEnd="true"/>
 
@@ -73,7 +73,7 @@
             android:layout_below="@+id/tvBody"
             android:layout_toEndOf="@+id/itvImport"
             android:text="@string/lbl_import"
-            android:textColor="@color/raspberry_wine"/>
+            android:textColor="@color/storymaker_highlight"/>
 
         <IconTextView
             style="@style/TextImage"
@@ -87,7 +87,7 @@
             android:layout_toEndOf="@+id/itvCapture"
             android:layout_below="@+id/itvImport"
             android:text="@string/lbl_capture"
-            android:textColor="@color/raspberry_wine"/>
+            android:textColor="@color/storymaker_highlight"/>
 
     </RelativeLayout>
 </RelativeLayout>

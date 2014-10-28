@@ -15,14 +15,14 @@
     <!--<color name="raspberry_wine">#4F97CF</color> &lt;!&ndash;blue &ndash;&gt;-->
     <!--<color name="raspberry_wine">#F17433</color> &lt;!&ndash;orange &ndash;&gt;-->
     <!--<color name="raspberry_wine">#B4CA3E</color> &lt;!&ndash;old lime &ndash;&gt;-->
-    <color name="raspberry_wine">#41646D</color> <!--slate -->
+    <color name="storymaker_highlight">#41646D</color> <!--slate -->
     <!--<color name="raspberry_wine">#F17433</color> &lt;!&ndash;magenta &ndash;&gt;-->
 
     <color name="storymaker_blue">#4F97CF</color> <!--blue -->
     <color name="storymaker_orange">#F17433</color> <!--orange -->
     <color name="storymaker_lime">#B4CA3E</color> <!--old lime -->
     <color name="storymaker_slate">#41646D</color> <!--slate -->
-    <color name="storymaker_magenta">#F17433</color> <!--magenta -->
+    <color name="storymaker_magenta">#6A2942</color> <!--magenta -->
 
     <color name="ultra_ultra_light_grey">#fff5f5f5</color> <!-- for quiz card choice bg -->
     <color name="ultra_light_grey">#ffe6e6e6</color> <!-- for quiz card choice bg stroke -->
