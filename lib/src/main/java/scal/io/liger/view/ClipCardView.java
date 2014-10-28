@@ -586,7 +586,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         int clipHeight = r.getDimensionPixelSize(R.dimen.clip_thumb_height);        // Height of each clip thumb
         int howtoHeight = r.getDimensionPixelSize(R.dimen.card_tap_height);       // Height of howto card that appears at stack top
 
-        final View howtoCard = ((View) clipCandidatesContainer.getParent()).findViewById(R.id.howtoCard);
+        final View howtoCard = ((View) clipCandidatesContainer.getParent()).findViewById(R.id.tvTapToContinue);
         float finalHowToOpacity = mClipsExpanded ?  0f : 1f;
         ObjectAnimator howtoAnim = ObjectAnimator.ofFloat(howtoCard, "alpha", 1 - finalHowToOpacity, finalHowToOpacity);
         howtoAnim.setStartDelay((long) (STAGGERED_ANIMATION_GAP_MS * (clipCandidateCount + 1) * finalHowToOpacity));

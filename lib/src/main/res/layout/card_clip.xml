@@ -9,6 +9,7 @@
         style="@style/h3"
         android:id="@+id/tvTapToContinue"
         android:layout_height="@dimen/card_tap_height"
+        android:layout_width="match_parent"
         android:background="@color/storymaker_highlight"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical"
