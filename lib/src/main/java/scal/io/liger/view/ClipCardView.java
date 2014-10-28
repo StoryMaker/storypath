@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.IconTextView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -36,7 +35,6 @@ import android.widget.Toast;
 
 import com.edmodo.rangebar.RangeBar;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +43,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.Constants;
-import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -100,7 +96,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 Intent intent = null;
                 int requestId = -1;
 
-                String clipMedium = mCardModel.getClipMedium();
+                String clipMedium = mCardModel.getMedium();
                 String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
                 if (clipMedium.equals(Constants.VIDEO)) {
                     intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -286,7 +282,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
             // Clip has attached media. Show an appropriate preview
             // e.g: A thumbnail for video
-            String clipMedium = mCardModel.getClipMedium();
+            String clipMedium = mCardModel.getMedium();
             if (clipMedium.equals(Constants.VIDEO)) {
 
                 //set up image as preview

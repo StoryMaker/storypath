@@ -18,7 +18,6 @@ public class ClipCard extends ExampleCard {
 
     @Expose private String clipType;
     @Expose private ArrayList<ClipMetadata> clips;
-    // need length, medium, type restrictions, etc
 
     public ClipCard() {
         super();

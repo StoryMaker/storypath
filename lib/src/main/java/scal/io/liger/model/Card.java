@@ -359,6 +359,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     }
 
     public void loadStoryPath(String storyPathTemplateKey) {
+        Log.d(this.getClass().getName(), "loading " + storyPathTemplateKey);
         if (storyPathReference instanceof StoryPathLibrary) {
             ((StoryPathLibrary)storyPathReference).loadStoryPathTemplate(storyPathTemplateKey);
         } else {

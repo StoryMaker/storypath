@@ -14,13 +14,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
 
-import java.io.File;
 import java.io.IOException;
 
 import scal.io.liger.Constants;
-import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ExampleCard;
 
@@ -55,7 +52,7 @@ public class ExampleCardView implements DisplayableCard{
 
         tvHeader.setText(mCardModel.getHeader());
 
-        final String clipMedium = mCardModel.getClipMedium();
+        final String clipMedium = mCardModel.getMedium();
         final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
 
         //set up media display
