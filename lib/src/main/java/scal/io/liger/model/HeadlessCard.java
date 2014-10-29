@@ -37,7 +37,7 @@ public abstract class HeadlessCard extends Card {
 //            Log.e(this.getClass().getName(), "update notification received from non-card observable");
 //            return;
 //        }
-//        if (storyPathReference == null) {
+//        if (storyPath == null) {
 //            Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
 //            return;
 //        }

@@ -138,7 +138,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
         if (mediaPath != null) {
                 /*
-                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPathReference().buildPath(mediaPath));
+                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPath().buildPath(mediaPath));
                 if(mediaFile.exists() && !mediaFile.isDirectory()) {
                     mediaURI = Uri.parse(mediaFile.getPath());
                 }

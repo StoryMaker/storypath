@@ -176,10 +176,10 @@ public class ReviewCardView implements DisplayableCard {
      * Also determines the medium and sets {@link #mMedium}
      */
     private void queueMediaFiles() {
-        List<ClipMetadata> clipMetaDataCollection = mCardModel.getStoryPathReference().exportMetadata();
+        List<ClipMetadata> clipMetaDataCollection = mCardModel.getStoryPath().exportMetadata();
         Log.i(TAG, String.format("Found %d media files for card", clipMetaDataCollection.size()));
         for (ClipMetadata clipMetadata : clipMetaDataCollection) {
-            MediaFile mediaFile = mCardModel.getStoryPathReference().loadMediaFileSP(clipMetadata.getUuid());
+            MediaFile mediaFile = mCardModel.getStoryPath().loadMediaFileSP(clipMetadata.getUuid());
             mClipMedia.add(mediaFile);
             if (mMedium == null) mMedium = mediaFile.getMedium();
             mHasMediaFiles = true;

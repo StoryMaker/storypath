@@ -320,7 +320,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             sp.setFileLocation(jsonFile.getPath());
         }
 
-        sp.setStoryPathLibraryReference(mStoryPathLibrary);
+        sp.setStoryPathLibrary(mStoryPathLibrary);
 
 
         mStoryPathLibrary.setCurrentStoryPath(sp);
@@ -441,7 +441,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this);
 
                     // loaded in reverse order, so need to set these references
-                    storyPath.setStoryPathLibraryReference(storyPathLibrary);
+                    storyPath.setStoryPathLibrary(storyPathLibrary);
                     storyPathLibrary.setCurrentStoryPath(storyPath);
                     storyPathLibrary.setCurrentStoryPathFile(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()));
 
@@ -606,7 +606,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
         /*
         // prep and serialize current story path
-        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(null);
+        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibrary(null);
         mStoryPathLibrary.getCurrentStoryPath().clearObservers();
         mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         mStoryPathLibrary.getCurrentStoryPath().setContext(null);
@@ -656,7 +656,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         mStoryPathLibrary.getCurrentStoryPath().setContext(this);
         mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
         mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
-        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryReference(mStoryPathLibrary);
+        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibrary(mStoryPathLibrary);
         */
     }
 

@@ -56,25 +56,25 @@ public class OrderMediaCard extends Card {
 
         if (storyMedium != null) {
             for (String reference : storyMedium) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.addObserver(this);
             }
         }
         if (videoClipCards != null) {
             for (String reference : videoClipCards) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.addObserver(this);
             }
         }
         if (audioClipCards != null) {
             for (String reference : audioClipCards) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.addObserver(this);
             }
         }
         if (photoClipCards != null) {
             for (String reference : photoClipCards) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.addObserver(this);
             }
         }
@@ -87,25 +87,25 @@ public class OrderMediaCard extends Card {
 
         if (storyMedium != null) {
             for (String reference : storyMedium) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.deleteObserver(this);
             }
         }
         if (videoClipCards != null) {
             for (String reference : videoClipCards) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.deleteObserver(this);
             }
         }
         if (audioClipCards != null) {
             for (String reference : audioClipCards) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.deleteObserver(this);
             }
         }
         if (photoClipCards != null) {
             for (String reference : photoClipCards) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.deleteObserver(this);
             }
         }
@@ -118,7 +118,7 @@ public class OrderMediaCard extends Card {
             Log.e(this.getClass().getName(), "update notification received from non-card observable");
             return;
         }
-        if (storyPathReference == null) {
+        if (storyPath == null) {
             Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
@@ -130,7 +130,7 @@ public class OrderMediaCard extends Card {
             checkStateVideo() ||
             checkStateAudio() ||
             checkStatePhoto()) {
-            storyPathReference.notifyCardChanged(this);
+            storyPath.notifyCardChanged(this);
         }
     }
 
@@ -145,7 +145,7 @@ public class OrderMediaCard extends Card {
             return false;
         }
 
-        String newState = storyPathReference.getReferencedValue(mediumReference);
+        String newState = storyPath.getReferencedValue(mediumReference);
 
         if (stateMedium != newState) {
             stateMedium = newState;
@@ -159,7 +159,7 @@ public class OrderMediaCard extends Card {
     public boolean checkStateVideo() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPathReference, videoClipCards);
+        ArrayList<String> values = ReferenceHelper.getValues(storyPath, videoClipCards);
 
         if (values == null) {
             newState = 0;
@@ -183,7 +183,7 @@ public class OrderMediaCard extends Card {
     public boolean checkStateAudio() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPathReference, audioClipCards);
+        ArrayList<String> values = ReferenceHelper.getValues(storyPath, audioClipCards);
 
         if (values == null) {
             newState = 0;
@@ -207,7 +207,7 @@ public class OrderMediaCard extends Card {
     public boolean checkStatePhoto() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPathReference, photoClipCards);
+        ArrayList<String> values = ReferenceHelper.getValues(storyPath, photoClipCards);
 
         if (values == null) {
             newState = 0;
@@ -293,7 +293,7 @@ public class OrderMediaCard extends Card {
             return clipPaths;
         }
 
-        medium = storyPathReference.getReferencedValue(mediumReference);
+        medium = storyPath.getReferencedValue(mediumReference);
 
         if ((medium == null) || (medium.length() == 0 )) {
             Log.e(this.type, "no value found for story medium referenced by " + mediumReference);

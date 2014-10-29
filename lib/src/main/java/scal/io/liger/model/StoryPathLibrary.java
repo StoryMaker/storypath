@@ -144,7 +144,7 @@ public class StoryPathLibrary extends StoryPath {
 
         // serialize current story path
         Gson gson = new Gson();
-        oldPath.setStoryPathLibraryReference(null);
+        oldPath.setStoryPathLibrary(null);
         oldPath.clearObservers();
         oldPath.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         Context oldContext = oldPath.getContext();
@@ -172,7 +172,7 @@ public class StoryPathLibrary extends StoryPath {
         newPath.setContext(oldContext);
         newPath.setCardReferences();
         newPath.initializeObservers();
-        newPath.setStoryPathLibraryReference(this);
+        newPath.setStoryPathLibrary(this);
 
         // update current story path
         this.setCurrentStoryPath(newPath);

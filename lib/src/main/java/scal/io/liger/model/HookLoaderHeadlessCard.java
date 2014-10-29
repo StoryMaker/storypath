@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
 /**
@@ -42,7 +41,7 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
             Log.e(this.getClass().getName(), "update notification received from non-card observable");
             return;
         }
-        if (storyPathReference == null) {
+        if (storyPath == null) {
             Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
@@ -58,11 +57,11 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
                     Log.d(this.getClass().getName(), "LOADING FILE: " + target);
 //                    ArrayList<String> refs = getReferences();
 
-                    String topic = getStoryPathReference().getReferencedValue("default_library::quiz_card_topic::choice");
-                    String format = getStoryPathReference().getReferencedValue("default_library::quiz_card_format::choice");
-                    String medium = getStoryPathReference().getReferencedValue("default_library::quiz_card_medium::choice");
-                    String clipType = getStoryPathReference().getReferencedValue("default_library::quiz_card_cliptype::choice");
-                    String clipQuestion = getStoryPathReference().getReferencedValue("default_library::quiz_card_clipquestion::choice");
+                    String topic = getStoryPath().getReferencedValue("default_library::quiz_card_topic::choice");
+                    String format = getStoryPath().getReferencedValue("default_library::quiz_card_format::choice");
+                    String medium = getStoryPath().getReferencedValue("default_library::quiz_card_medium::choice");
+                    String clipType = getStoryPath().getReferencedValue("default_library::quiz_card_cliptype::choice");
+                    String clipQuestion = getStoryPath().getReferencedValue("default_library::quiz_card_clipquestion::choice");
 
                     target = topic + "_" + format + "_" + medium;
                     if (clipType != null && !clipType.equals("")) {
@@ -94,7 +93,7 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
 
         // cards 4 and 5 appear under specific conditions
         // if the conditions are met but the cards have no values, the check fails
-        String format = getStoryPathReference().getReferencedValue("default_library::quiz_card_format::choice");
+        String format = getStoryPath().getReferencedValue("default_library::quiz_card_format::choice");
         if (format != null) {
             if (format.equals("series") && !checkReferencedValueMatches("default_library::quiz_card_cliptype::choice")) {
                 result = false;

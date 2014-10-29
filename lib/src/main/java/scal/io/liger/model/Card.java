@@ -26,7 +26,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     @Expose protected String type;
     @Expose private String id;
     @Expose private String title;
-    protected StoryPath storyPathReference; // not serialized
+    protected StoryPath storyPath; // not serialized
     @Expose protected ArrayList<String> references;
     @Expose private HashMap<String, String> values;
 
@@ -56,7 +56,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
             Log.e(this.getClass().getName(), "update notification received from non-card observable");
             return;
         }
-        if (storyPathReference == null) {
+        if (storyPath == null) {
             Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
@@ -65,7 +65,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         //changeCardVisibilityState();
         if (checkVisibilityChanged()) {
-            storyPathReference.notifyCardChanged(this);
+            storyPath.notifyCardChanged(this);
         }
     }
 
@@ -73,12 +73,12 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         if (stateVisiblity) {
             if (checkReferencedValues() != stateVisiblity) {
                 // therefore, we went from visible to invisible, remove
-                //getStoryPathReference().inactivateCard(this);
+                //getStoryPath().inactivateCard(this);
             }
         } else {
             if (checkReferencedValues() != stateVisiblity) {
                 // therefore, we went from invisible to visible, add it
-                //getStoryPathReference().activateCard(this);
+                //getStoryPath().activateCard(this);
             }
         }
     }
@@ -100,7 +100,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     public void registerObservers() {
         if (references != null) {
             for (String reference : references) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                  card.addObserver(this);
             }
         }
@@ -109,7 +109,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     public void removeObservers() {
         if (references != null) {
             for (String reference : references) {
-                Card card = storyPathReference.getCardById(reference);
+                Card card = storyPath.getCardById(reference);
                 card.deleteObserver(this);
             }
         }
@@ -119,20 +119,39 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         // required for JSON/GSON
     }
 
+    /**
+     * @return a DisplayableCard responsible for generating a view for this Card's state.
+     */
     public abstract DisplayableCard getDisplayableCard(Context context);
 
+    /**
+     * @return the type of this card, generally the value returned by {@link Class#getSimpleName()}
+     *         e.g: "ReviewCard"
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Set the type of this card, generally the value returned by {@link Class#getSimpleName()}
+     * e.g: "ReviewCard"
+     * TODO What is the use case?
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * @return an identifier for this Card unique to its {@link scal.io.liger.model.StoryPath}
+     * see {@link #getStoryPath()}
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Set an identifier to uniquely identify this Card in its {@link scal.io.liger.model.StoryPath}
+     */
     public void setId(String id) {
         this.id = id;
     }
@@ -143,14 +162,22 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         this.title = title;
     }
 
-    public StoryPath getStoryPathReference() {
-        return storyPathReference;
+    /**
+     * @return the {@link scal.io.liger.model.StoryPath} this card belongs to. The value returned
+     * by {@link #getId()} is unique to this StoryPath.
+     */
+    public StoryPath getStoryPath() {
+        return storyPath;
     }
 
-    public void setStoryPathReference(StoryPath storyPathReference) {
-        this.storyPathReference = storyPathReference;
+    public void setStoryPath(StoryPath storyPath) {
+        this.storyPath = storyPath;
     }
 
+    /**
+     * @return A Collection of fully qualified Card Ids which this Card references
+     * e.g { "default_library::quiz_card_topic::choice", ... }
+     */
     public ArrayList<String> getReferences() {
         return references;
     }
@@ -167,14 +194,21 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     }
 
     // FIXME we should extend this to allow 1 and 2 part ids for local checks only (key::value or key)
+
+    /**
+     * Determine if a non-null value exists in our StoryPath for the specified id
+     *
+     * @param reference a fully-qualified Id. e.g: "default_library::quiz_card_topic::choice"
+     * @return Whether a Card in this card's StoryPath has a non-null value for the specified key
+     */
     public boolean checkReferencedValueMatches(String reference) {
         boolean result = true;
 
         String[] pathParts = reference.split("::");
-        String referencedValue = storyPathReference.getReferencedValue(reference);
+        String referencedValue = storyPath.getReferencedValue(reference);
 
         if ((referencedValue != null) && (referencedValue.equals(Constants.EXTERNAL))) {
-            referencedValue = storyPathReference.getExternalReferencedValue(reference);
+            referencedValue = storyPath.getExternalReferencedValue(reference);
         }
 
         if (pathParts.length == 3) {
@@ -226,8 +260,8 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
             /*
             // send notification that a value has been saved so that cards can re-check references
-            if (storyPathReference != null) {
-                storyPathReference.notifyCardChanged();
+            if (storyPath != null) {
+                storyPath.notifyCardChanged();
             } else {
                 System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             }
@@ -258,7 +292,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         return false;
     }
-
+    /**
+     * Get the value stored by this Card for a bare Id. e.g: "choice".
+     * Uses reflection to search class field if key not present in values
+    */
     public String getValueByKey(String key) {
         if (values != null) {
             if (values.keySet().contains(key)) {
@@ -284,9 +321,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
     }
 
     /**
-     * get's a value.
-     * @param fullPath accepts is a FQID
-     * @return
+     * Get this Card's value for a key described by fullPath. Return null if no entry for key exists.
+     *
+     * @param fullPath a fully qualified value key. e.g: "default_library::quiz_card_topic::choice"
+     * @return this Card's value for the key contained in fullPath
      */
     public String getValueById (String fullPath) {
         // assumes the format story::card::field
@@ -312,21 +350,29 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         pathArray.add(fullPath);
 
         ArrayList<Card> matchingCards = new ArrayList<Card>();
-        matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPathReference(), pathArray));
+        matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPath(), pathArray));
 
         // check for attached story path/story path library
-        if (this.getStoryPathReference().getStoryPathLibraryReference() != null) {
-            matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPathReference().getStoryPathLibraryReference(), pathArray));
+        if (this.getStoryPath().getStoryPathLibrary() != null) {
+            matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPath().getStoryPathLibrary(), pathArray));
         }
-        if (this.getStoryPathReference() instanceof StoryPathLibrary) {
-            if (((StoryPathLibrary)this.getStoryPathReference()).getCurrentStoryPath() != null) {
-                matchingCards.addAll(ReferenceHelper.getCards(((StoryPathLibrary) this.getStoryPathReference()).getCurrentStoryPath(), pathArray));
+        if (this.getStoryPath() instanceof StoryPathLibrary) {
+            if (((StoryPathLibrary)this.getStoryPath()).getCurrentStoryPath() != null) {
+                matchingCards.addAll(ReferenceHelper.getCards(((StoryPathLibrary) this.getStoryPath()).getCurrentStoryPath(), pathArray));
             }
         }
 
         return matchingCards;
     }
 
+    /**
+     * Replaces fully qualified Ids in originalString with their values,
+     * using an empty string if no value available.
+     *
+     * @param originalString a string which may contain embedded fully-qualified Ids:
+     *                       e.g: "Your choice of {{default_library::quiz_card_topic::choice}} is a great one!"
+     * @return originalString with ids replaced for values. e.g "Your choice of cake is a great one!"
+     */
     public String fillReferences(String originalString) { // <- need to integrate with observer/update process
         if (originalString == null) {
             return originalString;
@@ -341,10 +387,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
             String referenceString = m.group(1);
             if (referenceString != null) {
                 referenceString = referenceString.trim();
-                String referenceValue = storyPathReference.getReferencedValue(referenceString);
+                String referenceValue = storyPath.getReferencedValue(referenceString);
 
                 if ((referenceValue != null) && (referenceValue.equals(Constants.EXTERNAL))) {
-                    referenceValue = storyPathReference.getExternalReferencedValue(referenceString);
+                    referenceValue = storyPath.getExternalReferencedValue(referenceString);
                 }
 
                 // doing a replace with a null seems to cause issues
@@ -360,8 +406,8 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
     public void loadStoryPath(String storyPathTemplateKey) {
         Log.d(this.getClass().getName(), "loading " + storyPathTemplateKey);
-        if (storyPathReference instanceof StoryPathLibrary) {
-            ((StoryPathLibrary)storyPathReference).loadStoryPathTemplate(storyPathTemplateKey);
+        if (storyPath instanceof StoryPathLibrary) {
+            ((StoryPathLibrary) storyPath).loadStoryPathTemplate(storyPathTemplateKey);
         } else {
             Log.e(this.getClass().getName(), "cannot initiate a story path load from a story path card (use a link card)");
         }

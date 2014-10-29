@@ -1,7 +1,5 @@
 package scal.io.liger;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -92,7 +90,7 @@ public class ReferenceHelper {
             for (Card card : story.getCards()) {
                 // need to account for separation of package and class name
                 // or should class "wildcards" for cards ignore package?
-                if ((card.getStoryPathReference().getClassPackage() + "." + card.getType()).equals(cardTarget) ||
+                if ((card.getStoryPath().getClassPackage() + "." + card.getType()).equals(cardTarget) ||
                     (card.getType().equals(cardTarget))) {
                     results.add(card);
                 }

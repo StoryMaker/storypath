@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
@@ -39,6 +38,8 @@ import scal.io.liger.touch.DraggableGridView;
 import scal.io.liger.touch.OnRearrangeListener;
 
 public class OrderMediaCardView implements DisplayableCard, ActionMode.Callback, OrderMediaAdapter.OnReorderListener {
+    public static final String TAG = "OrderMediaCardView";
+
     private OrderMediaCard mCardModel;
     private Context mContext;
     private List<Card> mListCards = new ArrayList<Card>();
@@ -68,7 +69,7 @@ public class OrderMediaCardView implements DisplayableCard, ActionMode.Callback,
 
     public void fillList(ArrayList<String> clipPaths) {
 
-        mListCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
+        mListCards = mCardModel.getStoryPath().getCardsByIds(clipPaths);
 
     }
 
@@ -98,7 +99,7 @@ public class OrderMediaCardView implements DisplayableCard, ActionMode.Callback,
             MediaFile mf = ccm.getSelectedMediaFile();
 
             if (mf == null) {
-                Log.e(this.getClass().getName(), "no media file was found");
+                Log.e(TAG, "no media file was found");
             } else {
                 mediaPath = mf.getPath();
             }
@@ -108,7 +109,7 @@ public class OrderMediaCardView implements DisplayableCard, ActionMode.Callback,
 
             if(mediaPath != null) {
                 /*
-                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPathReference().buildPath(mediaPath));
+                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPath().buildPath(mediaPath));
                 if(mediaFile.exists() && !mediaFile.isDirectory()) {
                     mediaURI = Uri.parse(mediaFile.getPath());
                 }
@@ -157,10 +158,10 @@ public class OrderMediaCardView implements DisplayableCard, ActionMode.Callback,
             public void onRearrange(int currentIndex, int newIndex) {
                 //update actual card list
                 Card currentCard = mListCards.get(currentIndex);
-                int currentCardIndex = mCardModel.getStoryPathReference().getCardIndex(currentCard);
+                int currentCardIndex = mCardModel.getStoryPath().getCardIndex(currentCard);
                 int newCardIndex = currentCardIndex - (currentIndex - newIndex);
 
-                mCardModel.getStoryPathReference().rearrangeCards(currentCardIndex, newCardIndex);
+                mCardModel.getStoryPath().rearrangeCards(currentCardIndex, newCardIndex);
 
             }
         });
@@ -248,8 +249,8 @@ public class OrderMediaCardView implements DisplayableCard, ActionMode.Callback,
     @Override
     public void onReorder(int firstIndex, int secondIndex) {
         Card currentCard = mListCards.get(firstIndex);
-        int currentCardIndex = mCardModel.getStoryPathReference().getCardIndex(currentCard);
-        int newCardIndex = mCardModel.getStoryPathReference().getCardIndex(mListCards.get(secondIndex));
-        mCardModel.getStoryPathReference().swapCards(currentCardIndex, newCardIndex);
+        int currentCardIndex = mCardModel.getStoryPath().getCardIndex(currentCard);
+        int newCardIndex = mCardModel.getStoryPath().getCardIndex(mListCards.get(secondIndex));
+        mCardModel.getStoryPath().swapCards(currentCardIndex, newCardIndex);
     }
 }

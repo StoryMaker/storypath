@@ -2,7 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,19 +19,22 @@ import scal.io.liger.ReferenceHelper;
 import scal.io.liger.StoryPathDeserializer;
 
 /**
+ * An ordered collection of cards de-serialized from JSON
+ *
  * @author Matthew Bogner
  * @author Josh Steiner
  */
 public class StoryPath {
     public static final String TAG = "StoryPath";
 
+    /** An identifier unique to this Story Path */
     @Expose protected String id;
     @Expose protected String title;
     @Expose protected String classPackage;
     @Expose ArrayList<Card> cards;
     @Expose protected ArrayList<Dependency> dependencies;
     @Expose protected String fileLocation;
-    protected StoryPathLibrary storyPathLibraryReference; // not serialized
+    protected StoryPathLibrary storyPathLibrary; // not serialized
     @Expose protected String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets
@@ -179,6 +181,9 @@ public class StoryPath {
     }
     */
 
+    /**
+     * @return a Collection of Dependencies describing other StoryPath files this instance references
+     */
     public ArrayList<Dependency> getDependencies() {
         return dependencies;
     }
@@ -202,12 +207,12 @@ public class StoryPath {
         this.fileLocation = fileLocation;
     }
 
-    public StoryPathLibrary getStoryPathLibraryReference() {
-        return storyPathLibraryReference;
+    public StoryPathLibrary getStoryPathLibrary() {
+        return storyPathLibrary;
     }
 
-    public void setStoryPathLibraryReference(StoryPathLibrary storyPathLibraryReference) {
-        this.storyPathLibraryReference = storyPathLibraryReference;
+    public void setStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
+        this.storyPathLibrary = storyPathLibrary;
     }
 
     public String getStoryPathLibraryFile() {
@@ -226,27 +231,35 @@ public class StoryPath {
         this.context = context;
     }
 
-    // set a reference to this story path in each card
-    // must be done before cards attempt to reference
-    // values from previous story paths or cards
+    /**
+     * Set a reference to this story path in each card.
+     * Must be done before cards attempt to reference
+     * values from previous story paths or cards
+     */
     public void setCardReferences() {
         for (Card card : cards) {
-            card.setStoryPathReference(this);
+            card.setStoryPath(this);
         }
     }
 
-    // clear references to this story path from each card
-    // must be done before serializing this story path to
-    // prevent duplication or circular references
+    /**
+     * Clear references to this story path from each card.
+     * must be done before serializing this story path to
+     * prevent duplication or circular references
+     *
+     * TODO Can this docstring be revised now that we have explicit de/serialization with @Expose?
+     */
     public void clearCardReferences() {
         for (Card card : cards) {
-            card.setStoryPathReference(null);
+            card.setStoryPath(null);
         }
     }
 
-    // observers must be initialized after cards are deserialized
-    // observers must be cleared before serializing to prevent
-    // circular references (cards pointing to cards)
+    /**
+     * Observers must be initialized after cards are deserialized.
+     * Observers must be cleared before serializing to prevent TODO Is this still necessary w/ @Expose?
+     * circular references (cards pointing to cards)
+     */
     public void initializeObservers() {
         for (Card card : cards) {
             card.registerObservers();
@@ -265,7 +278,9 @@ public class StoryPath {
         }
     }
 
-
+    /** Return the value corresponding to the fully qualified Id or null if it could not be found.
+     * e.g: "default_library::quiz_card_topic::choice"
+    */
     public String getReferencedValue(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
@@ -281,11 +296,7 @@ public class StoryPath {
         } else {
             String value = card.getValueById(fullPath);
 
-            if (value == null) {
-                return null;
-            } else {
-                return value;
-            }
+            return value;
         }
     }
 
@@ -362,20 +373,20 @@ public class StoryPath {
      */
     public void notifyCardChanged(@NonNull Card firstCard) {
         Log.i(TAG, "notifyCardChanged of update to card " + firstCard.getId());
-        if (storyPathLibraryReference == null || storyPathLibraryReference.mListener == null) {
+        if (storyPathLibrary == null || storyPathLibrary.mListener == null) {
             return;
         }
 
         String action = ((MainActivity)context).checkCard(firstCard);
 
         if (action.equals("ADD")) {
-            storyPathLibraryReference.mListener.onCardAdded(firstCard);
+            storyPathLibrary.mListener.onCardAdded(firstCard);
         }
         if (action.equals("UPDATE")) {
-            storyPathLibraryReference.mListener.onCardChanged(firstCard);
+            storyPathLibrary.mListener.onCardChanged(firstCard);
         }
         if (action.equals("DELETE")) {
-            storyPathLibraryReference.mListener.onCardRemoved(firstCard);
+            storyPathLibrary.mListener.onCardRemoved(firstCard);
         }
     }
 
@@ -384,10 +395,10 @@ public class StoryPath {
      * currently in this StoryPath
      */
     public void notifyCardsSwapped(Card cardOne, Card cardTwo) {
-        if (storyPathLibraryReference == null || storyPathLibraryReference.mListener == null) {
+        if (storyPathLibrary == null || storyPathLibrary.mListener == null) {
             return;
         }
-        storyPathLibraryReference.mListener.onCardsSwapped(cardOne, cardTwo);
+        storyPathLibrary.mListener.onCardsSwapped(cardOne, cardTwo);
     }
 
     /*
@@ -522,11 +533,11 @@ public class StoryPath {
     }
 
     public void saveMediaFileSP(String uuid, MediaFile file) {
-        storyPathLibraryReference.saveMediaFileSPL(uuid, file);
+        storyPathLibrary.saveMediaFileSPL(uuid, file);
     }
 
     public MediaFile loadMediaFileSP(String uuid) {
-        return storyPathLibraryReference.loadMediaFileSPL(uuid);
+        return storyPathLibrary.loadMediaFileSPL(uuid);
     }
 
     public ArrayList<ClipMetadata> exportMetadata() {

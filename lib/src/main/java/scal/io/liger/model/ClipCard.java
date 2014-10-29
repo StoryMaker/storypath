@@ -1,7 +1,6 @@
 package scal.io.liger.model;
 
 import android.content.Context;
-import android.media.MediaMetadata;
 import android.util.Log;
 
 
@@ -82,12 +81,12 @@ public class ClipCard extends ExampleCard {
     public void saveMediaFile(MediaFile mf) {
         ClipMetadata cmd = new ClipMetadata(clipType, UUID.randomUUID().toString());
 
-        getStoryPathReference().saveMediaFileSP(cmd.getUuid(), mf);
+        getStoryPath().saveMediaFileSP(cmd.getUuid(), mf);
         addClip(cmd);
     }
 
     public MediaFile loadMediaFile(ClipMetadata cmd) {
-        return getStoryPathReference().loadMediaFileSP(cmd.getUuid());
+        return getStoryPath().loadMediaFileSP(cmd.getUuid());
     }
 
     public void selectMediaFile(ClipMetadata clip) {

@@ -3,6 +3,9 @@ package scal.io.liger.model;
 import com.google.gson.annotations.Expose;
 
 /**
+ * Relates a String id to a File describing a {@link scal.io.liger.model.StoryPath}.
+ * Used by separate StoryPaths to reference each other.
+ *
  * Created by mnbogner on 7/14/14.
  */
 public class Dependency {

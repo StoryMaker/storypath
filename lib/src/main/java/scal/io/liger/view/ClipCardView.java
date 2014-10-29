@@ -103,7 +103,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 int requestId = -1;
 
                 String medium = mCardModel.getMedium();
-                String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
+                String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
                 if (medium.equals(Constants.VIDEO)) {
                     intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                     requestId = Constants.REQUEST_VIDEO_CAPTURE;
@@ -666,9 +666,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         File mediaFile = null;
 
         if (mediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(mediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(mediaPath));
         } else if (exampleMediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(exampleMediaPath));
         }
 
         return mediaFile;

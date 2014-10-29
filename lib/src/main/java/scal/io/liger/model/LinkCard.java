@@ -46,8 +46,8 @@ public class LinkCard extends Card {
             return;
         }
 
-        if (storyPathReference != null) {
-            storyPathReference.linkNotification(linkPath);
+        if (storyPath != null) {
+            storyPath.linkNotification(linkPath);
         } else {
             System.err.println("STORY PATH REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
         }
