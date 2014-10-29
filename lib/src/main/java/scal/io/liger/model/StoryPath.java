@@ -298,16 +298,17 @@ public class StoryPath {
         // reference targets a serialized story path
         for (Dependency dependency : dependencies) {
             if (dependency.getDependencyId().equals(pathParts[0])) {
-                GsonBuilder gBuild = new GsonBuilder();
-                gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
-                Gson gson = gBuild.create();
+                //GsonBuilder gBuild = new GsonBuilder();
+                //gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
+                //Gson gson = gBuild.create();
 
-                String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
-                story = gson.fromJson(json, StoryPath.class);
+                //String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
+                //story = gson.fromJson(json, StoryPath.class);
+                story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibraryReference, this.context);
 
-                story.context = this.context;
-                story.setCardReferences();
-                story.setFileLocation(buildPath(dependency.getDependencyFile()));
+                //story.context = this.context;
+                //story.setCardReferences();
+                //story.setFileLocation(buildPath(dependency.getDependencyFile()));
             }
         }
 

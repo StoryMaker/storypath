@@ -68,6 +68,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             JsonHelper.setupFileStructure(this);
             MediaHelper.setupFileStructure(this);
 
+            /*
             Intent i = getIntent();
             if (i.hasExtra("storypathlibrary_json")) {
                 String splJsonFilename = i.getExtras().getString("storypathlibrary_json");
@@ -75,8 +76,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 String json = JsonHelper.loadJSON(jsonFile);
                 initHook(json, jsonFile);
             } else {
+            */
                 showJsonSelectorPopup();
-            }
+            //}
         } else {
             Log.d(TAG, "onSaveInstanceState called with no saved state");
             Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
@@ -149,13 +151,17 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         else {
             builder.setTitle("Choose Story File(SdCard/Liger/)").setItems(jsonFiles, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int index) {
-                    File jsonFile = JsonHelper.setSelectedJSONFile(index);
+                    //File jsonFile = JsonHelper.setSelectedJSONFile(index);
+                    String jsonPath = JsonHelper.setSelectedJSONPath(index);
 
                     // TEMP - unsure how to best determine new story vs. existing story
 
-                    String json = JsonHelper.loadJSON();
+                    //String json = JsonHelper.loadJSON();
+                    String json = JsonHelper.loadJSONFromZip(MainActivity.this);
 
-                    initHook(json, jsonFile);
+                    Log.d("GOOGLE", "JSON: " + json);
+
+                    initHook(json, jsonPath);
 
                     // need to implement selection of story path based on hook
 
@@ -185,14 +191,20 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         initHook(json, null);
     }
 
-    private void initHook(String json, File jsonFile) {
+    private void initHook(String json, String jsonPath) {
         Log.d(TAG, "initHook called");
 
         // unsure what needs to be set up for the hook interface
 
+
+
+
         try {
-            initStoryPathLibraryModel(json, jsonFile);
+            initStoryPathLibraryModel(json, jsonPath);
+
+            mStoryPathLibrary.setStoryPathLibraryListener(this);
             setupCardView();
+
         } catch (com.google.gson.JsonSyntaxException e) {
             Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -216,11 +228,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
     */
 
-    private void initStoryPathLibraryModel(String json, File jsonFile) throws MalformedJsonException {
+    private void initStoryPathLibraryModel(String json, String jsonPath) throws MalformedJsonException {
         Log.d(TAG, "initStoryPathLibraryModel called");
 
-        if (jsonFile != null) {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonFile.getPath(), this);
+        if (jsonPath != null) {
+            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, this);
         } else {
             mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
         }
@@ -260,39 +272,44 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
         //mCardView.setSwipeable(false);
 
-        try {
-            initStoryPathModel(json, jsonFile);
+        //try {
+            //initStoryPathModel(json, jsonFile);
             setupCardView();
-        } catch (com.google.gson.JsonSyntaxException e) {
-            Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        } catch (MalformedJsonException e) {
-            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        //} catch (com.google.gson.JsonSyntaxException e) {
+        //    Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        //} catch (MalformedJsonException e) {
+        //    Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        //}
     }
 
+    /*
     private void refreshCardList(String json) {
         refreshCardList(json, null);
     }
+    */
 
-    public void refreshCardList(String json, File jsonFile) {
-        Log.d(TAG, "refreshCardList called");
+    //public void refreshCardList(String json, File jsonFile) {
+    public void refreshCardList() {
+    Log.d(TAG, "refreshCardList called");
         if (mRecyclerView == null)
             return;
 
         //mCardView.setSwipeable(false);
 
-        try {
-            initStoryPathModel(json, jsonFile);
+        //try {
+            //initStoryPathModel(json, jsonFile);
             refreshCardViewXXX();
-        } catch (com.google.gson.JsonSyntaxException e) {
-            Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        } catch (MalformedJsonException e) {
-            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        //} catch (com.google.gson.JsonSyntaxException e) {
+        //    Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        //} catch (MalformedJsonException e) {
+        //    Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        //}
     }
 
+    /*
     private void initStoryPathModel(String json, File jsonFile) throws MalformedJsonException {
-        Log.d(TAG, "initStoryPathModel called");
+
+            Log.d(TAG, "initStoryPathModel called");
 
         if (jsonFile != null) {
             mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, jsonFile.getPath(), mStoryPathLibrary, this));
@@ -300,7 +317,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             mStoryPathLibrary.setCurrentStoryPath(JsonHelper.deserializeStoryPath(json, null, mStoryPathLibrary, this));
         }
 
-        /*
+
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
         Gson gson = gBuild.create();
@@ -324,8 +341,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
 
         mStoryPathLibrary.setCurrentStoryPath(sp);
-        */
+
     }
+    */
 
     public void setupCardView () {
         Log.d(TAG, "setupCardView called");

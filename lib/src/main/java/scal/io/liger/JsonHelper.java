@@ -28,7 +28,9 @@ public class JsonHelper {
     private static final String TAG = "JsonHelper";
     private static final String LIGER_DIR = "Liger";
     private static File selectedJSONFile = null;
+    private static String selectedJSONPath = null;
     private static ArrayList<File> jsonFileList = null;
+    private static ArrayList<String> jsonPathList = null;
     private static String sdLigerFilePath = null;
 
     public static String loadJSONFromPath(String jsonPath) {
@@ -83,6 +85,38 @@ public class JsonHelper {
         } else {
             Log.e(TAG, "SD CARD NOT FOUND");
         }
+
+        return jsonString;
+    }
+
+    // NEW
+
+    public static String loadJSONFromZip(Context context) {
+        return loadJSONFromZip(selectedJSONPath, context);
+    }
+
+    public static String loadJSONFromZip(String jsonFilePath, Context context) {
+
+        Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
+
+        if(null == jsonFilePath) {
+            return null;
+        }
+
+        String jsonString = "";
+
+        // removed sd card check as expansion file should not be located on sd card
+            try {
+                InputStream jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                jsonString = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+            }
 
         return jsonString;
     }
@@ -179,11 +213,11 @@ public class JsonHelper {
 
         ArrayList<String> jsonFileNamesList = new ArrayList<String>();
         jsonFileList = new ArrayList<File>();
+        jsonPathList = new ArrayList<String>();
 
         // HARD CODING LIST
 
         File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
-//        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library.json");
         File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
         File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
         File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
@@ -203,6 +237,13 @@ public class JsonHelper {
         jsonFileList.add(ligerFile_4);
         jsonFileList.add(ligerFile_5);
         jsonFileList.add(ligerFile_6);
+
+        jsonPathList.add("default/default_library/default_library.json");
+        jsonPathList.add("default/learning_guide_TEST.json");
+        jsonPathList.add("default/LIB_1/LIB_1_TEST.json");
+        jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
+        jsonPathList.add("default/learning_guide_library.json");
+        jsonPathList.add("default/learning_guide_library_SAVE.json");
 
         /*
         File ligerDir = new File(sdLigerFilePath);
@@ -232,6 +273,11 @@ public class JsonHelper {
     public static File setSelectedJSONFile(int index) {
         selectedJSONFile = jsonFileList.get(index);
         return selectedJSONFile;
+    }
+
+    public static String setSelectedJSONPath(int index) {
+        selectedJSONPath = jsonPathList.get(index);
+        return selectedJSONPath;
     }
 
     private static void addFileToSDCard(InputStream jsonInputStream, String filePath) {
@@ -268,13 +314,9 @@ public class JsonHelper {
         }
     }
 
-
-
-    // NEW
-
     public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
         String storyPathLibraryJson = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -302,9 +344,34 @@ public class JsonHelper {
 
     }
 
+    // NEW
+
+    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, Context context) {
+
+        Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
+
+        String storyPathLibraryJson = "";
+
+        // removed sd card check as expansion file should not be located on sd card
+            try {
+                InputStream jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                storyPathLibraryJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                return null;
+            }
+
+        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, context);
+    }
+
     public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
@@ -327,16 +394,12 @@ public class JsonHelper {
         storyPathLibrary.initializeObservers();
         storyPathLibrary.setContext(context);
 
-        // need to reset visibility so that visible cards will update their status properly
-        //storyPathLibrary.resetVisibility();
-
         return storyPathLibrary;
-
     }
 
     public static String saveStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         Date timeStamp = new Date();
         String jsonFilePath = storyPathLibrary.buildPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
@@ -370,44 +433,23 @@ public class JsonHelper {
         storyPathLibrary.setFileLocation(jsonFilePath);
 
         return jsonFilePath;
-
     }
 
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
-        // set aside references to prevent circular dependencies when serializing
-        //Context tempContext = storyPathLibrary.getContext();
-        //StoryPath tempCurrentStoryPath = storyPathLibrary.getCurrentStoryPath();
-        //ArrayList<Card> tempValidCards = storyPathLibrary.getValidCards();
-
-//        storyPathLibrary.setContext(null);
-//        storyPathLibrary.setCurrentStoryPath(null);
-        //storyPathLibrary.setValidCards(null);
-//        storyPathLibrary.clearObservers();
-//        storyPathLibrary.clearCardReferences();
-
         String storyPathLibraryJson = gson.toJson(storyPathLibrary);
 
-        // restore references
-
-//        storyPathLibrary.setCardReferences();
-//        storyPathLibrary.initializeObservers();
-        //storyPathLibrary.setValidCards(tempValidCards);
-//        storyPathLibrary.setCurrentStoryPath(tempCurrentStoryPath);
-//        storyPathLibrary.setContext(tempContext);
-
         return storyPathLibraryJson;
-
     }
 
     public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
 
         String storyPathJson = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -432,12 +474,36 @@ public class JsonHelper {
         }
 
         return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, context);
+    }
 
+    // NEW
+
+    public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
+
+        Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
+
+        String storyPathJson = "";
+
+        // removed sd card check as expansion file should not be located on sd card
+            try {
+                InputStream jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                storyPathJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                return null;
+            }
+
+        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, context);
     }
 
     public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
@@ -466,16 +532,12 @@ public class JsonHelper {
 
         storyPath.setContext(context);
 
-        // need to reset visibility so that visible cards will update their status properly
-        //storyPath.resetVisibility();
-
         return storyPath;
-
     }
 
     public static String saveStoryPath(StoryPath storyPath) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD saveStoryPath CALLED FOR " + storyPath.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPath CALLED FOR " + storyPath.getId());
 
         Date timeStamp = new Date();
         String jsonFilePath = storyPath.buildPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
@@ -509,12 +571,11 @@ public class JsonHelper {
         storyPath.setFileLocation(jsonFilePath);
 
         return jsonFilePath;
-
     }
 
     public static String serializeStoryPath(StoryPath storyPath) {
 
-        Log.e(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
@@ -522,26 +583,20 @@ public class JsonHelper {
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPath.getContext();
         StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibraryReference();
-        //ArrayList<Card> tempValidCards = storyPath.getValidCards();
         storyPath.setContext(null);
         storyPath.setStoryPathLibraryReference(null);
-        //storyPath.setValidCards(null);
         storyPath.clearObservers();
         storyPath.clearCardReferences();
-        //storyPath.clearValidCards();
 
         String storyPathJson = gson.toJson(storyPath);
 
         // restore references
-        // valid cards will be reset next time getValidCards() is called
         storyPath.setCardReferences();
         storyPath.initializeObservers();
-        //storyPath.setValidCards(tempValidCards);
         storyPath.setStoryPathLibraryReference(tempStoryPathLibrary);
         storyPath.setContext(tempContext);
 
         return storyPathJson;
-
     }
 
 }
