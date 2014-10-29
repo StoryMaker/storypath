@@ -1,0 +1,326 @@
+[main]
+host = https://www.transifex.com
+
+[storymaker.event_discussion_audio_question_1]
+file_filter = translated_strings/event_discussion_audio_question_1-<lang>.json
+source_file = strings/event_discussion_audio_question_1.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_audio_question_2]
+file_filter = translated_strings/event_discussion_audio_question_2-<lang>.json
+source_file = strings/event_discussion_audio_question_2.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_audio_question_3]
+file_filter = translated_strings/event_discussion_audio_question_3-<lang>.json
+source_file = strings/event_discussion_audio_question_3.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_video_question_4]
+file_filter = translated_strings/event_discussion_video_question_4-<lang>.json
+source_file = strings/event_discussion_video_question_4.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_video_question_5]
+file_filter = translated_strings/event_discussion_video_question_5-<lang>.json
+source_file = strings/event_discussion_video_question_5.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_video_question_6]
+file_filter = translated_strings/event_discussion_video_question_6-<lang>.json
+source_file = strings/event_discussion_video_question_6.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_highlights_audio]
+file_filter = translated_strings/event_highlights_audio-<lang>.json
+source_file = strings/event_highlights_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_highlights_audio]
+file_filter = translated_strings/event_highlights_audio-<lang>.json
+source_file = strings/event_highlights_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.XXX]
+file_filter = translated_strings/XXX-<lang>.json
+source_file = strings/XXX.json
+source_lang = en
+type = KEYVALUEJSON

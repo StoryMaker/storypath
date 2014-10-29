@@ -1,0 +1,26 @@
+---
+    id: profile_discussion_video_question17
+    title: Profile Discussion
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - video
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video

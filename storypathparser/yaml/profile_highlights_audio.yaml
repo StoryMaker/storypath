@@ -1,0 +1,26 @@
+---
+    id: profile_highlights_audio
+    title: Profile Highlights
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - audio
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

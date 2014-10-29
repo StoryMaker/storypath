@@ -1,0 +1,26 @@
+---
+    id: profile_process_video
+    title: Profile Process
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - video
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video
