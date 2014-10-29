@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
+import scal.io.liger.ReferenceHelper;
 
 /**
  * Created by mnbogner on 9/29/14.
@@ -61,6 +62,15 @@ public class StoryPathLibrary extends StoryPath {
         mListener = listener;
     }
 
+    @Override
+    public ArrayList<Card> getCards() {
+        return getCurrentStoryPath().getCards();
+    }
+
+    @Override
+    public ArrayList<Card> getCards(ArrayList<String> references) {
+        return getCurrentStoryPath().getCards(references);
+    }
 
     public HashMap<String, String> getStoryPathTemplateFiles() {
         return storyPathTemplateFiles;

@@ -1,5 +1,6 @@
 package scal.io.liger.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -24,7 +25,7 @@ import scal.io.liger.model.ReviewCard;
 /**
  * ReviewCardView allows the user to review the order of clips
  * attached to a ReviewCard's Story Path. This card will also support
- * adding narration, changing the order of clip, and jumbling the order.
+ * adding narration, changing the order of clips, and jumbling the order.
  */
 public class ReviewCardView implements DisplayableCard {
     public static final String TAG = "ReviewCardView";
@@ -47,7 +48,7 @@ public class ReviewCardView implements DisplayableCard {
         if (mCardModel == null) {
             return null;
         }
-
+//        mClipMedia.poll()
         View view = LayoutInflater.from(context).inflate(R.layout.card_review, null);
         final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
         final VideoView vvCardVideo = ((VideoView) view.findViewById(R.id.vv_card_video));
@@ -67,7 +68,8 @@ public class ReviewCardView implements DisplayableCard {
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                List<Card> mediaCards = mCardModel.getStoryPath().gatherCards("<<ClipCard>>");
+                Util.showOrderMediaPopup((Activity) mContext, mMedium, mediaCards);
             }
         });
 
@@ -179,7 +181,7 @@ public class ReviewCardView implements DisplayableCard {
         List<ClipMetadata> clipMetaDataCollection = mCardModel.getStoryPath().exportMetadata();
         Log.i(TAG, String.format("Found %d media files for card", clipMetaDataCollection.size()));
         for (ClipMetadata clipMetadata : clipMetaDataCollection) {
-            MediaFile mediaFile = mCardModel.getStoryPath().loadMediaFileSP(clipMetadata.getUuid());
+            MediaFile mediaFile = mCardModel.getStoryPath().loadMediaFile(clipMetadata.getUuid());
             mClipMedia.add(mediaFile);
             if (mMedium == null) mMedium = mediaFile.getMedium();
             mHasMediaFiles = true;

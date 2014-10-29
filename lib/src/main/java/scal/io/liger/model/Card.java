@@ -344,6 +344,14 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         return null;
     }
 
+    /**
+     * Get a Collection of Cards in this card's StoryPath by fully qualified path
+     *
+     * TODO Why isn't this a method on StoryPath?
+     *
+     * @param fullPath e.g: "thispath::<<scal.io.liger.model.TipCollectionHeadlessCard>>"
+     * @return a collection of cards matching fullPath within this cards StoryPath
+     */
     public ArrayList<Card> getCardsByClass (String fullPath) {
         // helper method takes a collection of references
         StoryPath storyPath = getStoryPath();
