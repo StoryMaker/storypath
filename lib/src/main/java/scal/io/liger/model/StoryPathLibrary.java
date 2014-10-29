@@ -110,7 +110,8 @@ public class StoryPathLibrary extends StoryPath {
         this.mediaFiles = mediaFiles;
     }
 
-    public void saveMediaFileSPL(String uuid, MediaFile file) {
+    @Override
+    public void saveMediaFile(String uuid, MediaFile file) {
         if (this.mediaFiles == null) {
             this.mediaFiles = new HashMap<String, MediaFile>();
         }
@@ -118,7 +119,8 @@ public class StoryPathLibrary extends StoryPath {
         this.mediaFiles.put(uuid, file);
     }
 
-    public MediaFile loadMediaFileSPL(String uuid) {
+    @Override
+    public MediaFile loadMediaFile(String uuid) {
         return mediaFiles.get(uuid);
     }
 

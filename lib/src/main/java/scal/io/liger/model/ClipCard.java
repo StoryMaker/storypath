@@ -81,12 +81,12 @@ public class ClipCard extends ExampleCard {
     public void saveMediaFile(MediaFile mf) {
         ClipMetadata cmd = new ClipMetadata(clipType, UUID.randomUUID().toString());
 
-        getStoryPath().saveMediaFileSP(cmd.getUuid(), mf);
+        getStoryPath().saveMediaFile(cmd.getUuid(), mf);
         addClip(cmd);
     }
 
     public MediaFile loadMediaFile(ClipMetadata cmd) {
-        return getStoryPath().loadMediaFileSP(cmd.getUuid());
+        return getStoryPath().loadMediaFile(cmd.getUuid());
     }
 
     public void selectMediaFile(ClipMetadata clip) {
