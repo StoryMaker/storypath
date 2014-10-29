@@ -355,7 +355,7 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         // check for attached story path/story path library
         if (storyPath.getStoryPathLibrary() != null) {
-            matchingCards.addAll(storyPath.getCards(pathArray));
+            matchingCards.addAll(storyPath.getStoryPathLibrary().getCards(pathArray));
         }
         if (storyPath instanceof StoryPathLibrary) {
             StoryPathLibrary storyPathLibrary = ((StoryPathLibrary)storyPath);
@@ -363,8 +363,6 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
                 matchingCards.addAll(storyPathLibrary.getCurrentStoryPath().getCards(pathArray));
             }
         }
-
-        // TODO StoryPathLibrary should override getCards
 
         return matchingCards;
     }
