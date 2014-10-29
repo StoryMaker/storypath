@@ -11,6 +11,7 @@ import scal.io.liger.ReferenceHelper;
 import scal.io.liger.view.DisplayableCard;
 import scal.io.liger.view.GenericCardView;
 import scal.io.liger.view.PreviewCardView;
+import scal.io.liger.view.ReviewCardView;
 
 public class ReviewCard extends GenericCard {
 
@@ -21,7 +22,7 @@ public class ReviewCard extends GenericCard {
 
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
-        return new GenericCardView(context, this);
+        return new ReviewCardView(context, this);
     }
 
     public String getMediaPath() { return fillReferences(mediaPath); }

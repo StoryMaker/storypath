@@ -9,11 +9,12 @@
 
     <ImageView
         android:id="@+id/iv_card_photo"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="220dp"
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
         android:scaleType="centerCrop"
+        android:src="@drawable/cliptype_medium"
         android:layout_marginBottom="@dimen/padding_small"
         android:layout_centerHorizontal="true"
         android:visibility="visible"/>
@@ -21,7 +22,7 @@
     <VideoView
         android:id="@+id/vv_card_video"
         android:layout_width="fill_parent"
-        android:layout_height="320dp"
+        android:layout_height="220dp"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:layout_marginBottom="@dimen/padding_small"
