@@ -1,13 +1,10 @@
 package scal.io.liger.model;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
 import java.util.Observable;
-
-import scal.io.liger.view.DisplayableCard;
 
 /**
  * @author Matthew Bogner
@@ -44,7 +41,7 @@ public class LoaderHeadlessCard extends HeadlessCard {
             Log.e(this.getClass().getName(), "update notification received from non-card observable");
             return;
         }
-        if (storyPathReference == null) {
+        if (storyPath == null) {
             Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }

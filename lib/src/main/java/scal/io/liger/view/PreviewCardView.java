@@ -18,7 +18,6 @@ import scal.io.liger.MediaHelper;
 import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
-import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.PreviewCard;
 import scal.io.liger.R;
@@ -113,7 +112,7 @@ public class PreviewCardView implements DisplayableCard {
 
     public void loadClips(ArrayList<String> clipPaths) {
         // get batch of ordered cards
-        ArrayList<Card> clipCards = mCardModel.getStoryPathReference().getCardsByIds(clipPaths);
+        ArrayList<Card> clipCards = mCardModel.getStoryPath().getCardsByIds(clipPaths);
         for (Card cm : clipCards) {
             ClipCard ccm = null;
 
@@ -130,7 +129,7 @@ public class PreviewCardView implements DisplayableCard {
                 Log.e(this.getClass().getName(), "no media file was found");
             } else {
                 mediaPath = mf.getPath();
-                paths.add(mCardModel.getStoryPathReference().buildPath(mediaPath));
+                paths.add(mCardModel.getStoryPath().buildPath(mediaPath));
             }
         }
     }

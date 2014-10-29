@@ -45,7 +45,7 @@
         <Button
             android:id="@+id/btn_continue"
             style="@style/p"
-            android:textColor="@color/raspberry_wine"
+            android:textColor="@color/storymaker_highlight"
             android:text="@string/lbl_continue"
             android:layout_gravity="center_horizontal"
             android:background="@android:color/transparent"/>

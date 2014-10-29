@@ -16,7 +16,7 @@
                 "id": "example_video",
                 "type": "ExampleCard",
                 "header": "LIBRARY CARD V",
-                "clipMedium": "video",
+                "medium": "video",
                 "clipType": "character",
                 "exampleMediaPath": "video_preview.mp4",
                 "references": [
@@ -27,7 +27,7 @@
                 "id": "example_audio",
                 "type": "ExampleCard",
                 "header": "LIBRARY CARD A",
-                "clipMedium": "audio",
+                "medium": "audio",
                 "clipType": "character",
                 "exampleMediaPath": "video_preview.mp4",
                 "references": [
@@ -38,7 +38,7 @@
                 "id": "example_photo",
                 "type": "ExampleCard",
                 "header": "LIBRARY CARD P",
-                "clipMedium": "photo",
+                "medium": "photo",
                 "clipType": "character",
                 "exampleMediaPath": "video_preview.mp4",
                 "references": [

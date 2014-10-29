@@ -9,7 +9,7 @@
       }
     },
     {
-      "clipMedium": "video",
+      "medium": "video",
       "exampleMediaPath": "video_preview.mp4",
       "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
       "id": "example_video",
@@ -19,7 +19,7 @@
       "type": "ExampleCard"
     },
     {
-      "clipMedium": "audio",
+      "medium": "audio",
       "exampleMediaPath": "video_preview.mp4",
       "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
       "id": "example_audio",
@@ -29,7 +29,7 @@
       "type": "ExampleCard"
     },
     {
-      "clipMedium": "photo",
+      "medium": "photo",
       "exampleMediaPath": "video_preview.mp4",
       "header": "A good story has a beginning, middle and end. Collect three clips to tell your story.",
       "id": "example_photo",
@@ -73,7 +73,7 @@
          "volume": 0
        }
       ],
-      "clipMedium": "video",
+      "medium": "video",
       "exampleMediaPath": "video_sample1.mp4",
       "header": "Introduce the audience to a person important to your story",
       "id": "clip_video_character",
@@ -94,7 +94,7 @@
           "volume": 0
         }
       ],
-      "clipMedium": "video",
+      "medium": "video",
       "exampleMediaPath": "video_sample2.mp4",
       "header": "Introduce the audience to an action important to your story",
       "id": "clip_video_action",
@@ -115,7 +115,7 @@
           "volume": 0
         }
       ],
-      "clipMedium": "video",
+      "medium": "video",
       "exampleMediaPath": "video_sample3.mp4",
       "header": "Introduce the audience to a result important to your story",
       "id": "clip_video_result",
@@ -127,7 +127,7 @@
     },
     {
       "clipType": "character",
-      "clipMedium": "audio",
+      "medium": "audio",
       "header": "Introduce the audience to a person important to your story",
       "id": "clip_audio_character",
       "references": [
@@ -138,7 +138,7 @@
     },
     {
       "clipType": "action",
-      "clipMedium": "audio",
+      "medium": "audio",
       "header": "Introduce the audience to an action important to your story",
       "id": "clip_audio_action",
       "references": [
@@ -149,7 +149,7 @@
     },
     {
       "clipType": "result",
-      "clipMedium": "audio",
+      "medium": "audio",
       "header": "Introduce the audience to a result important to your story",
       "id": "clip_audio_result",
       "references": [
@@ -160,7 +160,7 @@
     },
     {
       "clipType": "character",
-      "clipMedium": "photo",
+      "medium": "photo",
       "header": "Introduce the audience to a person important to your story",
       "id": "clip_photo_character",
       "references": [
@@ -171,7 +171,7 @@
     },
     {
       "clipType": "action",
-      "clipMedium": "photo",
+      "medium": "photo",
       "header": "Introduce the audience to an action important to your story",
       "id": "clip_photo_action",
       "references": [
@@ -182,7 +182,7 @@
     },
     {
       "clipType": "result",
-      "clipMedium": "photo",
+      "medium": "photo",
       "header": "Introduce the audience to a result important to your story",
       "id": "clip_photo_result",
       "references": [

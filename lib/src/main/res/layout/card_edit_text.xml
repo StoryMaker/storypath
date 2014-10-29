@@ -30,7 +30,7 @@
         style="@style/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/raspberry_wine"
+        android:textColor="@color/storymaker_highlight"
         android:text="Save Text"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/transparent"/>

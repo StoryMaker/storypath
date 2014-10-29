@@ -9,7 +9,8 @@
         style="@style/h3"
         android:id="@+id/tvTapToContinue"
         android:layout_height="@dimen/card_tap_height"
-        android:background="@color/raspberry_wine"
+        android:layout_width="match_parent"
+        android:background="@color/storymaker_highlight"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical"
         android:text="@string/lbl_card_tap"
@@ -26,7 +27,7 @@
 
     <IconTextView
         style="@style/TextImage"
-        android:id="@+id/itvHeader"
+        android:id="@+id/itvClipTypeIcon"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/clipCandidates" />
 
@@ -34,8 +35,8 @@
         style="@style/p"
         android:id="@+id/tvHeader"
         android:textAllCaps="true"
-        android:textColor="@color/raspberry_wine"
-        android:layout_toEndOf="@+id/itvHeader"
+        android:textColor="@color/storymaker_highlight"
+        android:layout_toEndOf="@+id/itvClipTypeIcon"
         android:layout_below="@id/clipCandidates"/>
 
     <Spinner
@@ -43,7 +44,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="@dimen/padding_small"
-        android:background="@color/storymaker_blue"
+        android:background="@color/storymaker_highlight"
         android:layout_below="@id/clipCandidates"
         android:layout_alignParentEnd="true"/>
 
@@ -64,30 +65,40 @@
         <IconTextView
             style="@style/TextImage"
             android:id="@+id/itvImport"
+            android:paddingTop="8dp"
             android:layout_below="@+id/tvBody"
+            android:gravity="center_vertical"
             android:text="{fa-ic_card_import}" />
 
         <TextView
             style="@style/p"
             android:id="@+id/tvImport"
-            android:layout_below="@+id/tvBody"
+            android:paddingLeft="8dp"
             android:layout_toEndOf="@+id/itvImport"
+            android:layout_alignTop="@id/itvImport"
+            android:layout_alignBottom="@id/itvImport"
+            android:gravity="center_vertical"
             android:text="@string/lbl_import"
-            android:textColor="@color/raspberry_wine"/>
+            android:textColor="@color/storymaker_highlight"/>
 
         <IconTextView
             style="@style/TextImage"
             android:id="@+id/itvCapture"
+            android:paddingTop="8dp"
+            android:gravity="center_vertical"
             android:layout_below="@+id/itvImport"
             android:text="{fa-ic_card_capture_photo}" />
 
         <TextView
             style="@style/p"
             android:id="@+id/tvCapture"
+            android:paddingLeft="8dp"
             android:layout_toEndOf="@+id/itvCapture"
-            android:layout_below="@+id/itvImport"
+            android:layout_alignTop="@id/itvCapture"
+            android:layout_alignBottom="@id/itvCapture"
+            android:gravity="center_vertical"
             android:text="@string/lbl_capture"
-            android:textColor="@color/raspberry_wine"/>
+            android:textColor="@color/storymaker_highlight"/>
 
     </RelativeLayout>
 </RelativeLayout>

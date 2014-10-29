@@ -4,12 +4,12 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,18 +29,17 @@ public class QuizCardView extends ExampleCardView {
     public QuizCard mCardModel;
 
     private List<Choice> mDisplayedChoices = new ArrayList<>(); // Quiz choices currently displayed
-    private List<Choice> mSelectedChoices = new ArrayList<>();  // Quiz choices currently selected
-    private int mExpandedHeight = UNSET_HEIGHT; // The height of the quiz choice container when expanded
+    private List<String> mSelectedChoices = new ArrayList<>();  // Quiz choice ids currently selected. For comparison against QuizCard#getCorrectAnswers()
+    private String mLastSelectedChoiceTitle;                    // The last selected choice title to display when collapsed
     private boolean mExpanded = true; // Are the quiz card's possible choices expanded?
 
-    private static final int UNSET_HEIGHT = -42; // placeholder value to indicate quiz choice container not measured
 
     private boolean quizIsPassed() {
         if (mSelectedChoices.size() >= mCardModel.getCorrectRequired()) {
             List<String> correctAnswers = mCardModel.getCorrectAnswers();
             if (correctAnswers == null) return true; // null from getCorrectAnswers means proceed no matter what
-            for (Choice choice : mSelectedChoices) {
-                if (!correctAnswers.contains(choice.id))
+            for (String choiceId : mSelectedChoices) {
+                if (!correctAnswers.contains(choiceId))
                     return false;
             }
             return true;
@@ -57,9 +56,6 @@ public class QuizCardView extends ExampleCardView {
         super();
         mContext = context;
         mCardModel = (QuizCard) cardModel;
-
-//        Resources r = context.getResources();
-//        mExpandedHeight = r.getDimensionPixelSize(R.dimen.clip_card_footer_height);
     }
 
     @Override
@@ -67,10 +63,9 @@ public class QuizCardView extends ExampleCardView {
         if (mCardModel == null) {
             return null;
         }
-        // TODO: How to determine if this card should begin expanded?
         View view = LayoutInflater.from(context).inflate(R.layout.card_quiz, null);
 
-        // Views modified by animation callbacks, and must be final
+        // Views modified by animation callbacks must be final
         final TextView breadCrumb = (TextView) view.findViewById(R.id.breadCrumb);
         final ViewGroup choiceContainer = (ViewGroup) view.findViewById(R.id.choiceContainer);
 
@@ -87,18 +82,6 @@ public class QuizCardView extends ExampleCardView {
             }
         });
 
-        /** Get expanded height of choiceContainer on layout */
-        choiceContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (mExpandedHeight == UNSET_HEIGHT) {
-                    mExpandedHeight = choiceContainer.getHeight();
-                    if (mExpandedHeight > 0) mExpanded = true;
-                    Log.i("layout", "on quiz choice layout height is " + mExpandedHeight);
-                }
-            }
-        });
-
         mDisplayedChoices = mCardModel.getFilteredChoices();
         final boolean hasQuizResponses = mDisplayedChoices != null && mDisplayedChoices.size() > 0;
 
@@ -110,11 +93,10 @@ public class QuizCardView extends ExampleCardView {
             @Override
             public void onClick(View v) {
                 Choice choice = (Choice) v.getTag(R.id.view_tag_quiz_choice);
-                markQuizChoiceSelected(v, !v.isSelected(), true);
+                markQuizChoiceSelected(choiceContainer, v, !v.isSelected(), true);
                 if (quizIsPassed()) {
                     // We're done!
                     toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
-                    quizCardComplete();
                 }
             }
         };
@@ -129,7 +111,7 @@ public class QuizCardView extends ExampleCardView {
                 quizChoiceView.setOnClickListener(quizCardChoiceClickListener);
                 quizChoiceView.setTag(R.id.view_tag_quiz_choice, displayedChoice);
                 if (choiceId != null && displayedChoice.id.equals(choiceId)) {
-                    markQuizChoiceSelected(quizChoiceView, true, false); // Don't notify since we're responding to initial state
+                    markQuizChoiceSelected(choiceContainer, quizChoiceView, true, false); // Don't notify since we're responding to initial state
                 }
             }
             boolean quizIsPassed = quizIsPassed();
@@ -148,25 +130,52 @@ public class QuizCardView extends ExampleCardView {
         return view;
     }
 
-    private void markQuizChoiceSelected(View quizChoiceView, boolean isSelected, boolean doNotify) {
+    /**
+     * Mark a quiz choice view as selected.
+     *
+     * @param quizChoiceView the view that was selected. Must have a tag at R.id.view_tag_quiz_choice corresponding to the {@link scal.io.liger.model.Choice}
+     * @param isSelected whether the view should be marked selected or unselected
+     * @param doNotify whether to notify observers of the underlying model of this change
+     */
+    private void markQuizChoiceSelected(ViewGroup choiceContainer, View quizChoiceView, boolean isSelected, boolean doNotify) {
+        boolean isSingleChoice = mCardModel.getCorrectRequired() < 2;
+
         quizChoiceView.setSelected(isSelected);
         Choice choice = (Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
         StringBuilder logString = new StringBuilder();
         logString.append(choice.text);
         if (isSelected) {
             logString.append(" Selected ");
-            if (!mSelectedChoices.contains(choice)) {
-                mCardModel.addValue(VALUES_CHOICE_TAG, choice.id, doNotify);
-                mSelectedChoices.add(choice);
+            if (!mSelectedChoices.contains(choice.getId())) {
+                mCardModel.addValue(VALUES_CHOICE_TAG, choice.getId(), doNotify);
+                mSelectedChoices.add(choice.getId());
+                mLastSelectedChoiceTitle = choice.getText();
             }
         } else {
             logString.append(" Unselected ");
-            mSelectedChoices.remove(choice);
+            mSelectedChoices.remove(choice.getId());
             mCardModel.addValue(VALUES_CHOICE_TAG, "", doNotify);
         }
-        logString.append(" selected choice " + mSelectedChoices.size() + " correctRequired " + mCardModel.getCorrectRequired());
+
+        if (isSingleChoice) {
+            // If we're in single-choice mode, unselect all other choices
+            int numQuizChoiceViews = choiceContainer.getChildCount();
+            for (int x = 0; x < numQuizChoiceViews; x++) {
+                View child = choiceContainer.getChildAt(x);
+                if (child != quizChoiceView && child.isSelected()) {
+                    Choice childChoice = (Choice) child.getTag(R.id.view_tag_quiz_choice);
+                    child.setSelected(false);
+                    mSelectedChoices.remove(childChoice.getId());
+                    logString.append(" (Unselected " + childChoice.getText() + ") ");
+                    // TODO When the QuizCard supports multiple selections, remember to remove
+                    // TODO the just-unselected value from its collection
+                    //mCardModel.addValue(VALUES_CHOICE_TAG, "", doNotify);
+                }
+            }
+        }
+        logString.append(" . Total selected " + mSelectedChoices.size() + " correctRequired " + mCardModel.getCorrectRequired());
         logString.append(" passed: " + quizIsPassed());
-        Log.i(TAG, logString.toString());
+//        Log.i(TAG, logString.toString());
     }
 
     private void toggleQuizResponseExpansion(final TextView breadCrumb, final ViewGroup choiceContainer, boolean doAnimate) {
@@ -178,19 +187,19 @@ public class QuizCardView extends ExampleCardView {
         final int animSecondColor;
         if (mExpanded) {
             // Breadcrumb shows first user response
-            breadCrumb.setText(mSelectedChoices.get(0).text);
+            breadCrumb.setText(mLastSelectedChoiceTitle);
             finalChoiceContainerHeight = 0;
             animFirstColor = mContext.getResources().getColor(R.color.white);
-            animSecondColor = mContext.getResources().getColor(R.color.raspberry_wine);
+            animSecondColor = mContext.getResources().getColor(R.color.storymaker_highlight);
         } else {
             // Breadcrumb shows quiz question
             breadCrumb.setText(mCardModel.getQuestion());
-            finalChoiceContainerHeight = mExpandedHeight;
-            animFirstColor = mContext.getResources().getColor(R.color.raspberry_wine);
+            finalChoiceContainerHeight = calculateExpandedChoiceContainerHeightPx();
+            animFirstColor = mContext.getResources().getColor(R.color.storymaker_highlight);
             animSecondColor = mContext.getResources().getColor(R.color.white);
         }
         if (doAnimate) {
-            // Animate choiceContainer to height 0
+            // Animate choiceContainer height
             //Log.i(TAG, String.format("animating quiz container from %d to %d", choiceContainer.getHeight(), finalChoiceContainerHeight));
             ValueAnimator animator = ValueAnimator.ofInt(choiceContainer.getHeight(), finalChoiceContainerHeight);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -214,7 +223,6 @@ public class QuizCardView extends ExampleCardView {
             breadCrumb.setBackgroundColor(animSecondColor);
             breadCrumb.setTextColor(animFirstColor);
         }
-
         mExpanded = !mExpanded;
     }
 
@@ -227,27 +235,12 @@ public class QuizCardView extends ExampleCardView {
         return choiceView;
     }
 
-    //returns stored mediaPath (if exists) or exampleMediaPath (if exists)
-    /*
-    @Override
-    public File getValidFile(String mediaPath, String exampleMediaPath) {
-        File mediaFile = null;
+    private int calculateExpandedChoiceContainerHeightPx() {
+        Resources r = mContext.getResources();
+        int choiceHeight = r.getDimensionPixelSize(R.dimen.card_quiz_response_height);
+        int choiceMargin = r.getDimensionPixelSize(R.dimen.padding_tiny);
+        int numChoices = mDisplayedChoices.size();
 
-        if (mediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(mediaPath));
-        } else if (exampleMediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
-        }
-
-        return mediaFile;
-    }
-    */
-
-    /**
-     * This quiz card is completed and collapsed into the breadcrumb state.
-     * Expand the next quiz card.
-     */
-    private void quizCardComplete() {
-        // TODO
+        return numChoices * (choiceHeight + (2 * choiceMargin));
     }
 }
