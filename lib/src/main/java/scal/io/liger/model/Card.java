@@ -346,21 +346,25 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
     public ArrayList<Card> getCardsByClass (String fullPath) {
         // helper method takes a collection of references
-        ArrayList<String> pathArray = new ArrayList<String>();
+        StoryPath storyPath = getStoryPath();
+        ArrayList<String> pathArray = new ArrayList<>();
         pathArray.add(fullPath);
 
-        ArrayList<Card> matchingCards = new ArrayList<Card>();
-        matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPath(), pathArray));
+        ArrayList<Card> matchingCards = new ArrayList<>();
+        matchingCards.addAll(storyPath.getCards(pathArray));
 
         // check for attached story path/story path library
-        if (this.getStoryPath().getStoryPathLibrary() != null) {
-            matchingCards.addAll(ReferenceHelper.getCards(this.getStoryPath().getStoryPathLibrary(), pathArray));
+        if (storyPath.getStoryPathLibrary() != null) {
+            matchingCards.addAll(storyPath.getCards(pathArray));
         }
-        if (this.getStoryPath() instanceof StoryPathLibrary) {
-            if (((StoryPathLibrary)this.getStoryPath()).getCurrentStoryPath() != null) {
-                matchingCards.addAll(ReferenceHelper.getCards(((StoryPathLibrary) this.getStoryPath()).getCurrentStoryPath(), pathArray));
+        if (storyPath instanceof StoryPathLibrary) {
+            StoryPathLibrary storyPathLibrary = ((StoryPathLibrary)storyPath);
+            if (storyPathLibrary.getCurrentStoryPath() != null) {
+                matchingCards.addAll(storyPathLibrary.getCurrentStoryPath().getCards(pathArray));
             }
         }
+
+        // TODO StoryPathLibrary should override getCards
 
         return matchingCards;
     }

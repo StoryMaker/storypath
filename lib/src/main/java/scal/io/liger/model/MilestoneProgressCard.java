@@ -158,7 +158,7 @@ public class MilestoneProgressCard extends Card {
     public boolean checkStateVideo() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPath, videoClipCards);
+        ArrayList<String> values = storyPath.getValues(videoClipCards);
 
         if (values == null) {
             newState = 0;
@@ -182,7 +182,7 @@ public class MilestoneProgressCard extends Card {
     public boolean checkStateAudio() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPath, audioClipCards);
+        ArrayList<String> values = storyPath.getValues(audioClipCards);
 
         if (values == null) {
             newState = 0;
@@ -206,7 +206,7 @@ public class MilestoneProgressCard extends Card {
     public boolean checkStatePhoto() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPath, photoClipCards);
+        ArrayList<String> values = storyPath.getValues(photoClipCards);
 
         if (values == null) {
             newState = 0;
@@ -300,13 +300,13 @@ public class MilestoneProgressCard extends Card {
             return false;
         }
         else if (medium.equals(Constants.VIDEO)) {
-            values = ReferenceHelper.getValues(storyPath, videoClipCards);
+            values = storyPath.getValues(videoClipCards);
         }
         else if (medium.equals(Constants.AUDIO)) {
-            values = ReferenceHelper.getValues(storyPath, audioClipCards);
+            values = storyPath.getValues(audioClipCards);
         }
         else if (medium.equals(Constants.PHOTO)) {
-            values = ReferenceHelper.getValues(storyPath, photoClipCards);
+            values = storyPath.getValues(photoClipCards);
         }
 
         for (String s : values) {
@@ -339,13 +339,13 @@ public class MilestoneProgressCard extends Card {
             return 0;
         }
         else if (medium.equals(Constants.VIDEO)) {
-            values = ReferenceHelper.getValues(storyPath, videoClipCards);
+            values = storyPath.getValues(videoClipCards);
         }
         else if (medium.equals(Constants.AUDIO)) {
-            values = ReferenceHelper.getValues(storyPath, audioClipCards);
+            values = storyPath.getValues(audioClipCards);
         }
         else if (medium.equals(Constants.PHOTO)) {
-            values = ReferenceHelper.getValues(storyPath, photoClipCards);
+            values = storyPath.getValues(photoClipCards);
         }
 
         for (String s : values) {

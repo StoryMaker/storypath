@@ -158,7 +158,7 @@ public class PreviewCard extends Card {
     public boolean checkStateVideo() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPath, videoClipCards);
+        ArrayList<String> values = storyPath.getValues(videoClipCards);
 
         if (values == null) {
             newState = 0;
@@ -182,7 +182,7 @@ public class PreviewCard extends Card {
     public boolean checkStateAudio() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPath, audioClipCards);
+        ArrayList<String> values = storyPath.getValues(audioClipCards);
 
         if (values == null) {
             newState = 0;
@@ -206,7 +206,7 @@ public class PreviewCard extends Card {
     public boolean checkStatePhoto() {
         int newState = 0;
 
-        ArrayList<String> values = ReferenceHelper.getValues(storyPath, photoClipCards);
+        ArrayList<String> values = storyPath.getValues(photoClipCards);
 
         if (values == null) {
             newState = 0;
