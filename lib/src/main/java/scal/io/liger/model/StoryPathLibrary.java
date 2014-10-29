@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
+import scal.io.liger.ReferenceHelper;
 
 /**
  * Created by mnbogner on 9/29/14.
@@ -60,7 +61,6 @@ public class StoryPathLibrary extends StoryPath {
     public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {
         mListener = listener;
     }
-
 
     public HashMap<String, String> getStoryPathTemplateFiles() {
         return storyPathTemplateFiles;
@@ -110,7 +110,8 @@ public class StoryPathLibrary extends StoryPath {
         this.mediaFiles = mediaFiles;
     }
 
-    public void saveMediaFileSPL(String uuid, MediaFile file) {
+    @Override
+    public void saveMediaFile(String uuid, MediaFile file) {
         if (this.mediaFiles == null) {
             this.mediaFiles = new HashMap<String, MediaFile>();
         }
@@ -118,7 +119,8 @@ public class StoryPathLibrary extends StoryPath {
         this.mediaFiles.put(uuid, file);
     }
 
-    public MediaFile loadMediaFileSPL(String uuid) {
+    @Override
+    public MediaFile loadMediaFile(String uuid) {
         return mediaFiles.get(uuid);
     }
 
@@ -144,7 +146,7 @@ public class StoryPathLibrary extends StoryPath {
 
         // serialize current story path
         Gson gson = new Gson();
-        oldPath.setStoryPathLibraryReference(null);
+        oldPath.setStoryPathLibrary(null);
         oldPath.clearObservers();
         oldPath.clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
         Context oldContext = oldPath.getContext();
@@ -172,7 +174,7 @@ public class StoryPathLibrary extends StoryPath {
         newPath.setContext(oldContext);
         newPath.setCardReferences();
         newPath.initializeObservers();
-        newPath.setStoryPathLibraryReference(this);
+        newPath.setStoryPathLibrary(this);
 
         // update current story path
         this.setCurrentStoryPath(newPath);

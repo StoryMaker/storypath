@@ -102,7 +102,7 @@ public class MediumCardView implements DisplayableCard {
     }
 
     private void moveToNextCard() {
-        StoryPath spm = mCardModel.getStoryPathReference();
+        StoryPath spm = mCardModel.getStoryPath();
         // currently broken in several places
         //Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
         //String linkPath = spm.getId() + "::" + cm.getId();

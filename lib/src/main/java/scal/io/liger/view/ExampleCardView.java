@@ -53,7 +53,7 @@ public class ExampleCardView implements DisplayableCard{
         tvHeader.setText(mCardModel.getHeader());
 
         final String medium = mCardModel.getMedium();
-        final String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
+        final String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
 
         //set up media display
         //final File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
@@ -159,9 +159,9 @@ public class ExampleCardView implements DisplayableCard{
         File mediaFile = null;
 
         if (mediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(mediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(mediaPath));
         } else if (exampleMediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(exampleMediaPath));
         }
         return mediaFile;
     }

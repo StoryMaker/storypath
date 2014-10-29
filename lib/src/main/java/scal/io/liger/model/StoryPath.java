@@ -2,7 +2,6 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,6 +11,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
@@ -20,19 +20,22 @@ import scal.io.liger.ReferenceHelper;
 import scal.io.liger.StoryPathDeserializer;
 
 /**
+ * An ordered collection of {@link scal.io.liger.model.Card}s de/serializable from/to JSON
+ *
  * @author Matthew Bogner
  * @author Josh Steiner
  */
 public class StoryPath {
     public static final String TAG = "StoryPath";
 
+    /** An identifier unique to this Story Path */
     @Expose protected String id;
     @Expose protected String title;
     @Expose protected String classPackage;
     @Expose ArrayList<Card> cards;
     @Expose protected ArrayList<Dependency> dependencies;
     @Expose protected String fileLocation;
-    protected StoryPathLibrary storyPathLibraryReference; // not serialized
+    protected StoryPathLibrary storyPathLibrary; // not serialized
     @Expose protected String storyPathLibraryFile;
 
     // this is used by the JsonHelper class to load json assets
@@ -179,6 +182,9 @@ public class StoryPath {
     }
     */
 
+    /**
+     * @return a Collection of Dependencies describing other StoryPath files this instance references
+     */
     public ArrayList<Dependency> getDependencies() {
         return dependencies;
     }
@@ -202,12 +208,12 @@ public class StoryPath {
         this.fileLocation = fileLocation;
     }
 
-    public StoryPathLibrary getStoryPathLibraryReference() {
-        return storyPathLibraryReference;
+    public StoryPathLibrary getStoryPathLibrary() {
+        return storyPathLibrary;
     }
 
-    public void setStoryPathLibraryReference(StoryPathLibrary storyPathLibraryReference) {
-        this.storyPathLibraryReference = storyPathLibraryReference;
+    public void setStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
+        this.storyPathLibrary = storyPathLibrary;
     }
 
     public String getStoryPathLibraryFile() {
@@ -226,27 +232,35 @@ public class StoryPath {
         this.context = context;
     }
 
-    // set a reference to this story path in each card
-    // must be done before cards attempt to reference
-    // values from previous story paths or cards
+    /**
+     * Set a reference to this story path in each card.
+     * Must be done before cards attempt to reference
+     * values from previous story paths or cards
+     */
     public void setCardReferences() {
         for (Card card : cards) {
-            card.setStoryPathReference(this);
+            card.setStoryPath(this);
         }
     }
 
-    // clear references to this story path from each card
-    // must be done before serializing this story path to
-    // prevent duplication or circular references
+    /**
+     * Clear references to this story path from each card.
+     * must be done before serializing this story path to
+     * prevent duplication or circular references
+     *
+     * TODO Can this docstring be revised now that we have explicit de/serialization with @Expose?
+     */
     public void clearCardReferences() {
         for (Card card : cards) {
-            card.setStoryPathReference(null);
+            card.setStoryPath(null);
         }
     }
 
-    // observers must be initialized after cards are deserialized
-    // observers must be cleared before serializing to prevent
-    // circular references (cards pointing to cards)
+    /**
+     * Observers must be initialized after cards are deserialized.
+     * Observers must be cleared before serializing to prevent TODO Is this still necessary w/ @Expose?
+     * circular references (cards pointing to cards)
+     */
     public void initializeObservers() {
         for (Card card : cards) {
             card.registerObservers();
@@ -265,7 +279,9 @@ public class StoryPath {
         }
     }
 
-
+    /** Return the value corresponding to the fully qualified Id or null if it could not be found.
+     * e.g: "default_library::quiz_card_topic::choice"
+    */
     public String getReferencedValue(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
@@ -281,11 +297,7 @@ public class StoryPath {
         } else {
             String value = card.getValueById(fullPath);
 
-            if (value == null) {
-                return null;
-            } else {
-                return value;
-            }
+            return value;
         }
     }
 
@@ -362,20 +374,20 @@ public class StoryPath {
      */
     public void notifyCardChanged(@NonNull Card firstCard) {
         Log.i(TAG, "notifyCardChanged of update to card " + firstCard.getId());
-        if (storyPathLibraryReference == null || storyPathLibraryReference.mListener == null) {
+        if (storyPathLibrary == null || storyPathLibrary.mListener == null) {
             return;
         }
 
         String action = ((MainActivity)context).checkCard(firstCard);
 
         if (action.equals("ADD")) {
-            storyPathLibraryReference.mListener.onCardAdded(firstCard);
+            storyPathLibrary.mListener.onCardAdded(firstCard);
         }
         if (action.equals("UPDATE")) {
-            storyPathLibraryReference.mListener.onCardChanged(firstCard);
+            storyPathLibrary.mListener.onCardChanged(firstCard);
         }
         if (action.equals("DELETE")) {
-            storyPathLibraryReference.mListener.onCardRemoved(firstCard);
+            storyPathLibrary.mListener.onCardRemoved(firstCard);
         }
     }
 
@@ -384,10 +396,10 @@ public class StoryPath {
      * currently in this StoryPath
      */
     public void notifyCardsSwapped(Card cardOne, Card cardTwo) {
-        if (storyPathLibraryReference == null || storyPathLibraryReference.mListener == null) {
+        if (storyPathLibrary == null || storyPathLibrary.mListener == null) {
             return;
         }
-        storyPathLibraryReference.mListener.onCardsSwapped(cardOne, cardTwo);
+        storyPathLibrary.mListener.onCardsSwapped(cardOne, cardTwo);
     }
 
     /*
@@ -521,19 +533,26 @@ public class StoryPath {
         notifyCardsSwapped(tempCard, cards.get(firstIndex));
     }
 
-    public void saveMediaFileSP(String uuid, MediaFile file) {
-        storyPathLibraryReference.saveMediaFileSPL(uuid, file);
+    public void saveMediaFile(String uuid, MediaFile file) {
+        storyPathLibrary.saveMediaFile(uuid, file);
     }
 
-    public MediaFile loadMediaFileSP(String uuid) {
-        return storyPathLibraryReference.loadMediaFileSPL(uuid);
+    public MediaFile loadMediaFile(String uuid) {
+        return storyPathLibrary.loadMediaFile(uuid);
     }
 
+    /**
+     * Get a Collection of meta data for all Clips.
+     *
+     * To retrieve the corresponding MediaFile for each ClipMetaData, see
+     * {@link #loadMediaFile(String)} using the uuid found via
+     * {@link ClipMetadata#getUuid()}
+     */
     public ArrayList<ClipMetadata> exportMetadata() {
-        ArrayList<ClipMetadata> metadata = new ArrayList<ClipMetadata>();
-        ArrayList<String> classReference = new ArrayList<String>();
+        ArrayList<ClipMetadata> metadata = new ArrayList<>();
+        ArrayList<String> classReference = new ArrayList<>();
         classReference.add(this.getId() + "::<<" + ClipCard.class.getName() + ">>");
-        ArrayList<Card> clipCards = ReferenceHelper.getCards(this, classReference);
+        ArrayList<Card> clipCards = getCards(classReference);
         for (Card c : clipCards) {
             // should be safe to cast, cards fetched based on class
             ClipCard cc = (ClipCard)c;
@@ -552,7 +571,7 @@ public class StoryPath {
     public void importMetadata(ArrayList<ClipMetadata> metadata) {
         ArrayList<String> classReference = new ArrayList<String>();
         classReference.add(this.getId() + "::<<" + ClipCard.class.getName() + ">>");
-        ArrayList<Card> clipCards = ReferenceHelper.getCards(this, classReference);
+        ArrayList<Card> clipCards = getCards(classReference);
         for (Card c : clipCards) {
             // should be safe to cast, cards fetched based on class
             ClipCard cc = (ClipCard) c;
@@ -569,7 +588,7 @@ public class StoryPath {
         ArrayList<ClipMetadata> metadata = exportMetadata();
         ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
         for (ClipMetadata cm : metadata) {
-            MediaFile mf = loadMediaFileSP(cm.getUuid());
+            MediaFile mf = loadMediaFile(cm.getUuid());
 
             if (mf == null) {
                 Log.e(this.getClass().getName(), "no media file was found for uuid " + cm.getUuid());
@@ -579,5 +598,107 @@ public class StoryPath {
             }
         }
         return allMetadata;
+    }
+
+    public ArrayList<Card> getCards(ArrayList<String> references) {
+        ArrayList<Card> results = new ArrayList<Card>();
+
+        ArrayList<Card> unfilteredCards = null;
+        ArrayList<Card> filteredCards = null;
+
+        for (String reference : references) {
+            String[] parts = reference.split("::");
+
+            // TODO: check parts[0] and load external story path if necessary
+
+            unfilteredCards = gatherCards(parts[1]);
+
+            // check for key/value parts
+            if (parts.length == 4) {
+                filteredCards = ReferenceHelper.filterCards(unfilteredCards, parts[2], parts[3]);
+            } else {
+                filteredCards = unfilteredCards;
+            }
+
+            // check for duplicates
+            for (Card card : filteredCards) {
+                if (!results.contains(card)) {
+                    results.add(card);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public ArrayList<String> getValues(ArrayList<String> references) {
+        HashMap<String, String> resultMap = new HashMap<String, String>();
+
+        ArrayList<Card> unfilteredCards = null;
+        ArrayList<Card> filteredCards = null;
+
+        for (String reference : references) {
+            String[] parts = reference.split("::");
+
+            // TODO: check parts[0] and load external story path if necessary
+
+            unfilteredCards = gatherCards(parts[1]);
+
+            // check for key/value parts
+            if (parts.length == 4) {
+                filteredCards = ReferenceHelper.filterCards(unfilteredCards, parts[2], parts[3]);
+            } else {
+                filteredCards = unfilteredCards;
+            }
+
+            // check for key part
+            if (parts.length > 2) {
+                // check for duplicates
+                for (Card card : filteredCards) {
+                    resultMap.put(card.getId(), card.getValueByKey(parts[2]));
+                }
+            }
+        }
+
+        ArrayList<String> results = new ArrayList<String>(resultMap.values());
+        return results;
+    }
+
+    /**
+     * Search for cards by type or id.
+     *
+     * Card Types should be of form returned by {@link scal.io.liger.model.Card#getType()}
+     * Card Ids should be of form returned by {@link scal.io.liger.model.Card#getId()}
+     *
+     * @param cardTarget a query by card type or id.
+     *                   Example type query: "<<ClipCard>>"
+     *                   Example id query: "clip_card_1"
+     * @return
+     */
+    public ArrayList<Card> gatherCards(String cardTarget) {
+        ArrayList<Card> results = new ArrayList<Card>();
+
+        if (cardTarget.equals("*")) {
+            results = getCards();
+        } else if (cardTarget.startsWith("<<")) {
+            // strip "<<" and ">>"
+            cardTarget = cardTarget.substring(2, cardTarget.length()-2);
+            for (Card card : getCards()) {
+                // need to account for separation of package and class name
+                // or should class "wildcards" for cards ignore package?
+                if ((card.getStoryPath().getClassPackage() + "." + card.getType()).equals(cardTarget) ||
+                        (card.getType().equals(cardTarget))) {
+                    results.add(card);
+                }
+            }
+        } else {
+            for (Card card : getCards()) {
+                if (card.getId().equals(cardTarget)) {
+                    results.add(card);
+                }
+            }
+        }
+
+        return results;
     }
 }

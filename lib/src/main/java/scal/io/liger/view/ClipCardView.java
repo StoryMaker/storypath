@@ -96,14 +96,14 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         IconTextView itvCapture = (IconTextView) view.findViewById(R.id.itvCapture);
 
         /** Capture Media Button Click Listener */
-        itvCapture.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener captureClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = null;
                 int requestId = -1;
 
                 String medium = mCardModel.getMedium();
-                String cardMediaId = mCardModel.getStoryPathReference().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
+                String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
                 if (medium.equals(Constants.VIDEO)) {
                     intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                     requestId = Constants.REQUEST_VIDEO_CAPTURE;
@@ -122,7 +122,11 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     ((Activity) mContext).startActivityForResult(intent, requestId);
                 }
             }
-        });
+        };
+
+        // Set the capture click listener on icon and text label
+        itvCapture.setOnClickListener(captureClickListener);
+        view.findViewById(R.id.tvCapture).setOnClickListener(captureClickListener);
 
         setupSpinner(spinner);
 
@@ -283,7 +287,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             itvClipTypeIcon.setText("{fa-ic_clip_place}");
         } else {
             //TODO handle invalid clip type
-            Log.d(this.getClass().getName(), "No clipType matching '" + clipType + "' found.");
+            Log.d(TAG, "No clipType matching '" + clipType + "' found.");
             drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
             itvClipTypeIcon.setText("{fa-card_capture_photo}");
         }
@@ -515,13 +519,15 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (player.isPlaying()) {
-                    if (player.getCurrentPosition() > clipStopMs.get()) {
-                        player.pause();
-                        Log.i(TAG, "stopping playback at clip end selection");
+                try {
+                    if (player.isPlaying()) {
+                        if (player.getCurrentPosition() > clipStopMs.get()) {
+                            player.pause();
+                            Log.i(TAG, "stopping playback at clip end selection");
+                        }
+                        playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
                     }
-                    playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
-                }
+                } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
             }
         }, 100, 100);
 
@@ -582,7 +588,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         int clipHeight = r.getDimensionPixelSize(R.dimen.clip_thumb_height);        // Height of each clip thumb
         int howtoHeight = r.getDimensionPixelSize(R.dimen.card_tap_height);       // Height of howto card that appears at stack top
 
-        final View howtoCard = ((View) clipCandidatesContainer.getParent()).findViewById(R.id.howtoCard);
+        final View howtoCard = ((View) clipCandidatesContainer.getParent()).findViewById(R.id.tvTapToContinue);
         float finalHowToOpacity = mClipsExpanded ?  0f : 1f;
         ObjectAnimator howtoAnim = ObjectAnimator.ofFloat(howtoCard, "alpha", 1 - finalHowToOpacity, finalHowToOpacity);
         howtoAnim.setStartDelay((long) (STAGGERED_ANIMATION_GAP_MS * (clipCandidateCount + 1) * finalHowToOpacity));
@@ -662,9 +668,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         File mediaFile = null;
 
         if (mediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(mediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(mediaPath));
         } else if (exampleMediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPathReference().buildPath(exampleMediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(exampleMediaPath));
         }
 
         return mediaFile;

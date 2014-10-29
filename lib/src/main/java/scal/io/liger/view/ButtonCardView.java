@@ -40,7 +40,7 @@ public class ButtonCardView implements DisplayableCard{
             @Override
             public void onClick(View v) {
 
-                StoryPath spm = mCardModel.getStoryPathReference();
+                StoryPath spm = mCardModel.getStoryPath();
                 //Card cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel));
 
                 mCardModel.clearValues();
@@ -61,7 +61,7 @@ public class ButtonCardView implements DisplayableCard{
 
     /*
     private void moveToNextCard() {
-        StoryPathModel spm = mCardModel.getStoryPathReference();
+        StoryPathModel spm = mCardModel.getStoryPath();
         CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
         String linkPath = spm.getId() + "::" + cm.getId();
         spm.linkNotification(linkPath);

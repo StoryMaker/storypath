@@ -17,7 +17,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
-import scal.io.liger.model.Card;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
@@ -457,7 +456,7 @@ public class JsonHelper {
 
         storyPath.setCardReferences();
         storyPath.initializeObservers();
-        storyPath.setStoryPathLibraryReference(storyPathLibrary);
+        storyPath.setStoryPathLibrary(storyPathLibrary);
         // THIS MAY HAVE UNINTENDED CONSEQUENCES...
         if (storyPath.getStoryPathLibraryFile() == null) {
             storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
@@ -521,10 +520,10 @@ public class JsonHelper {
 
         // set aside references to prevent circular dependencies when serializing
         Context tempContext = storyPath.getContext();
-        StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibraryReference();
+        StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibrary();
         //ArrayList<Card> tempValidCards = storyPath.getValidCards();
         storyPath.setContext(null);
-        storyPath.setStoryPathLibraryReference(null);
+        storyPath.setStoryPathLibrary(null);
         //storyPath.setValidCards(null);
         storyPath.clearObservers();
         storyPath.clearCardReferences();
@@ -537,7 +536,7 @@ public class JsonHelper {
         storyPath.setCardReferences();
         storyPath.initializeObservers();
         //storyPath.setValidCards(tempValidCards);
-        storyPath.setStoryPathLibraryReference(tempStoryPathLibrary);
+        storyPath.setStoryPathLibrary(tempStoryPathLibrary);
         storyPath.setContext(tempContext);
 
         return storyPathJson;

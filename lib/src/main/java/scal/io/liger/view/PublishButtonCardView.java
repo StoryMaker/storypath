@@ -3,7 +3,6 @@ package scal.io.liger.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -11,13 +10,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import scal.io.liger.Constants;
-import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.PublishButtonCard;
 import scal.io.liger.model.Card;
-import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.StoryPath;
 
 public class PublishButtonCardView implements DisplayableCard{
@@ -51,13 +48,13 @@ public class PublishButtonCardView implements DisplayableCard{
             public void onClick(View v) {
 
                 // TEMP
-                final MainActivity mainActivity = (MainActivity) mCardModel.getStoryPathReference().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                final MainActivity mainActivity = (MainActivity) mCardModel.getStoryPath().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
                 Handler h = new Handler();
 
                 h.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        StoryPath spm = mCardModel.getStoryPathReference();
+                        StoryPath spm = mCardModel.getStoryPath();
                         ArrayList<FullMetadata> exportMetadata = spm.exportAllMetadata();
                         Intent i = new Intent();
                         i.setAction(Constants.ACTION_PUBLISH);
@@ -78,7 +75,7 @@ public class PublishButtonCardView implements DisplayableCard{
 
     /*
     private void moveToNextCard() {
-        StoryPathModel spm = mCardModel.getStoryPathReference();
+        StoryPathModel spm = mCardModel.getStoryPath();
         CardModel cm = spm.getValidCardFromIndex(spm.getValidCardIndex(mCardModel) + 1);
         String linkPath = spm.getId() + "::" + cm.getId();
         spm.linkNotification(linkPath);
