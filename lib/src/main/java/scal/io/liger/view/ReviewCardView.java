@@ -13,11 +13,14 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import scal.io.liger.Constants;
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
+import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.ReviewCard;
@@ -68,7 +71,7 @@ public class ReviewCardView implements DisplayableCard {
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Card> mediaCards = mCardModel.getStoryPath().gatherCards("<<ClipCard>>");
+                List<Card> mediaCards = getClipCardsWithAttachedMedia();
                 Util.showOrderMediaPopup((Activity) mContext, mMedium, mediaCards);
             }
         });
@@ -187,5 +190,20 @@ public class ReviewCardView implements DisplayableCard {
             mHasMediaFiles = true;
         }
         Log.i(TAG, String.format("Queued %d media files for playback", mClipMedia.size()));
+    }
+
+    /**
+     * Return a List of ClipCards with attached media
+     */
+    private ArrayList<Card> getClipCardsWithAttachedMedia() {
+        ArrayList<Card> mediaCards = mCardModel.getStoryPath().gatherCards("<<ClipCard>>");
+        Iterator iterator = mediaCards.iterator();
+        while (iterator.hasNext()) {
+            ClipCard clipCard = (ClipCard) iterator.next();
+            if ( clipCard.getClips() == null || clipCard.getClips().size() < 1 ) {
+                iterator.remove();
+            }
+        }
+        return mediaCards;
     }
 }
