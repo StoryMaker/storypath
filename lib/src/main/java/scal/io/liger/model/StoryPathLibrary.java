@@ -62,16 +62,6 @@ public class StoryPathLibrary extends StoryPath {
         mListener = listener;
     }
 
-    @Override
-    public ArrayList<Card> getCards() {
-        return getCurrentStoryPath().getCards();
-    }
-
-    @Override
-    public ArrayList<Card> getCards(ArrayList<String> references) {
-        return getCurrentStoryPath().getCards(references);
-    }
-
     public HashMap<String, String> getStoryPathTemplateFiles() {
         return storyPathTemplateFiles;
     }
