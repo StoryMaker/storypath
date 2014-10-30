@@ -415,8 +415,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final AtomicInteger clipStopMs = new AtomicInteger(selectedClip.getStopTime());
 
         /** Setup initial values that don't require media loaded */
-        clipStart.setText(makeTimeString(selectedClip.getStartTime()));
-        clipEnd.setText(makeTimeString(selectedClip.getStopTime()));
+        clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
+        clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
 
@@ -432,7 +432,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     // Left seek was adjusted, seek to it
                     clipStartMs.set(getMsFromRangeBarIndex(leftIdx, tickCount, clipDurationMs.get()));
                     player.seekTo(clipStartMs.get());
-                    clipStart.setText(makeTimeString(clipStartMs.get()));
+                    clipStart.setText(Util.makeTimeString(clipStartMs.get()));
                     //Log.i(TAG, String.format("Left seek to %d ms", clipStartMs.get()));
                     if (playbackBar.getProgress() < leftIdx) playbackBar.setProgress(leftIdx);
 
@@ -441,7 +441,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     // Right seek was adjusted, seek to it
                     clipStopMs.set(getMsFromRangeBarIndex(rightIdx, tickCount, clipDurationMs.get()));
                     player.seekTo(clipStopMs.get());
-                    clipEnd.setText(makeTimeString(clipStopMs.get()));
+                    clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
 
                     if (playbackBar.getProgress() > rightIdx) playbackBar.setProgress(rightIdx);
                     //Log.i(TAG, String.format("Right seek to %d ms", clipStopMs.get()));
@@ -490,8 +490,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     player.seekTo(selectedClip.getStartTime());
                     rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipDurationMs.get()),
                                               getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipDurationMs.get()));
-                    clipLength.setText("Total : " + makeTimeString(clipDurationMs.get()));
-                    clipEnd.setText(makeTimeString(selectedClip.getStopTime()));
+                    clipLength.setText("Total : " + Util.makeTimeString(clipDurationMs.get()));
+                    clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
                     e.printStackTrace();
                 }
@@ -550,13 +550,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 });
         Dialog dialog = builder.create();
         dialog.show();
-    }
-
-    private String makeTimeString(int timeMs) {
-        long second = (timeMs / 1000) % 60;
-        long minute = (timeMs / (1000 * 60)) % 60;
-
-        return String.format("%02d:%02d", minute, second);
     }
 
     private int getMsFromRangeBarIndex(int tick, int max, int clipDurationMs) {

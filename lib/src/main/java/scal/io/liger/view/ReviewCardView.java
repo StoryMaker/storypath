@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,7 +23,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.edmodo.rangebar.RangeBar;
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -52,7 +53,6 @@ public class ReviewCardView implements DisplayableCard {
 
     private ReviewCard mCardModel;
     private Context mContext;
-    private ArrayDeque<MediaFile> mClipMedia = new ArrayDeque<>();
     private String mMedium;
     private boolean mHasMediaFiles;
 
@@ -88,15 +88,15 @@ public class ReviewCardView implements DisplayableCard {
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Card> mediaCards = getClipCardsWithAttachedMedia();
-                Util.showOrderMediaPopup((Activity) mContext, mMedium, mediaCards);
+                getClipCardsWithAttachedMedia();
+                Util.showOrderMediaPopup((Activity) mContext, mMedium, mMediaCards);
             }
         });
 
         btnNarrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                showClipNarrationDialog();
             }
         });
 
@@ -107,13 +107,14 @@ public class ReviewCardView implements DisplayableCard {
             }
         });
 
-        queueMediaFiles();
+        // Initialize data structures from current StoryPath
+        getClipCardsWithAttachedMedia();
 
         if (hasUnplayedMediaFiles()) {
             ivCardPhoto.setVisibility(View.GONE);
             vvCardVideo.setVisibility(View.VISIBLE);
 
-            MediaFile firstMedia = getNextMediaFile(true);
+            MediaFile firstMedia = getNextMediaFile();
             Uri video = Uri.parse(firstMedia.getPath());
             vvCardVideo.setMediaController(null);
             vvCardVideo.setVideoURI(video);
@@ -129,12 +130,12 @@ public class ReviewCardView implements DisplayableCard {
             public void onCompletion(MediaPlayer vvCardPlayer) {
                 if (hasUnplayedMediaFiles()) {
                     Log.i(TAG, "ReviewCard playing next clip");
-                    vvCardVideo.setVideoURI(Uri.parse(getNextMediaFile(true).getPath()));
+                    vvCardVideo.setVideoURI(Uri.parse(getNextMediaFile().getPath()));
                     vvCardVideo.start();
                 } else {
-                    // Refill queue and return to first video
-                    queueMediaFiles();
-                    vvCardVideo.setVideoURI(Uri.parse(getNextMediaFile(true).getPath()));
+                    // Point us back at the first ClipCard in this StoryPath
+                    mCurrentlyPlayingClipCard = (ClipCard) mMediaCards.get(0);
+                    vvCardVideo.setVideoURI(Uri.parse(getNextMediaFile().getPath()));
                     vvCardVideo.seekTo((5));
                 }
             }
@@ -179,40 +180,36 @@ public class ReviewCardView implements DisplayableCard {
     }
 
     /**
-     * @return whether unplayed clips remain in the queue
+     * @return whether a clip exists in {@link #mMediaCards} after the position of {@link #mCurrentlyPlayingClipCard}
      */
     private boolean hasUnplayedMediaFiles() {
-        return mClipMedia.size() > 0;
+        return (mMediaCards.indexOf(mCurrentlyPlayingClipCard) < (mMediaCards.size() - 1));
     }
 
     /**
-     * @return the next MediaFile for playback from {@link #mClipMedia}
+     * @return the MediaFile corresponding to the next unplayed ClipCard in {@link #mMediaCards} or
+     * null if no more ClipCards remain.
+     *
+     * see {@link #hasUnplayedMediaFiles()}
      */
-    private MediaFile getNextMediaFile(boolean removeFromQueue) {
-        if (mClipMedia.size() == 0) return null;
-        return removeFromQueue ? mClipMedia.poll() : mClipMedia.peek();
+    private MediaFile getNextMediaFile() {
+        if (!hasUnplayedMediaFiles()) return null;
+        int currentClipIdx = mMediaCards.indexOf(mCurrentlyPlayingClipCard);
+        return ((ClipCard) mMediaCards.get(++currentClipIdx)).getSelectedMediaFile();
     }
 
     /**
-     * Add all MediaFiles belonging to the card model's story path to {@link #mClipMedia}
-     * Also determines the medium and sets {@link #mMedium}
+     * @return the MediaFile corresponding to the currently playing ClipCard in {@link #mMediaCards}
      */
-    private void queueMediaFiles() {
-        List<ClipMetadata> clipMetaDataCollection = mCardModel.getStoryPath().exportMetadata();
-        Log.i(TAG, String.format("Found %d media files for card", clipMetaDataCollection.size()));
-        for (ClipMetadata clipMetadata : clipMetaDataCollection) {
-            MediaFile mediaFile = mCardModel.getStoryPath().loadMediaFile(clipMetadata.getUuid());
-            mClipMedia.add(mediaFile);
-            if (mMedium == null) mMedium = mediaFile.getMedium();
-            mHasMediaFiles = true;
-        }
-        Log.i(TAG, String.format("Queued %d media files for playback", mClipMedia.size()));
+    private MediaFile getCurrentMediaFile() {
+        return mCurrentlyPlayingClipCard.getSelectedMediaFile();
     }
 
     /**
-     * Return a List of ClipCards with attached media
+     * Initializes the value of {@link #mMediaCards} to a List of ClipCards with attached media
+     * within the current StoryPath
      */
-    private ArrayList<Card> getClipCardsWithAttachedMedia() {
+    private void getClipCardsWithAttachedMedia() {
         ArrayList<Card> mediaCards = mCardModel.getStoryPath().gatherCards("<<ClipCard>>");
         Iterator iterator = mediaCards.iterator();
         while (iterator.hasNext()) {
@@ -221,13 +218,38 @@ public class ReviewCardView implements DisplayableCard {
                 iterator.remove();
             }
         }
-        return mediaCards;
+        mMediaCards = mediaCards;
     }
+
+    /** The ClipCard currently being played by the dialog
+     * created by {@link #showClipNarrationDialog()}
+     * TODO We should probably isolate the ClipNarrationDialog and all its members
+    */
+    ClipCard mCurrentlyPlayingClipCard;
+
+    /**
+     * The Surface created by the TextureView onto which we'll play video
+     */
+    Surface mSurface;
+
+    /**
+     * Collection of ClipCards with attached media within the current StoryPath.
+     */
+    ArrayList<Card> mMediaCards;
+
+    /**
+     * Collection of cumulative duration parallel to mMediaCards.
+     * e.g: the first entry is the duration of the first clip, the second is the duration
+     * of the first and second clips etc. Used to properly report playback progress relative to
+     * entire mMediaCards collection.
+     */
+    ArrayList<Integer> mAccumulatedDurationByMediaCard;
+
 
     /**
      * Show a dialog allowing the user to record narration for a Clip
      */
-    private void showClipNarrationDialog(ArrayList<ClipCard> mediaCards) {
+    private void showClipNarrationDialog() {
         View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.dialog_clip_narration, null);
 
@@ -239,10 +261,13 @@ public class ReviewCardView implements DisplayableCard {
 
         /** Media player and media */
         final MediaPlayer player = new MediaPlayer();
-        final ClipMetadata firstClip = mediaCards.get(0).getSelectedClip();
-        final AtomicInteger clipDurationMs = new AtomicInteger();
+        mCurrentlyPlayingClipCard = (ClipCard) mMediaCards.get(0);
+        final AtomicInteger clipCollectionDuration = new AtomicInteger();
 
-        Log.i(TAG, String.format("Showing clip trim dialog with initial start: %d stop: %d", firstClip.getStartTime(), firstClip.getStopTime()));
+        /** SeekBar value varies from 0 to seekBarMax */
+        final int seekBarMax = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
+
+        Log.i(TAG, String.format("Showing clip trim dialog with initial start: %d stop: %d", mCurrentlyPlayingClipCard.getSelectedClip().getStartTime(), mCurrentlyPlayingClipCard.getSelectedClip().getStopTime()));
 
         videoView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,7 +275,6 @@ public class ReviewCardView implements DisplayableCard {
                 if (player.isPlaying()) {
                     player.pause();
                 } else {
-//                    player.seekTo();
                     player.start();
                 }
             }
@@ -259,41 +283,55 @@ public class ReviewCardView implements DisplayableCard {
         videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                setThumbnailForClip(thumbnailView, mCardModel.getStoryPath().loadMediaFile(firstClip.getUuid()));
+                mSurface = new Surface(surface);
 
-                Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
-                Surface s = new Surface(surface);
+                setThumbnailForClip(thumbnailView, mCurrentlyPlayingClipCard);
+
+                final Uri video = Uri.parse(mCurrentlyPlayingClipCard.getSelectedMediaFile().getPath());
+                final Surface s = new Surface(surface);
                 try {
                     player.setDataSource(mContext, video);
                     player.setSurface(s);
-                    player.prepare();
+                    player.prepareAsync();
                     player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
                     player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
-                            player.seekTo(clipStartMs.get());
+                            player.seekTo(mCurrentlyPlayingClipCard.getSelectedClip().getStartTime());
+
+                            int currentClipIdx = mMediaCards.indexOf(mCurrentlyPlayingClipCard);
+                            if (currentClipIdx == 0) {
+                                Log.i(TAG, "prepared finished for first clip");
+                                // This is the first clip
+                                // Setup initial views requiring knowledge of clip media
+                                if (mCurrentlyPlayingClipCard.getSelectedClip().getStopTime() == 0)
+                                    mCurrentlyPlayingClipCard.getSelectedClip().setStopTime(player.getDuration());
+                                player.seekTo(mCurrentlyPlayingClipCard.getSelectedClip().getStartTime());
+                                if (clipCollectionDuration.get() == 0)
+                                    clipCollectionDuration.set(calculateTotalClipCollectionLengthMs(mMediaCards));
+
+                                clipLength.setText("Total : " + Util.makeTimeString(clipCollectionDuration.get()));
+                            } else {
+                                Log.i(TAG, "Auto starting subsequent clip");
+                                // automatically begin playing subsequent clips
+                                player.start();
+                            }
+                        }
+                    });
+                    player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            advanceToNextClip(mp);
                         }
                     });
                     thumbnailView.setVisibility(View.GONE);
-                    clipDurationMs.set(player.getDuration());
-                    if (clipStopMs.get() == 0) clipStopMs.set(clipDurationMs.get()); // If no stop point set, play whole clip
-
-                    // Setup initial views requiring knowledge of clip media
-                    if (firstClip.getStopTime() == 0) firstClip.setStopTime(clipDurationMs.get());
-                    player.seekTo(firstClip.getStartTime());
-                    rangeBar.setThumbIndices(getRangeBarIndexForMs(firstClip.getStartTime(), tickCount, clipDurationMs.get()),
-                            getRangeBarIndexForMs(firstClip.getStopTime(), tickCount, clipDurationMs.get()));
-                    clipLength.setText("Total : " + makeTimeString(clipDurationMs.get()));
-                    clipEnd.setText(makeTimeString(firstClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) { /* do nothing */}
 
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -301,57 +339,105 @@ public class ReviewCardView implements DisplayableCard {
             }
 
             @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) { /* do nothing */}
 
         });
 
-        // Poll MediaPlayer for position, ensuring it never exceeds clipStopMs
+        // Poll MediaPlayer for position, ensuring it never exceeds stop point indicated by ClipMetadata
         final Timer timer = new Timer("mplayer");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
                     if (player.isPlaying()) {
-                        if (player.getCurrentPosition() > clipStopMs.get()) {
+                        if (mCurrentlyPlayingClipCard.getSelectedClip().getStopTime() > 0 && player.getCurrentPosition() > mCurrentlyPlayingClipCard.getSelectedClip().getStopTime()) {
                             player.pause();
-                            Log.i(TAG, "stopping playback at clip end selection");
+                            advanceToNextClip(player);
                         }
-                        playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
+                        int durationOfPreviousClips = 0;
+                        int currentlyPlayingCardIndex = mMediaCards.indexOf(mCurrentlyPlayingClipCard);
+                        if (currentlyPlayingCardIndex > 0)
+                            durationOfPreviousClips = mAccumulatedDurationByMediaCard.get(currentlyPlayingCardIndex - 1);
+                        playbackBar.setProgress((int) (seekBarMax * ((float) durationOfPreviousClips + player.getCurrentPosition()) / clipCollectionDuration.get())); // Show progress relative to clip collection duration
                     }
                 } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
             }
-        }, 100, 100);
-
+        },
+        100,    // Initial delay ms
+        100);   // Repeat interval ms
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setView(v)
-                .setPositiveButton("TRIM CLIP", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mCardModel.getSelectedClip().setStartTime(clipStartMs.get());
-                        mCardModel.getSelectedClip().setStopTime(clipStopMs.get());
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        player.release();
-                        timer.cancel();
-                    }
-                });
+        builder.setView(v);
         Dialog dialog = builder.create();
         dialog.show();
     }
 
     /**
+     * Advance the given MediaPlayer to the next clip in mMediaCards
+     * and ends with a call to {@link android.media.MediaPlayer#prepare()}. Therefore
+     * an OnPreparedListener must be set on MediaPlayer to start playback
+     */
+    private void advanceToNextClip(MediaPlayer player) {
+        Uri video;
+        int currentClipIdx = mMediaCards.indexOf(mCurrentlyPlayingClipCard);
+        if (currentClipIdx == (mMediaCards.size() - 1)) {
+            // We've played through all the clips
+            Log.i(TAG, "Played all clips. Resetting to first");
+            mCurrentlyPlayingClipCard = (ClipCard) mMediaCards.get(0);
+        } else {
+            // Advance to next clip
+            Log.i(TAG, "Advancing to next clip");
+            mCurrentlyPlayingClipCard = (ClipCard) mMediaCards.get(++currentClipIdx);
+        }
+
+        video = Uri.parse(mCurrentlyPlayingClipCard.getSelectedMediaFile().getPath());
+        try {
+            player.reset();
+            player.setDataSource(mContext, video);
+            player.setSurface(mSurface);
+            player.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Calculates the cumulative length in ms of each selected clip of each Card in cards.
+     * Also populates {@link #mAccumulatedDurationByMediaCard}.
+     *
+     * @param cards An ArrayList of {@link scal.io.liger.model.ClipCard}s.
+     *              Only cards of type ClipCard will be evaluated.
+     *
+     * Note we don't accept an ArrayList<ClipCard> due to the current operation of StoryPath#gatherCards(..)
+     */
+    private int calculateTotalClipCollectionLengthMs(ArrayList<Card> cards) {
+        int totalDuration = 0;
+        mAccumulatedDurationByMediaCard = new ArrayList<>(cards.size());
+        for (Card card : cards) {
+            if (card instanceof ClipCard) {
+                ClipMetadata clipMeta = ((ClipCard) card).getSelectedClip();
+                MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(((ClipCard)card).getSelectedMediaFile().getPath()));
+                int clipDuration = mp.getDuration();
+                Log.i(TAG, String.format("Got duration for media: %d. start time: %d. stop time: %d", clipDuration, clipMeta.getStartTime(), clipMeta.getStopTime()));
+                totalDuration += (((clipMeta.getStopTime() == 0) ? clipDuration : clipMeta.getStopTime()) - clipMeta.getStartTime());
+                mAccumulatedDurationByMediaCard.add(totalDuration);
+                Log.i(TAG, "Total duration now " + totalDuration);
+                mp.release();
+            }
+        }
+        return totalDuration;
+    }
+
+    /**
      * Set a thumbnail on the given ImageView for the given MediaFile
      */
-    private void setThumbnailForClip(@NonNull ImageView thumbnail, @NonNull MediaFile media) {
+    private void setThumbnailForClip(@NonNull ImageView thumbnail, @NonNull ClipCard clipCard) {
         // Clip has attached media. Show an appropriate preview
         // e.g: A thumbnail for video
-        String medium = mCardModel.getMedium();
+
+        MediaFile mediaFile = mCardModel.getStoryPath().loadMediaFile(mCurrentlyPlayingClipCard.getSelectedClip().getUuid());
+
+        String medium = clipCard.getMedium();
         if (medium.equals(Constants.VIDEO)) {
             Bitmap videoFrame = mediaFile.getThumbnail();
             if(null != videoFrame) {
@@ -369,9 +455,39 @@ public class ReviewCardView implements DisplayableCard {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
             //set background image
-            String clipType = mCardModel.getClipType();
+            String clipType = clipCard.getClipType();
             setClipExampleDrawables(clipType, thumbnail);
             thumbnail.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Set an example thumbnail on imageView for this clipType
+     *
+     * This should be called if no thumbnail directly representing the clip is available.
+     */
+    private void setClipExampleDrawables(String clipType, ImageView imageView) {
+        Drawable drawable;
+        switch (clipType) {
+            case Constants.CHARACTER:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character);
+                break;
+            case Constants.ACTION:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_action);
+                break;
+            case Constants.RESULT:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_result);
+                break;
+            case Constants.SIGNATURE:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_signature);
+                break;
+            case Constants.PLACE:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place);
+                break;
+            default:
+                Log.d(TAG, "No clipType matching '" + clipType + "' found.");
+                drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
+        }
+        imageView.setImageDrawable(drawable);
     }
 }

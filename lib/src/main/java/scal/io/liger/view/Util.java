@@ -112,4 +112,14 @@ public class Util {
             }
         });
     }
+
+    /**
+     * @return a String of form "MM:SS" from a raw ms value
+     */
+    public static String makeTimeString(int timeMs) {
+        long second = (timeMs / 1000) % 60;
+        long minute = (timeMs / (1000 * 60)) % 60;
+
+        return String.format("%02d:%02d", minute, second);
+    }
 }

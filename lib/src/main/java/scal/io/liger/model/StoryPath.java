@@ -676,7 +676,7 @@ public class StoryPath {
      * @return
      */
     public ArrayList<Card> gatherCards(String cardTarget) {
-        ArrayList<Card> results = new ArrayList<Card>();
+        ArrayList<Card> results = new ArrayList<>();
 
         if (cardTarget.equals("*")) {
             results = getCards();

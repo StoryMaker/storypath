@@ -48,7 +48,7 @@
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:layout_alignParentRight="true"
-        android:text="RECORD VOICEOVER"
+        android:text="RECORD"
         android:layout_below="@id/playbackProgress"/>
 
     <Button
