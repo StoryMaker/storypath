@@ -13,8 +13,8 @@ languages = [
 # TODO mkdir the dirs you need as they wont exist on clean checkout
 
 # FIXME make sure there's no translations present or we are going to double translate them, maybe go into a loop
-json_dir = os.getcwd() + "/json"
-translations_dir = os.getcwd() + "/translated_strings"
+json_dir = os.getcwd() + "/default_library/json"
+translations_dir = os.getcwd() + "/default_library/translated_strings"
 
 def parse_file(original_json_file_path, translated_strings_file_name, out_file_path):
     in_stream = open(original_json_file_path, 'r')

@@ -194,15 +194,15 @@ def parse_file(in_filename, json_out_filename, strings_out_filename):
     strings_outfile.close()
 
     
-yaml_dir = os.getcwd() + "/yaml"
-json_dir = os.getcwd() + "/json"
-strings_dir = os.getcwd() + "/strings"
+yaml_dir = os.getcwd() + "/default_library/yaml"
+json_dir = os.getcwd() + "/default_library/json"
+strings_dir = os.getcwd() + "/default_library/strings"
 
 '''
 fileName, fileExtension = os.path.splitext(name)
 
-#in_file = "yaml/event_discussion_audio_question_1.yaml"
-in_file = "default_library.yaml"
+#in_file = "default_library/yaml/event_discussion_audio_question_1.yaml"
+in_file = "default_library/yaml/default_library.yaml"
 parse_file(open(in_file, 'r'))
 
 
