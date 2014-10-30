@@ -7,6 +7,7 @@
             type: TipCard
             tags:
                 - audio
+                - before
 
         - 
             type: ClipCard
@@ -20,21 +21,24 @@
         - 
             type: ClipCard
             medium: audio
-            goals: Record sounds that introduce your discussion.
+            goals: 
+                - Record sounds that introduce your discussion.
             clipType: Signature
             length: 0:07
 
         - 
             type: ClipCard
             medium: audio
-            goals: What do you think is the most exciting part of the event?
+            goals: 
+                - What do you think is the most exciting part of the event?
             clipType: Character
             length: 0:30
 
         - 
             type: ClipCard
             medium: audio
-            goals: What do you think is the most exciting part of the event?
+            goals: 
+                - What do you think is the most exciting part of the event?
             clipType: Character
             length: 0:30
 
@@ -50,43 +54,48 @@
         - 
             type: ClipCard
             medium: audio
-            goals: What do you think is the most exciting part of the event?
+            goals: 
+                - What do you think is the most exciting part of the event?
             clipType: Character
             length: 0:30
 
         - 
             type: ClipCard
             medium: audio
-            goals: What do you think is the most exciting part of the event?
+            goals: 
+                - What do you think is the most exciting part of the event?
             clipType: Character
             length: 0:30
 
         - 
             type: ClipCard
             medium: audio
-            goals: Capture people reacting to an exciting part of the event.
+            goals: 
+                - Capture people reacting to an exciting part of the event.
             clipType: Result
             length: 0:12
 
         - 
             type: ClipCard
             medium: audio
-            goals: What do you think is the most exciting part of the event?
+            goals: 
+                - What do you think is the most exciting part of the event?
             clipType: Character
             length: 0:30
 
         - 
             type: ClipCard
             medium: audio
-            goals: Record sounds of how the event ends.
+            goals: 
+                - Record sounds of how the event ends.
             clipType: Place
             length: 0:09
 
         - 
             type: TipCard
             tags:
-                - edit
                 - audio
+                - after
 
         - 
             type: ReviewCard

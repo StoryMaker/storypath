@@ -8,13 +8,14 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_1"
+            "id": "clip_card_0"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
-                "audio"
+                "audio", 
+                "during"
             ]
         }, 
         {
@@ -25,11 +26,11 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_2"
+            "id": "clip_card_1"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_2", 
+            "id": "tip_card_1", 
             "tags": [
                 "audio"
             ]
@@ -42,17 +43,17 @@
             ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clip_card_3"
+            "id": "clip_card_2"
         }, 
         {
             "medium": "audio", 
             "length": "0:15", 
             "goals": [
-                "Record the three of the most important examples that illustrates the issue and its impact."
+                "Record the most important example that illustrates the issue and its impact."
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_4"
+            "id": "clip_card_3"
         }, 
         {
             "medium": "audio", 
@@ -62,11 +63,11 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_5"
+            "id": "clip_card_4"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_3", 
+            "id": "tip_card_2", 
             "tags": [
                 "audio"
             ]
@@ -79,12 +80,12 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_6"
+            "id": "clip_card_5"
         }, 
         {
             "text": "If there are more than three, you should add cards to include them.", 
             "type": "TextCard", 
-            "id": "text_card_1"
+            "id": "text_card_0"
         }, 
         {
             "medium": "audio", 
@@ -94,7 +95,7 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_7"
+            "id": "clip_card_6"
         }, 
         {
             "medium": "audio", 
@@ -105,11 +106,11 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_8"
+            "id": "clip_card_7"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_4", 
+            "id": "tip_card_3", 
             "tags": [
                 "edit", 
                 "audio"
@@ -118,12 +119,12 @@
         {
             "medium": "audio", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "--------", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "audio", 
@@ -133,7 +134,7 @@
         {
             "medium": "audio", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 

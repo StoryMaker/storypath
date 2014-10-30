@@ -14,6 +14,7 @@
             type: TipCard
             tags:
                 - video
+                - during
 
         - 
             type: ClipCard
@@ -27,6 +28,7 @@
             type: TipCard
             tags:
                 - video
+                - during
 
         - 
             type: ClipCard
@@ -56,6 +58,7 @@
             type: TipCard
             tags:
                 - video
+                - during
 
         - 
             type: ClipCard
@@ -99,10 +102,16 @@
             tags:
                 - edit
                 - video
+                - after
 
         - 
             type: ReviewCard
             medium: video
+
+        - 
+            type: TipCard
+            tags:
+                - narration
 
         - 
             type: EvaluationCard

@@ -2,7 +2,7 @@
     "cards": [
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
                 "photo"
             ]
@@ -15,7 +15,7 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_1"
+            "id": "clip_card_0"
         }, 
         {
             "medium": "photo", 
@@ -25,11 +25,11 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_2"
+            "id": "clip_card_1"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_2", 
+            "id": "tip_card_1", 
             "tags": [
                 "photo", 
                 "photo essay"
@@ -43,7 +43,7 @@
             ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clip_card_3"
+            "id": "clip_card_2"
         }, 
         {
             "medium": "photo", 
@@ -53,7 +53,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_4"
+            "id": "clip_card_3"
         }, 
         {
             "medium": "photo", 
@@ -63,7 +63,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_5"
+            "id": "clip_card_4"
         }, 
         {
             "medium": "photo", 
@@ -73,7 +73,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_6"
+            "id": "clip_card_5"
         }, 
         {
             "medium": "photo", 
@@ -83,11 +83,11 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_7"
+            "id": "clip_card_6"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_3", 
+            "id": "tip_card_2", 
             "tags": [
                 "portraits"
             ]
@@ -100,11 +100,11 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_8"
+            "id": "clip_card_7"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_4", 
+            "id": "tip_card_3", 
             "tags": [
                 "edit", 
                 "photo"
@@ -113,12 +113,12 @@
         {
             "medium": "photo", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "--------", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "photo", 
@@ -128,7 +128,7 @@
         {
             "medium": "photo", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 

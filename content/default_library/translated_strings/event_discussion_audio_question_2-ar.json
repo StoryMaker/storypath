@@ -1,0 +1,15 @@
+{
+    "event_discussion_audio_question2::clip_card_7::goals[0]": "التقاط ردة فعل الناس حول جزء معين من الحدث.",
+    "event_discussion_audio_question2::clip_card_9::goals[0]": "تسجيل أصوات كيفية انتهاء الحدث.",
+    "event_discussion_audio_question2::clip_card_3::goals[0]": "ماهو رأيك حول الحدث؟",
+    "event_discussion_audio_question2::clip_card_4::goals[1]": "تسجيل أصوات لمكان مهم للحدث.",
+    "event_discussion_audio_question2::clip_card_4::goals[0]": "تسجيل أصوات حول مكان وقوع الحدث. ",
+    "event_discussion_audio_question2::evaluation_card_0::text": "هل تجمع قصتك مجموعة من الآراء حول الحدث؟",
+    "event_discussion_audio_question2::clip_card_0::goals[1]": "تسجيل أصوات لمكان مهم للحدث.",
+    "event_discussion_audio_question2::clip_card_0::goals[0]": "تسجيل أصوات حول مكان وقوع الحدث. ",
+    "event_discussion_audio_question2::clip_card_5::goals[0]": "ماهو رأيك حول الحدث؟",
+    "event_discussion_audio_question2::clip_card_6::goals[0]": "ماهو رأيك حول الحدث؟",
+    "event_discussion_audio_question2::clip_card_8::goals[0]": "ماهو رأيك حول الحدث؟",
+    "event_discussion_audio_question2::clip_card_1::goals[0]": "تسجيل الأصوات التي تطرح مناقشتكم.",
+    "event_discussion_audio_question2::clip_card_2::goals[0]": "ماهو رأيك حول الحدث؟"
+}

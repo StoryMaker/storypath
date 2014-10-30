@@ -7,6 +7,7 @@
             type: TipCard
             tags:
                 - audio
+                - before
 
         - 
             type: ClipCard
@@ -165,10 +166,16 @@
             tags:
                 - edit
                 - audio
+                - after
 
         - 
             type: ReviewCard
             medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
 
         - 
             type: EvaluationCard

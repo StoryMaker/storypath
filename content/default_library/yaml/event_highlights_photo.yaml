@@ -7,6 +7,7 @@
             type: TipCard
             tags:
                 - photo
+                - before
 
         - 
             type: ClipCard
@@ -29,6 +30,7 @@
             tags:
                 - photo
                 - photo essay
+                - during
 
         - 
             type: ClipCard
@@ -74,6 +76,7 @@
             type: TipCard
             tags:
                 - portraits
+                - during
 
         - 
             type: ClipCard
@@ -88,10 +91,16 @@
             tags:
                 - edit
                 - photo
+                - after
 
         - 
             type: ReviewCard
             medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
 
         - 
             type: EvaluationCard

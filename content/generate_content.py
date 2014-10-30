@@ -25,6 +25,7 @@ def set_id(key, card):
     if not card.has_key('id'):
         card['id'] = "%s_%s" % (key, get_count(key))
 
+# TODO export directly to the real assets/ folder
 # TODO warn that fields existed in card but not newcard
 
 #def id, extract_string(

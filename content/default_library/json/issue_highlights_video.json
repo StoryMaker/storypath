@@ -14,7 +14,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "video"
+                "video", 
+                "during"
             ]
         }, 
         {
@@ -31,7 +32,8 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "video"
+                "video", 
+                "during"
             ]
         }, 
         {
@@ -68,7 +70,8 @@
             "type": "TipCard", 
             "id": "tip_card_2", 
             "tags": [
-                "video"
+                "video", 
+                "during"
             ]
         }, 
         {
@@ -122,13 +125,21 @@
             "id": "tip_card_3", 
             "tags": [
                 "edit", 
-                "video"
+                "video", 
+                "after"
             ]
         }, 
         {
             "medium": "video", 
             "type": "ReviewCard", 
             "id": "review_card_0"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_4", 
+            "tags": [
+                "narration"
+            ]
         }, 
         {
             "text": "--------", 

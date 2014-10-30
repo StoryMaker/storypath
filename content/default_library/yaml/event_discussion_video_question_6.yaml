@@ -7,6 +7,7 @@
             type: TipCard
             tags:
                 - video
+                - before
 
         - 
             type: ClipCard
@@ -48,6 +49,7 @@
             type: TipCard
             tags:
                 - interview
+                - during
 
         - 
             type: ClipCard
@@ -96,7 +98,8 @@
         - 
             type: TipCard
             tags:
-                - edit
+                - video
+                - after
 
         - 
             type: ReviewCard

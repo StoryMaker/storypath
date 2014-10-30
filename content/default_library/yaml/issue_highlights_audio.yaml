@@ -15,6 +15,7 @@
             type: TipCard
             tags:
                 - audio
+                - during
 
         - 
             type: ClipCard
@@ -28,6 +29,7 @@
             type: TipCard
             tags:
                 - audio
+                - during
 
         - 
             type: ClipCard
@@ -41,7 +43,7 @@
             type: ClipCard
             medium: audio
             goals: 
-                - Record the three of the most important examples that illustrates the issue and its impact.
+                - Record the most important example that illustrates the issue and its impact.
             clipType: Action
             length: 0:15
 
@@ -57,6 +59,7 @@
             type: TipCard
             tags:
                 - audio
+                - during
 
         - 
             type: ClipCard
@@ -92,10 +95,16 @@
             tags:
                 - edit
                 - audio
+                - during
 
         - 
             type: ReviewCard
             medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
 
         - 
             type: EvaluationCard

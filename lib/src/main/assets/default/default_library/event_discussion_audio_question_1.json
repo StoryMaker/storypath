@@ -2,7 +2,7 @@
     "cards": [
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
                 "audio"
             ]
@@ -16,7 +16,7 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_1"
+            "id": "clip_card_0"
         }, 
         {
             "medium": "audio", 
@@ -25,6 +25,16 @@
                 "Record sounds that introduce your discussion."
             ], 
             "clipType": "Signature", 
+            "type": "ClipCard", 
+            "id": "clip_card_1"
+        }, 
+        {
+            "medium": "audio", 
+            "length": "0:30", 
+            "goals": [
+                "Why is the event important?"
+            ], 
+            "clipType": "Character", 
             "type": "ClipCard", 
             "id": "clip_card_2"
         }, 
@@ -70,27 +80,17 @@
         }, 
         {
             "medium": "audio", 
-            "length": "0:30", 
-            "goals": [
-                "Why is the event important?"
-            ], 
-            "clipType": "Character", 
-            "type": "ClipCard", 
-            "id": "clip_card_7"
-        }, 
-        {
-            "medium": "audio", 
             "length": "0:09", 
             "goals": [
                 "Record sounds of how the event ends."
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_8"
+            "id": "clip_card_7"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_2", 
+            "id": "tip_card_1", 
             "tags": [
                 "edit", 
                 "audio"
@@ -99,12 +99,12 @@
         {
             "medium": "audio", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "Does your story tell us why the event is important?", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "audio", 
@@ -114,7 +114,7 @@
         {
             "medium": "audio", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 

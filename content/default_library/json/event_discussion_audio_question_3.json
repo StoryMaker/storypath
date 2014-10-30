@@ -4,7 +4,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "audio"
+                "audio", 
+                "before"
             ]
         }, 
         {
@@ -21,7 +22,9 @@
         {
             "medium": "audio", 
             "length": "0:07", 
-            "goals": "Record sounds that introduce your discussion.", 
+            "goals": [
+                "Record sounds that introduce your discussion."
+            ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
             "id": "clip_card_1"
@@ -29,7 +32,9 @@
         {
             "medium": "audio", 
             "length": "0:30", 
-            "goals": "What do you think is the most exciting part of the event?", 
+            "goals": [
+                "What do you think is the most exciting part of the event?"
+            ], 
             "clipType": "Character", 
             "type": "ClipCard", 
             "id": "clip_card_2"
@@ -37,7 +42,9 @@
         {
             "medium": "audio", 
             "length": "0:30", 
-            "goals": "What do you think is the most exciting part of the event?", 
+            "goals": [
+                "What do you think is the most exciting part of the event?"
+            ], 
             "clipType": "Character", 
             "type": "ClipCard", 
             "id": "clip_card_3"
@@ -56,7 +63,9 @@
         {
             "medium": "audio", 
             "length": "0:30", 
-            "goals": "What do you think is the most exciting part of the event?", 
+            "goals": [
+                "What do you think is the most exciting part of the event?"
+            ], 
             "clipType": "Character", 
             "type": "ClipCard", 
             "id": "clip_card_5"
@@ -64,7 +73,9 @@
         {
             "medium": "audio", 
             "length": "0:30", 
-            "goals": "What do you think is the most exciting part of the event?", 
+            "goals": [
+                "What do you think is the most exciting part of the event?"
+            ], 
             "clipType": "Character", 
             "type": "ClipCard", 
             "id": "clip_card_6"
@@ -72,7 +83,9 @@
         {
             "medium": "audio", 
             "length": "0:12", 
-            "goals": "Capture people reacting to an exciting part of the event.", 
+            "goals": [
+                "Capture people reacting to an exciting part of the event."
+            ], 
             "clipType": "Result", 
             "type": "ClipCard", 
             "id": "clip_card_7"
@@ -80,7 +93,9 @@
         {
             "medium": "audio", 
             "length": "0:30", 
-            "goals": "What do you think is the most exciting part of the event?", 
+            "goals": [
+                "What do you think is the most exciting part of the event?"
+            ], 
             "clipType": "Character", 
             "type": "ClipCard", 
             "id": "clip_card_8"
@@ -88,7 +103,9 @@
         {
             "medium": "audio", 
             "length": "0:09", 
-            "goals": "Record sounds of how the event ends.", 
+            "goals": [
+                "Record sounds of how the event ends."
+            ], 
             "clipType": "Place", 
             "type": "ClipCard", 
             "id": "clip_card_9"
@@ -97,8 +114,8 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "edit", 
-                "audio"
+                "audio", 
+                "after"
             ]
         }, 
         {

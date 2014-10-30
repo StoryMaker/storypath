@@ -2,7 +2,7 @@
     "cards": [
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
                 "series"
             ]
@@ -12,6 +12,16 @@
             "length": "0:00", 
             "goals": [
                 "You might photograph an in interesting person responding to the results of a game or a speech or a performance."
+            ], 
+            "clipType": "Character", 
+            "type": "ClipCard", 
+            "id": "clip_card_0"
+        }, 
+        {
+            "medium": "photo", 
+            "length": "0:00", 
+            "goals": [
+                "Replicate the composition of the first photo with a different person."
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
@@ -28,18 +38,8 @@
             "id": "clip_card_2"
         }, 
         {
-            "medium": "photo", 
-            "length": "0:00", 
-            "goals": [
-                "Replicate the composition of the first photo with a different person."
-            ], 
-            "clipType": "Character", 
-            "type": "ClipCard", 
-            "id": "clip_card_3"
-        }, 
-        {
             "type": "TipCard", 
-            "id": "tip_card_2", 
+            "id": "tip_card_1", 
             "tags": [
                 "series"
             ]
@@ -52,7 +52,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_4"
+            "id": "clip_card_3"
         }, 
         {
             "medium": "photo", 
@@ -62,11 +62,11 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_5"
+            "id": "clip_card_4"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_3", 
+            "id": "tip_card_2", 
             "tags": [
                 "edit", 
                 "photo"
@@ -75,12 +75,12 @@
         {
             "medium": "photo", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "--------", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "photo", 
@@ -90,7 +90,7 @@
         {
             "medium": "photo", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 

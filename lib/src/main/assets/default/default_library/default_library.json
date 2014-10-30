@@ -649,7 +649,7 @@
                     "id": "event"
                 }, 
                 {
-                    "text": "A Person or People", 
+                    "text": "A Person", 
                     "id": "profile"
                 }, 
                 {
@@ -664,11 +664,11 @@
                 "default_library::quiz_card_topic::choice"
             ], 
             "type": "QuizCard", 
-            "question": "What do you want to do?", 
+            "question": "How would you like to tell it?", 
             "id": "quiz_card_format", 
             "choices": [
                 {
-                    "text": "Talk to people, or a person, about...", 
+                    "text": "Talk to people about it.", 
                     "id": "interview", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -677,7 +677,7 @@
                     ]
                 }, 
                 {
-                    "text": "Ask many people...", 
+                    "text": "Ask the same question to many people.", 
                     "id": "discussion", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -686,7 +686,7 @@
                     ]
                 }, 
                 {
-                    "text": "Recap of the important parts", 
+                    "text": "Create an accurate summary.", 
                     "id": "report", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -695,7 +695,7 @@
                     ]
                 }, 
                 {
-                    "text": "Show the steps taken...", 
+                    "text": "Document the steps taken.", 
                     "id": "process", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -703,7 +703,7 @@
                     ]
                 }, 
                 {
-                    "text": "Takes pictures of people...", 
+                    "text": "Collect a set of pictures of people.", 
                     "id": "series", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -772,11 +772,11 @@
                 "default_library::quiz_card_format::choice::series"
             ], 
             "type": "QuizCard", 
-            "question": "What kind of clips would you like to make a series.", 
+            "question": "What would you like to focus on?", 
             "id": "quiz_card_cliptype", 
             "choices": [
                 {
-                    "text": "Character", 
+                    "text": "Characters", 
                     "id": "character", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -785,7 +785,7 @@
                     ]
                 }, 
                 {
-                    "text": "Action", 
+                    "text": "Actions", 
                     "id": "action", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -793,14 +793,14 @@
                     ]
                 }, 
                 {
-                    "text": "Result", 
+                    "text": "Results", 
                     "id": "result", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event"
                     ]
                 }, 
                 {
-                    "text": "Place", 
+                    "text": "Places", 
                     "id": "place", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::event", 
@@ -808,7 +808,7 @@
                     ]
                 }, 
                 {
-                    "text": "Signature", 
+                    "text": "Signatures", 
                     "id": "signature", 
                     "filters_or": [
                         "default_library::quiz_card_topic::choice::issue"
@@ -980,7 +980,6 @@
                 "default_library::quiz_card_topic::choice", 
                 "default_library::quiz_card_format::choice", 
                 "default_library::quiz_card_medium::choice", 
-                "default_library::quiz_card_cliptype::choice",
                 "default_library::quiz_card_clipquestion::choice"
             ], 
             "id": "hook_loader_card"

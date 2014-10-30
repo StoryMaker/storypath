@@ -4,7 +4,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "series"
+                "series", 
+                "before"
             ]
         }, 
         {
@@ -41,7 +42,8 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "series"
+                "series", 
+                "during"
             ]
         }, 
         {
@@ -68,8 +70,8 @@
             "type": "TipCard", 
             "id": "tip_card_2", 
             "tags": [
-                "edit", 
-                "photo"
+                "series", 
+                "after"
             ]
         }, 
         {
