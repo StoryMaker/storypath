@@ -1,0 +1,27 @@
+---
+    id: profile_discussion_audio_question14
+    title: Profile Discussion
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - audio
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio
+            

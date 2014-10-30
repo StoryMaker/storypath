@@ -1,0 +1,26 @@
+---
+    id: profile_interview_video
+    title: Profile Interview
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - video
+
+        - 
+            type: ReviewCard
+            medium: vide
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video

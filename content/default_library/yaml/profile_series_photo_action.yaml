@@ -1,0 +1,26 @@
+---
+    id: profile_series_photo_action
+    title: Profile Series
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

@@ -525,13 +525,15 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (player.isPlaying()) {
-                    if (player.getCurrentPosition() > clipStopMs.get()) {
-                        player.pause();
-                        Log.i(TAG, "stopping playback at clip end selection");
+                try {
+                    if (player.isPlaying()) {
+                        if (player.getCurrentPosition() > clipStopMs.get()) {
+                            player.pause();
+                            Log.i(TAG, "stopping playback at clip end selection");
+                        }
+                        playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
                     }
-                    playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
-                }
+                } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
             }
         }, 100, 100);
 

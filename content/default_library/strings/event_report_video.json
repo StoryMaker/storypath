@@ -1,0 +1,20 @@
+{
+  "event_report_video::clip_card_3::goals[0]": "Ask a person to introduce the event.", 
+  "event_report_video::clip_card_13::goals[0]": "Ask someone attending the event to talk about what they did.", 
+  "event_report_video::clip_card_6::goals[0]": "Ask someone who is part of the event: Why is this event interesting?", 
+  "event_report_video::clip_card_8::goals[0]": "Ask an Expert to talk about the event.", 
+  "event_report_video::clip_card_15::goals[0]": "If it\u2019s a different location, show where the event ends.", 
+  "event_report_video::clip_card_2::goals[0]": "Show something notable about the event.", 
+  "event_report_video::clip_card_10::goals[0]": "Show people interacting at the event.", 
+  "event_report_video::clip_card_14::goals[0]": "Show something the character talks about at the event.", 
+  "event_report_video::clip_card_5::goals[0]": "Show something important to the event.", 
+  "event_report_video::clip_card_11::goals[0]": "Ask: What happens at the event?", 
+  "event_report_video::clip_card_16::goals[0]": "Show the end of the event.", 
+  "event_report_video::clip_card_1::goals[0]": "Show preparation for the event.", 
+  "event_report_video::clip_card_4::goals[0]": "Show what happens at the event.", 
+  "event_report_video::evaluation_card_0::text": "--------", 
+  "event_report_video::clip_card_12::goals[0]": "Show the result of people interacting at the event.", 
+  "event_report_video::clip_card_7::goals[0]": "Show a place important to the event.", 
+  "event_report_video::clip_card_0::goals[0]": "Show where the event happens.", 
+  "event_report_video::clip_card_9::goals[0]": "Show something happening at the event."
+}

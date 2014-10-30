@@ -79,5 +79,5 @@ for file_name in json_files:
     file_id = file_name.split('.')[0]
     test_spl = "%s_library.json" % file_id 
     print test_spl
-    f = open("json/test/%s" % test_spl, 'w')
+    f = open("default_library/json/test/%s" % test_spl, 'w')
     f.write(spl_template % (file_id, file_id, file_name, file_id))
