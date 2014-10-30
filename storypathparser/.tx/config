@@ -1,6 +1,12 @@
 [main]
 host = https://www.transifex.com
 
+[storymaker.default_library]
+file_filter = translated_strings/default_library-<lang>.json
+source_file = strings/default_library.json
+source_lang = en
+type = KEYVALUEJSON
+
 [storymaker.event_discussion_audio_question_1]
 file_filter = translated_strings/event_discussion_audio_question_1-<lang>.json
 source_file = strings/event_discussion_audio_question_1.json
