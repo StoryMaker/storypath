@@ -50,6 +50,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
+import scal.io.liger.model.ExampleMediaFile;
 import scal.io.liger.model.MediaFile;
 
 
@@ -354,7 +355,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 }
                 */
 
-                Bitmap videoFrame = mediaFile.getThumbnail();
+                Bitmap videoFrame = null;
+                if (mediaFile instanceof ExampleMediaFile) {
+                    videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
+                } else {
+                    videoFrame = mediaFile.getThumbnail();
+                }
                 if(null != videoFrame) {
                     thumbnail.setImageBitmap(videoFrame);
                 }

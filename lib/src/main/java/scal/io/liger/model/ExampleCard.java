@@ -13,7 +13,7 @@ public class ExampleCard extends Card {
     @Expose private String header;
     @Expose private String medium;
     @Expose private String exampleMediaPath;
-    @Expose private MediaFile exampleMediaFile;
+    @Expose private ExampleMediaFile exampleMediaFile;
 
     public ExampleCard() {
         super();
@@ -41,20 +41,20 @@ public class ExampleCard extends Card {
 
     public void setExampleMediaPath(String example_media_path) { this.exampleMediaPath = example_media_path; }
 
-    public MediaFile getExampleMediaFile() {
+    public ExampleMediaFile getExampleMediaFile() {
         if (exampleMediaPath == null) {
             Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
             return null;
         }
 
         if (exampleMediaFile == null) {
-            exampleMediaFile = new MediaFile(storyPath.buildPath(exampleMediaPath), medium);
+            exampleMediaFile = new ExampleMediaFile(storyPath.buildPath(exampleMediaPath), medium);
         }
 
         return exampleMediaFile;
     }
 
-    public void setExampleMediaFile(MediaFile exampleMediaFile) {
+    public void setExampleMediaFile(ExampleMediaFile exampleMediaFile) {
         this.exampleMediaFile = exampleMediaFile;
     }
 }

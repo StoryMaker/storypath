@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.commonsware.cwac:anddown:0.2.0'
     compile 'com.google.code.gson:gson:2.3'
+    compile 'com.google.android.gms:play-services:4.0.30'
     compile 'com.edmodo:rangebar:1.0.0'
     androidTestCompile files('libs/espresso-1.1-bundled.jar')
     compile project(':android-iconify')
