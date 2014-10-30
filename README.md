@@ -415,7 +415,7 @@ Here are the steps to creating/editing icons:
         fa_clip_ex_character('\uf146');
     }
     ```
-    *[Here](https://gist.github.com/micahjlucas/e877ade5761c98d6e9b7.js) is a script to help quicken this process of         converting the generated "fontcustom.css" to a usable Enum list in "Iconify.java"*
+    *[Here](https://gist.github.com/micahjlucas/e877ade5761c98d6e9b7) is a small script to help quicken the process of converting the generated "fontcustom.css" to a usable Enum list in "Iconify.java"*
     
     **Note:** Your enum keys *must* begin with *"fa"*
     
