@@ -316,7 +316,7 @@ public class StoryPath {
 
                 //String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
                 //story = gson.fromJson(json, StoryPath.class);
-                story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibraryReference, this.context);
+                story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, this.context);
 
                 //story.context = this.context;
                 //story.setCardReferences();
@@ -363,6 +363,23 @@ public class StoryPath {
             Log.e(this.getClass().getName(), "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
             return originalPath;
         }
+    }
+
+    public String buildFilePath(String originalPath) {
+        if (originalPath.startsWith(File.separator)) {
+            return originalPath;
+        }
+
+        // determine location of app folder
+        String basePath = JsonHelper.getSdLigerFilePath();
+
+        // flatten path
+        String flatPath = originalPath.replace(File.separatorChar, '_');
+
+        Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + basePath + " OTHER PART: " + flatPath);
+
+        String relativePath = basePath + File.separator + flatPath;
+        return relativePath;
     }
 
     /**
