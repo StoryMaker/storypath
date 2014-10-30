@@ -128,10 +128,16 @@
             tags:
                 - edit
                 - video
+                - after
 
         - 
             type: ReviewCard
             medium: video
+
+        - 
+            type: TipCard
+            tags:
+                - narration
 
         - 
             type: EvaluationCard

@@ -136,8 +136,7 @@
         - 
             type: TipCard
             tags:
-                - after
-                - audio
+                - narration
 
         - 
             type: EvaluationCard

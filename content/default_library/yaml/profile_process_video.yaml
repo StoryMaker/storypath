@@ -96,6 +96,11 @@
             medium: video
 
         - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
             type: EvaluationCard
             text: --------
 

@@ -1,5 +1,5 @@
 [main]
-host = https:/www.transifex.com
+host = https://www.transifex.com
 
 [storymaker.default_library]
 file_filter = default_library/translated_strings/default_library-<lang>.json

@@ -66,6 +66,11 @@
             medium: photo
 
         - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
             type: EvaluationCard
             text: --------
 

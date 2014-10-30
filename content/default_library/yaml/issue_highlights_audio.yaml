@@ -29,6 +29,7 @@
             type: TipCard
             tags:
                 - audio
+                - during
 
         - 
             type: ClipCard
@@ -58,6 +59,7 @@
             type: TipCard
             tags:
                 - audio
+                - during
 
         - 
             type: ClipCard
@@ -93,10 +95,16 @@
             tags:
                 - edit
                 - audio
+                - during
 
         - 
             type: ReviewCard
             medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
 
         - 
             type: EvaluationCard

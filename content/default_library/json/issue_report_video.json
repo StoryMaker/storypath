@@ -4,7 +4,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "video"
+                "video", 
+                "before"
             ]
         }, 
         {
@@ -162,7 +163,8 @@
             "id": "tip_card_1", 
             "tags": [
                 "edit", 
-                "video"
+                "video", 
+                "after"
             ]
         }, 
         {

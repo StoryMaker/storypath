@@ -4,7 +4,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "audio"
+                "audio", 
+                "before"
             ]
         }, 
         {
@@ -31,7 +32,8 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "audio"
+                "audio", 
+                "during"
             ]
         }, 
         {
@@ -88,7 +90,8 @@
             "type": "TipCard", 
             "id": "tip_card_2", 
             "tags": [
-                "audio"
+                "audio", 
+                "during"
             ]
         }, 
         {
@@ -105,14 +108,21 @@
             "type": "TipCard", 
             "id": "tip_card_3", 
             "tags": [
-                "edit", 
-                "audio"
+                "audio", 
+                "after"
             ]
         }, 
         {
             "medium": "audio", 
             "type": "ReviewCard", 
             "id": "review_card_0"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_4", 
+            "tags": [
+                "narration"
+            ]
         }, 
         {
             "text": "--------", 

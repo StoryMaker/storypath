@@ -127,8 +127,7 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "after", 
-                "video"
+                "narration"
             ]
         }, 
         {

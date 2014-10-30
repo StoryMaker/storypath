@@ -7,6 +7,7 @@
             type: TipCard
             tags:
                 - video
+                - before
 
         - 
             type: ClipCard
@@ -149,6 +150,7 @@
             tags:
                 - edit
                 - video
+                - after
 
         - 
             type: ReviewCard
