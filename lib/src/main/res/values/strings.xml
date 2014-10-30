@@ -23,6 +23,14 @@
     <string name="menu_done">Done</string>
     <string name="clip_order">Clip order</string>
 
+    <!-- Record Narration Dialog -->
+    <string name="dialog_record">RECORD</string>
+    <string name="dialog_done">DONE</string>
+    <string name="dialog_pause">PAUSE</string>
+    <string name="dialog_resume">RESUME</string>
+    <string name="dialog_stop">STOP</string>
+    <string name="dialog_redo">REDO</string>
+
     <string-array name="clipcard_overflow">
         <item>Change Goal</item>
         <item>Duplicate Card</item>

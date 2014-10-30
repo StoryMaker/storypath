@@ -48,11 +48,11 @@
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:layout_alignParentRight="true"
-        android:text="RECORD"
+        android:text="@string/dialog_record"
         android:layout_below="@id/playbackProgress"/>
 
     <Button
-        android:id="@+id/pauseResumeDoneButton"
+        android:id="@+id/donePauseResumeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -61,7 +61,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:layout_toStartOf="@id/recordStopRedoButton"
-        android:text="DONE"
+        android:text="@string/dialog_done"
         android:layout_below="@id/playbackProgress"/>
 
 </RelativeLayout>
