@@ -8,7 +8,7 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_1"
+            "id": "clip_card_0"
         }, 
         {
             "medium": "video", 
@@ -18,7 +18,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_2"
+            "id": "clip_card_1"
         }, 
         {
             "medium": "video", 
@@ -28,7 +28,7 @@
             ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clip_card_3"
+            "id": "clip_card_2"
         }, 
         {
             "medium": "video", 
@@ -38,7 +38,7 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_4"
+            "id": "clip_card_3"
         }, 
         {
             "medium": "video", 
@@ -48,7 +48,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_5"
+            "id": "clip_card_4"
         }, 
         {
             "medium": "video", 
@@ -58,7 +58,7 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_6"
+            "id": "clip_card_5"
         }, 
         {
             "medium": "video", 
@@ -68,7 +68,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_7"
+            "id": "clip_card_6"
         }, 
         {
             "medium": "video", 
@@ -78,7 +78,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_8"
+            "id": "clip_card_7"
         }, 
         {
             "medium": "video", 
@@ -88,7 +88,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_9"
+            "id": "clip_card_8"
         }, 
         {
             "medium": "video", 
@@ -98,7 +98,7 @@
             ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clip_card_10"
+            "id": "clip_card_9"
         }, 
         {
             "medium": "video", 
@@ -108,7 +108,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_11"
+            "id": "clip_card_10"
         }, 
         {
             "medium": "video", 
@@ -118,7 +118,7 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_12"
+            "id": "clip_card_11"
         }, 
         {
             "medium": "video", 
@@ -128,7 +128,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_13"
+            "id": "clip_card_12"
         }, 
         {
             "medium": "video", 
@@ -138,7 +138,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_14"
+            "id": "clip_card_13"
         }, 
         {
             "medium": "video", 
@@ -148,11 +148,11 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_15"
+            "id": "clip_card_14"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
                 "edit", 
                 "video"
@@ -161,12 +161,12 @@
         {
             "medium": "video", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "--------", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "video", 
@@ -176,7 +176,7 @@
         {
             "medium": "video", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 

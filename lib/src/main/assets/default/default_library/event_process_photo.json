@@ -8,7 +8,7 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_1"
+            "id": "clip_card_0"
         }, 
         {
             "medium": "photo", 
@@ -18,11 +18,11 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_2"
+            "id": "clip_card_1"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
                 "portrait"
             ]
@@ -35,12 +35,12 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_3"
+            "id": "clip_card_2"
         }, 
         {
             "text": "Do not record every step. Just the significant steps to show the progression from beginning to end.", 
             "type": "TextCard", 
-            "id": "text_card_1"
+            "id": "text_card_0"
         }, 
         {
             "medium": "photo", 
@@ -50,12 +50,12 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_4"
+            "id": "clip_card_3"
         }, 
         {
             "text": "Be sure to get a variety of compositions when illustrating the process. Some wide shots, close-ups and medium shots.", 
             "type": "TextCard", 
-            "id": "text_card_2"
+            "id": "text_card_1"
         }, 
         {
             "medium": "photo", 
@@ -65,12 +65,12 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_5"
+            "id": "clip_card_4"
         }, 
         {
             "text": "If there are more than four steps involved, add more clip cards with the + button.", 
             "type": "TextCard", 
-            "id": "text_card_3"
+            "id": "text_card_2"
         }, 
         {
             "medium": "photo", 
@@ -80,7 +80,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_6"
+            "id": "clip_card_5"
         }, 
         {
             "medium": "photo", 
@@ -90,7 +90,7 @@
             ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clip_card_7"
+            "id": "clip_card_6"
         }, 
         {
             "medium": "photo", 
@@ -100,11 +100,11 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_8"
+            "id": "clip_card_7"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_2", 
+            "id": "tip_card_1", 
             "tags": [
                 "photo", 
                 "photo essay"
@@ -118,7 +118,7 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_9"
+            "id": "clip_card_8"
         }, 
         {
             "medium": "photo", 
@@ -128,11 +128,11 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_10"
+            "id": "clip_card_9"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_3", 
+            "id": "tip_card_2", 
             "tags": [
                 "edit", 
                 "photo"
@@ -141,12 +141,12 @@
         {
             "medium": "photo", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "--------", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "photo", 
@@ -156,7 +156,7 @@
         {
             "medium": "photo", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 

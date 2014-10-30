@@ -6,14 +6,14 @@
         - 
             type: TipCard
             tags:
-                - edit
                 - audio
+                - before
+
         - 
             type: ClipCard
             medium: audio
             goals: 
-                - Record sounds of where the event happens.
-                - Record sounds of a place important to the event.
+                - Record sounds of a place important to your character.
             clipType: Place
             length: 0:10
 
@@ -29,15 +29,17 @@
             type: ClipCard
             medium: audio
             goals: 
-                - Why is the event important?
-            clipType: Character
-            length: 0:30
+                - Record sounds of what your character does for a living.
+                - Record sounds of your character interacting with other people in his life.
+                - Record sounds of people discussing your character in a group.
+            clipType: Action
+            length: 0:20
 
         - 
             type: ClipCard
             medium: audio
             goals:  
-                - Why is the event important?
+                - "Ask: Why do you think this person is important?"
             clipType: Character
             length: 0:30
 
@@ -45,7 +47,7 @@
             type: ClipCard
             medium: audio
             goals: 
-                - Why is the event important?
+                - "Ask: Why do you think this person is important?"
             clipType: Character
             length: 0:30
 
@@ -53,7 +55,7 @@
             type: ClipCard
             medium: audio
             goals: 
-                - Why is the event important?
+                - "Ask: Why do you think this person is important?"
             clipType: Character
             length: 0:30
 
@@ -61,7 +63,7 @@
             type: ClipCard
             medium: audio
             goals: 
-                - Why is the event important?
+                - "Ask: Why do you think this person is important?"
             clipType: Character
             length: 0:30
 
@@ -69,7 +71,15 @@
             type: ClipCard
             medium: audio
             goals: 
-                - Record sounds of how the event ends.
+                - "Ask: Why do you think this person is important?"
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of the person's enviroment. 
             clipType: Place
             length: 0:09
 

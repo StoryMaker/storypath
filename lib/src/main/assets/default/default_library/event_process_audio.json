@@ -8,7 +8,7 @@
             ], 
             "clipType": "Place", 
             "type": "ClipCard", 
-            "id": "clip_card_1"
+            "id": "clip_card_0"
         }, 
         {
             "medium": "audio", 
@@ -20,7 +20,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_2"
+            "id": "clip_card_1"
         }, 
         {
             "medium": "audio", 
@@ -30,12 +30,12 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_3"
+            "id": "clip_card_2"
         }, 
         {
             "text": "Do not record every step. Just the significant steps to show the progression from beginning to end.", 
             "type": "TextCard", 
-            "id": "text_card_1"
+            "id": "text_card_0"
         }, 
         {
             "medium": "audio", 
@@ -45,7 +45,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_4"
+            "id": "clip_card_3"
         }, 
         {
             "medium": "audio", 
@@ -55,12 +55,12 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_5"
+            "id": "clip_card_4"
         }, 
         {
             "text": "If there are more than four steps involved, add more clip cards with the + button.", 
             "type": "TextCard", 
-            "id": "text_card_2"
+            "id": "text_card_1"
         }, 
         {
             "medium": "audio", 
@@ -70,7 +70,7 @@
             ], 
             "clipType": "Action", 
             "type": "ClipCard", 
-            "id": "clip_card_6"
+            "id": "clip_card_5"
         }, 
         {
             "medium": "audio", 
@@ -80,7 +80,7 @@
             ], 
             "clipType": "Signature", 
             "type": "ClipCard", 
-            "id": "clip_card_7"
+            "id": "clip_card_6"
         }, 
         {
             "medium": "audio", 
@@ -90,7 +90,7 @@
             ], 
             "clipType": "Character", 
             "type": "ClipCard", 
-            "id": "clip_card_8"
+            "id": "clip_card_7"
         }, 
         {
             "medium": "audio", 
@@ -100,7 +100,7 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_9"
+            "id": "clip_card_8"
         }, 
         {
             "medium": "audio", 
@@ -110,11 +110,11 @@
             ], 
             "clipType": "Result", 
             "type": "ClipCard", 
-            "id": "clip_card_10"
+            "id": "clip_card_9"
         }, 
         {
             "type": "TipCard", 
-            "id": "tip_card_1", 
+            "id": "tip_card_0", 
             "tags": [
                 "edit", 
                 "audio"
@@ -123,12 +123,12 @@
         {
             "medium": "audio", 
             "type": "ReviewCard", 
-            "id": "review_card_1"
+            "id": "review_card_0"
         }, 
         {
             "text": "--------", 
             "type": "EvaluationCard", 
-            "id": "evaluation_card_1"
+            "id": "evaluation_card_0"
         }, 
         {
             "medium": "audio", 
@@ -138,7 +138,7 @@
         {
             "medium": "audio", 
             "type": "NextUpCard", 
-            "id": "nextup_card_1"
+            "id": "nextup_card_0"
         }
     ], 
     "classPackage": "scal.io.liger.model", 
