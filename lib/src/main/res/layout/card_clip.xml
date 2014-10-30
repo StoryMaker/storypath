@@ -29,7 +29,7 @@
         style="@style/TextImage"
         android:id="@+id/itvClipTypeIcon"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/clipCandidates" />
+        android:layout_below="@id/clipCandidates"/>
 
     <TextView
         style="@style/p"
@@ -40,7 +40,7 @@
         android:layout_below="@id/clipCandidates"/>
 
     <Spinner
-        android:id="@+id/overflowSpinner"
+        android:id="@+id/spOverflow"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="@dimen/padding_small"
@@ -57,48 +57,27 @@
         <TextView
             style="@style/h2"
             android:id="@+id/tvBody"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_medium"
             android:paddingBottom="@dimen/padding_medium"/>
-
-        <IconTextView
-            style="@style/TextImage"
-            android:id="@+id/itvImport"
-            android:paddingTop="8dp"
-            android:layout_below="@+id/tvBody"
-            android:gravity="center_vertical"
-            android:text="{fa-ic_card_import}" />
 
         <TextView
             style="@style/p"
             android:id="@+id/tvImport"
-            android:paddingLeft="8dp"
-            android:layout_toEndOf="@+id/itvImport"
-            android:layout_alignTop="@id/itvImport"
-            android:layout_alignBottom="@id/itvImport"
+            android:layout_below="@+id/tvBody"
             android:gravity="center_vertical"
+            android:paddingBottom="@dimen/padding_xsmall"
             android:text="@string/lbl_import"
-            android:textColor="@color/storymaker_highlight"/>
-
-        <IconTextView
-            style="@style/TextImage"
-            android:id="@+id/itvCapture"
-            android:paddingTop="8dp"
-            android:gravity="center_vertical"
-            android:layout_below="@+id/itvImport"
-            android:text="{fa-ic_card_capture_photo}" />
+            android:textColor="@color/storymaker_highlight"
+            android:drawablePadding="@dimen/padding_xsmall"/>
 
         <TextView
             style="@style/p"
             android:id="@+id/tvCapture"
-            android:paddingLeft="8dp"
-            android:layout_toEndOf="@+id/itvCapture"
-            android:layout_alignTop="@id/itvCapture"
-            android:layout_alignBottom="@id/itvCapture"
+            android:layout_below="@+id/tvImport"
             android:gravity="center_vertical"
             android:text="@string/lbl_capture"
-            android:textColor="@color/storymaker_highlight"/>
+            android:textColor="@color/storymaker_highlight"
+            android:drawablePadding="@dimen/padding_xsmall"/>
 
     </RelativeLayout>
 </RelativeLayout>
