@@ -92,8 +92,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         itvClipTypeIcon = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
         TextView tvHeader  = (TextView) view.findViewById(R.id.tvHeader);
         TextView tvBody    = (TextView) view.findViewById(R.id.tvBody);
-        Spinner spinner      = (Spinner) view.findViewById(R.id.overflowSpinner);
-        IconTextView itvCapture = (IconTextView) view.findViewById(R.id.itvCapture);
+        TextView tvImport = (TextView) view.findViewById(R.id.tvImport);
+        TextView tvCapture = (TextView) view.findViewById(R.id.tvCapture);
+        Spinner spOverflow = (Spinner) view.findViewById(R.id.spOverflow);
 
         /** Capture Media Button Click Listener */
         View.OnClickListener captureClickListener = new View.OnClickListener() {
@@ -124,11 +125,23 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             }
         };
 
-        // Set the capture click listener on icon and text label
-        itvCapture.setOnClickListener(captureClickListener);
-        view.findViewById(R.id.tvCapture).setOnClickListener(captureClickListener);
+        // Set click listeners for actions
+        tvCapture.setOnClickListener(captureClickListener);
+        //tvImport.setOnClickListener(); TODO import
 
-        setupSpinner(spinner);
+
+        //set drawables for actions
+        Drawable drwImport = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_import).colorRes(R.color.storymaker_highlight);
+        drwImport.setBounds(0, 0, 48, 48);
+        tvImport.setCompoundDrawables(drwImport, null, null, null);
+
+        Drawable drwCapture = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_capture_photo).colorRes(R.color.storymaker_highlight);
+        drwCapture.setBounds(0, 0, 48, 48);
+        tvCapture.setCompoundDrawables( drwCapture, null, null, null);
+
+        //a-ic_card_capture_photo
+
+        setupSpinner(spOverflow);
 
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
