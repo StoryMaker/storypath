@@ -35,7 +35,7 @@ import static java.lang.String.valueOf;
 
 public final class Iconify {
 
-    private static final String TTF_FILE = "fc_storymaker_1.0.ttf";
+    private static final String TTF_FILE = "fc_storymaker.ttf";
 
     public static final String TAG = Iconify.class.getSimpleName();
 
