@@ -4,7 +4,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "audio"
+                "audio", 
+                "before"
             ]
         }, 
         {
@@ -92,8 +93,8 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "edit", 
-                "audio"
+                "audio", 
+                "after"
             ]
         }, 
         {

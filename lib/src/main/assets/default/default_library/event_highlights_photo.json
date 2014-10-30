@@ -4,7 +4,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "photo"
+                "photo", 
+                "before"
             ]
         }, 
         {
@@ -32,7 +33,8 @@
             "id": "tip_card_1", 
             "tags": [
                 "photo", 
-                "photo essay"
+                "photo essay", 
+                "during"
             ]
         }, 
         {
@@ -89,7 +91,8 @@
             "type": "TipCard", 
             "id": "tip_card_2", 
             "tags": [
-                "portraits"
+                "portraits", 
+                "during"
             ]
         }, 
         {
@@ -107,13 +110,21 @@
             "id": "tip_card_3", 
             "tags": [
                 "edit", 
-                "photo"
+                "photo", 
+                "after"
             ]
         }, 
         {
             "medium": "photo", 
             "type": "ReviewCard", 
             "id": "review_card_0"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_4", 
+            "tags": [
+                "narration"
+            ]
         }, 
         {
             "text": "--------", 

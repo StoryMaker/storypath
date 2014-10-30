@@ -39,7 +39,8 @@
             "type": "TipCard", 
             "id": "tip_card_0", 
             "tags": [
-                "series"
+                "series", 
+                "during"
             ]
         }, 
         {
@@ -67,7 +68,8 @@
             "id": "tip_card_1", 
             "tags": [
                 "edit", 
-                "photo"
+                "photo", 
+                "during"
             ]
         }, 
         {

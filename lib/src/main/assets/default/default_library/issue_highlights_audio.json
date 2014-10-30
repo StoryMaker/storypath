@@ -32,7 +32,8 @@
             "type": "TipCard", 
             "id": "tip_card_1", 
             "tags": [
-                "audio"
+                "audio", 
+                "during"
             ]
         }, 
         {
@@ -69,7 +70,8 @@
             "type": "TipCard", 
             "id": "tip_card_2", 
             "tags": [
-                "audio"
+                "audio", 
+                "during"
             ]
         }, 
         {
@@ -113,13 +115,21 @@
             "id": "tip_card_3", 
             "tags": [
                 "edit", 
-                "audio"
+                "audio", 
+                "during"
             ]
         }, 
         {
             "medium": "audio", 
             "type": "ReviewCard", 
             "id": "review_card_0"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_4", 
+            "tags": [
+                "narration"
+            ]
         }, 
         {
             "text": "--------", 
