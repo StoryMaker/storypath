@@ -240,33 +240,22 @@ public class ZipResourceFile {
      * @throws IOException
      */
     public InputStream getInputStream(String assetPath) throws IOException {
-
-        for (String s : mHashMap.keySet()) {
-            Log.d("GOOGLE", "HASH KEY - " + s);
-        }
-
         ZipEntryRO entry = mHashMap.get(assetPath);
         if (null != entry) {
             if (entry.isUncompressed()) {
-                Log.d("GOOGLE", "UNCOMPRESSED");
                 return entry.getAssetFileDescriptor().createInputStream();
             } else {
-                Log.d("GOOGLE", "COMPRESSED");
                 ZipFile zf = mZipFiles.get(entry.getZipFile());
                 /** read compressed files **/
                 if (null == zf) {
-                    Log.d("GOOGLE", "ZIP FILE");
                     zf = new ZipFile(entry.getZipFile(), ZipFile.OPEN_READ);
                     mZipFiles.put(entry.getZipFile(), zf);
                 }
                 ZipEntry zi = zf.getEntry(assetPath);
                 if (null != zi) {
-                    Log.d("GOOGLE", "ZIP ENTRY");
                     return zf.getInputStream(zi);
                 }
             }
-        } else {
-            Log.d("GOOGLE", "NULL ENTRY");
         }
         return null;
     }

@@ -31,23 +31,18 @@ public class APKExpansionSupport {
 
 	static String[] getAPKExpansionFiles(Context ctx, int mainVersion, int patchVersion) {
 		String packageName = ctx.getPackageName();
-        Log.d("GOOGLE", "PACKAGE: " + packageName);
 		Vector<String> ret = new Vector<String>();
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-            Log.d("GOOGLE", "MOUNTED");
 			// Build the full path to the app's expansion files
 			File root = Environment.getExternalStorageDirectory();
 			File expPath = new File(root.toString() + EXP_PATH + packageName);
-            Log.d("GOOGLE", "PATH: " + expPath.getPath());
 
 			// Check that expansion file path exists
 			if (expPath.exists()) {
-                Log.d("GOOGLE", "EXISTS");
 				if ( mainVersion > 0 ) {
 					String strMainPath = expPath + File.separator + "main." + mainVersion + "." + packageName + ".obb";
 					File main = new File(strMainPath);
-                    Log.d("GOOGLE", "MAIN: " + main.getPath());
 					if ( main.isFile() ) {
 						ret.add(strMainPath);
 					}
@@ -59,12 +54,8 @@ public class APKExpansionSupport {
 						ret.add(strPatchPath);
 					}
 				}
-			} else {
-                Log.d("GOOGLE", "DOESN'T EXIST");
-            }
-		} else {
-            Log.d("GOOGLE", "NOT MOUNTED");
-        }
+			}
+		}
 		String[] retArray = new String[ret.size()];
 		ret.toArray(retArray);
 		return retArray;
