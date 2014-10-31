@@ -37,6 +37,15 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     StoryPathLibrary mStoryPathLibrary;
     //Story mStory;
     CardAdapter mCardAdapter = null;
+    String language = null;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +76,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             JsonHelper.setupFileStructure(this);
             MediaHelper.setupFileStructure(this);
+
+            Intent i = getIntent();
+            if (i.hasExtra("lang")) {
+                language = i.getExtras().getString("lang");
+                Log.d("LANGUAGE", "Found language code " + language + " in intent");
+            } else {
+                Log.d("LANGUAGE", "Found no code in intent (setting to test)");
+            }
 
             /*
             Intent i = getIntent();
@@ -157,7 +174,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // TEMP - unsure how to best determine new story vs. existing story
 
                     //String json = JsonHelper.loadJSON();
-                    String json = JsonHelper.loadJSONFromZip(MainActivity.this);
+                    String json = JsonHelper.loadJSONFromZip(MainActivity.this, language);
 
                     Log.d("GOOGLE", "JSON: " + json);
 
@@ -453,10 +470,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 if (dependency.getDependencyId().equals(pathParts[0])) {
 
                     // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
-                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, this);
+                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, this, language);
                     newStoryPath = true;
 
-                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this);
+                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this, language);
 
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibrary(storyPathLibrary);

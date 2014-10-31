@@ -32,9 +32,9 @@ public class JsonHelper {
     private static ArrayList<String> jsonPathList = null;
     private static String sdLigerFilePath = null;
 
-    private static String language = null; // TEMP
+    //private static String language = null; // TEMP
 
-    public static String loadJSONFromPath(String jsonPath) {
+    public static String loadJSONFromPath(String jsonPath, String language) {
 
         String jsonString = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -77,11 +77,11 @@ public class JsonHelper {
         return jsonString;
     }
 
-    public static String loadJSON() {
-        return loadJSON(selectedJSONFile);
+    public static String loadJSON(String language) {
+        return loadJSON(selectedJSONFile, language);
     }
 
-    public static String loadJSON(File file) {
+    public static String loadJSON(File file, String language) {
         if(null == file) {
             return null;
         }
@@ -128,11 +128,11 @@ public class JsonHelper {
 
     // NEW
 
-    public static String loadJSONFromZip(Context context) {
-        return loadJSONFromZip(selectedJSONPath, context);
+    public static String loadJSONFromZip(Context context, String language) {
+        return loadJSONFromZip(selectedJSONPath, context, language);
     }
 
-    public static String loadJSONFromZip(String jsonFilePath, Context context) {
+    public static String loadJSONFromZip(String jsonFilePath, Context context, String language) {
 
         Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
 
@@ -369,7 +369,7 @@ public class JsonHelper {
         }
     }
 
-    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, Context context) {
+    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -418,7 +418,7 @@ public class JsonHelper {
 
     // NEW
 
-    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, Context context) {
+    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, Context context, String language) {
 
         Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
 
@@ -537,7 +537,7 @@ public class JsonHelper {
         return storyPathLibraryJson;
     }
 
-    public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
+    public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
 
@@ -585,7 +585,7 @@ public class JsonHelper {
 
     // NEW
 
-    public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
+    public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context, String language) {
 
         Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
 

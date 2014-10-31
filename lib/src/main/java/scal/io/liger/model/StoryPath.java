@@ -314,9 +314,11 @@ public class StoryPath {
                 //gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
                 //Gson gson = gBuild.create();
 
+                MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+
                 //String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
                 //story = gson.fromJson(json, StoryPath.class);
-                story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, this.context);
+                story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, this.context, mainActivity.getLanguage());
 
                 //story.context = this.context;
                 //story.setCardReferences();

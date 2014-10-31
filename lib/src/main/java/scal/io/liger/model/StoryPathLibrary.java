@@ -207,7 +207,7 @@ public class StoryPathLibrary extends StoryPath {
 
             //try {
 
-                StoryPath story = JsonHelper.loadStoryPathFromZip(buildPath(storyPathTemplateFile), this, context);
+                StoryPath story = JsonHelper.loadStoryPathFromZip(buildPath(storyPathTemplateFile), this, context, mainActivity.getLanguage());
                 setCurrentStoryPath(story);
 
                 mainActivity.refreshCardList();
