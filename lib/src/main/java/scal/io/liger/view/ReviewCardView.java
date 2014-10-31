@@ -60,7 +60,6 @@ public class ReviewCardView implements DisplayableCard {
     private ReviewCard mCardModel;
     private Context mContext;
     private String mMedium;
-    private boolean mHasMediaFiles;
 
     /** Current Narration State. To change use
      * {@link #changeRecordNarrationStateChanged(scal.io.liger.view.ReviewCardView.RecordNarrationState)}
@@ -143,7 +142,7 @@ public class ReviewCardView implements DisplayableCard {
                 case Constants.VIDEO:
                     ivCardPhoto.setVisibility(View.GONE);
                     tvCardVideo.setVisibility(View.VISIBLE);
-                    tvCardVideo.setSurfaceTextureListener(new VideoSurfaceTextureListener(tvCardVideo, mMediaCards, ivCardPhoto));
+                    tvCardVideo.setSurfaceTextureListener(new VideoWithNarrationSurfaceTextureListener(tvCardVideo, mMediaCards, ivCardPhoto));
                     break;
                 case Constants.AUDIO:
                     // TODO
@@ -162,33 +161,6 @@ public class ReviewCardView implements DisplayableCard {
         return view;
     }
 
-
-    /**
-     * @return whether a clip exists in {@link #mMediaCards} after the position of {@link #mCurrentlyPlayingClipCard}
-     */
-    private boolean hasUnplayedMediaFiles() {
-        return (mMediaCards.indexOf(mCurrentlyPlayingClipCard) < (mMediaCards.size() - 1));
-    }
-
-    /**
-     * @return the MediaFile corresponding to the next unplayed ClipCard in {@link #mMediaCards} or
-     * null if no more ClipCards remain.
-     *
-     * see {@link #hasUnplayedMediaFiles()}
-     */
-    private MediaFile getNextMediaFile() {
-        if (!hasUnplayedMediaFiles()) return null;
-        int currentClipIdx = mMediaCards.indexOf(mCurrentlyPlayingClipCard);
-        return ((ClipCard) mMediaCards.get(++currentClipIdx)).getSelectedMediaFile();
-    }
-
-    /**
-     * @return the MediaFile corresponding to the currently playing ClipCard in {@link #mMediaCards}
-     */
-    private MediaFile getCurrentMediaFile() {
-        return mCurrentlyPlayingClipCard.getSelectedMediaFile();
-    }
-
     /**
      * Initializes the value of {@link #mMediaCards} to a List of ClipCards with attached media
      * within the current StoryPath
@@ -198,6 +170,7 @@ public class ReviewCardView implements DisplayableCard {
         Iterator iterator = mediaCards.iterator();
         while (iterator.hasNext()) {
             ClipCard clipCard = (ClipCard) iterator.next();
+            mMedium = clipCard.getMedium();
             if ( clipCard.getClips() == null || clipCard.getClips().size() < 1 ) {
                 iterator.remove();
             }
@@ -206,20 +179,6 @@ public class ReviewCardView implements DisplayableCard {
     }
 
     /** Record Narration Dialog */
-
-    /** The ClipCard currently being played by the dialog
-     * created by {@link #showClipNarrationDialog()}
-     * TODO We should probably isolate the ClipNarrationDialog and all its members
-    */
-    ClipCard mCurrentlyPlayingClipCard;
-
-    /** For playback of clip collection */
-    MediaPlayer mClipCollectionPlayer;
-    /** For playback of narration */
-    MediaPlayer mNarrationPlayer;
-
-    /** The Surface created by the TextureView onto which we'll play video */
-    Surface mSurface;
 
     /** Collection of ClipCards with attached media within the current StoryPath. */
     ArrayList<Card> mMediaCards;
@@ -249,101 +208,19 @@ public class ReviewCardView implements DisplayableCard {
         mRecordStopRedoBtn              = (Button) v.findViewById(R.id.recordStopRedoButton);
 
         /** Media player and media */
-        mClipCollectionPlayer = new MediaPlayer();
-        mCurrentlyPlayingClipCard = (ClipCard) mMediaCards.get(0);
         final AtomicInteger clipCollectionDuration = new AtomicInteger();
 
         /** SeekBar value varies from 0 to seekBarMax */
         final int seekBarMax = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
 
-        Log.i(TAG, String.format("Showing clip trim dialog with initial start: %d stop: %d", mCurrentlyPlayingClipCard.getSelectedClip().getStartTime(), mCurrentlyPlayingClipCard.getSelectedClip().getStopTime()));
-
         /** Configure views for initial state */
         changeRecordNarrationStateChanged(RecordNarrationState.READY);
-
-//        View.OnClickListener playVideoToggleClickListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mClipCollectionPlayer.isPlaying()) {
-//                    pauseClipCollectionPlaybackWithNarration();
-//                } else {
-//                    startClipCollectionPlaybackWithNarration();
-//                    if(thumbnailView.getVisibility() == View.VISIBLE) {
-//                        thumbnailView.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-//        };
-//        videoView.setOnClickListener(playVideoToggleClickListener);
-//        thumbnailView.setOnClickListener(playVideoToggleClickListener);
 
         final VideoWithNarrationSurfaceTextureListener surfaceListener = new VideoWithNarrationSurfaceTextureListener(videoView, mMediaCards, thumbnailView);
         videoView.setSurfaceTextureListener(surfaceListener);
         surfaceListener.setPlaybackProgressSeekBar(playbackBar);
 
         clipLength.setText("Total: " + Util.makeTimeString(surfaceListener.getTotalClipCollectionDuration()));
-
-//        videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-//            @Override
-//            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-//                mSurface = new Surface(surface);
-//
-//                setThumbnailForClip(thumbnailView, mCurrentlyPlayingClipCard);
-//
-//                final Uri video = Uri.parse(mCurrentlyPlayingClipCard.getSelectedMediaFile().getPath());
-//                try {
-//                    mClipCollectionPlayer.setDataSource(mContext, video);
-//                    mClipCollectionPlayer.setSurface(mSurface);
-//                    mClipCollectionPlayer.prepareAsync();
-//                    mClipCollectionPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-//                    mClipCollectionPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                        @Override
-//                        public void onPrepared(MediaPlayer mp) {
-//                            mClipCollectionPlayer.seekTo(mCurrentlyPlayingClipCard.getSelectedClip().getStartTime());
-//
-//                            int currentClipIdx = mMediaCards.indexOf(mCurrentlyPlayingClipCard);
-//                            if (currentClipIdx == 0) {
-//                                Log.i(TAG, "prepared finished for first clip");
-//                                // This is the first clip
-//                                // Setup initial views requiring knowledge of clip media
-//                                if (mCurrentlyPlayingClipCard.getSelectedClip().getStopTime() == 0)
-//                                    mCurrentlyPlayingClipCard.getSelectedClip().setStopTime(mClipCollectionPlayer.getDuration());
-//                                mClipCollectionPlayer.seekTo(mCurrentlyPlayingClipCard.getSelectedClip().getStartTime());
-//                                if (clipCollectionDuration.get() == 0)
-//                                    clipCollectionDuration.set(calculateTotalClipCollectionLengthMs(mMediaCards));
-//
-//                                clipLength.setText("Total : " + Util.makeTimeString(clipCollectionDuration.get()));
-//                            } else {
-//                                Log.i(TAG, "Auto starting subsequent clip");
-//                                // automatically begin playing subsequent clips
-//                                mClipCollectionPlayer.start();
-//                            }
-//                        }
-//                    });
-//                    /** MediaPlayer for narration recording */
-//                    mClipCollectionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                        @Override
-//                        public void onCompletion(MediaPlayer mp) {
-//                            advanceToNextClip(mp);
-//                        }
-//                    });
-//                } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) { /* do nothing */}
-//
-//            @Override
-//            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSurfaceTextureUpdated(SurfaceTexture surface) { /* do nothing */}
-//
-//        });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(v);
@@ -352,8 +229,6 @@ public class ReviewCardView implements DisplayableCard {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 Log.i(TAG, "Narrate Dialog Dismissed. Cleaning up");
-//                stopCollectionPlaybackWithNarration();
-//                releaseMediaPlayers();
                 releaseMediaRecorder();
             }
         });
@@ -562,57 +437,6 @@ public class ReviewCardView implements DisplayableCard {
         }
     }
 
-    /**
-     * Start playing back the complete collection of Clips, also playing
-     * the attached audio narration if present.
-     */
-    private void startClipCollectionPlaybackWithNarration() {
-        if (mCardModel.getSelectedNarrationFile() != null) {
-            mNarrationPlayer = MediaPlayer.create(mContext, Uri.parse("file:///" + mCardModel.getSelectedNarrationFile().getPath()));
-            Log.i(TAG, "Attempting to set narration source " + mCardModel.getSelectedNarrationFile().getPath());
-            Log.i(TAG, "File exists: " + new File(mCardModel.getSelectedNarrationFile().getPath()).exists());
-            //mNarrationPlayer.setDataSource(mCardModel.getSelectedNarrationFile().getPath());
-            //mNarrationPlayer.prepare();
-            mNarrationPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    Log.i(TAG, String.format("narration player error what: %d extra %d ", what, extra));
-                    return false;
-                }
-            });
-            mNarrationPlayer.start();
-            mNarrationPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    Log.i(TAG, "narrate player completed");
-                    mNarrationPlayer.release();
-                }
-            });
-        }
-        mClipCollectionPlayer.start();
-    }
-
-    private void pauseClipCollectionPlaybackWithNarration() {
-        if (mNarrationPlayer.isPlaying())      mNarrationPlayer.pause();
-        if (mClipCollectionPlayer.isPlaying()) mClipCollectionPlayer.pause();
-    }
-
-    private void stopCollectionPlaybackWithNarration() {
-        if (mNarrationPlayer.isPlaying()) {
-            mNarrationPlayer.stop();
-            mNarrationPlayer.reset();
-        }
-
-        if (mClipCollectionPlayer.isPlaying()) {
-            mClipCollectionPlayer.stop();
-            mClipCollectionPlayer.reset();
-        }
-    }
-
-    private void releaseMediaPlayers() {
-        if (mNarrationPlayer != null) mNarrationPlayer.release();
-        if (mClipCollectionPlayer != null) mClipCollectionPlayer.release();
-    }
 
     /** A convenience SurfaceTextureListener to configure a TextureView for video playback of a Collection
      * of ClipCards. Note the constructor argument is a list of Cards due to the nature of {@link scal.io.liger.model.StoryPath#gatherCards(String)}
