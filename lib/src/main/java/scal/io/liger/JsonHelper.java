@@ -32,7 +32,7 @@ public class JsonHelper {
     private static ArrayList<String> jsonPathList = null;
     private static String sdLigerFilePath = null;
 
-    private static String language = "de"; // TEMP
+    private static String language = null; // TEMP
 
     public static String loadJSONFromPath(String jsonPath) {
 
