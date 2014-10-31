@@ -115,13 +115,21 @@
             "id": "tip_card_0", 
             "tags": [
                 "edit", 
-                "video"
+                "video", 
+                "after"
             ]
         }, 
         {
             "medium": "video", 
             "type": "ReviewCard", 
             "id": "review_card_0"
+        }, 
+        {
+            "type": "TipCard", 
+            "id": "tip_card_1", 
+            "tags": [
+                "narration"
+            ]
         }, 
         {
             "text": "--------", 
