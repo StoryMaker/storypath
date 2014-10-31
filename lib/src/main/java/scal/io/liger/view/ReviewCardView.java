@@ -90,14 +90,14 @@ public class ReviewCardView implements DisplayableCard {
     }
 
     @Override
-    public View getCardView(Context context) {
+    public View getCardView(final Context context) {
         Log.d("RevieCardView", "getCardView");
         if (mCardModel == null) {
             return null;
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_review, null);
-        final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_card_photo));
+        final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_thumbnail));
         final TextureView tvCardVideo = ((TextureView) view.findViewById(R.id.tv_card_video));
 
         Button btnJumble = ((Button) view.findViewById(R.id.btn_jumble));
@@ -115,15 +115,21 @@ public class ReviewCardView implements DisplayableCard {
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getClipCardsWithAttachedMedia();
-                Util.showOrderMediaPopup((Activity) mContext, mMedium, mMediaCards);
+                if (mMediaCards.size() > 0)
+                    Util.showOrderMediaPopup((Activity) mContext, mMedium, mMediaCards);
+                else
+                    Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_reordering), Toast.LENGTH_SHORT).show();
             }
         });
 
         btnNarrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showClipNarrationDialog();
+
+                if (mMediaCards.size() > 0)
+                    showClipNarrationDialog();
+                else
+                    Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_narrating), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -140,7 +146,8 @@ public class ReviewCardView implements DisplayableCard {
         if (mMediaCards.size() > 0) {
             switch (((ClipCard) mMediaCards.get(0)).getMedium()) {
                 case Constants.VIDEO:
-                    ivCardPhoto.setVisibility(View.GONE);
+                    setThumbnailForClip(ivCardPhoto, (ClipCard) mMediaCards.get(0));
+                    ivCardPhoto.setVisibility(View.VISIBLE);
                     tvCardVideo.setVisibility(View.VISIBLE);
                     tvCardVideo.setSurfaceTextureListener(new VideoWithNarrationSurfaceTextureListener(tvCardVideo, mMediaCards, ivCardPhoto));
                     break;
@@ -207,12 +214,6 @@ public class ReviewCardView implements DisplayableCard {
         mDonePauseResumeBtn             = (Button) v.findViewById(R.id.donePauseResumeButton);
         mRecordStopRedoBtn              = (Button) v.findViewById(R.id.recordStopRedoButton);
 
-        /** Media player and media */
-        final AtomicInteger clipCollectionDuration = new AtomicInteger();
-
-        /** SeekBar value varies from 0 to seekBarMax */
-        final int seekBarMax = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
-
         /** Configure views for initial state */
         changeRecordNarrationStateChanged(RecordNarrationState.READY);
 
@@ -270,6 +271,7 @@ public class ReviewCardView implements DisplayableCard {
                         if(thumbnailView.getVisibility() == View.VISIBLE) {
                             thumbnailView.setVisibility(View.GONE);
                         }
+                        surfaceListener.stopPlayback();
                         changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
 
                         startRecordingNarration();
@@ -278,6 +280,7 @@ public class ReviewCardView implements DisplayableCard {
                     case RECORDING:
                     case PAUSED:
                         // Stop Button
+                        surfaceListener.stopPlayback();
                         stopRecordingNarration();
                         changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
                         break;
@@ -285,8 +288,10 @@ public class ReviewCardView implements DisplayableCard {
                         // Redo Button
                         // TODO Show recording countdown first
                         // TODO reset player to first clip
+                        surfaceListener.stopPlayback();
                         startRecordingNarration();
                         changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
+                        surfaceListener.startPlayback(); // Make sure to call this after changing state to RECORDING
                         break;
                 }
             }
@@ -489,7 +494,8 @@ public class ReviewCardView implements DisplayableCard {
         private void init() {
             // Setup views
             currentlyPlayingCard = (ClipCard) mediaCards.get(0);
-            setThumbnailForClip(ivThumbnail, currentlyPlayingCard);
+            // TODO : Blank clip placeholder
+            //setThumbnailForClip(ivThumbnail, currentlyPlayingCard); TextureView should show thumbnail
             ivThumbnail.setOnClickListener(getVideoPlaybackToggleClickListener());
             tvVideo.setOnClickListener(getVideoPlaybackToggleClickListener());
 
@@ -691,16 +697,25 @@ public class ReviewCardView implements DisplayableCard {
         @Override
         protected View.OnClickListener getVideoPlaybackToggleClickListener() {
             return new View.OnClickListener() {
+
+                boolean paused = false;
+
                 @Override
                 public void onClick(View v) {
                     if (mediaPlayer == null) return;
 
                     if (mediaPlayer.isPlaying()) {
-                        stopPlayback();
+                        pausePlayback();
+                        paused = true;
+                    }
+                    else if (paused){
+                        // paused
+                        resumePlayback();
+                        paused = false;
                     }
                     else {
+                        // stopped
                         startPlayback();
-
                     }
                 }
             };
@@ -739,16 +754,37 @@ public class ReviewCardView implements DisplayableCard {
             }
         }
 
+        private void pausePlayback() {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            }
+
+            if (narrationPlayer != null && narrationPlayer.isPlaying()) {
+                narrationPlayer.pause();
+            }
+        }
+
+        private void resumePlayback() {
+            if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+            }
+
+            if (narrationPlayer != null && !narrationPlayer.isPlaying()) {
+                narrationPlayer.start();
+            }
+        }
+
         private void stopPlayback() {
-            if (mediaPlayer.isPlaying()) {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
                 mediaPlayer.reset();
             }
 
-            if (narrationPlayer.isPlaying()) {
+            if (narrationPlayer != null && narrationPlayer.isPlaying()) {
                 narrationPlayer.stop();
                 narrationPlayer.reset();
             }
+            currentlyPlayingCard = (ClipCard) mediaCards.get(0);
         }
 
         private void release() {
