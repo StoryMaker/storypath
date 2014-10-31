@@ -408,14 +408,17 @@ Here are the steps to creating/editing icons:
     private static final String TTF_FILE = "YOUR_FILE_NAME.ttf";
     ```
   * Still in "Iconify.java", change 'IconValue' variable to include your font names and unicode values
-    
+
     ```java
     public static enum IconValue {
         fa_clip_ex_action('\uf145'),
         fa_clip_ex_character('\uf146');
     }
     ```
-    *Note: Your enum keys* **must** *begin with "fa"*
+    *[Here](https://gist.github.com/micahjlucas/e877ade5761c98d6e9b7) is a small script to help quicken the process of converting the generated "fontcustom.css" to a usable Enum list in "Iconify.java"*
+    
+    **Note:** Your enum keys *must* begin with *"fa"*
+    
 4. You are now ready to use your new icons
   
     ```xml

@@ -1,0 +1,108 @@
+---
+    id: issue_discussion_audio_question9
+    title: Issue Discussion - Solving
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals:
+                - Record something that introduces the issue.
+                - Capture a clear sound that represents the issue.
+            clipType: Signature
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Capture people affected by the issue talking.
+                - Record the sounds of where the issue happens.
+            clipType: Place
+            length: 0:09
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What do you think should be done about the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What do you think should be done about the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Capture important sounds of a place important to the event.
+                - Record sounds of where the issue occurs.
+            clipType: Action
+            length: 0:09
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What do you think should be done about the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What do you think should be done about the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What do you think should be done about the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Show a place important to the issue.
+            clipType: Place
+            length: 0:09
+
+        - 
+            type: TipCard
+            tags:
+              - edit
+              - audio
+              - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: EvaluationCard
+            text: Does your story offer good ideas about how to handle the issue?
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio 

@@ -1,0 +1,19 @@
+{
+  "profile_report_audio::clip_card_1::goals[0]": "Use your own voice or ask your character to introduce themself.", 
+  "profile_report_audio::clip_card_12::goals[0]": "Ask: Can you please tell us about your future?", 
+  "profile_report_audio::clip_card_4::goals[0]": "Record sound of your character completing the action.", 
+  "profile_report_audio::clip_card_11::goals[0]": "Record sound of something important to the character.", 
+  "profile_report_audio::clip_card_10::goals[0]": "Record sounds of what your character does for fun.", 
+  "profile_report_audio::clip_card_0::goals[0]": "Record sounds of a place important to your character.", 
+  "profile_report_audio::clip_card_9::goals[0]": "Record sounds of how people respond to the character.", 
+  "profile_report_audio::clip_card_13::goals[0]": "Tell us yourself what you think will happen next to your character.", 
+  "profile_report_audio::clip_card_7::goals[0]": "Record sounds of the most important thing about your character\u2019s story.", 
+  "profile_report_audio::clip_card_8::goals[0]": "Record sound of your character interacting with other people.", 
+  "profile_report_audio::clip_card_14::goals[0]": "Record sounds of where your character ends the story.", 
+  "profile_report_audio::clip_card_3::goals[0]": "Record sounds of something your character does that\u2019s significant.", 
+  "profile_report_audio::clip_card_6::goals[0]": "Ask: Can you please tell us a little about what you do?", 
+  "profile_report_audio::evaluation_card_0::text": "--------", 
+  "profile_report_audio::clip_card_2::goals[0]": "Record sound of something notable about your character.", 
+  "profile_report_audio::clip_card_15::goals[0]": "Record sound of your character at the end of the story.", 
+  "profile_report_audio::clip_card_5::goals[0]": "Tell us why your character is interesting."
+}

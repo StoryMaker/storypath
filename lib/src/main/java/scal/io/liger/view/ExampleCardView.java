@@ -68,7 +68,7 @@ public class ExampleCardView implements DisplayableCard{
 
                 //set up image as preview
                 //Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
-                Bitmap videoFrame = mCardModel.getExampleMediaFile().getThumbnail();
+                Bitmap videoFrame = mCardModel.getExampleMediaFile().getExampleThumbnail(mCardModel);
                 if(null != videoFrame) {
                     ivCardPhoto.setImageBitmap(videoFrame);
                 }
@@ -79,7 +79,9 @@ public class ExampleCardView implements DisplayableCard{
                     @Override
                     public void onClick(View v) {
                         //Uri video = Uri.parse(mediaFile.getPath());
-                        Uri video = Uri.parse(mCardModel.getExampleMediaFile().getPath());
+
+                        // need to extract video to a temp file before playing
+                        Uri video = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
                         vvCardVideo.setVideoURI(video);
                         vvCardVideo.seekTo(5);
                         vvCardVideo.setMediaController(null);
@@ -101,12 +103,12 @@ public class ExampleCardView implements DisplayableCard{
                 });
             } else if (medium.equals(Constants.PHOTO)) {
                 //Uri uri = Uri.parse(mediaFile.getPath());
-                Uri uri = Uri.parse(mCardModel.getExampleMediaFile().getPath());
+                Uri uri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
                 ivCardPhoto.setImageURI(uri);
                 ivCardPhoto.setVisibility(View.VISIBLE);
             } else if (medium.equals(Constants.AUDIO)) {
                 //Uri myUri = Uri.parse(mediaFile.getPath());
-                Uri myUri = Uri.parse(mCardModel.getExampleMediaFile().getPath());
+                Uri myUri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
                 final MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 

@@ -1,0 +1,121 @@
+---
+    id: profile_highlights_photo
+    title: Profile Highlights
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+                - before
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show a wide shot of the entire location itself. 
+                - Show your character arriving to the location.
+            clipType: Place
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - photo
+                - photo essay
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph the people who know and are interested in your character. 
+                - Photograph other people reacting to your characters actions.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - portrait
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Capture your character at a dramatic moment in their story, should sum up the story.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph the most important moment that illustrates your character during their story.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph another important but different moment your character experiences during their story.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph a very different moment from before your character experiences during their story.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TextCard
+            text: If there are more than three important moments, you should add clips to include them.
+
+        - 
+            type: TipCard
+            tags:
+                - photo
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph your character interacting with people important to them.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph your character as the stories climax, or the dramatic finish occurs.
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

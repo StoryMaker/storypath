@@ -1,0 +1,338 @@
+[main]
+host = https://www.transifex.com
+
+[storymaker.default_library]
+file_filter = default_library/translated_strings/default_library-<lang>.json
+source_file = default_library/strings/default_library.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_audio_question_1]
+file_filter = default_library/translated_strings/event_discussion_audio_question_1-<lang>.json
+source_file = default_library/strings/event_discussion_audio_question_1.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_audio_question_2]
+file_filter = default_library/translated_strings/event_discussion_audio_question_2-<lang>.json
+source_file = default_library/strings/event_discussion_audio_question_2.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_audio_question_3]
+file_filter = default_library/translated_strings/event_discussion_audio_question_3-<lang>.json
+source_file = default_library/strings/event_discussion_audio_question_3.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_video_question_4]
+file_filter = default_library/translated_strings/event_discussion_video_question_4-<lang>.json
+source_file = default_library/strings/event_discussion_video_question_4.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_video_question_5]
+file_filter = default_library/translated_strings/event_discussion_video_question_5-<lang>.json
+source_file = default_library/strings/event_discussion_video_question_5.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_discussion_video_question_6]
+file_filter = default_library/translated_strings/event_discussion_video_question_6-<lang>.json
+source_file = default_library/strings/event_discussion_video_question_6.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_highlights_audio]
+file_filter = default_library/translated_strings/event_highlights_audio-<lang>.json
+source_file = default_library/strings/event_highlights_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_highlights_audio]
+file_filter = default_library/translated_strings/event_highlights_audio-<lang>.json
+source_file = default_library/strings/event_highlights_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_highlights_photo]
+file_filter = default_library/translated_strings/event_highlights_photo-<lang>.json
+source_file = default_library/strings/event_highlights_photo.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_highlights_video]
+file_filter = default_library/translated_strings/event_highlights_video-<lang>.json
+source_file = default_library/strings/event_highlights_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_interview_audio]
+file_filter = default_library/translated_strings/event_interview_audio-<lang>.json
+source_file = default_library/strings/event_interview_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_interview_video]
+file_filter = default_library/translated_strings/event_interview_video-<lang>.json
+source_file = default_library/strings/event_interview_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_process_audio]
+file_filter = default_library/translated_strings/event_process_audio-<lang>.json
+source_file = default_library/strings/event_process_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_process_photo]
+file_filter = default_library/translated_strings/event_process_photo-<lang>.json
+source_file = default_library/strings/event_process_photo.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_process_video]
+file_filter = default_library/translated_strings/event_process_video-<lang>.json
+source_file = default_library/strings/event_process_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_report_audio]
+file_filter = default_library/translated_strings/event_report_audio-<lang>.json
+source_file = default_library/strings/event_report_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_report_video]
+file_filter = default_library/translated_strings/event_report_video-<lang>.json
+source_file = default_library/strings/event_report_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_series_photo_action]
+file_filter = default_library/translated_strings/event_series_photo_action-<lang>.json
+source_file = default_library/strings/event_series_photo_action.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_series_photo_character]
+file_filter = default_library/translated_strings/event_series_photo_character-<lang>.json
+source_file = default_library/strings/event_series_photo_character.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_series_photo_place]
+file_filter = default_library/translated_strings/event_series_photo_place-<lang>.json
+source_file = default_library/strings/event_series_photo_place.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.event_series_photo_result]
+file_filter = default_library/translated_strings/event_series_photo_result-<lang>.json
+source_file = default_library/strings/event_series_photo_result.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_discussion_audio_question_7]
+file_filter = default_library/translated_strings/issue_discussion_audio_question_7-<lang>.json
+source_file = default_library/strings/issue_discussion_audio_question_7.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_discussion_audio_question_8]
+file_filter = default_library/translated_strings/issue_discussion_audio_question_8-<lang>.json
+source_file = default_library/strings/issue_discussion_audio_question_8.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_discussion_audio_question_9]
+file_filter = default_library/translated_strings/issue_discussion_audio_question_9-<lang>.json
+source_file = default_library/strings/issue_discussion_audio_question_9.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_discussion_video_question_10]
+file_filter = default_library/translated_strings/issue_discussion_video_question_10-<lang>.json
+source_file = default_library/strings/issue_discussion_video_question_10.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_discussion_video_question_11]
+file_filter = default_library/translated_strings/issue_discussion_video_question_11-<lang>.json
+source_file = default_library/strings/issue_discussion_video_question_11.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_discussion_video_question_12]
+file_filter = default_library/translated_strings/issue_discussion_video_question_12-<lang>.json
+source_file = default_library/strings/issue_discussion_video_question_12.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_highlights_audio]
+file_filter = default_library/translated_strings/issue_highlights_audio-<lang>.json
+source_file = default_library/strings/issue_highlights_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_highlights_photo]
+file_filter = default_library/translated_strings/issue_highlights_photo-<lang>.json
+source_file = default_library/strings/issue_highlights_photo.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_highlights_video]
+file_filter = default_library/translated_strings/issue_highlights_video-<lang>.json
+source_file = default_library/strings/issue_highlights_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_interview_audio]
+file_filter = default_library/translated_strings/issue_interview_audio-<lang>.json
+source_file = default_library/strings/issue_interview_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_interview_video]
+file_filter = default_library/translated_strings/issue_interview_video-<lang>.json
+source_file = default_library/strings/issue_interview_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_report_audio]
+file_filter = default_library/translated_strings/issue_report_audio-<lang>.json
+source_file = default_library/strings/issue_report_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_report_video]
+file_filter = default_library/translated_strings/issue_report_video-<lang>.json
+source_file = default_library/strings/issue_report_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_series_photo_character]
+file_filter = default_library/translated_strings/issue_series_photo_character-<lang>.json
+source_file = default_library/strings/issue_series_photo_character.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_series_photo_place]
+file_filter = default_library/translated_strings/issue_series_photo_place-<lang>.json
+source_file = default_library/strings/issue_series_photo_place.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.issue_series_photo_signature]
+file_filter = default_library/translated_strings/issue_series_photo_signature-<lang>.json
+source_file = default_library/strings/issue_series_photo_signature.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_discussion_audio_question_13]
+file_filter = default_library/translated_strings/profile_discussion_audio_question_13-<lang>.json
+source_file = default_library/strings/profile_discussion_audio_question_13.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_discussion_audio_question_14]
+file_filter = default_library/translated_strings/profile_discussion_audio_question_14-<lang>.json
+source_file = default_library/strings/profile_discussion_audio_question_14.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_discussion_audio_question_15]
+file_filter = default_library/translated_strings/profile_discussion_audio_question_15-<lang>.json
+source_file = default_library/strings/profile_discussion_audio_question_15.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_discussion_video_question_16]
+file_filter = default_library/translated_strings/profile_discussion_video_question_16-<lang>.json
+source_file = default_library/strings/profile_discussion_video_question_16.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_discussion_video_question_17]
+file_filter = default_library/translated_strings/profile_discussion_video_question_17-<lang>.json
+source_file = default_library/strings/profile_discussion_video_question_17.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_discussion_video_question_18]
+file_filter = default_library/translated_strings/profile_discussion_video_question_18-<lang>.json
+source_file = default_library/strings/profile_discussion_video_question_18.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_highlights_audio]
+file_filter = default_library/translated_strings/profile_highlights_audio-<lang>.json
+source_file = default_library/strings/profile_highlights_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_highlights_photo]
+file_filter = default_library/translated_strings/profile_highlights_photo-<lang>.json
+source_file = default_library/strings/profile_highlights_photo.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_highlights_video]
+file_filter = default_library/translated_strings/profile_highlights_video-<lang>.json
+source_file = default_library/strings/profile_highlights_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_interview_audio]
+file_filter = default_library/translated_strings/profile_interview_audio-<lang>.json
+source_file = default_library/strings/profile_interview_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_interview_video]
+file_filter = default_library/translated_strings/profile_interview_video-<lang>.json
+source_file = default_library/strings/profile_interview_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_process_audio]
+file_filter = default_library/translated_strings/profile_process_audio-<lang>.json
+source_file = default_library/strings/profile_process_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_process_photo]
+file_filter = default_library/translated_strings/profile_process_photo-<lang>.json
+source_file = default_library/strings/profile_process_photo.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_process_video]
+file_filter = default_library/translated_strings/profile_process_video-<lang>.json
+source_file = default_library/strings/profile_process_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_report_audio]
+file_filter = default_library/translated_strings/profile_report_audio-<lang>.json
+source_file = default_library/strings/profile_report_audio.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_report_video]
+file_filter = default_library/translated_strings/profile_report_video-<lang>.json
+source_file = default_library/strings/profile_report_video.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_series_photo_action]
+file_filter = default_library/translated_strings/profile_series_photo_action-<lang>.json
+source_file = default_library/strings/profile_series_photo_action.json
+source_lang = en
+type = KEYVALUEJSON
+
+[storymaker.profile_series_photo_character]
+file_filter = default_library/translated_strings/profile_series_photo_character-<lang>.json
+source_file = default_library/strings/profile_series_photo_character.json
+source_lang = en
+type = KEYVALUEJSON

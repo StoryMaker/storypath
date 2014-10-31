@@ -1,0 +1,120 @@
+---
+    id: profile_interview_video
+    title: Profile Interview
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - before
+                - video
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show us where your character lives.
+            clipType: Place
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show us something notable about your character’s home.
+            clipType: Signature
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Introduce your character.
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show your character ready to begin their day.
+            clipType: Result
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show us what your character does for a living.
+            clipType: Place
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - "Ask: Can you please go ahead and tell us about what you do?"
+            clipType: Character
+            length: 0:35
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show us the most important thing about your character’s work.
+            clipType: Signature
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show what your character does for fun.
+            clipType: Action
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show where your character ends the day.
+            clipType: Place
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - "Ask: Can you please tell us about your future?"
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show your character at the end of the day
+            clipType: Result
+            length: 0:13
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video
+

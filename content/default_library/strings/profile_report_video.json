@@ -1,0 +1,16 @@
+{
+  "profile_report_video::clip_card_2::goals[0]": "Show us what you find notable about your character.", 
+  "profile_report_video::clip_card_6::goals[0]": "Show us a place important to your character", 
+  "profile_report_video::clip_card_10::goals[0]": "If it\u2019s a new place, show where your character ends the story.", 
+  "profile_report_video::clip_card_3::goals[0]": "Ask: Please tell us a little about what you do for a living?", 
+  "profile_report_video::clip_card_12::goals[0]": "Show your character at the end of the story.", 
+  "profile_report_video::clip_card_7::goals[0]": "Show your character interacting with other people in their life.", 
+  "profile_report_video::clip_card_0::goals[0]": "Show us where your character lives.", 
+  "profile_report_video::evaluation_card_0::text": "--------", 
+  "profile_report_video::clip_card_4::goals[0]": "Show your character\u2019s work.", 
+  "profile_report_video::clip_card_11::goals[0]": "Ask: Can you please tell us about your future?", 
+  "profile_report_video::clip_card_1::goals[0]": "Ask: Will you please introduce yourself?", 
+  "profile_report_video::clip_card_8::goals[0]": "Show what your character does for fun.", 
+  "profile_report_video::clip_card_5::goals[0]": "Show us the most important thing about your character\u2019s work.", 
+  "profile_report_video::clip_card_9::goals[0]": "Show us something important to the character."
+}

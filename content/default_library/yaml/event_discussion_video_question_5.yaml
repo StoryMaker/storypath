@@ -1,0 +1,118 @@
+---
+    id: event_discussion_video_question5
+    title: Event Discussion - Opinion
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - video
+                - before
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show us something that represents the event.
+            clipType: Signature
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show where the event happens.
+            clipType: Place
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - What is your opinion of the event?
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: TextCard
+            text: Talk to different people for each clip to give your story a range of voices.
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - What is your opinion of the event?
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: TipCard
+            tags:
+                - interview
+                - during
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - What is your opinion of the event?
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: TextCard
+            text: If you get a bad answer, it's smart to try again with a new clip.
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - What is your opinion of the event?
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show a place important to the event.
+            clipType: Place
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - What is your opinion of the event?
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show how the event ends.
+            clipType: Place
+            length: 0:12
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - after
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: EvaluationCard
+            text: Does your story tell us why the issue is important?
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video

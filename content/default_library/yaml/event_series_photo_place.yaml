@@ -1,0 +1,80 @@
+---
+    id: event_series_photo_place
+    title: Event Series - Place
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - before
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - You might photograph a series of objects. Artwork or interesting displays of new technology.
+                - You might photograph a series of display booths or food stands.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different object.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different object.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different object.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different object.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

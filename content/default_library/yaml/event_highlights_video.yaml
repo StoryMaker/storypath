@@ -1,0 +1,114 @@
+---
+    id: event_highlights_video
+    title: Event Highlights
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - video
+                - before
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the location. A wide shot of the location, or entrance to the event.
+            clipType: Place
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show us people attending the event or reacting to something happening at the event. The more animated your subjects are the better. 
+            clipType: Character
+            length: 0:10
+
+        - 
+            type: TipCard
+            tags:
+                - video
+                - during
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Shoot one clip that sums up what the event is about. A single image that captures its energy and its purpose.
+            clipType: Signature
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Pay attention to the people in attendance, capture what makes them unique as best you can.
+            clipType: Action
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Look for people putting on the event, look for moments when they interact with other people.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Something drew you personally to this event, be sure to record it as well as you can.
+            clipType: Action
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Talk to any significant people at the event. This might be the main performer or speaker. This might be a dignitary or politician or celebrity in attendance.
+            clipType: Character
+            length: 0:15
+        
+        - 
+            type: TipCard
+            tags:
+                - portraits
+                - during
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Look for a climax or dramatic finish, record it. The end of a game or a performance or even a speech, for example. 
+            clipType: Result
+            length: 0:20
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - video
+                - after
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video

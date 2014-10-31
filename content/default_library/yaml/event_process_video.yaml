@@ -1,0 +1,120 @@
+---
+    id: event_process_video
+    title: Event Process
+    cards:
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show where the event will happen before it starts.
+            clipType: Place
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the very beginning of the event.
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the first significant step in the event.
+            clipType: Action
+            length: 0:12
+
+        - 
+            type: TextCard
+            text: Do not shoot every step. Just the significant steps to show the progression from beginning to end. 
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the second significant step in the event.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the third significant step in the event.
+            clipType: Action
+            length: 0:11
+
+        - 
+            type: TextCard
+            text: If there are more than four steps involved, add more clip cards with the + button.
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the final significant step in the event.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show an especially dramatic moment that is a summary of the event.
+            clipType: Signature
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the character doing the activity.
+            clipType: Character
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show people watching or reacting to the event. Engaged and animated watchers are best. 
+            clipType: Result
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the finished product or the event concluding - the dramatic finish. 
+            clipType: Result
+            length: 0:15
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - video
+                - after
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video

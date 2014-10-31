@@ -1,0 +1,17 @@
+{
+  "event_process_audio::clip_card_0::goals[0]": "Record sounds where the event will happen before it starts.", 
+  "event_process_audio::clip_card_1::goals[2]": "Capture the sounds of the crowd inside the event.", 
+  "event_process_audio::clip_card_4::goals[0]": "Record the third significant step in the event.", 
+  "event_process_audio::clip_card_3::goals[0]": "Record the second significant step in the event.", 
+  "event_process_audio::clip_card_7::goals[0]": "Record the character doing the activity.", 
+  "event_process_audio::text_card_0::text": "Do not record every step. Just the significant steps to show the progression from beginning to end.", 
+  "event_process_audio::evaluation_card_0::text": "--------", 
+  "event_process_audio::clip_card_2::goals[0]": "Record the first significant step in the event.", 
+  "event_process_audio::clip_card_9::goals[0]": "Record the finished product or the event concluding - the dramatic finish.", 
+  "event_process_audio::clip_card_6::goals[0]": "Record an especially dramatic moment that is a summary of the event.", 
+  "event_process_audio::text_card_1::text": "If there are more than four steps involved, add more clip cards with the + button.", 
+  "event_process_audio::clip_card_1::goals[0]": "Introduce the beginning of the event.", 
+  "event_process_audio::clip_card_8::goals[0]": "Record people watching or reacting to the event. Engaged and animated watchers are best.", 
+  "event_process_audio::clip_card_1::goals[1]": "Stand near the entrance and record the sounds of people walking by.", 
+  "event_process_audio::clip_card_5::goals[0]": "Record the final significant step in the event."
+}

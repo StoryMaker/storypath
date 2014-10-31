@@ -1,0 +1,114 @@
+---
+    id: issue_highlights_photo
+    title: Issue Highlights
+    cards:
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show a location or the community that your issue is about.
+            clipType: Place
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - photo
+                - photo essay
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show people affected by the issue. 
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - portrait
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Shoot a photo that sums up the the issue and its impact.  
+            clipType: Signature
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph the most important example that illustrates the issue and its impact.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph another important but different example that illustrate the issue and its impact.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph another important but different example that illustrate the issue and its impact.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TextCard
+            text: If there are more than three, you should add clips to include them.
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show the effect of the issue. Show how it impacts the community.
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Has anything been done about the issue? Show the change.
+                - If nothing has changed, show that.
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

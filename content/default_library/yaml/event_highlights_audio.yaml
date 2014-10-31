@@ -1,0 +1,113 @@
+---
+    id: event_highlights_audio
+    title: Event Highlights
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds from the location.
+            clipType: Place
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record people attending the event or reacting to something happening at the event. The more animated your subjects are the better. 
+            clipType: Character
+            length: 0:10
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record a sound that sums up what the event is about. 
+            clipType: Signature
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the most interesting people attending the event.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the most interesting person involved with the event.
+            clipType: Action
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the most unique part of the event.
+            clipType: Action
+            length: 0:13
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record any significant people at the event. For example the main performer or speaker, a dignitary, politician, or celebrity in attendance.
+            clipType: Character
+            length: 0:30
+        
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Look for a climax or dramatic finish to record. It could be the end of a performance or a speech, for example. 
+            clipType: Result
+            length: 0:30
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

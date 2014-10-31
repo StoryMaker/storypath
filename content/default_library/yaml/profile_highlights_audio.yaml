@@ -1,0 +1,101 @@
+---
+    id: profile_highlights_audio
+    title: Profile Highlights
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the sounds of a location important to your character.
+                - Record your character arriving at an important location.
+            clipType: Place
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record people reacting to your character. 
+                - Record your character doing what makes them unique.
+            clipType: Character
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record your character during a dramatic moment.
+                - Find and record a sound that sums up the story.
+            clipType: Signature
+            length: 0:13
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the most important moment that illustrates who your character is.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record another important but different example that illustrates your character.
+            clipType: Action
+            length: 0:20
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record another unique example that illustrates the issue and its impact.
+            clipType: Action
+            length: 0:13
+
+        - 
+            type: TextCard
+            text: If there are more than three moments, you should add cards to include them.
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record your character as your story is at the most exciting moment.
+            clipType: Result
+            length: 0:20
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

@@ -1,0 +1,109 @@
+---
+    id: profile_highlights_video
+    title: Profile Highlights
+    cards:
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the location important to your character.
+                - Show your character arriving at an important location.
+            clipType: Place
+            length: 0:10
+
+        - 
+            type: TipCard
+            tags:
+                - video
+                - during
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show people reacting to your character. 
+                - Show your character doing what makes them unique.
+            clipType: Character
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show your character during a dramatic moment.
+                - Show a moment that sums up the story.
+            clipType: Signature
+            length: 0:13
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show the most important moment that illustrates who your character is.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show another important but different example that illustrates your character.
+            clipType: Action
+            length: 0:20
+
+        - 
+            type: TipCard
+            tags:
+                - video
+                - during
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show another unique example that illustrates your character.
+            clipType: Action
+            length: 0:13
+
+        - 
+            type: TextCard
+            text: If there are more than three moments, you should add cards to be able to include them.
+
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show your character interacting with other people important to your character.
+            clipType: Action
+            length: 0:13
+
+        - 
+            type: ClipCard
+            medium: video
+            goals: 
+                - Show your character as your story is at the most exciting moment.
+            clipType: Result
+            length: 0:20
+
+        - 
+            type: ReviewCard
+            medium: video
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: video
+
+        - 
+            type: NextUpCard
+            medium: video

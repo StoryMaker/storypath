@@ -1,0 +1,137 @@
+---
+    id: event_process_photo
+    title: Event Process
+    cards:
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show the place where the process you wish to illustrate will happen before it starts
+            clipType: Place
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show the very beginning of the process.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - portrait
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Record the first significant step in the event.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TextCard
+            text: Do not record every step. Just the significant steps to show the progression from beginning to end. 
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Record the second significant step in the event.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TextCard
+            text: Be sure to get a variety of compositions when illustrating the process. Some wide shots, close-ups and medium shots.
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Record the third significant step in the event.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TextCard
+            text: If there are more than four steps involved, add more clip cards with the + button.
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Record the final significant step in the event.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Take a picture of an especially dramatic moment that is a summary of the event.
+            clipType: Signature
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Take a photograph significant people doing the activity. 
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - photo
+                - photo essay
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Take a photograph of people watching or reacting to the process. The more animated your subjects are the better. 
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show the finished product or the result of the completed process -- the dramatic finish.
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

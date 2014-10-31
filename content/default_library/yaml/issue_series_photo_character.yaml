@@ -1,0 +1,77 @@
+---
+    id: issue_series_photo_character
+    title: Issue Series - Characters
+    cards:
+
+        - 
+            type: TextCard
+            text: Find a pattern that viewers can identify with. 
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph a variety of interesting people that illustrate the issue or its impact.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

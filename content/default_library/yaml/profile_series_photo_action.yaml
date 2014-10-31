@@ -1,0 +1,83 @@
+---
+    id: profile_series_photo_action
+    title: Profile Series
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - before
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph an action which illustrates your story.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different action.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different action.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different action.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different action.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

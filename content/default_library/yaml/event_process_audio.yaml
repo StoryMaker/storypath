@@ -1,0 +1,122 @@
+---
+    id: event_process_audio
+    title: Event Process
+    cards:
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds where the event will happen before it starts.
+            clipType: Place
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Introduce the beginning of the event.
+                - Stand near the entrance and record the sounds of people walking by.
+                - Capture the sounds of the crowd inside the event.
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the first significant step in the event.
+            clipType: Action
+            length: 0:12
+
+        - 
+            type: TextCard
+            text: Do not record every step. Just the significant steps to show the progression from beginning to end. 
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the second significant step in the event.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the third significant step in the event.
+            clipType: Action
+            length: 0:11
+
+        - 
+            type: TextCard
+            text: If there are more than four steps involved, add more clip cards with the + button.
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the final significant step in the event.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record an especially dramatic moment that is a summary of the event.
+            clipType: Signature
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the character doing the activity.
+            clipType: Character
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record people watching or reacting to the event. Engaged and animated watchers are best. 
+            clipType: Result
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the finished product or the event concluding - the dramatic finish. 
+            clipType: Result
+            length: 0:15
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - audio
+                - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

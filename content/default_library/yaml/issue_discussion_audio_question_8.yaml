@@ -1,0 +1,108 @@
+---
+    id: issue_discussion_audio_question8
+    title: Issue Discussion - Opinion
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals:
+                - Record something that introduces the issue.
+                - Capture a clear sound that represents the issue.
+            clipType: Signature
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Capture people affected by the issue talking.
+                - Record the sounds of where the issue happens.
+            clipType: Place
+            length: 0:09
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What is your opinion of the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What is your opinion of the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Capture important sounds of a place important to the event.
+                - Record sounds of where the issue occurs.
+            clipType: Place
+            length: 0:09
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What is your opinion of the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What is your opinion of the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What is your opinion of the issue?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Show a place important to the issue.
+            clipType: Place
+            length: 0:09
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - audio
+                - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: EvaluationCard
+            text: Does your story collect a range of opinions on the issue?
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio 

@@ -1,0 +1,83 @@
+---
+    id: profile_series_photo_character
+    title: Profile Series
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - before
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph a person who illustrates the core idea of your story.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Replicate the composition of the first photo with a different person.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - series
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

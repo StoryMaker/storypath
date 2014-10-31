@@ -1,0 +1,177 @@
+---
+    id: profile_report_audio
+    title: Profile Report
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of a place important to your character.
+            clipType: Place
+            length: 0:14
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Use your own voice or ask your character to introduce themself.
+            clipType: Character
+            length: 0:24
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound of something notable about your character.
+            clipType: Signature
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of something your character does that’s significant.
+            clipType: Action
+            length: 0:10
+            
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound of your character completing the action.
+            clipType: Result
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Tell us why your character is interesting.
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - "Ask: Can you please tell us a little about what you do?"
+            clipType: Character
+            length: 0:40
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of the most important thing about your character’s story.
+            clipType: Signature
+            length: 0:40
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound of your character interacting with other people.
+            clipType: Action
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of how people respond to the character.
+            clipType: Result
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of what your character does for fun.
+            clipType: Action
+            length: 0:17
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound of something important to the character.
+            clipType: Signature
+            length: 0:24
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - "Ask: Can you please tell us about your future?"
+            clipType: Character
+            length: 0:40
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Tell us yourself what you think will happen next to your character.
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of where your character ends the story.
+            clipType: Place
+            length: 0:14
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound of your character at the end of the story.
+            clipType: Result
+            length: 0:08
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

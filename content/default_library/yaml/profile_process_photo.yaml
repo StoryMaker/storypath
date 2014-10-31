@@ -1,0 +1,113 @@
+---
+    id: profile_process_photo
+    title: Profile Process
+    cards:
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show your character getting ready to start the process. How do they prepare?
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - portrait
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show the very beginning or first step of the process.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Take a photograph that helps the viewer understand where the story is taking place.
+            clipType: Place
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph the next significant step in the process.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: BasicTextCard
+            text: Be sure to get a variety of compositions when illustrating the process. Some wide shots, close-ups and medium shots. Your character does not have to be in every picture.
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph the next significant step in the process.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - photo essay
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph the next significant step in the process.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Shoot a photo that sums up the process.
+            clipType: Signature
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - If your story is about something your character does with an audience or people just watching, be sure to get a photograph of their reaction.
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Take a photograph of your character as they complete the process. The more dramatic, the better.
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

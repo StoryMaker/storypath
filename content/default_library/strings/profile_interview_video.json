@@ -1,0 +1,14 @@
+{
+  "profile_interview_video::clip_card_2::goals[0]": "Introduce your character.", 
+  "profile_interview_video::clip_card_5::goals[0]": "Ask: Can you please go ahead and tell us about what you do?", 
+  "profile_interview_video::clip_card_10::goals[0]": "Show your character at the end of the day", 
+  "profile_interview_video::clip_card_6::goals[0]": "Show us the most important thing about your character\u2019s work.", 
+  "profile_interview_video::clip_card_9::goals[0]": "Ask: Can you please tell us about your future?", 
+  "profile_interview_video::clip_card_4::goals[0]": "Show us what your character does for a living.", 
+  "profile_interview_video::clip_card_1::goals[0]": "Show us something notable about your character\u2019s home.", 
+  "profile_interview_video::clip_card_8::goals[0]": "Show where your character ends the day.", 
+  "profile_interview_video::evaluation_card_0::text": "--------", 
+  "profile_interview_video::clip_card_0::goals[0]": "Show us where your character lives.", 
+  "profile_interview_video::clip_card_3::goals[0]": "Show your character ready to begin their day.", 
+  "profile_interview_video::clip_card_7::goals[0]": "Show what your character does for fun."
+}

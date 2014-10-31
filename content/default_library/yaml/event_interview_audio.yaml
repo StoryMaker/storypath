@@ -1,0 +1,181 @@
+---
+    id: event_interview_audio
+    title: Event Interview
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound introducing the event. 
+            clipType: Signature
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Introduce the event.
+            clipType: Character
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of where the event happens.
+            clipType: Place
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - "Ask: What is the purpose of the event?"
+            clipType: Character
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of preparation for the event.
+            clipType: Action
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - "Ask: When did the event first start?"
+            clipType: Character
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of what happens at the event.
+            clipType: Action
+            length: 0:12
+        
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound of something notable about the event.
+            clipType: Signature
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of a place important to the event.
+            clipType: Place
+            length: 0:08
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - "Ask: what do you do at the event?"
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of the most important thing the character does at the event.
+            clipType: Signature
+            length: 0:25
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sound people interacting at the event.
+            clipType: Action
+            length: 0:13
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of the result of people interacting at the event.
+            clipType: Result
+            length: 0:13
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - "Ask: How does the event impact individuals or the community?"
+            clipType: Place
+            length: 0:12
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of how the event ends.
+            clipType: Result
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record another sound of something happening at the event.
+            clipType: Action
+            length: 0:13
+        
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - What will happen at the event in the future?
+            clipType: Character
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of the end of the event.
+            clipType: Result
+            length: 0:10
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

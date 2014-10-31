@@ -1,0 +1,115 @@
+---
+    id: event_highlights_photo
+    title: Event Highlights
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - photo
+                - before
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show the location. This might be a wide shot of the location or of the entrance to the event.
+            clipType: Place
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Show us people attending the event or reacting to something happening at the event. The more animated your subjects are the better. 
+            clipType: Character
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - photo
+                - photo essay
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Shoot one picture that sums up what the event is about. This might be a single image that captures its energy and its purpose. 
+            clipType: Signature
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Pay attention to the people in attendance, capture what makes them unique as best you can.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Look for people putting on the event, look for moments when they interact with other people.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Something drew you personally to this event, be sure to photograph it as well as you can.
+            clipType: Action
+            length: 0:00
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Photograph any significant people at the event. This might be the main performer or speaker. This might be a dignitary or politician or celebrity in attendance.
+            clipType: Character
+            length: 0:00
+        
+        - 
+            type: TipCard
+            tags:
+                - portraits
+                - during
+
+        - 
+            type: ClipCard
+            medium: photo
+            goals: 
+                - Look for a climax or dramatic finish, photograph it. The end of a game or a performance or even a speech, for example. 
+            clipType: Result
+            length: 0:00
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - photo
+                - after
+
+        - 
+            type: ReviewCard
+            medium: photo
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: photo
+
+        - 
+            type: NextUpCard
+            medium: photo

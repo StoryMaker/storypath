@@ -1,0 +1,586 @@
+---
+    id: default_library
+    title: Start a New Story
+    classPackage: scal.io.liger.model
+    storyPathTemplateFiles:
+        event_discussion_audio_question_1: event_discussion_audio_question_1.json
+        event_discussion_audio_question_2: event_discussion_audio_question_2.json
+        event_discussion_audio_question_3: event_discussion_audio_question_3.json
+        event_discussion_video_question_4: event_discussion_video_question_4.json
+        event_discussion_video_question_5: event_discussion_video_question_5.json
+        event_discussion_video_question_6: event_discussion_video_question_6.json
+        event_highlights_audio: event_highlights_audio.json
+        event_highlights_photo: event_highlights_photo.json
+        event_highlights_video: event_highlights_video.json
+        event_interview_audio: event_interview_audio.json
+        event_interview_video: event_interview_video.json
+        event_process_audio: event_process_audio.json
+        event_process_photo: event_process_photo.json
+        event_process_video: event_process_video.json
+        event_report_audio: event_report_audio.json
+        event_report_video: event_report_video.json
+        event_series_photo_action: event_series_photo_action.json
+        event_series_photo_character: event_series_photo_character.json
+        event_series_photo_place: event_series_photo_place.json
+        event_series_photo_result: event_series_photo_result.json
+        issue_discussion_audio_question_7: issue_discussion_audio_question_7.json
+        issue_discussion_audio_question_8: issue_discussion_audio_question_8.json
+        issue_discussion_audio_question_9: issue_discussion_audio_question_9.json
+        issue_discussion_video_question_10: issue_discussion_video_question_10.json
+        issue_discussion_video_question_11: issue_discussion_video_question_11.json
+        issue_discussion_video_question_12: issue_discussion_video_question_12.json
+        issue_highlights_audio: issue_highlights_audio.json
+        issue_highlights_photo: issue_highlights_photo.json
+        issue_highlights_video: issue_highlights_video.json
+        issue_interview_audio: issue_interview_audio.json
+        issue_interview_video: issue_interview_video.json
+        issue_report_audio: issue_report_audio.json
+        issue_report_video: issue_report_video.json
+        issue_series_photo_character: issue_series_photo_character.json
+        issue_series_photo_place: issue_series_photo_place.json
+        issue_series_photo_signature: issue_series_photo_signature.json
+        profile_discussion_audio_question_13: profile_discussion_audio_question_13.json
+        profile_discussion_audio_question_14: profile_discussion_audio_question_14.json
+        profile_discussion_audio_question_15: profile_discussion_audio_question_15.json
+        profile_discussion_video_question_16: profile_discussion_video_question_16.json
+        profile_discussion_video_question_17: profile_discussion_video_question_17.json
+        profile_discussion_video_question_18: profile_discussion_video_question_18.json
+        profile_highlights_audio: profile_highlights_audio.json
+        profile_highlights_photo: profile_highlights_photo.json
+        profile_highlights_video: profile_highlights_video.json
+        profile_interview_audio: profile_interview_audio.json
+        profile_interview_video: profile_interview_video.json
+        profile_process_audio: profile_process_audio.json
+        profile_process_photo: profile_process_photo.json
+        profile_process_video: profile_process_video.json
+        profile_report_audio: profile_report_audio.json
+        profile_report_video: profile_report_video.json
+        profile_series_photo_action: profile_series_photo_action.json
+        profile_series_photo_character: profile_series_photo_character.json
+    cards:
+        -
+            type: TipCollectionHeadlessCard
+            id: "tip_collection"
+            tips: 
+                -   tags: [photo essay, after]
+                    text: Aim for 8 to 20 images in your final edit. Shoot more pictures than you
+                        plan to use.
+                -   tags: [photo, photo essay, during]
+                    text: Every new image should contain new information that advances your story.
+                -   tags: [photo, photo essay, during]
+                    text: Even if you will only use one image in your story, shoot a variety of images
+                        to choose from.
+                -   tags: [ethics, journalism, during]
+                    text: Know yourself, be aware of your biases don't let them influence how you
+                        portray your story.
+                -   tags: [security, photo, video, journalism, during]
+                    text: When shooting in dangerous situations always have an exit strategy.
+                -   tags: [journalism, interview, character, video, audio]
+                    text: Do some research before the interview when possible. You will ask better,
+                        more relevant questions.
+                -   tags: [journalism, interview, character, before]
+                    text: Have a one-sentence explanation of your story for your characters.
+                -   tags: [journalism, interview, character, video, audio, during]
+                    text: Save sensitive questions for the end.
+                -   tags: [journalism, interview, character, video, audio, before]
+                    text: Prioritize your questions and identify the single, most essential bit of
+                        information you need.
+                -   tags: [journalism, interview, character, video, audio, during]
+                    text: Get to the most important question quickly in the interview.
+                -   tags: [journalism, interview, character, video, audio, during]
+                    text: In your interview, remember to be tough but fair.
+                -   tags: [journalism, interview, character, video, audio, during]
+                    text: Your story will be more interesting if you interview characters with opposing
+                        viewpoints.
+                -   tags: [journalism, interview, character, video, audio, during]
+                    text: End the interview by asking, "Is there anything else you would like to add?"
+                -   tags: [video, during]
+                    text: Well composed shots have space in the direction the subject is facing, or
+                        moving.
+                -   tags: [video, during]
+                    text: '"The size of an object in the frame should equal it''s importance at that
+                        moment." -Alfred Hitchcock'
+                -   tags: [video, during]
+                    text: Ensure the most important part of your shot fills at least 50% of the frame.
+                -   tags: [video, after]
+                    text: Combine clips of different sizes or types to create a complementary sequence.
+                -   tags: [video, during]
+                    text: Do not stop recording until the action in your shot is complete.
+                -   tags: [video, during]
+                    text: Start the camera rolling before the action begins and don't stop recording
+                        until after it ends.
+                -   tags: [video, during]
+                    text: Do not place your subject in the center of the frame, use the rule of thirds.
+                -   tags: [video, photo, journalism, during]
+                    text: '"If your picture''s not good enough, you''re not close enough." -Robert
+                        Capa'
+                -   tags: [video, during]
+                    text: Keep recording for at least 15 seconds, if the clip is too long, trim it.
+                -   tags: [video, photo, during]
+                    text: Always update your White Balance setting when you move to a different lighting
+                        situation.
+                -   tags: [video, before]
+                    text: To shoot a sequence you need to break down the elements of your story into
+                        individual shots.
+                -   tags: [video, photo essay, during]
+                    text: Shoot different size shots to create an effective sequence.
+                -   tags: [audio, during]
+                    text: Clear and interesting sound can paint a good picture in the mind of anyone
+                        who listens.
+                -   tags: [audio, video, during]
+                    text: Hit record before you ask a question to record a few seconds of silence
+                        before speaking.
+                -   tags: [audio, video, during]
+                    text: Check your audio level using headphones before you start recording.
+                -   tags: [audio, during]
+                    text: Use multiple sources of audio to tell your story.
+                -   tags: [audio, during]
+                    text: Find different sounds and quotes that help tell your story.
+                -   tags: [audio, during]
+                    text: Use your own voice as little as possible, tell the story through the voices
+                        of others.
+                -   tags: [journalism, story, before]
+                    text: Think about the audience you want to reach when considering what Topic and
+                        Format to use.
+                -   tags: [audio, before]
+                    text: Even if time is limited, make a plan, do not record everything you hear.
+                -   tags: [photo, video, before]
+                    text: Even if time is limited, make a plan, do not shoot everything you see.
+                -   tags: [video, audio, journalism, before]
+                    text: When recording an interview, prepare at least 15 questions.
+                -   tags: [journalism, story, before]
+                    text: Focus on a single primary topic to tell a concise and clear story.
+                -   tags: [video, audio, journalism, during]
+                    text: Record first hand observations and interviews whenever possible.
+                -   tags: [video, audio, journalism, during]
+                    text: Be clear about your topic or goal when requesting an interview.
+                -   tags: [video, audio, journalism, during]
+                    text: Be calm. Relaxing will help your interview subject relax too.
+                -   tags: [video, audio, journalism, during]
+                    text: Always know what you want from the interview.
+                -   tags: [video, audio, journalism, during]
+                    text: Ask only one question at a time.
+                -   tags: [video, audio, journalism, during]
+                    text: Ask hard questions, but remember to be polite. A polite request will go
+                        a long way.
+                -   tags: [video, audio, journalism, before]
+                    text: Courtesy can help establish trust and improve your interviews.
+                -   tags: [video, audio, during]
+                    text: Listen for background noise that may harm the quality of your story before
+                        you click record.
+                -   tags: [audio, during]
+                    text: When preparing to record, hold your device in a way that is comfortable
+                        and natural.
+                -   tags: [audio, during]
+                    text: Hold your device close to the subject, and just below their mouth.
+                -   tags: [video, photo, during]
+                    text: Make sure your subject is in focus and not distorted by something in the
+                        frame.
+                -   tags: [video, during]
+                    text: Decide the best place to record from and hold your frame in place until
+                        complete.
+                -   tags: [video, during]
+                    text: Don't hold your breath, set your shot, and breathe. When your shot is steady,
+                        begin recording
+                -   tags: [video, during]
+                    text: Don't pan. If you want a new angle, stop recording. Change your frame, and
+                        record a new shot.
+                -   tags: [video, during]
+                    text: In a crowd, shoot away from the crowd for better audio, ask your subject
+                        to face you.
+                -   tags: [video, during]
+                    text: If it is windy, point your camera away from the wind, or block if with your
+                        body or a wall.
+                -   tags: [video, audio, journalism, during]
+                    text: Don't ask 'closed' questions that can be answered in one word such as 'yes'
+                        or 'no'.
+                -   tags: [video, audio, journalism, during]
+                    text: 'Keep the conversation moving. Ask: Why? What happened next? What do you
+                        mean?'
+                -   tags: [video, audio, journalism, during]
+                    text: If your questions do not provide a satisfactory answer, change your approach.
+                -   tags: [video, audio, journalism, during]
+                    text: Use follow-up questions if you need more information.
+                -   tags: [video, photo essay, during]
+                    text: Remember, without good sound your images only tell half the story.
+                -   tags: [video, audio, during]
+                    text: If it is windy, point your camera away from the wind, or protect your mic.
+                -   tags: [video, during]
+                    text: Crowds and busy streets make a lot of noise. Do not shoot interviews in
+                        front of crowds or busy streets.
+                -   tags: [video, audio, during]
+                    text: Machines make a lot of noise, turn them off if possible, or change your
+                        location if you can.
+                -   tags: [video, during]
+                    text: Record your subject with the light source directly on the subject.
+                -   tags: [video, during]
+                    text: If the light source is directly behind your subject, the subject will be
+                        dark and difficult to see.
+                -   tags: [video, photo, during]
+                    text: If you can feel the light source on the back of your neck on a sunny day,
+                        you will have the best lighting in that situation.
+                -   tags: [video, photo, during]
+                    text: Low light can produce poor shots. Shooting outside or in a sunny room can
+                        give you great light.
+                -   tags: [video, photo, interview, during]
+                    text: Lights approximately 3 feet away from your character are the most flattering.
+                -   tags: [video, during]
+                    text: Sound is half of the information in a video, consider it for every shot.
+                -   tags: [journalism, general, video, after]
+                    text: Every story has a major question. What's the question you've answered at
+                        the end of your item?
+                -   tags: [journalism, general, audio, during]
+                    text: 'A climax is the answer on the question that keeps your listener listening.
+                        Don''t give it away too early. '
+                -   tags: [journalism, general, video, during]
+                    text: A climax is the answer on the question that holds the attention of the viewer.
+                        Don't give it away too early.
+                -   tags: [journalism, general, during]
+                    text: 'Ask yourself for every clip: does it tell me something new? '
+                -   tags: [journalism, general, during]
+                    text: 'Ask yourself for every clip: does it tell me something new about my major
+                        question?'
+                -   tags: [photo, during]
+                    text: Get as close to your subject as possible.
+                -   tags: [photo, during]
+                    text: !!python/str "Remember: the viewer won't know anything about your story\
+                        \ that you don\u2019t show them in the photograph."
+                -   tags: [photo, after]
+                    text: Does your image illustrate context?
+                -   tags: [photo, during]
+                    text: Think Rule-of-Thirds.
+                -   tags: [photo, during]
+                    text: 'Pay attention to the edges of your frame not just the middle. '
+                -   tags: [photo, during]
+                    text: Good photography is all about light. Are you using available light as best
+                        you can?
+                -   tags: [photo, during]
+                    text: Simply changing the angle of view can make a much better photograph.
+                -   tags: [photo, during]
+                    text: Don't take just one photograph. Take lots. Experiment.
+                -   tags: [photo, during]
+                    text: 'Don''t forget to get signature shots when possible. '
+                -   tags: [photo, during]
+                    text: Get a variety of images -- close-ups, medium shots and wide shots.
+                -   tags: [photo, during]
+                    text: Good photographs are about peak action and drama. Choose your moments with
+                        that in mind.
+                -   tags: [series, before]
+                    text: For a series your images should be composed as identically as possible.
+                -   tags: [series, during]
+                    text: Taking your picture from an interesting angle of view can make a much better
+                        portrait.
+                -   tags: [series, after]
+                    text: A good series should be made up of five strong images. If you have more
+                        good shots, add them in though.
+                -   tags: [narration]
+                    text: Tell us some interesting facts about the history of the issue or why it
+                        started.
+                -   tags: [narration]
+                    text: Tell us how the issue is changing in response to the actions of characters
+                        in the story.
+                -   tags: [narration]
+                    text: Tell us what is expected for the issue in the future.
+                -   tags: [narration]
+                    text: Tell us some interesting facts about the history of the event or why it
+                        happens.
+                -   tags: [narration]
+                    text: Tell us how the event changes as it progresses.
+                -   tags: [narration]
+                    text: Tell us what is expected for the event the next time it happens.
+
+
+
+
+        - 
+            id: quiz_card_topic
+            type: QuizCard
+            question: What is your story about?
+            correctRequired: 1
+            choices:
+                - 
+                    id: event
+                    text: An Event
+                - 
+                    id: profile
+                    text: A Person
+                - 
+                    id: issue
+                    text: An Issue
+                
+        - 
+            id: quiz_card_format
+            type: QuizCard
+            question: How would you like to tell it?
+            correctRequired: 1
+            references:
+                - default_library::quiz_card_topic::choice
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: interview
+                    text: Talk to people about it.
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
+                
+                - 
+                    id: discussion
+                    text: Ask the same question to many people.
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
+                    
+                - 
+                    id: report
+                    text: Create an accurate summary.
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
+                    
+                - 
+                    id: process
+                    text: Document the steps taken.
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                    
+                - 
+                    id: series
+                    text: Collect a set of pictures of people.
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
+                    
+                - 
+                    id: highlights
+                    text: Show the best moments.
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue 
+            
+        -
+            id: quiz_card_medium
+            type: QuizCard 
+            question: Choose a medium.
+            correctRequired: 1
+            references:
+                - default_library::quiz_card_format::choice
+            choices:
+                # filter answer choices based on chosen format
+                - 
+                    id: audio
+                    text: Audio
+                    filters_or:
+                        - default_library::quiz_card_format::choice::interview
+                        - default_library::quiz_card_format::choice::discussion
+                        - default_library::quiz_card_format::choice::report
+                        - default_library::quiz_card_format::choice::process
+                        - default_library::quiz_card_format::choice::highlights
+                
+                - 
+                    id: video
+                    text: Video
+                    filters_or:
+                        - default_library::quiz_card_format::choice::interview
+                        - default_library::quiz_card_format::choice::discussion
+                        - default_library::quiz_card_format::choice::report
+                        - default_library::quiz_card_format::choice::process
+                        - default_library::quiz_card_format::choice::highlights
+                
+                - 
+                    id: photo
+                    text: Photo
+                    filters_or:
+                        - default_library::quiz_card_format::choice::process
+                        - default_library::quiz_card_format::choice::series
+                        - default_library::quiz_card_format::choice::highlights
+                
+        # this question only shows up if format == series
+        -
+            id: quiz_card_cliptype
+            type: QuizCard 
+            question: What would you like to focus on?
+            filter: default_library::quiz_card_format::choice::series
+            correctRequired: 1
+            references:
+                - default_library::quiz_card_medium::choice
+                - default_library::quiz_card_format::choice::series
+            choices:
+                # filter answer choices based on chosen topic
+                - 
+                    id: character
+                    text: Characters
+                    filters_or:        
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_topic::choice::issue
+                    
+                - 
+                    id: action
+                    text: Actions
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::profile
+                    
+                - 
+                    id: result
+                    text: Results
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event 
+                    
+                - 
+                    id: place
+                    text: Places
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_topic::choice::issue
+                    
+                - 
+                    id: signature
+                    text: Signatures
+                    filters_or:
+                        - default_library::quiz_card_topic::choice::issue
+
+
+        # this question only shows up only if format == discussion
+        -
+            id: quiz_card_clipquestion
+            type: QuizCard 
+            question: Which question would you like to use?
+            filter: default_library::quiz_card_format::choice::discussion
+            correctRequired: 1
+            references:
+                - default_library::quiz_card_medium::choice
+                - default_library::quiz_card_format::choice::discussion
+            choices:
+                # filter answer choices based on chosen topic && medium
+                - 
+                    id: question_1
+                    text: Why is the event important?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_2 
+                    text: What is your opinion of the event?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_3
+                    text: What do you think is the most exciting part of the event?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_4
+                    text: Why is the event important?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_5
+                    text: What is your opinion of the event?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_6
+                    text: What do you think is the most exciting part of the event?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_7
+                    text: Why is the issue important?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_8
+                    text: What is your opinion of the issue?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_9
+                    text: What do you think should be done about the issue?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_10
+                    text: Why is the issue important?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_11 
+                    text: What is your opinion of the issue?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_12 
+                    text: What do you think should be done about the issue?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_13
+                    text: Why is the character important?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::event
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_14
+                    text: What is your opinion of the character?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_15
+                    text: What do you think the character should do next?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_medium::choice::audio
+                - 
+                    id: question_16
+                    text: Why is the character important?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::profile
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_17
+                    text: What is your opinion of the character?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
+                - 
+                    id: question_18
+                    text: What do you think the character should do next?
+                    filters_and:
+                        - default_library::quiz_card_topic::choice::issue
+                        - default_library::quiz_card_medium::choice::video
+                        
+        -   
+            type: HookLoaderHeadlessCard
+            id: hook_loader_card
+            action: LOAD
+            references: 
+                - 
+                    default_library::quiz_card_topic::choice
+                - 
+                    default_library::quiz_card_format::choice
+                - 
+                    default_library::quiz_card_medium::choice
+                #- 
+                #    default_library::quiz_card_cliptype::choice
+                - 
+                    default_library::quiz_card_clipquestion::choice

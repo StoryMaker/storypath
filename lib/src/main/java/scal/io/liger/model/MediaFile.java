@@ -20,9 +20,9 @@ import scal.io.liger.Constants;
  */
 public class MediaFile {
 
-    @Expose private String path;
-    @Expose private String medium; // mime type?
-    @Expose private String thumbnailFilePath;
+    @Expose protected String path;
+    @Expose protected String medium; // mime type?
+    @Expose protected String thumbnailFilePath;
 
     public MediaFile() {
       // required for JSON/GSON

@@ -1,0 +1,97 @@
+---
+    id: event_discussion_audio_question1
+    title: Event Discussion - Why
+    cards:
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - before
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of where the event happens.
+                - Record sounds of a place important to the event.
+            clipType: Place
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals:
+                - Record sounds that introduce your discussion.
+            clipType: Signature
+            length: 0:07
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Why is the event important?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals:  
+                - Why is the event important?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Why is the event important?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Why is the event important?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Why is the event important?
+            clipType: Character
+            length: 0:30
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of how the event ends.
+            clipType: Place
+            length: 0:09
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - after
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: EvaluationCard
+            text: Does your story tell us why the event is important?
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

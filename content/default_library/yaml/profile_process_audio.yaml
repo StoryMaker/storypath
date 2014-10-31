@@ -1,0 +1,98 @@
+---
+    id: profile_process_audio
+    title: Profile Process
+    cards:
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record your character getting ready to start the process. How do they prepare?
+            clipType: Character
+            length: 0:18
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the very beginning or first step of the process.
+            clipType: Action
+            length: 0:18
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds of where the process is taking place.
+            clipType: Place
+            length: 0:11
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record your character at the next significant step in the process.
+            clipType: Action
+            length: 0:11
+
+        - 
+            type: BasicTextCard
+            text: Focus on the sounds necessary to illustrate the process. You don't need everything, just enough steps to show the progression from beginning to end.
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record sounds that tell the audience what is happening. 
+            clipType: Signature
+            length: 0:11
+
+        - 
+            type: BasicTextCard
+            text: Record a different kinds of sounds - the character explaining, sounds that indicate changes or unique steps in the process.
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - If your story is about something your character does with an audience or people watching, record their reaction.
+            clipType: Character
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record your character completing the process. The more dramatic, the better.
+            clipType: Result
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Conclude the story, tell us how it ended.
+                - Record your character concluding the process.
+            clipType: Signature
+            length: 0:15
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio

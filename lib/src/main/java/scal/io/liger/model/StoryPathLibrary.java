@@ -3,9 +3,11 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -198,11 +200,23 @@ public class StoryPathLibrary extends StoryPath {
 
         if (context != null) {
 
-            File jsonTemplateFile = new File(buildPath(storyPathTemplateFile));
-            String jsonTemplate = JsonHelper.loadJSONFromPath(jsonTemplateFile.getPath());
+            //File jsonTemplateFile = new File(buildPath(storyPathTemplateFile));
+            //String jsonTemplate = JsonHelper.loadJSONFromPath(jsonTemplateFile.getPath());
 
             MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
-            mainActivity.refreshCardList(jsonTemplate, jsonTemplateFile);
+
+            //try {
+
+                StoryPath story = JsonHelper.loadStoryPathFromZip(buildPath(storyPathTemplateFile), this, context, mainActivity.getLanguage());
+                setCurrentStoryPath(story);
+
+                mainActivity.refreshCardList();
+
+            //} catch (com.google.gson.JsonSyntaxException e) {
+            //    Toast.makeText(context, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //} catch (MalformedJsonException e) {
+            //    Toast.makeText(context, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //}
 
         } else {
             Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user

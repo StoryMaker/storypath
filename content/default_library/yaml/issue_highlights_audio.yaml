@@ -1,0 +1,119 @@
+---
+    id: issue_highlights_audio
+    title: Issue Highlights
+    cards:
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record a location or the community that your issue is about.
+            clipType: Place
+            length: 0:12
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record people affected by the issue. 
+            clipType: Character
+            length: 0:25
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record audio that sums up the the issue and its impact.  
+            clipType: Signature
+            length: 0:10
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the most important example that illustrates the issue and its impact.
+            clipType: Action
+            length: 0:15
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record another important but different example that illustrate the issue and its impact.
+            clipType: Action
+            length: 0:20
+
+        - 
+            type: TipCard
+            tags:
+                - audio
+                - during
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record another important but different example that illustrate the issue and its impact.
+            clipType: Action
+            length: 0:13
+
+        - 
+            type: TextCard
+            text: If there are more than three, you should add cards to include them.
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Record the effect of the issue. Show how it impacts the community.
+            clipType: Result
+            length: 0:20
+
+        - 
+            type: ClipCard
+            medium: audio
+            goals: 
+                - Has anything been done about the issue? Record the change.
+                - If nothing has changed, explain that.
+            clipType: Result
+            length: 0:30
+
+        - 
+            type: TipCard
+            tags:
+                - edit
+                - audio
+                - during
+
+        - 
+            type: ReviewCard
+            medium: audio
+
+        - 
+            type: TipCard
+            tags:
+                - narration
+
+        - 
+            type: EvaluationCard
+            text: --------
+
+        - 
+            type: PublishCard
+            medium: audio
+
+        - 
+            type: NextUpCard
+            medium: audio
