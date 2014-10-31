@@ -18,9 +18,8 @@
         android:layout_marginBottom="@dimen/padding_small"
         android:layout_centerHorizontal="true"
         android:visibility="visible"/>
-
-    <VideoView
-        android:id="@+id/vv_card_video"
+    <TextureView
+        android:id="@+id/tv_card_video"
         android:layout_width="fill_parent"
         android:layout_height="220dp"
         android:layout_gravity="center"
