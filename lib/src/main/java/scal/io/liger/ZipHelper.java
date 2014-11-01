@@ -2,6 +2,7 @@ package scal.io.liger;
 
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
@@ -12,14 +13,36 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Vector;
 
 /**
- * Created by mnbogner on 10/28/14.
+ * @author Matt Bogner
+ * @author Josh Steiner
  */
 public class ZipHelper {
     // move values into constants
     private static int mainVersion = 1;
     private static int patchVersion = 0;
+
+    public static String getExtensionZipFilename(Context ctx, String assetName) {
+        String[] splits = assetName.split("\\.");
+        String version = splits[1];
+        String name = splits[0];
+        String packageName = ctx.getPackageName();
+        String filename = name + "." + version + "." + packageName + ".obb";
+        return filename;
+    }
+
+    public static String getExtensionFolderPath(Context ctx) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            // Build the full path to the app's expansion files
+            String packageName = ctx.getPackageName();
+            File root = Environment.getExternalStorageDirectory();
+            String fullPath = root.toString() + "/Android/obb/" + packageName + "/";
+            return fullPath;
+        }
+        return null;
+    }
 
     public static InputStream getFileInputStream(String path, Context context) {
         try {
