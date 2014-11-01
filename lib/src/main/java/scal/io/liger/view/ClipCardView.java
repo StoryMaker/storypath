@@ -9,12 +9,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -128,7 +132,31 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         // Set click listeners for actions
         tvCapture.setOnClickListener(captureClickListener);
-        //tvImport.setOnClickListener(); TODO import
+
+        tvImport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ACTION_OPEN_DOCUMENT is the new API 19 action for the Android file manager
+                Intent intent;
+                int requestId = Constants.REQUEST_FILE_IMPORT;
+                if (Build.VERSION.SDK_INT >= 19) {
+                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                } else {
+                    intent = new Intent(Intent.ACTION_GET_CONTENT);
+                }
+
+                // Filter to only show results that can be "opened", such as a
+                // file (as opposed to a list of contacts or timezones)
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+                // Currently no recognized epub MIME type
+                intent.setType("*/*");
+
+                String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
+                mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
+                ((Activity) mContext).startActivityForResult(intent, requestId);
+            }
+        });
 
 
         //set drawables for actions
@@ -356,14 +384,25 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 */
 
                 Bitmap videoFrame = null;
-                if (mediaFile instanceof ExampleMediaFile) {
-                    videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
-                } else {
-                    videoFrame = mediaFile.getThumbnail();
+                if (mediaFile.getPath().contains("content:/")) {
+                    // path of form : content://com.android.providers.media.documents/document/video:183
+                    // An Android Document Provider URI. Thumbnail already generated
+                    // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
+                    long videoId = Long.parseLong(Uri.parse(mediaFile.getPath()).getLastPathSegment().split(":")[1]);
+                    thumbnail.setImageBitmap(MediaStore.Video.Thumbnails.getThumbnail(mContext.getContentResolver(), videoId, MediaStore.Images.Thumbnails.MINI_KIND, null));
                 }
-                if(null != videoFrame) {
-                    thumbnail.setImageBitmap(videoFrame);
+                else {
+                    // Regular old File path
+                    if (mediaFile instanceof ExampleMediaFile) {
+                        videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
+                    } else {
+                        videoFrame = mediaFile.getThumbnail();
+                    }
+                    if(null != videoFrame) {
+                        thumbnail.setImageBitmap(videoFrame);
+                    }
                 }
+
 
                 thumbnail.setVisibility(View.VISIBLE);
 //                btnMediaPlay.setVisibility(View.VISIBLE);
@@ -434,8 +473,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final AtomicInteger clipStopMs = new AtomicInteger(selectedClip.getStopTime());
 
         /** Setup initial values that don't require media loaded */
-        clipStart.setText(makeTimeString(selectedClip.getStartTime()));
-        clipEnd.setText(makeTimeString(selectedClip.getStopTime()));
+        clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
+        clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
 
@@ -451,7 +490,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     // Left seek was adjusted, seek to it
                     clipStartMs.set(getMsFromRangeBarIndex(leftIdx, tickCount, clipDurationMs.get()));
                     player.seekTo(clipStartMs.get());
-                    clipStart.setText(makeTimeString(clipStartMs.get()));
+                    clipStart.setText(Util.makeTimeString(clipStartMs.get()));
                     //Log.i(TAG, String.format("Left seek to %d ms", clipStartMs.get()));
                     if (playbackBar.getProgress() < leftIdx) playbackBar.setProgress(leftIdx);
 
@@ -460,7 +499,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     // Right seek was adjusted, seek to it
                     clipStopMs.set(getMsFromRangeBarIndex(rightIdx, tickCount, clipDurationMs.get()));
                     player.seekTo(clipStopMs.get());
-                    clipEnd.setText(makeTimeString(clipStopMs.get()));
+                    clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
 
                     if (playbackBar.getProgress() > rightIdx) playbackBar.setProgress(rightIdx);
                     //Log.i(TAG, String.format("Right seek to %d ms", clipStopMs.get()));
@@ -509,8 +548,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     player.seekTo(selectedClip.getStartTime());
                     rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipDurationMs.get()),
                                               getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipDurationMs.get()));
-                    clipLength.setText("Total : " + makeTimeString(clipDurationMs.get()));
-                    clipEnd.setText(makeTimeString(selectedClip.getStopTime()));
+                    clipLength.setText("Total : " + Util.makeTimeString(clipDurationMs.get()));
+                    clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
                     e.printStackTrace();
                 }
@@ -569,13 +608,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 });
         Dialog dialog = builder.create();
         dialog.show();
-    }
-
-    private String makeTimeString(int timeMs) {
-        long second = (timeMs / 1000) % 60;
-        long minute = (timeMs / (1000 * 60)) % 60;
-
-        return String.format("%02d:%02d", minute, second);
     }
 
     private int getMsFromRangeBarIndex(int tick, int max, int clipDurationMs) {

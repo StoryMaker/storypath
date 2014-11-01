@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
@@ -638,6 +639,32 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
+                }
+
+            } else if (requestCode == Constants.REQUEST_FILE_IMPORT) {
+                Uri uri = intent.getData();
+                // Will only allow stream-based access to files
+                if (Build.VERSION.SDK_INT >= 19) {
+                    final int takeFlags = intent.getFlags()
+                            & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                }
+
+                String path = getRealPathFromURI(getApplicationContext(), uri);
+                Log.d(TAG, "onActivityResult, imported file path:" + path);
+                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+
+                Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+
+                // TODO Support photo, audio import
+                if (c instanceof ClipCard) {
+                    ClipCard cc = (ClipCard)c;
+                    MediaFile mf = new MediaFile(uri.toString(), Constants.VIDEO);
+                    cc.saveMediaFile(mf);
+                    mCardAdapter.changeCard(cc);
+                } else {
+                    Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
 
             }

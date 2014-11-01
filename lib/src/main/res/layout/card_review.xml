@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/collapsable"
     android:layout_width="match_parent"
@@ -7,9 +7,20 @@
     android:padding="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
+    <TextureView
+        android:id="@+id/tv_card_video"
+        android:layout_alignParentTop="true"
+        android:layout_width="fill_parent"
+        android:layout_height="220dp"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/padding_small"
+        android:visibility="invisible"/>
+
     <ImageView
-        android:id="@+id/iv_card_photo"
-        android:layout_width="wrap_content"
+        android:id="@+id/iv_thumbnail"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
         android:layout_height="220dp"
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
@@ -19,17 +30,9 @@
         android:layout_centerHorizontal="true"
         android:visibility="visible"/>
 
-    <VideoView
-        android:id="@+id/vv_card_video"
-        android:layout_width="fill_parent"
-        android:layout_height="220dp"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/padding_small"
-        android:visibility="gone"/>
-
     <Button
         android:id="@+id/btn_jumble"
+        android:layout_below="@id/tv_card_video"
         style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
@@ -41,6 +44,7 @@
     <Button
         android:id="@+id/btn_order"
         style="@style/button"
+        android:layout_below="@id/btn_jumble"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
         android:drawableLeft="@drawable/ic_capture"
@@ -51,6 +55,7 @@
     <Button
         android:id="@+id/btn_narrate"
         style="@style/button"
+        android:layout_below="@id/btn_order"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
         android:drawableLeft="@drawable/ic_whoknows"
@@ -61,10 +66,11 @@
     <Button
         android:id="@+id/btn_publish"
         style="@style/button"
+        android:layout_below="@id/btn_narrate"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
         android:drawableLeft="@drawable/ic_capture"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
         android:text="Publish" />
-</LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/clip_thumb_height"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/clip_thumb_height"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/clipLength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/padding_xlarge"
+        android:layout_marginTop="@dimen/padding_small"
+        android:layout_below="@id/textureView"
+        android:textSize="@dimen/text_large"
+        android:text="Total 0:03"
+        android:fontFamily="sans-serif-light"/>
+
+    <SeekBar
+        android:id="@+id/playbackProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/clipLength"
+        android:thumb="@drawable/scrubber_control_normal_holo"
+        android:enabled="false"
+        android:max="@integer/trim_bar_tick_count" />
+
+    <!-- Get ready for some multi-use buttons! -->
+
+    <Button
+        android:id="@+id/recordStopRedoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_alignParentRight="true"
+        android:text="@string/dialog_record"
+        android:layout_below="@id/playbackProgress"/>
+
+    <Button
+        android:id="@+id/donePauseResumeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_toStartOf="@id/recordStopRedoButton"
+        android:text="@string/dialog_done"
+        android:layout_below="@id/playbackProgress"/>
+
+</RelativeLayout>

@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- For 4.4 up. Allows us to take permanent permission on File URI Without having
+     to show file chooser each time -->
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
