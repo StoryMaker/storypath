@@ -164,6 +164,9 @@ public class JsonHelper {
                     Log.d("LANGUAGE", "loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
                 }
 
+                if (jsonStream == null)
+                    return null;
+
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
                 jsonStream.read(buffer);
@@ -254,7 +257,7 @@ public class JsonHelper {
             String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
             // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
-            copyFilesToSdCard(context, sdLigerFilePath);
+//            copyFilesToSdCard(context, sdLigerFilePath); // FIXME we need to copy our .obb files only
         } else {
             Log.e(TAG, "SD CARD NOT FOUND");
         }

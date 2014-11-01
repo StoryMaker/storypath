@@ -177,6 +177,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     //String json = JsonHelper.loadJSON();
                     String json = JsonHelper.loadJSONFromZip(MainActivity.this, language);
 
+                    if (json == null || json.equals("")) {
+                        Toast.makeText(MainActivity.this, "Was not able to load this lesson, content was missing!", Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+
                     Log.d("GOOGLE", "JSON: " + json);
 
                     initHook(json, jsonPath);

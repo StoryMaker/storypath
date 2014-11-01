@@ -26,6 +26,11 @@ public class ZipHelper {
             // resource file contains main file and patch file
             ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
 
+            if (resourceFile == null) {
+                return null;
+            }
+
+
             // file path must be relative to the root of the resource file
             InputStream resourceStream = resourceFile.getInputStream(path);
 
