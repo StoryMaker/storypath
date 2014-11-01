@@ -32,6 +32,8 @@
 
     <Button
         android:id="@+id/btn_jumble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/tv_card_video"
         style="@style/button"
         android:background="@android:color/transparent"
@@ -43,6 +45,8 @@
 
     <Button
         android:id="@+id/btn_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         style="@style/button"
         android:layout_below="@id/btn_jumble"
         android:background="@android:color/transparent"
@@ -54,6 +58,8 @@
 
     <Button
         android:id="@+id/btn_narrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         style="@style/button"
         android:layout_below="@id/btn_order"
         android:background="@android:color/transparent"
@@ -65,6 +71,8 @@
 
     <Button
         android:id="@+id/btn_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         style="@style/button"
         android:layout_below="@id/btn_narrate"
         android:background="@android:color/transparent"
