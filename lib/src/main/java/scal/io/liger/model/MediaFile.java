@@ -65,7 +65,7 @@ public class MediaFile {
 
                     // FIXME should not be stored in the source location, but a cache dir in our app folder on the sd or internal cache if there is no SD
                     // FIXME need to check datestamp on original file to check if our thumbnail is up to date
-                    // FIXME this should be run from a background thread as it does disk access  
+                    // FIXME this should be run from a background thread as it does disk access
                     File originalFile = new File(path);
                     String fileName = originalFile.getName();
                     String[] tokens = fileName.split("\\.(?=[^\\.]+$)");

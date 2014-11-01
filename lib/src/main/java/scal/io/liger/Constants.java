@@ -8,6 +8,7 @@ public class Constants {
     public static final int REQUEST_VIDEO_CAPTURE = 100;
     public static final int REQUEST_IMAGE_CAPTURE = 101;
     public static final int REQUEST_AUDIO_CAPTURE = 102;
+    public static final int REQUEST_FILE_IMPORT   = 103;
 
     /** Intent extras used for external Media Capture via
      *  {@link android.app.Activity#startActivityForResult(android.content.Intent, int)} */
