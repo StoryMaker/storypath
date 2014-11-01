@@ -504,8 +504,7 @@ public class ReviewCardView implements DisplayableCard {
         private void init() {
             // Setup views
             currentlyPlayingCard = (ClipCard) mediaCards.get(0);
-            // TODO : Blank clip placeholder
-            //setThumbnailForClip(ivThumbnail, currentlyPlayingCard); TextureView should show thumbnail
+            setThumbnailForClip(ivThumbnail, currentlyPlayingCard);
             ivThumbnail.setOnClickListener(getVideoPlaybackToggleClickListener());
             tvVideo.setOnClickListener(getVideoPlaybackToggleClickListener());
 
