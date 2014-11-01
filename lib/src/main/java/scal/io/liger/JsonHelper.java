@@ -184,9 +184,9 @@ public class JsonHelper {
         return sdLigerFilePath;
     }
 
-//    private static void copyFilesToSdCard(Context context, String basePath) {
-//        copyFileOrDir(context, basePath, ""); // copy all files in assets folder in my project
-//    }
+    private static void copyFilesToSdCard(Context context, String basePath) {
+        copyFileOrDir(context, basePath, ""); // copy all files in assets folder in my project
+    }
 
     private static void copyFileOrDir(Context context, String assetFromPath, String baseToPath) {
         AssetManager assetManager = context.getAssets();
@@ -221,6 +221,9 @@ public class JsonHelper {
 
     private static void copyFile(Context context, String fromFilename, String baseToPath) {
         AssetManager assetManager = context.getAssets();
+
+        if (fromFilename.endsWith(".obb"))
+            return;  // let's not copy .obb files, they get copied elseware
 
         InputStream in = null;
         OutputStream out = null;
@@ -282,8 +285,9 @@ public class JsonHelper {
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
-//            String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
-//            sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
+            // FIXME we need to remove this, it seems like the popup stuff requires it even though we acutally read files from .obb not the Liger folder
+            String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
+            sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
             // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
 //            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
 
