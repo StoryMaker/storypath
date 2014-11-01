@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import scal.io.liger.model.Dependency;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
@@ -33,6 +34,18 @@ public class JsonHelper {
     private static String sdLigerFilePath = null;
 
     //private static String language = null; // TEMP
+
+    // TEMP - for gathering insance files to test references
+    public static ArrayList<String> getInstanceFiles() {
+        ArrayList<String> instanceList = new ArrayList<String>();
+        for (String s : jsonPathList) {
+            if (s.contains("-instance")) {
+                instanceList.add(s);
+                Log.d("FILES", "FOUND INSTANCE FILE: " + s);
+            }
+        }
+        return instanceList;
+    }
 
     public static String loadJSONFromPath(String jsonPath, String language) {
 
@@ -77,8 +90,20 @@ public class JsonHelper {
         return jsonString;
     }
 
-    public static String loadJSON(String language) {
-        return loadJSON(selectedJSONFile, language);
+    public static String loadJSON(Context context, String language) {
+        // check for file
+        // paths to actual files should fully qualified
+        // paths within zip files should be relative
+        // (or at least not resolve to actual files)
+        File checkFile = new File(selectedJSONPath);
+        //if (selectedJSONFile.exists()) {
+        //    return loadJSON(selectedJSONFile, language);
+        //} else {
+        if (checkFile.exists()) {
+            return loadJSON(checkFile, language);
+        } else {
+            return loadJSONFromZip(selectedJSONPath, context, language);
+        }
     }
 
     public static String loadJSON(File file, String language) {
@@ -128,9 +153,12 @@ public class JsonHelper {
 
     // NEW
 
+    // merged with regular loadJSON method
+    /*
     public static String loadJSONFromZip(Context context, String language) {
         return loadJSONFromZip(selectedJSONPath, context, language);
     }
+    */
 
     public static String loadJSONFromZip(String jsonFilePath, Context context, String language) {
 
@@ -254,7 +282,8 @@ public class JsonHelper {
             String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
             // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
-            copyFilesToSdCard(context, sdLigerFilePath);
+            //FILES NOW STORED IN ZIP FILE
+            //copyFilesToSdCard(context, sdLigerFilePath);
         } else {
             Log.e(TAG, "SD CARD NOT FOUND");
         }
@@ -273,32 +302,46 @@ public class JsonHelper {
         // HARD CODING LIST
 
         File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
-        File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
-        File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
-        File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
+        //File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
+        //File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
+        //File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
         File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
-        File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
+        //File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
 
         jsonFileNamesList.add(ligerFile_1.getName());
-        jsonFileNamesList.add(ligerFile_2.getName());
-        jsonFileNamesList.add(ligerFile_3.getName());
-        jsonFileNamesList.add(ligerFile_4.getName());
+        //jsonFileNamesList.add(ligerFile_2.getName());
+        //jsonFileNamesList.add(ligerFile_3.getName());
+        //jsonFileNamesList.add(ligerFile_4.getName());
         jsonFileNamesList.add(ligerFile_5.getName());
-        jsonFileNamesList.add(ligerFile_6.getName());
+        //jsonFileNamesList.add(ligerFile_6.getName());
 
         jsonFileList.add(ligerFile_1);
-        jsonFileList.add(ligerFile_2);
-        jsonFileList.add(ligerFile_3);
-        jsonFileList.add(ligerFile_4);
+        //jsonFileList.add(ligerFile_2);
+        //jsonFileList.add(ligerFile_3);
+        //jsonFileList.add(ligerFile_4);
         jsonFileList.add(ligerFile_5);
-        jsonFileList.add(ligerFile_6);
+        //jsonFileList.add(ligerFile_6);
 
         jsonPathList.add("default/default_library/default_library.json");
-        jsonPathList.add("default/learning_guide_TEST.json");
-        jsonPathList.add("default/LIB_1/LIB_1_TEST.json");
-        jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
+        //jsonPathList.add("default/learning_guide_TEST.json");
+        //jsonPathList.add("default/LIB_1/LIB_1_TEST.json");
+        //jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
         jsonPathList.add("default/learning_guide_library.json");
-        jsonPathList.add("default/learning_guide_library_SAVE.json");
+        //jsonPathList.add("default/learning_guide_library_SAVE.json");
+
+
+        File jsonFolder = new File(getSdLigerFilePath());
+        for (File jsonFile : jsonFolder.listFiles()) {
+            if (jsonFile.getName().contains(".json") && !jsonFile.isDirectory()) {
+                File localFile = new File(jsonFile.getPath());
+                Log.d("FILES", "FOUND JSON FILE: " + localFile.getName());
+                jsonFileNamesList.add(localFile.getName());
+                jsonFileList.add(localFile);
+                jsonPathList.add(localFile.getPath());
+            }
+        }
+
+
 
         /*
         File ligerDir = new File(sdLigerFilePath);
@@ -369,7 +412,7 @@ public class JsonHelper {
         }
     }
 
-    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, Context context, String language) {
+    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -412,13 +455,13 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, f.getPath(), context);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, f.getPath(), referencedFiles, context);
 
     }
 
     // NEW
 
-    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, Context context, String language) {
+    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
 
         Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
 
@@ -456,10 +499,10 @@ public class JsonHelper {
                 return null;
             }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, context);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, referencedFiles, context);
     }
 
-    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, Context context) {
+    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, ArrayList<String> referencedFiles, Context context) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -480,6 +523,21 @@ public class JsonHelper {
             storyPathLibrary.setFileLocation(jsonFilePath);
         }
 
+        // construct and insert dependencies
+        for (String referencedFile : referencedFiles) {
+            Dependency dependency = new Dependency();
+            dependency.setDependencyFile(referencedFile);
+
+            // extract id from path/file name
+            // assumes format <path/library id>-instance-<timestamp>.json
+            // assumes path/library id doesn't not contain "-"
+            String derivedId = referencedFile.substring(referencedFile.lastIndexOf(File.separator) + 1);
+            derivedId = derivedId.substring(0, derivedId.indexOf("-"));
+            dependency.setDependencyId(derivedId);
+            storyPathLibrary.addDependency(dependency);
+            Log.d("FILES", "DEPENDENCY: " + derivedId + " -> " + referencedFile);
+        }
+
         storyPathLibrary.setCardReferences();
         storyPathLibrary.initializeObservers();
         storyPathLibrary.setContext(context);
@@ -487,22 +545,32 @@ public class JsonHelper {
         return storyPathLibrary;
     }
 
-    public static String saveStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
+    public static String getStoryPathLibrarySaveFileName(StoryPathLibrary storyPathLibrary) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
+        Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
 
         Date timeStamp = new Date();
-        String jsonFilePath = storyPathLibrary.buildPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
+        //String jsonFilePath = storyPathLibrary.buildPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
+        //TEMP
+        String jsonFilePath = storyPathLibrary.buildFilePath(storyPathLibrary.getId() + "-instance-" + timeStamp.getTime() + ".json");
+
+        return jsonFilePath;
+    }
+
+    public static boolean saveStoryPathLibrary(StoryPathLibrary storyPathLibrary, String jsonFilePath) {
+
+        Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId() + " -> " + jsonFilePath);
 
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                File storyPathLibraryFile = new File(jsonFilePath);
-                FileOutputStream storyPathLibraryStream = new FileOutputStream(storyPathLibraryFile);
-                if (!storyPathLibraryFile.exists()) {
-                    storyPathLibraryFile.createNewFile();
+                File storyPathLibraryFile = new File(jsonFilePath + ".swap"); // NEED TO WRITE TO SWAP AND COPY
+                if (storyPathLibraryFile.exists()) {
+                    storyPathLibraryFile.delete();
                 }
+                storyPathLibraryFile.createNewFile();
+                FileOutputStream storyPathLibraryStream = new FileOutputStream(storyPathLibraryFile);
 
                 String storyPathLibraryJson = serializeStoryPathLibrary(storyPathLibrary);
 
@@ -510,24 +578,28 @@ public class JsonHelper {
                 storyPathLibraryStream.write(storyPathLibraryData);
                 storyPathLibraryStream.flush();
                 storyPathLibraryStream.close();
+
+                Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + ".swap " + jsonFilePath);
+
             } catch (IOException ioe) {
                 Log.e(TAG, "writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
-                return null;
+                return false;
             }
         } else {
             Log.e(TAG, "SD card not found");
-            return null;
+            return false;
         }
 
         // update file location
-        storyPathLibrary.setFileLocation(jsonFilePath);
+        // TEMP - this will break references to content in zip file.  unsure what to do...
+        // storyPathLibrary.setFileLocation(jsonFilePath);
 
-        return jsonFilePath;
+        return true;
     }
 
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
+        Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
@@ -537,7 +609,7 @@ public class JsonHelper {
         return storyPathLibraryJson;
     }
 
-    public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context, String language) {
+    public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
 
@@ -580,12 +652,12 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, context);
+        return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, referencedFiles, context);
     }
 
     // NEW
 
-    public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context, String language) {
+    public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
 
@@ -623,10 +695,10 @@ public class JsonHelper {
                 return null;
             }
 
-        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, context);
+        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, referencedFiles, context);
     }
 
-    public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, Context context) {
+    public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
 
@@ -655,27 +727,52 @@ public class JsonHelper {
 
         }
 
+        // construct and insert dependencies
+        for (String referencedFile : referencedFiles) {
+            Dependency dependency = new Dependency();
+            dependency.setDependencyFile(referencedFile);
+
+            // extract id from path/file name
+            // assumes format <path/library id>-instance-<timestamp>.json
+            // assumes path/library id doesn't not contain "-"
+            String derivedId = referencedFile.substring(referencedFile.lastIndexOf(File.separator) + 1);
+            derivedId = derivedId.substring(0, derivedId.indexOf("-"));
+            dependency.setDependencyId(derivedId);
+            storyPath.addDependency(dependency);
+            Log.d("FILES", "DEPENDENCY: " + derivedId + " -> " + referencedFile);
+        }
+
         storyPath.setContext(context);
 
         return storyPath;
     }
 
-    public static String saveStoryPath(StoryPath storyPath) {
+    public static String getStoryPathSaveFileName(StoryPath storyPath) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPath CALLED FOR " + storyPath.getId());
+        Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId());
 
         Date timeStamp = new Date();
-        String jsonFilePath = storyPath.buildPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
+        //String jsonFilePath = storyPath.buildPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
+        //TEMP
+        String jsonFilePath = storyPath.buildFilePath(storyPath.getId() + "-instance-" + timeStamp.getTime() + ".json");
+
+        return jsonFilePath;
+    }
+
+    public static boolean saveStoryPath(StoryPath storyPath, String jsonFilePath) {
+
+        Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId() + " -> " + jsonFilePath);
 
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
-                File storyPathFile = new File(jsonFilePath);
-                FileOutputStream storyPathStream = new FileOutputStream(storyPathFile);
-                if (!storyPathFile.exists()) {
-                    storyPathFile.createNewFile();
+                File storyPathFile = new File(jsonFilePath + ".swap"); // NEED TO WRITE TO SWAP AND COPY
+                if (storyPathFile.exists()) {
+                    storyPathFile.delete();
                 }
+                storyPathFile.createNewFile();
+                FileOutputStream storyPathStream = new FileOutputStream(storyPathFile);
 
                 String storyPathJson = serializeStoryPath(storyPath);
 
@@ -683,29 +780,34 @@ public class JsonHelper {
                 storyPathStream.write(storyPathData);
                 storyPathStream.flush();
                 storyPathStream.close();
+
+                Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + ".swap " + jsonFilePath);
+
             } catch (IOException ioe) {
                 Log.e(TAG, "writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
-                return null;
+                return false;
             }
         } else {
             Log.e(TAG, "SD card not found");
-            return null;
+            return false;
         }
 
         // update file location
-        storyPath.setFileLocation(jsonFilePath);
+        // TEMP - this will break references to content in zip file.  unsure what to do...
+        // storyPath.setFileLocation(jsonFilePath);
 
-        return jsonFilePath;
+        return true;
     }
 
     public static String serializeStoryPath(StoryPath storyPath) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
+        Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         // set aside references to prevent circular dependencies when serializing
+        /*
         Context tempContext = storyPath.getContext();
 
         StoryPathLibrary tempStoryPathLibrary = storyPath.getStoryPathLibrary();
@@ -713,14 +815,17 @@ public class JsonHelper {
         storyPath.setStoryPathLibrary(null);
         storyPath.clearObservers();
         storyPath.clearCardReferences();
+        */
 
         String storyPathJson = gson.toJson(storyPath);
 
         // restore references
+        /*
         storyPath.setCardReferences();
         storyPath.initializeObservers();
         storyPath.setStoryPathLibrary(tempStoryPathLibrary);
         storyPath.setContext(tempContext);
+        */
 
         return storyPathJson;
     }

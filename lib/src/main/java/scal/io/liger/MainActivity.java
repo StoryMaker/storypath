@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         Log.d("MainActivity", "onCreate");
 
         if (savedInstanceState == null) {
-            Log.d(TAG, "onSaveInstanceState called with savedInstanceState");
+            Log.d(TAG, "onCreate called with no savedInstanceState");
 
             JsonHelper.setupFileStructure(this);
             MediaHelper.setupFileStructure(this);
@@ -83,6 +83,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 Log.d("LANGUAGE", "Found language code " + language + " in intent");
             } else {
                 Log.d("LANGUAGE", "Found no code in intent (setting to test)");
+                language = "ar";
             }
 
             /*
@@ -97,11 +98,20 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 showJsonSelectorPopup();
             //}
         } else {
-            Log.d(TAG, "onSaveInstanceState called with no saved state");
+            Log.d(TAG, "onCreate called with valid savedInstanceState");
             Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
             if (savedInstanceState.containsKey("storyPathLibraryJson")) {
                 String jsonSPL = savedInstanceState.getString("storyPathLibraryJson");
-                initHook(jsonSPL);
+
+                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+
+                mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(jsonSPL, null, referencedFiles, this);
+
+                mStoryPathLibrary.setStoryPathLibraryListener(this);
+
+                setupCardView();
+
+                //initHook(jsonSPL);
 
                 if (savedInstanceState.containsKey("storyPathJson")) {
                     String jsonSP = savedInstanceState.getString("storyPathJson");
@@ -168,17 +178,25 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         else {
             builder.setTitle("Choose Story File(SdCard/Liger/)").setItems(jsonFiles, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int index) {
-                    //File jsonFile = JsonHelper.setSelectedJSONFile(index);
+                    File jsonFile = JsonHelper.setSelectedJSONFile(index);
                     String jsonPath = JsonHelper.setSelectedJSONPath(index);
 
                     // TEMP - unsure how to best determine new story vs. existing story
 
-                    //String json = JsonHelper.loadJSON();
-                    String json = JsonHelper.loadJSONFromZip(MainActivity.this, language);
+                    String json = JsonHelper.loadJSON(MainActivity.this, language);
+                    //String json = JsonHelper.loadJSONFromZip(MainActivity.this, language);
 
                     Log.d("GOOGLE", "JSON: " + json);
 
-                    initHook(json, jsonPath);
+                    //initHook(json, jsonPath);
+
+                    ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+
+                    mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
+
+                    mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
+
+                    setupCardView();
 
                     // need to implement selection of story path based on hook
 
@@ -204,11 +222,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
 
     // FIXME rename this to init initial cards or something
-    private void initHook(String json) {
-        initHook(json, null);
+    private void initHookDELETE(String json) {
+        //initHook(json, null);
     }
 
-    private void initHook(String json, String jsonPath) {
+    private void initHookDELETE(String json, String jsonPath) {
         Log.d(TAG, "initHook called");
 
         // unsure what needs to be set up for the hook interface
@@ -217,7 +235,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
 
         try {
-            initStoryPathLibraryModel(json, jsonPath);
+            //initStoryPathLibraryModel(json, jsonPath);
+
+
 
             mStoryPathLibrary.setStoryPathLibraryListener(this);
             setupCardView();
@@ -225,10 +245,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         } catch (com.google.gson.JsonSyntaxException e) {
             Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
-        } catch (MalformedJsonException e) {
-            Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+        } //catch (MalformedJsonException e) {
+       //     Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+      //      e.printStackTrace();
+      //  }
     }
 
     /*
@@ -245,13 +265,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
     */
 
-    private void initStoryPathLibraryModel(String json, String jsonPath) throws MalformedJsonException {
+    private void initStoryPathLibraryModelDELETE(String json, String jsonPath) throws MalformedJsonException {
         Log.d(TAG, "initStoryPathLibraryModel called");
 
         if (jsonPath != null) {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, this);
+            //mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, this);
         } else {
-            mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
+            //mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, null, this);
         }
 
         mStoryPathLibrary.setStoryPathLibraryListener(this);
@@ -469,11 +489,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             for (Dependency dependency : mStoryPathLibrary.getCurrentStoryPath().getDependencies()) {
                 if (dependency.getDependencyId().equals(pathParts[0])) {
 
+                    ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+
                     // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
-                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, this, language);
+                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, referencedFiles, this, language);
                     newStoryPath = true;
 
-                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), this, language);
+                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), referencedFiles, this, language);
 
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibrary(storyPathLibrary);
@@ -558,6 +580,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.VIDEO);
                     cc.saveMediaFile(mf);
+
+                    // SEEMS LIKE A REASONABLE TIME TO SAVE
+                    saveStoryFile();
+
                     mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
@@ -579,6 +605,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.PHOTO);
                     cc.saveMediaFile(mf);
+
+                    // SEEMS LIKE A REASONABLE TIME TO SAVE
+                    saveStoryFile();
+
                     mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
@@ -601,6 +631,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(path, Constants.AUDIO);
                     cc.saveMediaFile(mf);
+
+                    // SEEMS LIKE A REASONABLE TIME TO SAVE
+                    saveStoryFile();
+
                     mCardAdapter.changeCard(cc);
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
@@ -613,9 +647,37 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     public void saveStoryFile() {
         //Gson gson = new Gson();
 
-        String savedFilePath = JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath());
-        mStoryPathLibrary.setCurrentStoryPathFile(savedFilePath);
-        JsonHelper.saveStoryPathLibrary(mStoryPathLibrary);
+        if (mStoryPathLibrary == null) {
+            Log.d("FILES", "NOTHING TO SAVE YET");
+            return;
+        }
+
+        String savedStoryPathLibraryFile = mStoryPathLibrary.getSavedFileName();
+        if (savedStoryPathLibraryFile == null) {
+            savedStoryPathLibraryFile = JsonHelper.getStoryPathLibrarySaveFileName(mStoryPathLibrary);
+            mStoryPathLibrary.setSavedFileName(savedStoryPathLibraryFile);
+        }
+
+        if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+            mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryFile(savedStoryPathLibraryFile);
+            String savedStoryPathFile = mStoryPathLibrary.getCurrentStoryPath().getSavedFileName();
+            if (savedStoryPathFile == null) {
+                savedStoryPathFile = JsonHelper.getStoryPathSaveFileName(mStoryPathLibrary.getCurrentStoryPath());
+                mStoryPathLibrary.getCurrentStoryPath().setSavedFileName(savedStoryPathFile);
+            }
+            mStoryPathLibrary.setCurrentStoryPathFile(savedStoryPathFile);
+            JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath(), savedStoryPathFile);
+            Log.d("FILES", mStoryPathLibrary.getCurrentStoryPath().getId() + " WAS SAVED TO FILE " + savedStoryPathFile);
+        } else {
+            Log.d("FILES", mStoryPathLibrary.getId() + " HAS NO STORY PATH TO SAVE YET");
+        }
+
+        JsonHelper.saveStoryPathLibrary(mStoryPathLibrary, savedStoryPathLibraryFile);
+        Log.d("FILES", mStoryPathLibrary.getId() + " WAS SAVED TO FILE " + savedStoryPathLibraryFile);
+
+        //String savedFilePath = JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath());
+        //mStoryPathLibrary.setCurrentStoryPathFile(savedFilePath);
+        //JsonHelper.saveStoryPathLibrary(mStoryPathLibrary);
 
         /*
         // prep and serialize story path library

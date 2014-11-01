@@ -37,6 +37,7 @@ public class StoryPath {
     @Expose protected String fileLocation;
     protected StoryPathLibrary storyPathLibrary; // not serialized
     @Expose protected String storyPathLibraryFile;
+    @Expose protected String savedFileName = null;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -65,6 +66,14 @@ public class StoryPath {
 
     public void setClassPackage(String classPackage) {
         this.classPackage = classPackage;
+    }
+
+    public String getSavedFileName() {
+        return savedFileName;
+    }
+
+    public void setSavedFileName(String savedFileName) {
+        this.savedFileName = savedFileName;
     }
 
     public ArrayList<Card> getCards() {
@@ -318,7 +327,24 @@ public class StoryPath {
 
                 //String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
                 //story = gson.fromJson(json, StoryPath.class);
-                story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, this.context, mainActivity.getLanguage());
+
+                // check for file
+                // paths to actual files should fully qualified
+                // paths within zip files should be relative
+                // (or at least not resolve to actual files)
+                String checkPath = buildPath(dependency.getDependencyFile());
+                File checkFile = new File(checkPath);
+
+                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+
+                if (checkFile.exists()) {
+                    story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                } else {
+                    story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                }
+
 
                 //story.context = this.context;
                 //story.setCardReferences();
@@ -380,7 +406,7 @@ public class StoryPath {
 
         Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + basePath + " OTHER PART: " + flatPath);
 
-        String relativePath = basePath + File.separator + flatPath;
+        String relativePath = basePath + flatPath;
         return relativePath;
     }
 
@@ -409,6 +435,9 @@ public class StoryPath {
         if (action.equals("DELETE")) {
             storyPathLibrary.mListener.onCardRemoved(firstCard);
         }
+
+        // SEEMS LIKE A REASONABLE TIME TO SAVE
+        ((MainActivity)context).saveStoryFile();
     }
 
     /**

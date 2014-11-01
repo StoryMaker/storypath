@@ -58,6 +58,9 @@ public class StoryPathLibrary extends StoryPath {
         if (action.equals("DELETE")) {
             mListener.onCardRemoved(firstCard);
         }
+
+        // SEEMS LIKE A REASONABLE TIME TO SAVE
+        ((MainActivity)context).saveStoryFile();
     }
 
     public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {
@@ -189,8 +192,10 @@ public class StoryPathLibrary extends StoryPath {
 
         if (storyPathTemplateKey.equals("CURRENT")) { // ADD TO CONSTANTS
             storyPathTemplateFile = getCurrentStoryPathFile();
+            Log.e("FILES", "CURRENT STORY PATH: " + storyPathTemplateFile); // FIXME at least toast the user
         } else {
             storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
+            Log.e("FILES", "STORY PATH TEMPLATE: " + storyPathTemplateFile); // FIXME at least toast the user
         }
 
         if (storyPathTemplateFile == null) {
@@ -206,8 +211,23 @@ public class StoryPathLibrary extends StoryPath {
             MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
 
             //try {
+                // check for file
+                // paths to actual files should fully qualified
+                // paths within zip files should be relative
+                // (or at least not resolve to actual files)
+                String checkPath = buildPath(storyPathTemplateFile);
+                File checkFile = new File(checkPath);
 
-                StoryPath story = JsonHelper.loadStoryPathFromZip(buildPath(storyPathTemplateFile), this, context, mainActivity.getLanguage());
+                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+
+                StoryPath story = null;
+                if (checkFile.exists()) {
+                    story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, mainActivity.getLanguage());
+                    Log.e("FILES", "LOADED FROM FILE: " + checkPath);
+                } else {
+                    story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, mainActivity.getLanguage());
+                    Log.e("FILES", "LOADED FROM ZIP: " + checkPath);
+                }
                 setCurrentStoryPath(story);
 
                 mainActivity.refreshCardList();
