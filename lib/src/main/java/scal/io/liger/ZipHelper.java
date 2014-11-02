@@ -2,6 +2,7 @@ package scal.io.liger;
 
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
@@ -19,12 +20,26 @@ import java.io.OutputStream;
 public class ZipHelper {
     // move values into constants
     private static int mainVersion = 1;
-    private static int patchVersion = 0;
+    private static int patchVersion = 1;
 
     public static InputStream getFileInputStream(String path, Context context) {
         try {
             // resource file contains main file and patch file
-            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
+            //ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
+
+            // multi-patch attempt
+            String packageName = context.getPackageName();
+            File root = Environment.getExternalStorageDirectory();
+            String expPath_1 = root.toString() + "/Android/obb/" + packageName + "/main.1.scal.io.liger.sample.obb";
+            String expPath_2 = root.toString() + "/Android/obb/" + packageName + "/patch.1.scal.io.liger.sample.obb";
+            String expPath_3 = root.toString() + "/Android/obb/" + packageName + "/patch.2.scal.io.liger.sample.obb";
+
+            String[] paths = new String[3];
+            paths[0] = expPath_1;
+            paths[1] = expPath_2;
+            paths[2] = expPath_3;
+
+            ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths);
 
             // file path must be relative to the root of the resource file
             InputStream resourceStream = resourceFile.getInputStream(path);
