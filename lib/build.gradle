@@ -38,5 +38,5 @@ dependencies {
 //    compile 'com.google.android.gms:play-services:6.1.71'
     compile 'com.edmodo:rangebar:1.0.0'
     androidTestCompile files('libs/espresso-1.1-bundled.jar')
-    compile project(':external:liger:android-iconify')
+    compile project(':android-iconify')
 }
