@@ -381,16 +381,20 @@ public class JsonHelper {
             jsonKeyToPath.put("learning_guide_library_SAVE", "default/learning_guide_library_SAVE.json");
 
             File jsonFolder = new File(getSdLigerFilePath());
-            for (File jsonFile : jsonFolder.listFiles()) {
-                Log.d("FILES", "FOUND FILE: " + jsonFile.getName());
-                if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                    File localFile = new File(jsonFile.getPath());
-                    Log.d("FILES", "FOUND JSON FILE: " + localFile.getName());
-                    jsonFileNamesList.add(localFile.getName());
-                    jsonFileList.add(localFile);
-                    jsonPathList.add(localFile.getPath());
-                    jsonKeyToPath.put(localFile.getName(), localFile.getPath());
+            // check for nulls (uncertain as to cause of nulls)
+            if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
+                for (File jsonFile : jsonFolder.listFiles()) {
+                    if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
+                        File localFile = new File(jsonFile.getPath());
+                        Log.d("FILES", "FOUND INSTANCE FILE: " + localFile.getName());
+                        jsonFileNamesList.add(localFile.getName());
+                        jsonFileList.add(localFile);
+                        jsonPathList.add(localFile.getPath());
+                        jsonKeyToPath.put(localFile.getName(), localFile.getPath());
+                    }
                 }
+            } else {
+                Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
             }
         }
     }
