@@ -88,8 +88,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 language = i.getExtras().getString("lang");
                 Log.d("LANGUAGE", "Found language code " + language + " in intent");
             } else {
-                Log.d("LANGUAGE", "Found no code in intent (setting to test)");
-                language = "ar";
+                Log.d("LANGUAGE", "Found no language code in intent");
             }
 
             final ActionBar actionBar = getActionBar();
