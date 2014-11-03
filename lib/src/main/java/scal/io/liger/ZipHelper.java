@@ -22,7 +22,7 @@ import java.util.Vector;
 public class ZipHelper {
     // move values into constants
     private static int mainVersion = 1;
-    private static int patchVersion = 1;
+    private static int patchVersion = 0;
 
     public static String getExtensionZipFilename(Context ctx, String assetName) {
         String[] splits = assetName.split("\\.");
@@ -47,9 +47,10 @@ public class ZipHelper {
     public static InputStream getFileInputStream(String path, Context context) {
         try {
             // resource file contains main file and patch file
-            //ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
+            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
 
             // multi-patch attempt
+            /*
             String packageName = context.getPackageName();
             File root = Environment.getExternalStorageDirectory();
             String expPath_1 = root.toString() + "/Android/obb/" + packageName + "/main.1.scal.io.liger.sample.obb";
@@ -62,6 +63,7 @@ public class ZipHelper {
             paths[2] = expPath_3;
 
             ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths);
+            */
 
             if (resourceFile == null) {
                 return null;
