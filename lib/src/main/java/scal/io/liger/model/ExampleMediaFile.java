@@ -6,8 +6,6 @@ import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.google.gson.annotations.Expose;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,7 +52,7 @@ public class ExampleMediaFile extends MediaFile{
 
                     Log.d(" *** TESTING *** ", "New thumbnail name " + newThumbnailName);
 
-                    String newThumbnailPath = card.getStoryPath().buildFilePath(path.substring(0, path.lastIndexOf(File.separator) + 1) + newThumbnailName);
+                    String newThumbnailPath = card.getStoryPath().buildTargetPath(path.substring(0, path.lastIndexOf(File.separator) + 1) + newThumbnailName);
                     File newThumbnailFile = new File(newThumbnailPath);
 
                     Log.d(" *** TESTING *** ", "New thumbnail path " + newThumbnailFile.getPath());
@@ -110,7 +108,7 @@ public class ExampleMediaFile extends MediaFile{
         // local path will be relative
         // need to create a temp file with content from zip file to pass to ThumbnailUtils
 
-        String tempMediaFile = card.getStoryPath().buildFilePath(path);
+        String tempMediaFile = card.getStoryPath().buildTargetPath(path);
         String tempMediaPath = tempMediaFile.substring(0, tempMediaFile.lastIndexOf(File.separator));
 
         Log.d(" *** TESTING *** ", "Temp file path " + tempMediaPath);

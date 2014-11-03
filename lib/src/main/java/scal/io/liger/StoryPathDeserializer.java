@@ -54,6 +54,12 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
             spm.setFileLocation(fileLocation);
         }
 
+        tempObj = jObj.get("savedFileName");
+        if (tempObj != null) {
+            String savedFileName = jObj.get("savedFileName").getAsString();
+            spm.setSavedFileName(savedFileName);
+        }
+
         tempObj = jObj.get("storyPathLibraryFile");
         if (tempObj != null) {
             String storyPathLibraryFile = jObj.get("storyPathLibraryFile").getAsString();

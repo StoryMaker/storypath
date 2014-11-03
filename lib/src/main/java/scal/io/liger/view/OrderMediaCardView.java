@@ -96,7 +96,7 @@ public class OrderMediaCardView implements DisplayableCard {
 
             if(mediaPath != null) {
                 /*
-                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPath().buildPath(mediaPath));
+                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPath().buildZipPath(mediaPath));
                 if(mediaFile.exists() && !mediaFile.isDirectory()) {
                     mediaURI = Uri.parse(mediaFile.getPath());
                 }

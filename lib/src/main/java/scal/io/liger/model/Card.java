@@ -101,7 +101,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         if (references != null) {
             for (String reference : references) {
                 Card card = storyPath.getCardById(reference);
-                 card.addObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.addObserver(this);
+                }
             }
         }
     }
@@ -110,7 +113,10 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         if (references != null) {
             for (String reference : references) {
                 Card card = storyPath.getCardById(reference);
-                card.deleteObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.deleteObserver(this);
+                }
             }
         }
     }

@@ -719,9 +719,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         File mediaFile = null;
 
         if (mediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(mediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildZipPath(mediaPath));
         } else if (exampleMediaPath != null) {
-            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildPath(exampleMediaPath));
+            mediaFile = MediaHelper.loadFileFromPath(mCardModel.getStoryPath().buildZipPath(exampleMediaPath));
         }
 
         return mediaFile;

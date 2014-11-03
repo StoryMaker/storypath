@@ -67,7 +67,7 @@ public class MarkdownCardView implements DisplayableCard {
         Spanned htmlSpanned = Html.fromHtml(html, new Html.ImageGetter() {
             @Override
             public Drawable getDrawable(final String source) {
-                String absPath = mCardModel.getStoryPath().buildPath(source);
+                String absPath = mCardModel.getStoryPath().buildZipPath(source);
                 Bitmap myBitmap = BitmapFactory.decodeFile(absPath);
                 Drawable d = new BitmapDrawable(mContext.getResources(), myBitmap);
                 d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());

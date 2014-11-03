@@ -56,25 +56,37 @@ public class MilestoneProgressCard extends Card {
         if (storyMedium != null) {
             for (String reference : storyMedium) {
                 Card card = storyPath.getCardById(reference);
-                card.addObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.addObserver(this);
+                }
             }
         }
         if (videoClipCards != null) {
             for (String reference : videoClipCards) {
                 Card card = storyPath.getCardById(reference);
-                card.addObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.addObserver(this);
+                }
             }
         }
         if (audioClipCards != null) {
             for (String reference : audioClipCards) {
                 Card card = storyPath.getCardById(reference);
-                card.addObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.addObserver(this);
+                }
             }
         }
         if (photoClipCards != null) {
             for (String reference : photoClipCards) {
                 Card card = storyPath.getCardById(reference);
-                card.addObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.addObserver(this);
+                }
             }
         }
     }
@@ -87,25 +99,37 @@ public class MilestoneProgressCard extends Card {
         if (storyMedium != null) {
             for (String reference : storyMedium) {
                 Card card = storyPath.getCardById(reference);
-                card.deleteObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.deleteObserver(this);
+                }
             }
         }
         if (videoClipCards != null) {
             for (String reference : videoClipCards) {
                 Card card = storyPath.getCardById(reference);
-                card.deleteObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.deleteObserver(this);
+                }
             }
         }
         if (audioClipCards != null) {
             for (String reference : audioClipCards) {
                 Card card = storyPath.getCardById(reference);
-                card.deleteObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.deleteObserver(this);
+                }
             }
         }
         if (photoClipCards != null) {
             for (String reference : photoClipCards) {
                 Card card = storyPath.getCardById(reference);
-                card.deleteObserver(this);
+                // need to filter out cards that are not found (ie: references to external files)
+                if (card != null) {
+                    card.deleteObserver(this);
+                }
             }
         }
     }
@@ -145,6 +169,10 @@ public class MilestoneProgressCard extends Card {
         }
 
         String newState = storyPath.getReferencedValue(mediumReference);
+
+        if ((newState != null) && (newState.equals(Constants.EXTERNAL))) {
+            newState = storyPath.getExternalReferencedValue(mediumReference);
+        }
 
         if (stateMedium != newState) {
             stateMedium = newState;
@@ -293,6 +321,11 @@ public class MilestoneProgressCard extends Card {
         }
 
         String medium = storyPath.getReferencedValue(mediumReference);
+
+        if ((medium != null) && (medium.equals(Constants.EXTERNAL))) {
+            medium = storyPath.getExternalReferencedValue(mediumReference);
+        }
+
         ArrayList<String> values = new ArrayList<String>();
 
         if ((medium == null) || (medium.length() == 0 )) {
@@ -332,6 +365,11 @@ public class MilestoneProgressCard extends Card {
         }
 
         String medium = storyPath.getReferencedValue(mediumReference);
+
+        if ((medium != null) && (medium.equals(Constants.EXTERNAL))) {
+            medium = storyPath.getExternalReferencedValue(mediumReference);
+        }
+
         ArrayList<String> values = new ArrayList<String>();
 
         if ((medium == null) || (medium.length() == 0 )) {
@@ -371,6 +409,10 @@ public class MilestoneProgressCard extends Card {
         }
 
         String medium = storyPath.getReferencedValue(mediumReference);
+
+        if ((medium != null) && (medium.equals(Constants.EXTERNAL))) {
+            medium = storyPath.getExternalReferencedValue(mediumReference);
+        }
 
         if ((medium == null) || (medium.length() == 0 )) {
             Log.e(this.type, "no value found for story medium referenced by " + mediumReference);

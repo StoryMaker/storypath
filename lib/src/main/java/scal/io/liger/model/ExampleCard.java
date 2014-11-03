@@ -48,7 +48,7 @@ public class ExampleCard extends Card {
         }
 
         if (exampleMediaFile == null) {
-            exampleMediaFile = new ExampleMediaFile(storyPath.buildPath(exampleMediaPath), medium);
+            exampleMediaFile = new ExampleMediaFile(storyPath.buildZipPath(exampleMediaPath), medium);
         }
 
         return exampleMediaFile;

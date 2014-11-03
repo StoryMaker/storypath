@@ -129,7 +129,7 @@ public class PreviewCardView implements DisplayableCard {
                 Log.e(this.getClass().getName(), "no media file was found");
             } else {
                 mediaPath = mf.getPath();
-                paths.add(mCardModel.getStoryPath().buildPath(mediaPath));
+                paths.add(mCardModel.getStoryPath().buildZipPath(mediaPath));
             }
         }
     }

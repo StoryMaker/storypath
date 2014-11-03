@@ -187,6 +187,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     String json = JsonHelper.loadJSON(MainActivity.this, language);
                     //String json = JsonHelper.loadJSONFromZip(MainActivity.this, language);
 
+                    if (json == null || json.equals("")) {
+                        Toast.makeText(MainActivity.this, "Was not able to load this lesson, content was missing!", Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+
                     Log.d("GOOGLE", "JSON: " + json);
 
                     //initHook(json, jsonPath);
@@ -202,7 +208,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // need to implement selection of story path based on hook
 
                     /*
-                    jsonFile = new File(mStoryPathLibrary.buildPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
+                    jsonFile = new File(mStoryPathLibrary.buildZipPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
                     json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
 
                     initCardList(json, jsonFile);
@@ -468,11 +474,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             String jsonFile = "foo";
 
-            String json = JsonHelper.loadJSONFromPath(mStory.getStoryPathLibrary().buildPath(jsonFile));
+            String json = JsonHelper.loadJSONFromPath(mStory.getStoryPathLibrary().buildZipPath(jsonFile));
             story = gson.fromJson(json, StoryPath.class);
             story.context = this;
             story.setCardReferences();
-            story.setFileLocation(mStory.getCurrentStoryPath().buildPath(jsonFile));
+            story.setFileLocation(mStory.getCurrentStoryPath().buildZipPath(jsonFile));
 
             mStory.switchPaths(story);
             refreshCardView();
@@ -490,18 +496,43 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             for (Dependency dependency : mStoryPathLibrary.getCurrentStoryPath().getDependencies()) {
                 if (dependency.getDependencyId().equals(pathParts[0])) {
 
+                    // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
+
+                    // check for file
+                    // paths to actual files should fully qualified
+                    // paths within zip files should be relative
+                    // (or at least not resolve to actual files)
+                    String checkPath = mStoryPathLibrary.getCurrentStoryPath().buildZipPath(dependency.getDependencyFile());
+                    File checkFile = new File(checkPath);
+
                     ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
 
-                    // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
-                    storyPath = JsonHelper.loadStoryPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()), mStoryPathLibrary, referencedFiles, this, language);
+                    if (checkFile.exists()) {
+                        storyPath = JsonHelper.loadStoryPath(checkPath, mStoryPathLibrary, referencedFiles, this, language);
+                        Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                    } else {
+                        storyPath = JsonHelper.loadStoryPathFromZip(checkPath, mStoryPathLibrary, referencedFiles, this, language);
+                        Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                    }
+
                     newStoryPath = true;
 
-                    storyPathLibrary = JsonHelper.loadStoryPathLibrary(storyPath.buildPath(storyPath.getStoryPathLibraryFile()), referencedFiles, this, language);
+                    checkPath = storyPath.buildZipPath(storyPath.getStoryPathLibraryFile());
+                    checkFile = new File(checkPath);
+
+                    if (checkFile.exists()) {
+                        storyPathLibrary = JsonHelper.loadStoryPathLibrary(checkPath, referencedFiles, this, language);
+                        Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                    } else {
+                        storyPathLibrary = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
+                        Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                    }
 
                     // loaded in reverse order, so need to set these references
                     storyPath.setStoryPathLibrary(storyPathLibrary);
+                    storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
                     storyPathLibrary.setCurrentStoryPath(storyPath);
-                    storyPathLibrary.setCurrentStoryPathFile(mStoryPathLibrary.getCurrentStoryPath().buildPath(dependency.getDependencyFile()));
+                    storyPathLibrary.setCurrentStoryPathFile(storyPath.getFileLocation()); // VERIFY THIS
 
                     /*
                     GsonBuilder gBuild = new GsonBuilder();
@@ -509,12 +540,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     Gson gson = gBuild.create();
 
                     String jsonFile = dependency.getDependencyFile();
-                    String json = JsonHelper.loadJSONFromPath(mStoryPathLibrary.getCurrentStoryPath().buildPath(jsonFile));
+                    String json = JsonHelper.loadJSONFromPath(mStoryPathLibrary.getCurrentStoryPath().buildZipPath(jsonFile));
                     story = gson.fromJson(json, StoryPath.class);
 
                     story.setContext(this);
                     story.setCardReferences();
-                    story.setFileLocation(mStoryPathLibrary.getCurrentStoryPath().buildPath(jsonFile));
+                    story.setFileLocation(mStoryPathLibrary.getCurrentStoryPath().buildZipPath(jsonFile));
                     */
 
 
@@ -683,6 +714,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         if (savedStoryPathLibraryFile == null) {
             savedStoryPathLibraryFile = JsonHelper.getStoryPathLibrarySaveFileName(mStoryPathLibrary);
             mStoryPathLibrary.setSavedFileName(savedStoryPathLibraryFile);
+            Log.d("FILES", "NEW NAME: " + savedStoryPathLibraryFile);
+        } else {
+            Log.d("FILES", "EXISTING NAME: " + savedStoryPathLibraryFile);
         }
 
         if (mStoryPathLibrary.getCurrentStoryPath() != null) {
@@ -691,6 +725,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             if (savedStoryPathFile == null) {
                 savedStoryPathFile = JsonHelper.getStoryPathSaveFileName(mStoryPathLibrary.getCurrentStoryPath());
                 mStoryPathLibrary.getCurrentStoryPath().setSavedFileName(savedStoryPathFile);
+                Log.d("FILES", "NEW NAME: " + savedStoryPathFile);
+            } else {
+                Log.d("FILES", "EXISTING NAME: " + savedStoryPathFile);
             }
             mStoryPathLibrary.setCurrentStoryPathFile(savedStoryPathFile);
             JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath(), savedStoryPathFile);

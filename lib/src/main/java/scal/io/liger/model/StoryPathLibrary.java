@@ -3,11 +3,9 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +16,6 @@ import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
-import scal.io.liger.ReferenceHelper;
 
 /**
  * Created by mnbogner on 9/29/14.
@@ -160,7 +157,7 @@ public class StoryPathLibrary extends StoryPath {
         String json = gson.toJson(oldPath);
 
         try {
-            File oldPathFile = new File(oldPath.buildPath(oldPath.getId() + ".path"));
+            File oldPathFile = new File(oldPath.buildZipPath(oldPath.getId() + ".path"));
             PrintStream ps = new PrintStream(new FileOutputStream(oldPathFile.getPath()));
             ps.print(json);
             // store file path
@@ -205,7 +202,7 @@ public class StoryPathLibrary extends StoryPath {
 
         if (context != null) {
 
-            //File jsonTemplateFile = new File(buildPath(storyPathTemplateFile));
+            //File jsonTemplateFile = new File(buildZipPath(storyPathTemplateFile));
             //String jsonTemplate = JsonHelper.loadJSONFromPath(jsonTemplateFile.getPath());
 
             MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
@@ -215,7 +212,7 @@ public class StoryPathLibrary extends StoryPath {
                 // paths to actual files should fully qualified
                 // paths within zip files should be relative
                 // (or at least not resolve to actual files)
-                String checkPath = buildPath(storyPathTemplateFile);
+                String checkPath = buildZipPath(storyPathTemplateFile);
                 File checkFile = new File(checkPath);
 
                 ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();

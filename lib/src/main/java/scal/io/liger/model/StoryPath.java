@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import java.io.File;
@@ -17,7 +15,6 @@ import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
 import scal.io.liger.ReferenceHelper;
-import scal.io.liger.StoryPathDeserializer;
 
 /**
  * An ordered collection of {@link scal.io.liger.model.Card}s de/serializable from/to JSON
@@ -325,14 +322,14 @@ public class StoryPath {
 
                 MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
 
-                //String json = JsonHelper.loadJSONFromPath(buildPath(dependency.getDependencyFile()));
+                //String json = JsonHelper.loadJSONFromPath(buildZipPath(dependency.getDependencyFile()));
                 //story = gson.fromJson(json, StoryPath.class);
 
                 // check for file
                 // paths to actual files should fully qualified
                 // paths within zip files should be relative
                 // (or at least not resolve to actual files)
-                String checkPath = buildPath(dependency.getDependencyFile());
+                String checkPath = buildZipPath(dependency.getDependencyFile());
                 File checkFile = new File(checkPath);
 
                 ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
@@ -348,7 +345,7 @@ public class StoryPath {
 
                 //story.context = this.context;
                 //story.setCardReferences();
-                //story.setFileLocation(buildPath(dependency.getDependencyFile()));
+                //story.setFileLocation(buildZipPath(dependency.getDependencyFile()));
             }
         }
 
@@ -372,7 +369,7 @@ public class StoryPath {
         }
     }
 
-    public String buildPath(String originalPath) {
+    public String buildZipPath(String originalPath) {
         if (originalPath.startsWith(File.separator)) {
             return originalPath;
         }
@@ -383,7 +380,7 @@ public class StoryPath {
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
 
-            //Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
+            Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
 
             relativePath = relativePath + File.separator + originalPath;
             return relativePath;
@@ -398,13 +395,34 @@ public class StoryPath {
             return originalPath;
         }
 
+        // construct path relative to location of story path
+        String relativePath = getFileLocation();
+
+        if ((relativePath != null) && (relativePath.length() != 0)) {
+            relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
+
+            Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
+
+            relativePath = relativePath + File.separator + originalPath;
+            return relativePath;
+        } else {
+            Log.e(this.getClass().getName(), "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
+            return originalPath;
+        }
+    }
+
+    public String buildTargetPath(String originalPath) {
+        if (originalPath.startsWith(File.separator)) {
+            return originalPath;
+        }
+
         // determine location of app folder
         String basePath = JsonHelper.getSdLigerFilePath();
 
         // flatten path
         String flatPath = originalPath.replace(File.separatorChar, '_');
 
-        Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + basePath + " OTHER PART: " + flatPath);
+        Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + basePath + " FLAT PART: " + flatPath);
 
         String relativePath = basePath + flatPath;
         return relativePath;
@@ -658,9 +676,11 @@ public class StoryPath {
         for (String reference : references) {
             String[] parts = reference.split("::");
 
-            // TODO: check parts[0] and load external story path if necessary
-
-            unfilteredCards = gatherCards(parts[1]);
+            if (!this.getId().equals(parts[0])) {
+                unfilteredCards = gatherExternalCards(parts[0], parts[1]);
+            } else {
+                unfilteredCards = gatherCards(parts[1]);
+            }
 
             // check for key/value parts
             if (parts.length == 4) {
@@ -689,9 +709,11 @@ public class StoryPath {
         for (String reference : references) {
             String[] parts = reference.split("::");
 
-            // TODO: check parts[0] and load external story path if necessary
-
-            unfilteredCards = gatherCards(parts[1]);
+            if (!this.getId().equals(parts[0])) {
+                unfilteredCards = gatherExternalCards(parts[0], parts[1]);
+            } else {
+                unfilteredCards = gatherCards(parts[1]);
+            }
 
             // check for key/value parts
             if (parts.length == 4) {
@@ -747,6 +769,41 @@ public class StoryPath {
                 }
             }
         }
+
+        return results;
+    }
+
+    public ArrayList<Card> gatherExternalCards(String pathTarget, String cardTarget) {
+
+        StoryPath story = null;
+
+        // reference targets a serialized story path
+        for (Dependency dependency : dependencies) {
+            if (dependency.getDependencyId().equals(pathTarget)) {
+
+                MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+
+                String checkPath = buildZipPath(dependency.getDependencyFile());
+                File checkFile = new File(checkPath);
+
+                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+
+                if (checkFile.exists()) {
+                    story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                } else {
+                    story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                }
+            }
+        }
+
+        if (story == null) {
+            Log.e(this.getClass().getName(), "STORY PATH ID " + pathTarget + " WAS NOT FOUND");
+            return null;
+        }
+
+        ArrayList<Card> results = story.gatherCards(cardTarget);
 
         return results;
     }

@@ -27,6 +27,8 @@
 
     <IconTextView
         style="@style/TextImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/itvClipTypeIcon"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/clipCandidates"/>
@@ -34,6 +36,8 @@
     <TextView
         style="@style/p"
         android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAllCaps="true"
         android:textColor="@color/storymaker_highlight"
         android:layout_toEndOf="@+id/itvClipTypeIcon"
@@ -57,12 +61,16 @@
         <TextView
             style="@style/h2"
             android:id="@+id/tvBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_medium"
             android:paddingBottom="@dimen/padding_medium"/>
 
         <TextView
             style="@style/p"
             android:id="@+id/tvImport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tvBody"
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/padding_xsmall"
@@ -73,6 +81,8 @@
         <TextView
             style="@style/p"
             android:id="@+id/tvCapture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tvImport"
             android:gravity="center_vertical"
             android:text="@string/lbl_capture"

@@ -8,6 +8,31 @@
             "id": "top",
             "text": "This is **Make a New Story**.  *Ohh yeaaaa*.", 
             "type": "MarkdownCard"
+        },
+        {
+            "type": "MilestoneProgressCard",
+            "references": [
+                "learning_guide_v1::got_it::value::true"
+            ],
+            "storyMedium": [
+                "learning_guide_v1::medium_card::value"
+            ],
+            "videoClipCards": [
+                "learning_guide_v1::clip_video_character::clips",
+                "learning_guide_v1::clip_video_action::clips",
+                "learning_guide_v1::clip_video_result::clips"
+            ],
+            "audioClipCards": [
+                "learning_guide_v1::clip_audio_character::clips",
+                "learning_guide_v1::clip_audio_action::clips",
+                "learning_guide_v1::clip_audio_result::clips"
+            ],
+            "photoClipCards": [
+                "learning_guide_v1::clip_photo_character::clips",
+                "learning_guide_v1::clip_photo_action::clips",
+                "learning_guide_v1::clip_photo_result::clips"
+            ],
+            "id": "three_clips_filled"
         }
     ]
 }

@@ -127,7 +127,7 @@ public class Story {
         String json = gson.toJson(oldPath);
 
         try {
-            File oldPathFile = new File(oldPath.buildPath(oldPath.getId() + ".path"));
+            File oldPathFile = new File(oldPath.buildZipPath(oldPath.getId() + ".path"));
             PrintStream ps = new PrintStream(new FileOutputStream(oldPathFile.getPath()));
             ps.print(json);
             // store file path

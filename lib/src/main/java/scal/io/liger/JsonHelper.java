@@ -22,7 +22,8 @@ import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
 /**
- * Created by mnbogner on 7/14/14.
+ * @author Matt Bogner
+ * @author Josh Steiner
  */
 public class JsonHelper {
     private static final String TAG = "JsonHelper";
@@ -192,6 +193,9 @@ public class JsonHelper {
                     Log.d("LANGUAGE", "loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
                 }
 
+                if (jsonStream == null)
+                    return null;
+
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
                 jsonStream.read(buffer);
@@ -212,30 +216,30 @@ public class JsonHelper {
         copyFileOrDir(context, basePath, ""); // copy all files in assets folder in my project
     }
 
-    private static void copyFileOrDir(Context context, String basePath, String path) {
+    private static void copyFileOrDir(Context context, String assetFromPath, String baseToPath) {
         AssetManager assetManager = context.getAssets();
         String assets[] = null;
         try {
-            Log.i("tag", "copyFileOrDir() "+path);
-            assets = assetManager.list(path);
+            Log.i("tag", "copyFileOrDir() "+assetFromPath);
+            assets = assetManager.list(assetFromPath);
             if (assets.length == 0) {
-                copyFile(context, basePath, path);
+                copyFile(context, assetFromPath, baseToPath);
             } else {
-                String fullPath =  basePath + path;
+                String fullPath =  baseToPath + assetFromPath;
                 Log.i("tag", "path="+fullPath);
                 File dir = new File(fullPath);
-                if (!dir.exists() && !path.startsWith("images") && !path.startsWith("sounds") && !path.startsWith("webkit"))
+                if (!dir.exists() && !assetFromPath.startsWith("images") && !assetFromPath.startsWith("sounds") && !assetFromPath.startsWith("webkit"))
                     if (!dir.mkdirs())
                         Log.i("tag", "could not create dir "+fullPath);
                 for (int i = 0; i < assets.length; ++i) {
                     String p;
-                    if (path.equals(""))
+                    if (assetFromPath.equals(""))
                         p = "";
                     else
-                        p = path + "/";
+                        p = assetFromPath + "/";
 
-                    if (!path.startsWith("images") && !path.startsWith("sounds") && !path.startsWith("webkit"))
-                        copyFileOrDir(context, basePath, p + assets[i]);
+                    if (!assetFromPath.startsWith("images") && !assetFromPath.startsWith("sounds") && !assetFromPath.startsWith("webkit"))
+                        copyFileOrDir(context, p + assets[i], baseToPath);
                 }
             }
         } catch (IOException ex) {
@@ -243,19 +247,22 @@ public class JsonHelper {
         }
     }
 
-    private static void copyFile(Context context, String basePath, String filename) {
+    private static void copyFile(Context context, String fromFilename, String baseToPath) {
         AssetManager assetManager = context.getAssets();
+
+        if (fromFilename.endsWith(".obb"))
+            return;  // let's not copy .obb files, they get copied elseware
 
         InputStream in = null;
         OutputStream out = null;
         String newFileName = null;
         try {
-            Log.i("tag", "copyFile() "+filename);
-            in = assetManager.open(filename);
-            if (filename.endsWith(".jpg")) // extension was added to avoid compression on APK file
-                newFileName = basePath + filename.substring(0, filename.length()-4);
+            Log.i("tag", "copyFile() "+fromFilename);
+            in = assetManager.open(fromFilename);
+            if (fromFilename.endsWith(".jpg")) // extension was added to avoid compression on APK file
+                newFileName = baseToPath + fromFilename.substring(0, fromFilename.length()-4);
             else
-                newFileName = basePath + filename;
+                newFileName = baseToPath + fromFilename;
             out = new FileOutputStream(newFileName);
 
             byte[] buffer = new byte[1024];
@@ -275,17 +282,55 @@ public class JsonHelper {
 
     }
 
+    private static void copyObbFile(Context context, String fromFilename, String toPath) {
+        AssetManager assetManager = context.getAssets();
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            Log.i("tag", "copyObbFile() "+fromFilename);
+            in = assetManager.open(fromFilename);
+            out = new FileOutputStream(toPath);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            in.close();
+            in = null;
+            out.flush();
+            out.close();
+            out = null;
+        } catch (Exception e) {
+            Log.e("tag", "Exception in copyObbFile() of "+toPath);
+            Log.e("tag", "Exception in copyObbFile() "+e.toString());
+        }
+
+    }
+
     public static void setupFileStructure(Context context) {
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            // FIXME we need to remove this, it seems like the popup stuff requires it even though we acutally read files from .obb not the Liger folder
             String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
             // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
-            //FILES NOW STORED IN ZIP FILE
-            //copyFilesToSdCard(context, sdLigerFilePath);
+//            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
+
+            // copy the zipped assets to the right folder
+            String inputAssetFilename = "main.1.obb"; // FIXME we should parse this out from the assets so its always right
+            String zipPath = ZipHelper.getExtensionFolderPath(context);
+            String zipFilename = ZipHelper.getExtensionZipFilename(context, inputAssetFilename);
+            String zipFullpath = zipPath + zipFilename;
+
+            Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
+            new File(zipPath).mkdirs();
+            // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
+            copyObbFile(context, inputAssetFilename, zipFullpath);
         } else {
-            Log.e(TAG, "SD CARD NOT FOUND");
+            Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }
     }
 
@@ -332,7 +377,7 @@ public class JsonHelper {
 
         File jsonFolder = new File(getSdLigerFilePath());
         for (File jsonFile : jsonFolder.listFiles()) {
-            if (jsonFile.getName().contains(".json") && !jsonFile.isDirectory()) {
+            if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
                 File localFile = new File(jsonFile.getPath());
                 Log.d("FILES", "FOUND JSON FILE: " + localFile.getName());
                 jsonFileNamesList.add(localFile.getName());
@@ -520,7 +565,10 @@ public class JsonHelper {
                 return null;
             }
         } else {
-            storyPathLibrary.setFileLocation(jsonFilePath);
+            File checkFile = new File(jsonFilePath);
+            if (!checkFile.exists()) {
+                storyPathLibrary.setFileLocation(jsonFilePath); // FOR NOW, DON'T SAVE ACTIAL FILE LOCATIONS
+            }
         }
 
         // construct and insert dependencies
@@ -550,9 +598,9 @@ public class JsonHelper {
         Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
 
         Date timeStamp = new Date();
-        //String jsonFilePath = storyPathLibrary.buildPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
+        //String jsonFilePath = storyPathLibrary.buildZipPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
         //TEMP
-        String jsonFilePath = storyPathLibrary.buildFilePath(storyPathLibrary.getId() + "-instance-" + timeStamp.getTime() + ".json");
+        String jsonFilePath = storyPathLibrary.buildTargetPath(storyPathLibrary.getId() + "-instance-" + timeStamp.getTime() + ".json");
 
         return jsonFilePath;
     }
@@ -715,7 +763,10 @@ public class JsonHelper {
                 Log.e(TAG, "file location for story path " + storyPath.getId() + " could not be determined");
             }
         } else {
-            storyPath.setFileLocation(jsonFilePath);
+            File checkFile = new File(jsonFilePath);
+            if (!checkFile.exists()) {
+                storyPath.setFileLocation(jsonFilePath); // FOR NOW, DON'T SAVE ACTIAL FILE LOCATIONS
+            }
         }
 
         storyPath.setCardReferences();
@@ -752,9 +803,9 @@ public class JsonHelper {
         Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId());
 
         Date timeStamp = new Date();
-        //String jsonFilePath = storyPath.buildPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
+        //String jsonFilePath = storyPath.buildZipPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
         //TEMP
-        String jsonFilePath = storyPath.buildFilePath(storyPath.getId() + "-instance-" + timeStamp.getTime() + ".json");
+        String jsonFilePath = storyPath.buildTargetPath(storyPath.getId() + "-instance-" + timeStamp.getTime() + ".json");
 
         return jsonFilePath;
     }
