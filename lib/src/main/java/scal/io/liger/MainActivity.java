@@ -1,5 +1,6 @@
 package scal.io.liger;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
@@ -32,6 +34,10 @@ import scal.io.liger.model.StoryPathLibrary;
 
 public class MainActivity extends Activity implements StoryPathLibrary.StoryPathLibraryListener{
     private static final String TAG = "MainActivity";
+
+    public static final String INTENT_KEY_WINDOW_TITLE = "window_title";
+    public static final String INTENT_KEY_STORYPATH_LIBRARY_ID = "storypath_library_id";
+    public static final int INTENT_CODE = 16328;
 
     RecyclerView mRecyclerView;
     //CardUI mCardView;
@@ -71,7 +77,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 ////        }
 
         Log.d("MainActivity", "onCreate");
-
         if (savedInstanceState == null) {
             Log.d(TAG, "onCreate called with no savedInstanceState");
 
@@ -87,17 +92,31 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 language = "ar";
             }
 
-            /*
-            Intent i = getIntent();
-            if (i.hasExtra("storypathlibrary_json")) {
-                String splJsonFilename = i.getExtras().getString("storypathlibrary_json");
-                File jsonFile = new File(JsonHelper.getSdLigerFilePath() + splJsonFilename);
-                String json = JsonHelper.loadJSON(jsonFile);
-                initHook(json, jsonFile);
+            final ActionBar actionBar = getActionBar();
+
+            if (i.hasExtra(INTENT_KEY_WINDOW_TITLE)) {
+                actionBar.setTitle(i.getStringExtra(INTENT_KEY_WINDOW_TITLE));
+            }
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
+            if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_ID)) {
+                String jsonFilePath = JsonHelper.getJsonPathByKey(i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
+                String json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
+                initFromJson(json, jsonFilePath);
             } else {
-            */
                 showJsonSelectorPopup();
-            //}
+            }
+
+//            Intent i = getIntent();
+//            if (i.hasExtra("storypathlibrary_json")) {
+//                String splJsonFilename = i.getExtras().getString("storypathlibrary_json");
+//                File jsonFile = new File(JsonHelper.getSdLigerFilePath() + splJsonFilename);
+//                String json = JsonHelper.loadJSON(jsonFile);
+//                initHook(json, jsonFile);
+//            } else {
+//                showJsonSelectorPopup();
+//            }
+
         } else {
             Log.d(TAG, "onCreate called with valid savedInstanceState");
             Log.d("MainActivity", "savedInstanceState not null, check for and load storypath json");
@@ -187,13 +206,24 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     String json = JsonHelper.loadJSON(MainActivity.this, language);
                     //String json = JsonHelper.loadJSONFromZip(MainActivity.this, language);
 
-                    if (json == null || json.equals("")) {
-                        Toast.makeText(MainActivity.this, "Was not able to load this lesson, content was missing!", Toast.LENGTH_LONG).show();
-                        finish();
-                        return;
-                    }
+                    initFromJson(json, jsonPath);
 
-                    Log.d("GOOGLE", "JSON: " + json);
+                }
+            });
+        }
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void initFromJson(String json, String jsonPath) {
+        if (json == null || json.equals("")) {
+            Toast.makeText(MainActivity.this, "Was not able to load this lesson, content was missing!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        Log.d("GOOGLE", "JSON: " + json);
 
                     //initHook(json, jsonPath);
 
@@ -205,7 +235,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                     setupCardView();
 
-                    // need to implement selection of story path based on hook
+        // need to implement selection of story path based on hook
 
                     /*
                     jsonFile = new File(mStoryPathLibrary.buildZipPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
@@ -216,16 +246,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
 //                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
 
-                            if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
-                                mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
-                            }
-
-                }
-            });
+        if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
+            mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
         }
-
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     // FIXME rename this to init initial cards or something
@@ -943,5 +966,15 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     public void onCardRemoved(Card removedCard) {
         Log.i(TAG, "Card removed " + removedCard.getId());
         mCardAdapter.removeCard(removedCard);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishActivity(INTENT_CODE);
+                return true;
+        }
+        return true;
     }
 }

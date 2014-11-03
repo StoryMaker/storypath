@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import scal.io.liger.model.Dependency;
 import scal.io.liger.model.StoryPath;
@@ -30,8 +31,10 @@ public class JsonHelper {
     private static final String LIGER_DIR = "Liger";
     private static File selectedJSONFile = null;
     private static String selectedJSONPath = null;
+    private static ArrayList<String> jsonFileNamesList = null;
     private static ArrayList<File> jsonFileList = null;
     private static ArrayList<String> jsonPathList = null;
+    private static HashMap<String, String> jsonKeyToPath = null;
     private static String sdLigerFilePath = null;
 
     //private static String language = null; // TEMP
@@ -334,59 +337,71 @@ public class JsonHelper {
         }
     }
 
+    private static void setupJSONFileList() {
+
+        // HARD CODING LIST
+        if (jsonFileNamesList == null) {
+            jsonFileNamesList = new ArrayList<String>();
+            File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
+            File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
+            File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
+            File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
+            File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
+            File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
+
+            jsonFileNamesList.add(ligerFile_1.getName());
+            jsonFileNamesList.add(ligerFile_2.getName());
+            jsonFileNamesList.add(ligerFile_3.getName());
+            jsonFileNamesList.add(ligerFile_4.getName());
+            jsonFileNamesList.add(ligerFile_5.getName());
+            jsonFileNamesList.add(ligerFile_6.getName());
+
+            jsonFileList = new ArrayList<File>();
+            jsonFileList.add(ligerFile_1);
+            jsonFileList.add(ligerFile_2);
+            jsonFileList.add(ligerFile_3);
+            jsonFileList.add(ligerFile_4);
+            jsonFileList.add(ligerFile_5);
+            jsonFileList.add(ligerFile_6);
+
+            jsonPathList = new ArrayList<String>();
+            jsonPathList.add("default/default_library/default_library.json");
+            jsonPathList.add("default/learning_guide_TEST.json");
+            jsonPathList.add("default/LIB_1/LIB_1_TEST.json");
+            jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
+            jsonPathList.add("default/learning_guide_library.json");
+            jsonPathList.add("default/learning_guide_library_SAVE.json");
+
+            jsonKeyToPath = new HashMap<String, String>();
+            jsonKeyToPath.put("default_library", "default/default_library/default_library.json");
+            jsonKeyToPath.put("learning_guide_TEST", "default/learning_guide_TEST.json");
+            jsonKeyToPath.put("LIB_1_TEST", "default/LIB_1/LIB_1_TEST.json");
+            jsonKeyToPath.put("LIB_2_TEST", "default/LIB_2/LIB_2_TEST.json");
+            jsonKeyToPath.put("learning_guide_library", "default/learning_guide_library.json");
+            jsonKeyToPath.put("learning_guide_library_SAVE", "default/learning_guide_library_SAVE.json");
+
+            File jsonFolder = new File(getSdLigerFilePath());
+            for (File jsonFile : jsonFolder.listFiles()) {
+                Log.d("FILES", "FOUND FILE: " + jsonFile.getName());
+                if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
+                    File localFile = new File(jsonFile.getPath());
+                    Log.d("FILES", "FOUND JSON FILE: " + localFile.getName());
+                    jsonFileNamesList.add(localFile.getName());
+                    jsonFileList.add(localFile);
+                    jsonPathList.add(localFile.getPath());
+                    jsonKeyToPath.put(localFile.getName(), localFile.getPath());
+                }
+            }
+        }
+    }
+
     public static String[] getJSONFileList() {
         //ensure path has been set
         if(null == sdLigerFilePath) {
             return null;
         }
 
-        ArrayList<String> jsonFileNamesList = new ArrayList<String>();
-        jsonFileList = new ArrayList<File>();
-        jsonPathList = new ArrayList<String>();
-
-        // HARD CODING LIST
-
-        File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
-        //File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
-        //File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
-        //File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
-        File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
-        //File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
-
-        jsonFileNamesList.add(ligerFile_1.getName());
-        //jsonFileNamesList.add(ligerFile_2.getName());
-        //jsonFileNamesList.add(ligerFile_3.getName());
-        //jsonFileNamesList.add(ligerFile_4.getName());
-        jsonFileNamesList.add(ligerFile_5.getName());
-        //jsonFileNamesList.add(ligerFile_6.getName());
-
-        jsonFileList.add(ligerFile_1);
-        //jsonFileList.add(ligerFile_2);
-        //jsonFileList.add(ligerFile_3);
-        //jsonFileList.add(ligerFile_4);
-        jsonFileList.add(ligerFile_5);
-        //jsonFileList.add(ligerFile_6);
-
-        jsonPathList.add("default/default_library/default_library.json");
-        //jsonPathList.add("default/learning_guide_TEST.json");
-        //jsonPathList.add("default/LIB_1/LIB_1_TEST.json");
-        //jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
-        jsonPathList.add("default/learning_guide_library.json");
-        //jsonPathList.add("default/learning_guide_library_SAVE.json");
-
-
-        File jsonFolder = new File(getSdLigerFilePath());
-        for (File jsonFile : jsonFolder.listFiles()) {
-            if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                File localFile = new File(jsonFile.getPath());
-                Log.d("FILES", "FOUND JSON FILE: " + localFile.getName());
-                jsonFileNamesList.add(localFile.getName());
-                jsonFileList.add(localFile);
-                jsonPathList.add(localFile.getPath());
-            }
-        }
-
-
+        setupJSONFileList();
 
         /*
         File ligerDir = new File(sdLigerFilePath);
@@ -411,6 +426,15 @@ public class JsonHelper {
         */
 
         return jsonFileNamesList.toArray(new String[jsonFileNamesList.size()]);
+    }
+
+    public static String getJsonPathByKey(String key) {
+        setupJSONFileList();
+        if (jsonKeyToPath.containsKey(key)) {
+            return jsonKeyToPath.get(key);
+        } else {
+            return null;
+        }
     }
 
     public static File setSelectedJSONFile(int index) {
