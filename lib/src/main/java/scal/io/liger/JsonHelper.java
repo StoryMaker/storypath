@@ -60,6 +60,26 @@ public class JsonHelper {
         return results;
     }
 
+    public static ArrayList<String> getLibraryInstancePaths() {
+
+        ArrayList<String> results = new ArrayList<String>();
+
+        File jsonFolder = new File(getSdLigerFilePath());
+        // check for nulls (uncertain as to cause of nulls)
+        if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
+            for (File jsonFile : jsonFolder.listFiles()) {
+                if (jsonFile.getName().contains("-library-instance") && !jsonFile.isDirectory()) {
+                    Log.d("FILES", "FOUND LIBRARY INSTANCE PATH: " + jsonFile.getPath());
+                    results.add(jsonFile.getPath());
+                }
+            }
+        } else {
+            Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
+        }
+
+        return results;
+    }
+
     public static String loadJSONFromPath(String jsonPath, String language) {
 
         String jsonString = "";
@@ -413,7 +433,7 @@ public class JsonHelper {
             jsonKeyToPath.put("learning_guide_2_library", "default/learning_guide_2/learning_guide_2_library.json");
             jsonKeyToPath.put("learning_guide_3_library", "default/learning_guide_3/learning_guide_3_library.json");
 
-            for (File jsonFile : getInstanceFiles()) {
+            for (File jsonFile : getLibraryInstanceFiles()) {
                 jsonFileNamesList.add(jsonFile.getName());
                 jsonFileList.add(jsonFile);
                 jsonPathList.add(jsonFile.getPath());
@@ -432,6 +452,27 @@ public class JsonHelper {
             for (File jsonFile : jsonFolder.listFiles()) {
                 if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
                     Log.d("FILES", "FOUND INSTANCE FILE: " + jsonFile.getName());
+                    File localFile = new File(jsonFile.getPath());
+                    results.add(localFile);
+                }
+            }
+        } else {
+            Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
+        }
+
+        return results;
+    }
+
+    public static ArrayList<File> getLibraryInstanceFiles() {
+
+        ArrayList<File> results = new ArrayList<File>();
+
+        File jsonFolder = new File(getSdLigerFilePath());
+        // check for nulls (uncertain as to cause of nulls)
+        if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
+            for (File jsonFile : jsonFolder.listFiles()) {
+                if (jsonFile.getName().contains("-library-instance") && !jsonFile.isDirectory()) {
+                    Log.d("FILES", "FOUND LIBRARY INSTANCE FILE: " + jsonFile.getName());
                     File localFile = new File(jsonFile.getPath());
                     results.add(localFile);
                 }
@@ -672,7 +713,7 @@ public class JsonHelper {
         Date timeStamp = new Date();
         //String jsonFilePath = storyPathLibrary.buildZipPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
         //TEMP
-        String jsonFilePath = storyPathLibrary.buildTargetPath(storyPathLibrary.getId() + "-instance-" + timeStamp.getTime() + ".json");
+        String jsonFilePath = storyPathLibrary.buildTargetPath(storyPathLibrary.getId() + "-library-instance-" + timeStamp.getTime() + ".json");
 
         return jsonFilePath;
     }
