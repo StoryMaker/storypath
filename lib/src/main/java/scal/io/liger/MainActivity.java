@@ -122,7 +122,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             if (savedInstanceState.containsKey("storyPathLibraryJson")) {
                 String jsonSPL = savedInstanceState.getString("storyPathLibraryJson");
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                // should not need to insert dependencies into a saved instance state
+                ArrayList<String> referencedFiles = new ArrayList<String>();
 
                 mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(jsonSPL, null, referencedFiles, this);
 
@@ -224,7 +225,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                     //initHook(json, jsonPath);
 
-                    ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                    ArrayList<String> referencedFiles = null;
+
+                    // should not need to insert dependencies into a saved instance
+                    if (jsonPath.contains("instance")) {
+                        referencedFiles = new ArrayList<String>();
+                    } else {
+                        referencedFiles = JsonHelper.getInstancePaths();
+                    }
 
                     mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
 
@@ -476,7 +484,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         mRecyclerView.setAdapter(mCardAdapter);
     }
 
-    public void goToCard(String cardPath) throws MalformedJsonException {
+    public void goToCard(StoryPath currentPath, String cardPath) throws MalformedJsonException {
         Log.d(TAG, "goToCard: " + cardPath);
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
@@ -525,7 +533,22 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     String checkPath = mStoryPathLibrary.getCurrentStoryPath().buildZipPath(dependency.getDependencyFile());
                     File checkFile = new File(checkPath);
 
-                    ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                    // ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                    // add reference to previous path and gather references from that path
+                    ArrayList<String> referencedFiles = new ArrayList<String>();
+                    if (currentPath.getSavedFileName() != null) {
+                        Log.d("DEPENDENCIES", "ADDING REFERENCE TO CURRENT PATH " + currentPath.getSavedFileName());
+                        referencedFiles.add(currentPath.getSavedFileName());
+                    }
+
+                    if (currentPath.getDependencies() != null) {
+                        for (Dependency currentDependency : currentPath.getDependencies()) {
+                            if (currentDependency.getDependencyId().contains("instance")) {
+                                Log.d("DEPENDENCIES", "ADDING REFERENCE TO CURRENT PATH DEPENDENCY " + currentDependency.getDependencyFile());
+                                referencedFiles.add(currentDependency.getDependencyFile());
+                            }
+                        }
+                    }
 
                     if (checkFile.exists()) {
                         storyPath = JsonHelper.loadStoryPath(checkPath, mStoryPathLibrary, referencedFiles, this, language);

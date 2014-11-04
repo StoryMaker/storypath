@@ -215,7 +215,14 @@ public class StoryPathLibrary extends StoryPath {
                 String checkPath = buildZipPath(storyPathTemplateFile);
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                ArrayList<String> referencedFiles = null;
+
+                // should not need to insert dependencies into a saved instance file
+                if (checkPath.contains("instance")) {
+                    referencedFiles = new ArrayList<String>();
+                } else {
+                    referencedFiles = JsonHelper.getInstancePaths();
+                }
 
                 StoryPath story = null;
                 if (checkFile.exists()) {

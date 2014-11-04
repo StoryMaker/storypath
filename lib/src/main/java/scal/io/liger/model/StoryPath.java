@@ -340,7 +340,9 @@ public class StoryPath {
                 String checkPath = buildZipPath(dependency.getDependencyFile());
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                // should not need to load dependencies to get value from path
+                // ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                ArrayList<String> referencedFiles = new ArrayList<String>();
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
@@ -551,7 +553,7 @@ public class StoryPath {
         if (context != null) {
             try {
                 MainActivity mainActivity = (MainActivity) context;
-                mainActivity.goToCard(linkPath);
+                mainActivity.goToCard(this, linkPath);
             } catch (Exception e) {
                 Toast.makeText(context, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
             }
@@ -707,7 +709,10 @@ public class StoryPath {
                 String checkPath = buildZipPath(dependency.getDependencyFile());
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                // should not need to load dependencies to get media file from path
+                // ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                ArrayList<String> referencedFiles = new ArrayList<String>();
+
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
@@ -921,7 +926,9 @@ public class StoryPath {
                 String checkPath = buildZipPath(dependency.getDependencyFile());
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                // should not need to load dependencies to get card from path
+                // ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+                ArrayList<String> referencedFiles = new ArrayList<String>();
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
