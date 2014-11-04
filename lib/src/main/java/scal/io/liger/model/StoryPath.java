@@ -350,10 +350,12 @@ public class StoryPath {
                     Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
                 }
 
-
                 //story.context = this.context;
                 //story.setCardReferences();
                 //story.setFileLocation(buildZipPath(dependency.getDependencyFile()));
+
+                Log.d("getExternalReferencedValue", "FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
+                break;
             }
         }
 
@@ -732,6 +734,9 @@ public class StoryPath {
                         Log.d("CLIPS", "LOADED FROM ZIP: " + story.getStoryPathLibraryFile());
                     }
                 }
+
+                Log.d("getExternalMediaFile", "FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
+                break;
             }
         }
 
@@ -925,6 +930,9 @@ public class StoryPath {
                     story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
                     Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
                 }
+
+                Log.d("gatherExternalCards", "FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
+                break;
             }
         }
 

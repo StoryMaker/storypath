@@ -41,14 +41,23 @@ public class JsonHelper {
 
     // TEMP - for gathering insance files to test references
     public static ArrayList<String> getInstancePaths() {
-        ArrayList<String> instanceList = new ArrayList<String>();
-        for (String s : jsonPathList) {
-            if (s.contains("-instance")) {
-                instanceList.add(s);
-                Log.d("FILES", "FOUND INSTANCE FILE: " + s);
+
+        ArrayList<String> results = new ArrayList<String>();
+
+        File jsonFolder = new File(getSdLigerFilePath());
+        // check for nulls (uncertain as to cause of nulls)
+        if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
+            for (File jsonFile : jsonFolder.listFiles()) {
+                if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
+                    Log.d("FILES", "FOUND INSTANCE PATH: " + jsonFile.getPath());
+                    results.add(jsonFile.getPath());
+                }
             }
+        } else {
+            Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
         }
-        return instanceList;
+
+        return results;
     }
 
     public static String loadJSONFromPath(String jsonPath, String language) {
