@@ -319,6 +319,7 @@ public class JsonHelper {
             // FIXME we need to remove this, it seems like the popup stuff requires it even though we acutally read files from .obb not the Liger folder
             String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
             sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
+            new File(sdLigerFilePath).mkdirs();
             // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
 //            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
 
