@@ -1,8 +1,12 @@
 package scal.io.liger.view;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.ActionMode;
 import android.view.Display;
@@ -21,6 +25,8 @@ import java.util.List;
 import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.Card;
+import scal.io.liger.model.ExampleMediaFile;
+import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.touch.OnRearrangeListener;
 
@@ -121,5 +127,28 @@ public class Util {
         long minute = (timeMs / (1000 * 60)) % 60;
 
         return String.format("%02d:%02d", minute, second);
+    }
+
+    /**
+     * For MediaFiles with a path from Android's Storage Access Framework, we have to go about
+     * getting thumbnails from the system ContentProvider.
+     *
+     * If we can modify MediaFile to have access to a Context perhaps this method could removed
+     */
+    public static Bitmap getBitmapForMediaFile(Context context, MediaFile mediaFile, Card card) {
+        if (mediaFile.getPath().contains("content:/")) {
+            // path of form : content://com.android.providers.media.documents/document/video:183
+            // An Android Document Provider URI. Thumbnail already generated
+            // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
+            long videoId = Long.parseLong(Uri.parse(mediaFile.getPath()).getLastPathSegment().split(":")[1]);
+            return MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), videoId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+        } else {
+            // Regular old File path
+            if (mediaFile instanceof ExampleMediaFile) {
+                return ((ExampleMediaFile) mediaFile).getExampleThumbnail(card);
+            } else {
+                return mediaFile.getThumbnail();
+            }
+        }
     }
 }

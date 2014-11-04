@@ -21,6 +21,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.view.ReorderableRecyclerView;
+import scal.io.liger.view.Util;
 
 /**
  * Created by davidbrodsky on 10/23/14.
@@ -148,10 +149,9 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
         if (mMedium != null && mediaURI != null) {
             if (mMedium.equals(Constants.VIDEO)) {
-                //Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
-                Bitmap videoFrame = mf.getThumbnail();
-                if (null != videoFrame) {
-                    viewHolder.thumbnail.setImageBitmap(videoFrame);
+                Bitmap thumbnailBitmap = Util.getBitmapForMediaFile(viewHolder.title.getContext(), mf, cm);
+                if (thumbnailBitmap != null) {
+                    viewHolder.thumbnail.setImageBitmap(thumbnailBitmap);
                 }
                 return;
             } else if (mMedium.equals(Constants.PHOTO)) {

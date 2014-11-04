@@ -13,7 +13,6 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -310,20 +309,10 @@ public class ReviewCardView implements DisplayableCard {
 
         String medium = clipCard.getMedium();
         if (medium.equals(Constants.VIDEO)) {
-            if (mediaFile.getPath().contains("content:/")) {
-                // path of form : content://com.android.providers.media.documents/document/video:183
-                // An Android Document Provider URI. Thumbnail already generated
-                // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
-                long videoId = Long.parseLong(Uri.parse(mediaFile.getPath()).getLastPathSegment().split(":")[1]);
-                thumbnail.setImageBitmap(MediaStore.Video.Thumbnails.getThumbnail(mContext.getContentResolver(), videoId, MediaStore.Images.Thumbnails.MINI_KIND, null));
-            } else {
-                // Regular File path
-                Bitmap videoFrame = mediaFile.getThumbnail();
-                if (null != videoFrame) {
-                    thumbnail.setImageBitmap(videoFrame);
-                }
+            Bitmap thumbnailBitmap = Util.getBitmapForMediaFile(mContext, mediaFile, mCardModel);
+            if (thumbnailBitmap != null) {
+                thumbnail.setImageBitmap(thumbnailBitmap);
             }
-
             thumbnail.setVisibility(View.VISIBLE);
         } else if (medium.equals(Constants.PHOTO)) {
             Uri uri = Uri.parse(mediaFile.getPath());
