@@ -75,9 +75,15 @@ public class QuizCardView extends ExampleCardView {
         breadCrumb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mExpanded) {
-                    toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
-                }
+                // TODO : When we allow the Quiz stack to be re-expanded, we'll have to come up with
+                // a way to measure all the children to properly animate the expansion. Prior
+                // we used an assumption based on each Quiz choice occupying a single line and thus
+                // a fixed height.
+
+//                if (!mExpanded) {
+//                    toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
+//                }
+
                 // TODO : If quiz completed, expand cards, collapse all following Quiz cards
             }
         });
@@ -192,6 +198,7 @@ public class QuizCardView extends ExampleCardView {
             animFirstColor = mContext.getResources().getColor(R.color.white);
             animSecondColor = mContext.getResources().getColor(R.color.storymaker_highlight);
         } else {
+            // NOTE : This animation is currently disabled. See breadCrumb.setOnClickListener
             // Breadcrumb shows quiz question
             breadCrumb.setText(mCardModel.getQuestion());
             finalChoiceContainerHeight = calculateExpandedChoiceContainerHeightPx();
@@ -227,6 +234,9 @@ public class QuizCardView extends ExampleCardView {
     }
 
     private View inflateAndAddChoiceForQuiz(@NonNull ViewGroup quizChoiceContainer, Choice choice) {
+        // NOTE: quiz_card_choice layout previously had fixed height, which allowed calculation
+        // of expanded quiz card height without performing layout. Come up with a new way to
+        // animate the quiz card expansion now that we have varying height quiz choices.
         LayoutInflater inflater = (LayoutInflater) quizChoiceContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView choiceView = (TextView) (inflater.inflate(R.layout.quiz_card_choice, quizChoiceContainer, false)).findViewById(R.id.choiceText);
         choiceView.setText(choice.text);
