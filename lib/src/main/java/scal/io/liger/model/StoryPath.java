@@ -675,6 +675,112 @@ public class StoryPath {
         return allMetadata;
     }
 
+
+
+    public ArrayList<MediaFile> getExternalMediaFile(String reference) {
+
+        Log.d("CLIPS", "NEW METHOD getExternalMediaFile() CALLED FOR REFERENCE " + reference);
+
+        ArrayList<MediaFile> results = new ArrayList<MediaFile>();
+
+        String[] parts = reference.split("::");
+
+        StoryPath story = null;
+        StoryPathLibrary library = null;
+
+        if (dependencies == null) {
+            Log.e("CLIPS", "STORY PATH " + parts[0] + " REFERENCED (GET MEDIA), BUT DEPENDENCIES IS NULL");
+            return null;
+        } else if (dependencies.size() == 0) {
+            Log.e("CLIPS", "STORY PATH " + parts[0] + " REFERENCED (GET MEDIA), BUT DEPENDENCIES IS EMPTY");
+            return null;
+        }
+
+        // reference targets a serialized story path
+        for (Dependency dependency : dependencies) {
+            if (dependency.getDependencyId().equals(parts[0])) {
+
+                MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+
+                String checkPath = buildZipPath(dependency.getDependencyFile());
+                File checkFile = new File(checkPath);
+
+                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
+
+                if (checkFile.exists()) {
+                    story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    Log.d("CLIPS", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                } else {
+                    story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    Log.d("CLIPS", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                }
+
+                if (story instanceof StoryPathLibrary) {
+                    Log.d("CLIPS", "STORY PATH " + story.getId() + " IS A LIBRARY");
+                    library = (StoryPathLibrary)story;
+                } else {
+                    Log.d("CLIPS", "NEED TO LOAD STORY PATH LIBRARY CORRESPONDING TO " + story.getId());
+
+                    checkPath = story.buildZipPath(story.getStoryPathLibraryFile());
+                    checkFile = new File(checkPath);
+
+                    if (checkFile.exists()) {
+                        library = JsonHelper.loadStoryPathLibrary(story.getStoryPathLibraryFile(), referencedFiles, this.context, mainActivity.getLanguage());
+                        Log.d("CLIPS", "LOADED FROM FILE: " + story.getStoryPathLibraryFile());
+                    } else {
+                        library = JsonHelper.loadStoryPathLibraryFromZip(story.getStoryPathLibraryFile(), referencedFiles, this.context, mainActivity.getLanguage());
+                        Log.d("CLIPS", "LOADED FROM ZIP: " + story.getStoryPathLibraryFile());
+                    }
+                }
+            }
+        }
+
+        if (story == null) {
+            Log.e("CLIPS", "STORY PATH ID " + parts[0] + " WAS NOT FOUND");
+            return null;
+        }
+
+        if (library == null) {
+            Log.e("CLIPS", "STORY PATH LIBRARY CORRESPONDING TO ID " + parts[0] + " WAS NOT FOUND");
+            return null;
+        }
+
+        ArrayList<Card> cards = story.gatherCards(parts[1]);
+
+        if ((cards.size() > 1) || (cards.size() < 1)) {
+            Log.e("CLIPS", "UNEXPECTED NUMBER OF CARDS FOUND FOR REFERENCE " + reference);
+            return null;
+        }
+
+        if (!(cards.get(0) instanceof ClipCard)) {
+            Log.e("CLIPS", "CARD FOUND FOR REFERENCE " + reference + " IS NOT A CLIP CARD");
+            return null;
+        }
+
+        ClipCard clipCard = (ClipCard)(cards.get(0));
+
+        ArrayList<ClipMetadata> clips = clipCard.getClips();
+
+        if (clips.size() < 1) {
+            Log.e("CLIPS", "NO CLIPS FOUND FOR REFERENCE " + reference);
+            return null;
+        }
+
+        for (ClipMetadata clip : clips) {
+            MediaFile media = library.loadMediaFile(clip.getUuid());
+            if (media == null) {
+                Log.d("CLIPS", "NO MEDIA FOUND FOR UUID " + clip.getUuid());
+            } else {
+                Log.d("CLIPS", "FOUND MEDIA FOR UUID " + clip.getUuid());
+                results.add(media);
+            }
+        }
+
+        return results;
+    }
+
+
+
     public ArrayList<Card> getCards(ArrayList<String> references) {
         ArrayList<Card> results = new ArrayList<Card>();
 

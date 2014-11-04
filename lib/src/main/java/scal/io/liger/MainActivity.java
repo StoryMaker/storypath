@@ -542,10 +542,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                     if (checkFile.exists()) {
                         storyPathLibrary = JsonHelper.loadStoryPathLibrary(checkPath, referencedFiles, this, language);
-                        Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                        Log.e("FILES", "LOADED FROM FILE: " + storyPath.getStoryPathLibraryFile());
                     } else {
                         storyPathLibrary = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
-                        Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                        Log.e("FILES", "LOADED FROM ZIP: " + storyPath.getStoryPathLibraryFile());
                     }
 
                     // loaded in reverse order, so need to set these references
