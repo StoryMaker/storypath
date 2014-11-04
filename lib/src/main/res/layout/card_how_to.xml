@@ -8,7 +8,7 @@
     android:padding="@dimen/activity_horizontal_margin">
 
     <TextView
-        android:id="@+id/howtoCard"
+        android:id="@+id/tv_text"
         style="@style/p_italic"
         android:textColor="@color/white"
         android:text="@string/lbl_order_media_desc"/>
