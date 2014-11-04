@@ -105,6 +105,11 @@ public class ZipHelper {
 
         InputStream zipInput = getFileInputStream(path, context);
 
+        if (zipInput == null) {
+            Log.e(" *** TESTING *** ", "Failed to open input stream for " + path + " in .zip file");
+            return null;
+        }
+
         try {
             FileOutputStream tempOutput = new FileOutputStream(tempFile);
             byte[] buf = new byte[1024];

@@ -361,7 +361,10 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
 
 
-        if (mediaFile == null) {
+        if ((mediaFile == null) ||
+           ((mediaFile instanceof ExampleMediaFile) &&
+           ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel) == null))
+        {
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType();
 
