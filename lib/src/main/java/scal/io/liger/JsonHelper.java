@@ -348,6 +348,7 @@ public class JsonHelper {
             File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
             File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
             File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
+            File ligerFile_7 = new File(sdLigerFilePath + "/default/learning_guide_3/learning_guide_3_library.json");
 
             jsonFileNamesList.add(ligerFile_1.getName());
             jsonFileNamesList.add(ligerFile_2.getName());
@@ -355,6 +356,7 @@ public class JsonHelper {
             jsonFileNamesList.add(ligerFile_4.getName());
             jsonFileNamesList.add(ligerFile_5.getName());
             jsonFileNamesList.add(ligerFile_6.getName());
+            jsonFileNamesList.add(ligerFile_7.getName());
 
             jsonFileList = new ArrayList<File>();
             jsonFileList.add(ligerFile_1);
@@ -363,6 +365,7 @@ public class JsonHelper {
             jsonFileList.add(ligerFile_4);
             jsonFileList.add(ligerFile_5);
             jsonFileList.add(ligerFile_6);
+            jsonFileList.add(ligerFile_7);
 
             jsonPathList = new ArrayList<String>();
             jsonPathList.add("default/default_library/default_library.json");
@@ -371,6 +374,7 @@ public class JsonHelper {
             jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
             jsonPathList.add("default/learning_guide_library.json");
             jsonPathList.add("default/learning_guide_library_SAVE.json");
+            jsonPathList.add("default/learning_guide_3/learning_guide_3_library.json");
 
             jsonKeyToPath = new HashMap<String, String>();
             jsonKeyToPath.put("default_library", "default/default_library/default_library.json");
@@ -379,6 +383,7 @@ public class JsonHelper {
             jsonKeyToPath.put("LIB_2_TEST", "default/LIB_2/LIB_2_TEST.json");
             jsonKeyToPath.put("learning_guide_library", "default/learning_guide_library.json");
             jsonKeyToPath.put("learning_guide_library_SAVE", "default/learning_guide_library_SAVE.json");
+            jsonKeyToPath.put("learning_guide_3", "default/learning_guide_3/learning_guide_3_library.json");
 
             File jsonFolder = new File(getSdLigerFilePath());
             // check for nulls (uncertain as to cause of nulls)
