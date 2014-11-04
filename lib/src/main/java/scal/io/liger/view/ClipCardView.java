@@ -9,16 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -361,7 +358,10 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
 
 
-        if (mediaFile == null) {
+        if ((mediaFile == null) ||
+           ((mediaFile instanceof ExampleMediaFile) &&
+           ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel) == null))
+        {
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType();
 
@@ -384,26 +384,14 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 */
 
                 Bitmap videoFrame = null;
-                if (mediaFile.getPath().contains("content:/")) {
-                    // path of form : content://com.android.providers.media.documents/document/video:183
-                    // An Android Document Provider URI. Thumbnail already generated
-                    // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
-                    long videoId = Long.parseLong(Uri.parse(mediaFile.getPath()).getLastPathSegment().split(":")[1]);
-                    thumbnail.setImageBitmap(MediaStore.Video.Thumbnails.getThumbnail(mContext.getContentResolver(), videoId, MediaStore.Images.Thumbnails.MINI_KIND, null));
+                if (mediaFile instanceof ExampleMediaFile) {
+                    videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
+                } else {
+                    videoFrame = mediaFile.getThumbnail(mContext);
                 }
-                else {
-                    // Regular old File path
-                    if (mediaFile instanceof ExampleMediaFile) {
-                        videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
-                    } else {
-                        videoFrame = mediaFile.getThumbnail();
-                    }
-                    if(null != videoFrame) {
-                        thumbnail.setImageBitmap(videoFrame);
-                    }
+                if(null != videoFrame) {
+                    thumbnail.setImageBitmap(videoFrame);
                 }
-
-
                 thumbnail.setVisibility(View.VISIBLE);
 //                btnMediaPlay.setVisibility(View.VISIBLE);
 //                btnMediaPlay.setOnClickListener(new View.OnClickListener() {

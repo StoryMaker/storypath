@@ -40,7 +40,7 @@ public class JsonHelper {
     //private static String language = null; // TEMP
 
     // TEMP - for gathering insance files to test references
-    public static ArrayList<String> getInstanceFiles() {
+    public static ArrayList<String> getInstancePaths() {
         ArrayList<String> instanceList = new ArrayList<String>();
         for (String s : jsonPathList) {
             if (s.contains("-instance")) {
@@ -317,8 +317,16 @@ public class JsonHelper {
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             // FIXME we need to remove this, it seems like the popup stuff requires it even though we acutally read files from .obb not the Liger folder
-            String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
-            sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
+
+            // need to switch to context-based external directory
+            // String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
+            String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+
+            // sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
+            sdLigerFilePath = sdCardFolderPath + File.separator;
+            Log.d("FILES", "NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
+
+            new File(sdLigerFilePath).mkdirs();
             // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
 //            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
 
@@ -340,16 +348,17 @@ public class JsonHelper {
     private static void setupJSONFileList() {
 
         // HARD CODING LIST
-        if (jsonFileNamesList == null) {
-            jsonFileNamesList = new ArrayList<String>();
+        // rebuild list to pick up new save files
+        // if (jsonFileNamesList == null) {
             File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
-            File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_TEST.json");
-            File ligerFile_3 = new File(sdLigerFilePath + "/default/LIB_1/LIB_1_TEST.json");
-            File ligerFile_4 = new File(sdLigerFilePath + "/default/LIB_2/LIB_2_TEST.json");
+            File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_1/learning_guide_1.json");
+            File ligerFile_3 = new File(sdLigerFilePath + "/default/learning_guide_2/learning_guide_2.json");
+            File ligerFile_4 = new File(sdLigerFilePath + "/default/learning_guide_3/learning_guide_3.json");
             File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
             File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
             File ligerFile_7 = new File(sdLigerFilePath + "/default/learning_guide_3/learning_guide_3_library.json");
 
+            jsonFileNamesList = new ArrayList<String>();
             jsonFileNamesList.add(ligerFile_1.getName());
             jsonFileNamesList.add(ligerFile_2.getName());
             jsonFileNamesList.add(ligerFile_3.getName());
@@ -369,39 +378,50 @@ public class JsonHelper {
 
             jsonPathList = new ArrayList<String>();
             jsonPathList.add("default/default_library/default_library.json");
-            jsonPathList.add("default/learning_guide_TEST.json");
-            jsonPathList.add("default/LIB_1/LIB_1_TEST.json");
-            jsonPathList.add("default/LIB_2/LIB_2_TEST.json");
+            jsonPathList.add("default/learning_guide_1/learning_guide_1.json");
+            jsonPathList.add("default/learning_guide_2/learning_guide_2.json");
+            jsonPathList.add("default/learning_guide_3/learning_guide_3.json");
             jsonPathList.add("default/learning_guide_library.json");
             jsonPathList.add("default/learning_guide_library_SAVE.json");
             jsonPathList.add("default/learning_guide_3/learning_guide_3_library.json");
 
             jsonKeyToPath = new HashMap<String, String>();
             jsonKeyToPath.put("default_library", "default/default_library/default_library.json");
-            jsonKeyToPath.put("learning_guide_TEST", "default/learning_guide_TEST.json");
-            jsonKeyToPath.put("LIB_1_TEST", "default/LIB_1/LIB_1_TEST.json");
-            jsonKeyToPath.put("LIB_2_TEST", "default/LIB_2/LIB_2_TEST.json");
+            jsonKeyToPath.put("learning_guide_1.json", "default/learning_guide_1/learning_guide_1.json");
+            jsonKeyToPath.put("learning_guide_2.json", "default/learning_guide_2/learning_guide_2.json");
+            jsonKeyToPath.put("learning_guide_3.json", "default/learning_guide_3/learning_guide_3.json");
             jsonKeyToPath.put("learning_guide_library", "default/learning_guide_library.json");
             jsonKeyToPath.put("learning_guide_library_SAVE", "default/learning_guide_library_SAVE.json");
             jsonKeyToPath.put("learning_guide_3", "default/learning_guide_3/learning_guide_3_library.json");
 
-            File jsonFolder = new File(getSdLigerFilePath());
-            // check for nulls (uncertain as to cause of nulls)
-            if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
-                for (File jsonFile : jsonFolder.listFiles()) {
-                    if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                        File localFile = new File(jsonFile.getPath());
-                        Log.d("FILES", "FOUND INSTANCE FILE: " + localFile.getName());
-                        jsonFileNamesList.add(localFile.getName());
-                        jsonFileList.add(localFile);
-                        jsonPathList.add(localFile.getPath());
-                        jsonKeyToPath.put(localFile.getName(), localFile.getPath());
-                    }
-                }
-            } else {
-                Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
+            for (File jsonFile : getInstanceFiles()) {
+                jsonFileNamesList.add(jsonFile.getName());
+                jsonFileList.add(jsonFile);
+                jsonPathList.add(jsonFile.getPath());
+                jsonKeyToPath.put(jsonFile.getName(), jsonFile.getPath());
             }
+        // }
+    }
+
+    public static ArrayList<File> getInstanceFiles() {
+
+        ArrayList<File> results = new ArrayList<File>();
+
+        File jsonFolder = new File(getSdLigerFilePath());
+        // check for nulls (uncertain as to cause of nulls)
+        if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
+            for (File jsonFile : jsonFolder.listFiles()) {
+                if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
+                    Log.d("FILES", "FOUND INSTANCE FILE: " + jsonFile.getName());
+                    File localFile = new File(jsonFile.getPath());
+                    results.add(localFile);
+                }
+            }
+        } else {
+            Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
         }
+
+        return results;
     }
 
     public static String[] getJSONFileList() {

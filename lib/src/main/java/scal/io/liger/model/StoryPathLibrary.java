@@ -215,7 +215,7 @@ public class StoryPathLibrary extends StoryPath {
                 String checkPath = buildZipPath(storyPathTemplateFile);
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
 
                 StoryPath story = null;
                 if (checkFile.exists()) {

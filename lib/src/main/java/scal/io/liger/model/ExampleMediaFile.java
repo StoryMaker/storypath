@@ -69,6 +69,10 @@ public class ExampleMediaFile extends MediaFile{
 
                         File tempThumbnailFile = ZipHelper.getTempFile(path, tempThumbnailPath, card.getStoryPath().getContext());
 
+                        if (tempThumbnailFile == null) {
+                            return null;
+                        }
+
                         FileOutputStream thumbnailStream = new FileOutputStream(newThumbnailFile);
 
                         thumbnail = ThumbnailUtils.createVideoThumbnail(tempThumbnailFile.getPath(), MediaStore.Images.Thumbnails.MINI_KIND);

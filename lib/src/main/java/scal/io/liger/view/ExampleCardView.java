@@ -59,7 +59,8 @@ public class ExampleCardView implements DisplayableCard{
         //final File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
 
         //if (mediaFile == null) {
-        if (mCardModel.getExampleMediaFile() == null) {
+        if ((mCardModel.getExampleMediaFile() == null) ||
+            (mCardModel.getExampleMediaFile().getExampleURI(mCardModel) == null)) {
             // using medium cliptype image as default in case media file is missing
             ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
             ivCardPhoto.setVisibility(View.VISIBLE);
