@@ -26,6 +26,25 @@ public class ClipCard extends ExampleCard {
 
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
+        // before displaying card, check for references and import clips if necessary
+        if (references != null) {
+            for (String reference : references) {
+                if (reference.endsWith("clips")) {
+                    Log.d("CLIPS", "FOUND CLIP REFERENCE IN CLIP CARD " + getId() + ": " + reference);
+                    ArrayList<MediaFile> mediaFiles = storyPath.getExternalMediaFile(reference);
+
+                    if (mediaFiles == null) {
+                        Log.e("CLIPS", "UNABLE TO PROCESS CLIP REFERENCE " + reference);
+                    } else {
+                        for (MediaFile mediaFile : mediaFiles) {
+                            saveMediaFile(mediaFile);
+                            Log.d("CLIPS", "SAVED MEDIA FILE " + mediaFile.getPath() + " LOCALLY");
+                        }
+                    }
+                }
+            }
+        }
+
         return new ClipCardView(context, this);
     }
 

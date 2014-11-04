@@ -133,7 +133,6 @@ public class Util {
         i.setAction(Constants.ACTION_PUBLISH);
         i.putParcelableArrayListExtra("export_metadata", exportMetadata);
         host.startActivity(i);
-        int iasdfasd = 0;
         host.finish(); // Do we definitely want to finish the host Activity?
     }
 }
