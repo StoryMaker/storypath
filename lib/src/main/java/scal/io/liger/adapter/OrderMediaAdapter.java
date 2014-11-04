@@ -149,9 +149,9 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
         if (mMedium != null && mediaURI != null) {
             if (mMedium.equals(Constants.VIDEO)) {
-                Bitmap thumbnailBitmap = Util.getBitmapForMediaFile(viewHolder.title.getContext(), mf, cm);
-                if (thumbnailBitmap != null) {
-                    viewHolder.thumbnail.setImageBitmap(thumbnailBitmap);
+                Bitmap videoFrame = mf.getThumbnail(viewHolder.title.getContext());
+                if (videoFrame != null) {
+                    viewHolder.thumbnail.setImageBitmap(videoFrame);
                 }
                 return;
             } else if (mMedium.equals(Constants.PHOTO)) {

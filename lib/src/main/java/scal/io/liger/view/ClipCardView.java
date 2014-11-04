@@ -383,11 +383,15 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 }
                 */
 
-                Bitmap thumbnailBitmap = Util.getBitmapForMediaFile(mContext, mediaFile, mCardModel);
-                if (thumbnailBitmap != null) {
-                    thumbnail.setImageBitmap(thumbnailBitmap);
+                Bitmap videoFrame = null;
+                if (mediaFile instanceof ExampleMediaFile) {
+                    videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
+                } else {
+                    videoFrame = mediaFile.getThumbnail(mContext);
                 }
-
+                if(null != videoFrame) {
+                    thumbnail.setImageBitmap(videoFrame);
+                }
                 thumbnail.setVisibility(View.VISIBLE);
 //                btnMediaPlay.setVisibility(View.VISIBLE);
 //                btnMediaPlay.setOnClickListener(new View.OnClickListener() {

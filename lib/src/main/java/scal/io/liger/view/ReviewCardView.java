@@ -309,7 +309,7 @@ public class ReviewCardView implements DisplayableCard {
 
         String medium = clipCard.getMedium();
         if (medium.equals(Constants.VIDEO)) {
-            Bitmap thumbnailBitmap = Util.getBitmapForMediaFile(mContext, mediaFile, mCardModel);
+            Bitmap thumbnailBitmap = mediaFile.getThumbnail(mContext);
             if (thumbnailBitmap != null) {
                 thumbnail.setImageBitmap(thumbnailBitmap);
             }
