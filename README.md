@@ -2,6 +2,20 @@ liger-prototype
 ================
 
 ---
+# Bundling Sample Application Data
+---
+
+The sample module requires a complement of data that will be delivered in production via a Google Play APK Expansion File. To create and transfer this data to your device during development use the bundled `content.py` script:
+
+1. `python content.py clone`
+2. `python content.py zip_content`
+
+As work progresses on the liger data repository you can update your repository and re-bundle the APK Expansion File:
+
+1. `python content.py pull`
+2. `python content.py zip_content`
+
+---
 # Testing
 ---
 #### Espresso Testing:
