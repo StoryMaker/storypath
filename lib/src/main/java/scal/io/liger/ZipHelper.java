@@ -73,7 +73,11 @@ public class ZipHelper {
             // file path must be relative to the root of the resource file
             InputStream resourceStream = resourceFile.getInputStream(path);
 
-            Log.d(" *** TESTING *** ", "Found file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");
+            if (resourceStream == null) {
+                Log.d(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");
+            } else {
+                Log.d(" *** TESTING *** ", "Found file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");
+            }
             return resourceStream;
         } catch (IOException ioe) {
             Log.e(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");

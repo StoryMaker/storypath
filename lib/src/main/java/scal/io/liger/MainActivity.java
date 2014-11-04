@@ -222,8 +222,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             return;
         }
 
-        Log.d("GOOGLE", "JSON: " + json);
-
                     //initHook(json, jsonPath);
 
                     ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();

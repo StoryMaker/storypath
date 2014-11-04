@@ -313,6 +313,14 @@ public class StoryPath {
 
         StoryPath story = null;
 
+        if (dependencies == null) {
+            Log.e(this.getClass().getName(), "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS NULL");
+            return null;
+        } else if (dependencies.size() == 0) {
+            Log.e(this.getClass().getName(), "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS EMPTY");
+            return null;
+        }
+
         // reference targets a serialized story path
         for (Dependency dependency : dependencies) {
             if (dependency.getDependencyId().equals(pathParts[0])) {
@@ -682,6 +690,10 @@ public class StoryPath {
                 unfilteredCards = gatherCards(parts[1]);
             }
 
+            if (unfilteredCards == null) {
+                continue;
+            }
+
             // check for key/value parts
             if (parts.length == 4) {
                 filteredCards = ReferenceHelper.filterCards(unfilteredCards, parts[2], parts[3]);
@@ -713,6 +725,10 @@ public class StoryPath {
                 unfilteredCards = gatherExternalCards(parts[0], parts[1]);
             } else {
                 unfilteredCards = gatherCards(parts[1]);
+            }
+
+            if (unfilteredCards == null) {
+                continue;
             }
 
             // check for key/value parts
@@ -776,6 +792,14 @@ public class StoryPath {
     public ArrayList<Card> gatherExternalCards(String pathTarget, String cardTarget) {
 
         StoryPath story = null;
+
+        if (dependencies == null) {
+            Log.e(this.getClass().getName(), "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS NULL");
+            return null;
+        } else if (dependencies.size() == 0) {
+            Log.e(this.getClass().getName(), "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS EMPTY");
+            return null;
+        }
 
         // reference targets a serialized story path
         for (Dependency dependency : dependencies) {
