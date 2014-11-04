@@ -35,6 +35,7 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
     @Override
     public StoryPath deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         StoryPath spm = new StoryPath();
+        boolean errorFlag = false;
 
         JsonObject jObj = jsonElement.getAsJsonObject();
 
@@ -93,8 +94,14 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
                     spm.addCard(card);
                 } catch (ClassNotFoundException e) {
                     System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + cardType);
+                    errorFlag = true;
                 }
             }
+        }
+
+        // don't want to return incomplete models
+        if (errorFlag) {
+            throw new JsonParseException("encountered cards with no corresponding model");
         }
 
         return spm;
