@@ -122,7 +122,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             if (savedInstanceState.containsKey("storyPathLibraryJson")) {
                 String jsonSPL = savedInstanceState.getString("storyPathLibraryJson");
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
 
                 mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(jsonSPL, null, referencedFiles, this);
 
@@ -224,7 +224,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                     //initHook(json, jsonPath);
 
-                    ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+                    ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
 
                     mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
 
@@ -525,7 +525,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     String checkPath = mStoryPathLibrary.getCurrentStoryPath().buildZipPath(dependency.getDependencyFile());
                     File checkFile = new File(checkPath);
 
-                    ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+                    ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
 
                     if (checkFile.exists()) {
                         storyPath = JsonHelper.loadStoryPath(checkPath, mStoryPathLibrary, referencedFiles, this, language);

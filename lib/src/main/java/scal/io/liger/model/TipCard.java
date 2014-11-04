@@ -31,7 +31,7 @@ public class TipCard extends MarkdownCard {
 
     public ArrayList<String> getTips() {
         if (tips == null) {
-            ArrayList<Card> cards = getCardsByClass("thispath::<<scal.io.liger.model.TipCollectionHeadlessCard>>");
+            ArrayList<Card> cards = getCardsByClass(storyPath.getId() + "::<<scal.io.liger.model.TipCollectionHeadlessCard>>");
             if (cards.size() > 0) {
                 TipCollectionHeadlessCard tipCollection = (TipCollectionHeadlessCard) cards.get(0);
                 tips = tipCollection.getTipsTextByTags(tags);

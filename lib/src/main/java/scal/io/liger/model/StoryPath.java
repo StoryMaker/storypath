@@ -340,7 +340,7 @@ public class StoryPath {
                 String checkPath = buildZipPath(dependency.getDependencyFile());
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
@@ -810,7 +810,7 @@ public class StoryPath {
                 String checkPath = buildZipPath(dependency.getDependencyFile());
                 File checkFile = new File(checkPath);
 
-                ArrayList<String> referencedFiles = JsonHelper.getInstanceFiles();
+                ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
