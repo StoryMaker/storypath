@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
@@ -42,12 +43,15 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.Constants;
+import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
+import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.ReviewCard;
+import scal.io.liger.model.StoryPath;
 
 /**
  * ReviewCardView allows the user to review the order of clips
@@ -136,7 +140,8 @@ public class ReviewCardView implements DisplayableCard {
         btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                MainActivity mainActivity = (MainActivity) mCardModel.getStoryPath().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                Util.startPublishActivity(mainActivity, mCardModel.getStoryPath());
             }
         });
 

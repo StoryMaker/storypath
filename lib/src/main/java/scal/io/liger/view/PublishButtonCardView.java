@@ -48,20 +48,13 @@ public class PublishButtonCardView implements DisplayableCard{
             public void onClick(View v) {
 
                 // TEMP
-                final MainActivity mainActivity = (MainActivity) mCardModel.getStoryPath().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
                 Handler h = new Handler();
 
                 h.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        StoryPath spm = mCardModel.getStoryPath();
-                        ArrayList<FullMetadata> exportMetadata = spm.exportAllMetadata();
-                        Intent i = new Intent();
-                        i.setAction(Constants.ACTION_PUBLISH);
-                        i.putParcelableArrayListExtra("export_metadata", exportMetadata);
-                        mainActivity.startActivity(i);
-                        int iasdfasd = 0;
-                        mainActivity.finish();
+                        MainActivity mainActivity = (MainActivity) mCardModel.getStoryPath().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                        Util.startPublishActivity(mainActivity, mCardModel.getStoryPath());
                     }
                 }, 0);
             }

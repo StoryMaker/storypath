@@ -1,6 +1,7 @@
 package scal.io.liger.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +17,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.PopupWindow;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import scal.io.liger.Constants;
+import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.Card;
+import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.StoryPath;
 
 /**
@@ -120,5 +125,15 @@ public class Util {
         long minute = (timeMs / (1000 * 60)) % 60;
 
         return String.format("%02d:%02d", minute, second);
+    }
+
+    public static void startPublishActivity(Activity host, StoryPath storyPath) {
+        ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
+        Intent i = new Intent();
+        i.setAction(Constants.ACTION_PUBLISH);
+        i.putParcelableArrayListExtra("export_metadata", exportMetadata);
+        host.startActivity(i);
+        int iasdfasd = 0;
+        host.finish(); // Do we definitely want to finish the host Activity?
     }
 }
