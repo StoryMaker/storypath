@@ -27,7 +27,7 @@ public class ClipCard extends ExampleCard {
     @Override
     public DisplayableCard getDisplayableCard(Context context) {
         // before displaying card, check for references and import clips if necessary
-        if (references != null) {
+        if ((clips == null) && (references != null)) {
             for (String reference : references) {
                 if (reference.endsWith("clips")) {
                     Log.d("CLIPS", "FOUND CLIP REFERENCE IN CLIP CARD " + getId() + ": " + reference);
