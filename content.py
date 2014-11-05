@@ -50,9 +50,21 @@ def update_strings():
 def zip_content():
     """this creates the zipped blob of content and copies it in to storymaker's assets folder as its .obb file"""
 
-    #os.system("mkdir liger-content/assets ; mkdir sample/assets/ ; cd liger-content/assets ; zip -n .mp4 -r zipped . ; mv zipped.zip ../../sample/assets/main.1.obb")
-    os.system("zip -n .mp4 -r zipped . ; adb push zipped.zip /sdcard/Android/obb/scal.io.liger.sample/main.1.scal.io.liger.sample.obb")
+    os.system("cd liger-content/assets ; zip -n .mp4 -r zipped .")
+    
+@cli.command()  
+def adb_push():
+    """adb push zipped blob to /sdcard/Android/obb/scal.io.liger.sample/main.1.scal.io.liger.sample.obb"""
 
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/scal.io.liger.sample/main.1.scal.io.liger.sample.obb")
+    
+@cli.command()  
+def build_zip_push():
+    """build the json, zip it, push it to sd"""
+    
+    generate_json()
+    zip_content()
+    adb_push()
 
 
 cli.add_command(clone)
@@ -60,5 +72,7 @@ cli.add_command(pull)
 cli.add_command(push_strings)
 cli.add_command(update_strings)
 cli.add_command(zip_content)
+cli.add_command(adb_push)
+cli.add_command(build_zip_push)
 
 cli()
