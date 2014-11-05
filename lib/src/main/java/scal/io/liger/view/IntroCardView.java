@@ -1,6 +1,7 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +36,11 @@ public class IntroCardView implements DisplayableCard {
         TextView tvTime = ((TextView) view.findViewById(R.id.tv_time));
 
         //TODO set ivCardImage from model.getMediaPath()
+
+        //Uri uri = Uri.parse(mediaFile.getPath());
+        Uri uri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
+        ivCardImage.setImageURI(uri);
+        ivCardImage.setVisibility(View.VISIBLE);
 
         tvHeadline.setText(mCardModel.getHeadline());
         tvLevel.setText(mCardModel.getLevel());

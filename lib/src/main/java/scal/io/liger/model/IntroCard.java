@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
@@ -15,6 +16,8 @@ public class IntroCard extends Card {
     @Expose private String headline;
     @Expose private String level;
     @Expose private String time;
+    @Expose private String exampleMediaPath;
+    @Expose private ExampleMediaFile exampleMediaFile;
 
     public IntroCard() {
         super();
@@ -48,5 +51,22 @@ public class IntroCard extends Card {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public ExampleMediaFile getExampleMediaFile() {
+        if (exampleMediaPath == null) {
+            Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
+            return null;
+        }
+
+        if (exampleMediaFile == null) {
+            exampleMediaFile = new ExampleMediaFile(storyPath.buildZipPath(exampleMediaPath), "photo");
+        }
+
+        return exampleMediaFile;
+    }
+
+    public void setExampleMediaFile(ExampleMediaFile exampleMediaFile) {
+        this.exampleMediaFile = exampleMediaFile;
     }
 }
