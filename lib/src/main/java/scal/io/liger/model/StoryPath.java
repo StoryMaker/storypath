@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -554,8 +555,12 @@ public class StoryPath {
             try {
                 MainActivity mainActivity = (MainActivity) context;
                 mainActivity.goToCard(this, linkPath);
-            } catch (Exception e) {
+            } catch (com.google.gson.JsonSyntaxException e) {
+                Toast.makeText(context, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            } catch (MalformedJsonException e) {
                 Toast.makeText(context, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             }
         } else {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
