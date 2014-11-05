@@ -13,6 +13,10 @@ public class Dependency {
     @Expose private String dependencyId;
     @Expose private String dependencyFile;
 
+    public String toString() {
+        return dependencyId + ": " + dependencyFile;
+    }
+
     public Dependency() {
         // required for JSON/GSON
     }
