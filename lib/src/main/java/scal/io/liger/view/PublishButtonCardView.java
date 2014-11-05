@@ -17,7 +17,7 @@ import scal.io.liger.model.PublishButtonCard;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.StoryPath;
 
-public class PublishButtonCardView implements DisplayableCard{
+public class PublishButtonCardView implements DisplayableCard {
     private PublishButtonCard mCardModel;
     private Context mContext;
 
@@ -37,8 +37,8 @@ public class PublishButtonCardView implements DisplayableCard{
 
         String btnText = mCardModel.getText();
 
-        if(btnText.isEmpty()) {
-            btnText = "Next";
+        if(btnText == null || btnText.isEmpty()) {
+            btnText = "Publish"; // FIXME move to strings
         }
 
         btnCardButton.setText(btnText);

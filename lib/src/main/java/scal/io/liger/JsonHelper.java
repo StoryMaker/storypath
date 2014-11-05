@@ -365,10 +365,10 @@ public class JsonHelper {
             String zipFilename = ZipHelper.getExtensionZipFilename(context, inputAssetFilename);
             String zipFullpath = zipPath + zipFilename;
 
-            Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
-            new File(zipPath).mkdirs();
+//            Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
+//            new File(zipPath).mkdirs();
             // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
-            copyObbFile(context, inputAssetFilename, zipFullpath);
+//            copyObbFile(context, inputAssetFilename, zipFullpath);
         } else {
             Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }

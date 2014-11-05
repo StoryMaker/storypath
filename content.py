@@ -50,7 +50,8 @@ def update_strings():
 def zip_content():
     """this creates the zipped blob of content and copies it in to storymaker's assets folder as its .obb file"""
 
-    os.system("mkdir liger-content/assets ; mkdir sample/assets/ ; cd liger-content/assets ; zip -n .mp4 -r zipped . ; mv zipped.zip ../../sample/assets/main.1.obb")
+    #os.system("mkdir liger-content/assets ; mkdir sample/assets/ ; cd liger-content/assets ; zip -n .mp4 -r zipped . ; mv zipped.zip ../../sample/assets/main.1.obb")
+    os.system("zip -n .mp4 -r zipped . ; adb push zipped.zip /sdcard/Android/obb/scal.io.liger.sample/main.1.scal.io.liger.sample.obb")
 
 
 
