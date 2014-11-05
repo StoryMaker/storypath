@@ -555,7 +555,7 @@ public class StoryPath {
                 MainActivity mainActivity = (MainActivity) context;
                 mainActivity.goToCard(this, linkPath);
             } catch (Exception e) {
-                Toast.makeText(context, "JSON parsing error: " + e.getMessage().substring(e.getMessage().indexOf(":") + 2), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
             System.err.println("APP CONTEXT REFERENCE NOT FOUND, CANNOT SEND LINK NOTIFICATION");
