@@ -660,6 +660,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     saveStoryFile();
 
                     mCardAdapter.changeCard(cc);
+                    scrollRecyclerViewToCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
@@ -685,6 +686,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     saveStoryFile();
 
                     mCardAdapter.changeCard(cc);
+                    scrollRecyclerViewToCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
                 }
@@ -711,6 +713,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     saveStoryFile();
 
                     mCardAdapter.changeCard(cc);
+                    scrollRecyclerViewToCard(cc);
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
                 }
@@ -719,10 +722,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 Uri uri = intent.getData();
                 // Will only allow stream-based access to files
                 if (Build.VERSION.SDK_INT >= 19) {
-                    final int takeFlags = intent.getFlags()
-                            & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                    getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
 
                 String path = getRealPathFromURI(getApplicationContext(), uri);
@@ -737,6 +737,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     MediaFile mf = new MediaFile(uri.toString(), Constants.VIDEO);
                     cc.saveMediaFile(mf);
                     mCardAdapter.changeCard(cc);
+                    scrollRecyclerViewToCard(cc);
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
@@ -962,6 +963,15 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         }
 
         return "ERROR";
+    }
+
+    /**
+     * Scroll {@link #mRecyclerView} so that card is the
+     * first visible item
+     */
+    public void scrollRecyclerViewToCard(Card card) {
+        int position = mCardAdapter.getPositionForCard(card);
+        mRecyclerView.scrollToPosition(position);
     }
 
     @Override
