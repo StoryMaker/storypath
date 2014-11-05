@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -155,14 +156,17 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             }
         });
 
+        final int drawableSizeDp = 30;
+        Resources r = mContext.getResources();
+        int drawableSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, drawableSizeDp, r.getDisplayMetrics());
 
         //set drawables for actions
         Drawable drwImport = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_import).colorRes(R.color.storymaker_highlight);
-        drwImport.setBounds(0, 0, 48, 48);
+        drwImport.setBounds(0, 0, drawableSizePx, drawableSizePx);
         tvImport.setCompoundDrawables(drwImport, null, null, null);
 
         Drawable drwCapture = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_capture_photo).colorRes(R.color.storymaker_highlight);
-        drwCapture.setBounds(0, 0, 48, 48);
+        drwCapture.setBounds(0, 0, drawableSizePx, drawableSizePx);
         tvCapture.setCompoundDrawables( drwCapture, null, null, null);
 
         //a-ic_card_capture_photo

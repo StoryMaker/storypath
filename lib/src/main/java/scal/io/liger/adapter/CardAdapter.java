@@ -59,6 +59,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         return mCardIdToPosition.containsKey(card.getId());
     }
 
+    /**
+     * @return the current position of the passed card in the collection of items, or -1 if not present
+     */
+    public int getPositionForCard(Card card) {
+        if (!hasCard(card)) return -1;
+
+        return mCardIdToPosition.get(card.getId());
+    }
+
     public void appendCard(Card cardToAdd) {
 //        if (hasCard(cardToAdd)) return; // Hack to avoid duplicate card insertion
         mDataset.add(cardToAdd);
@@ -70,7 +79,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     /**
      * Add a card to this adapter at a position relative to
      * the list passed to this adapter's constructor
-     * see {@link #CardAdapter(android.app.Activity, java.util.List)}
+     * see {@link #CardAdapter(java.util.List)}
     */
     public void addCardAtPosition(Card cardToAdd, int position) {
 //        if (hasCard(cardToAdd)) return; // Hack to avoid duplicate card insertion
