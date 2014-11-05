@@ -323,7 +323,7 @@ public class StoryPath {
         }
 
         // reference targets a serialized story path
-        for (Dependency dependency : dependencies) {
+        for (Dependency dependency : getDependencies()) {
             if (dependency.getDependencyId().equals(pathParts[0])) {
                 //GsonBuilder gBuild = new GsonBuilder();
                 //gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
@@ -389,6 +389,15 @@ public class StoryPath {
 
         // construct path relative to location of story path
         String relativePath = getFileLocation();
+
+
+        while (originalPath.contains("..")) {
+            Log.d("PATHS", "NEED TO DEAL WITH RELATIVE PATHS");
+            originalPath = originalPath.substring(originalPath.indexOf(File.separator) + 1);
+            relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
+            Log.d("PATHS", "CHECKING... " + relativePath + File.separator + originalPath);
+        }
+
 
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
@@ -706,7 +715,7 @@ public class StoryPath {
         }
 
         // reference targets a serialized story path
-        for (Dependency dependency : dependencies) {
+        for (Dependency dependency : getDependencies()) {
             if (dependency.getDependencyId().equals(parts[0])) {
 
                 MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
@@ -720,10 +729,18 @@ public class StoryPath {
 
 
                 if (checkFile.exists()) {
-                    story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    if (dependency.getDependencyFile().contains("-library-instance")) {
+                        story = JsonHelper.loadStoryPathLibrary(dependency.getDependencyFile(), referencedFiles, this.context, mainActivity.getLanguage());
+                    } else {
+                        story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    }
                     Log.d("CLIPS", "LOADED FROM FILE: " + dependency.getDependencyFile());
                 } else {
-                    story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    if (dependency.getDependencyFile().contains("-library-instance")) {
+                        story = JsonHelper.loadStoryPathLibraryFromZip(dependency.getDependencyFile(), referencedFiles, this.context, mainActivity.getLanguage());
+                    } else {
+                        story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
+                    }
                     Log.d("CLIPS", "LOADED FROM ZIP: " + dependency.getDependencyFile());
                 }
 
@@ -901,7 +918,9 @@ public class StoryPath {
             }
         } else {
             for (Card card : getCards()) {
-                if (card.getId().equals(cardTarget)) {
+                if (card.getId() == null) {
+                    Log.e("JSON ERROR", "CARD TYPE " + card.getType() + " FOUND WITH NO ID!");
+                } else if (card.getId().equals(cardTarget)) {
                     results.add(card);
                 }
             }
@@ -923,7 +942,7 @@ public class StoryPath {
         }
 
         // reference targets a serialized story path
-        for (Dependency dependency : dependencies) {
+        for (Dependency dependency : getDependencies()) {
             if (dependency.getDependencyId().equals(pathTarget)) {
 
                 MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())

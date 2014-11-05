@@ -516,12 +516,16 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         }
         */
 
-        if (mStoryPathLibrary.getCurrentStoryPath().getId().equals(pathParts[0])) {
-            // reference targets this story path
+        if ((mStoryPathLibrary.getId().equals(pathParts[0])) ||
+           ((mStoryPathLibrary.getCurrentStoryPath() != null) &&
+            (mStoryPathLibrary.getCurrentStoryPath().getId().equals(pathParts[0])))) {
+            // reference targets this story path or library
+            storyPathLibrary = mStoryPathLibrary;
             storyPath = mStoryPathLibrary.getCurrentStoryPath();
         } else {
             // reference targets a serialized story path
-            for (Dependency dependency : mStoryPathLibrary.getCurrentStoryPath().getDependencies()) {
+
+            for (Dependency dependency : currentPath.getDependencies()) {
                 if (dependency.getDependencyId().equals(pathParts[0])) {
 
                     // ASSUMES DEPENDENCIES ARE CORRECT RELATIVE TO PATH OF CURRENT LIBRARY
@@ -530,7 +534,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // paths to actual files should fully qualified
                     // paths within zip files should be relative
                     // (or at least not resolve to actual files)
-                    String checkPath = mStoryPathLibrary.getCurrentStoryPath().buildZipPath(dependency.getDependencyFile());
+                    String checkPath = currentPath.buildZipPath(dependency.getDependencyFile());
                     File checkFile = new File(checkPath);
 
                     // ArrayList<String> referencedFiles = JsonHelper.getInstancePaths();
@@ -551,31 +555,63 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     }
 
                     if (checkFile.exists()) {
-                        storyPath = JsonHelper.loadStoryPath(checkPath, mStoryPathLibrary, referencedFiles, this, language);
-                        Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                        if (dependency.getDependencyFile().contains("-library-instance")) {
+                            storyPath = JsonHelper.loadStoryPathLibrary(checkPath, referencedFiles, this, language);
+                        } else {
+                            storyPath = JsonHelper.loadStoryPath(checkPath, mStoryPathLibrary, referencedFiles, this, language);
+                        }
+                        Log.d("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
                     } else {
-                        storyPath = JsonHelper.loadStoryPathFromZip(checkPath, mStoryPathLibrary, referencedFiles, this, language);
-                        Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                        if (dependency.getDependencyFile().contains("-library-instance")) {
+                            storyPath = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
+                        } else {
+                            storyPath = JsonHelper.loadStoryPathFromZip(checkPath, mStoryPathLibrary, referencedFiles, this, language);
+                        }
+                        Log.d("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
                     }
 
-                    newStoryPath = true;
+                    // need to account for references pointing to either a path or a library
+                    if (storyPath instanceof StoryPath) {
+                        Log.d("REFERENCES", "LOADED A PATH, NOW LOADING A LIBRARY");
 
-                    checkPath = storyPath.buildZipPath(storyPath.getStoryPathLibraryFile());
-                    checkFile = new File(checkPath);
+                        checkPath = storyPath.buildZipPath(storyPath.getStoryPathLibraryFile());
+                        checkFile = new File(checkPath);
 
-                    if (checkFile.exists()) {
-                        storyPathLibrary = JsonHelper.loadStoryPathLibrary(checkPath, referencedFiles, this, language);
-                        Log.e("FILES", "LOADED FROM FILE: " + storyPath.getStoryPathLibraryFile());
+                        if (checkFile.exists()) {
+                            storyPathLibrary = JsonHelper.loadStoryPathLibrary(checkPath, referencedFiles, this, language);
+                            Log.d("FILES", "LOADED FROM FILE: " + storyPath.getStoryPathLibraryFile());
+                        } else {
+                            storyPathLibrary = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
+                            Log.d("FILES", "LOADED FROM ZIP: " + storyPath.getStoryPathLibraryFile());
+                        }
                     } else {
-                        storyPathLibrary = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
-                        Log.e("FILES", "LOADED FROM ZIP: " + storyPath.getStoryPathLibraryFile());
+                        storyPathLibrary = (StoryPathLibrary)storyPath;
+
+                        if (storyPathLibrary.getCurrentStoryPathFile() == null) {
+                            Log.d("REFERENCES", "LOADED A LIBRARY, NO PATH");
+                            storyPath = null;
+                        } else {
+                            Log.d("REFERENCES", "LOADED A LIBRARY, NOW LOADING A PATH");
+                            checkPath = storyPathLibrary.buildZipPath(storyPathLibrary.getCurrentStoryPathFile());
+                            checkFile = new File(checkPath);
+
+                            if (checkFile.exists()) {
+                                storyPath = JsonHelper.loadStoryPath(checkPath, storyPathLibrary, referencedFiles, this, language);
+                                Log.d("FILES", "LOADED FROM FILE: " + storyPathLibrary.getCurrentStoryPathFile());
+                            } else {
+                                storyPath = JsonHelper.loadStoryPathFromZip(checkPath, storyPathLibrary, referencedFiles, this, language);
+                                Log.d("FILES", "LOADED FROM ZIP: " + storyPathLibrary.getCurrentStoryPathFile());
+                            }
+                        }
                     }
 
                     // loaded in reverse order, so need to set these references
-                    storyPath.setStoryPathLibrary(storyPathLibrary);
-                    storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
-                    storyPathLibrary.setCurrentStoryPath(storyPath);
-                    storyPathLibrary.setCurrentStoryPathFile(storyPath.getFileLocation()); // VERIFY THIS
+                    if (storyPath != null) {
+                        storyPath.setStoryPathLibrary(storyPathLibrary);
+                        storyPath.setStoryPathLibraryFile(storyPathLibrary.getFileLocation());
+                        storyPathLibrary.setCurrentStoryPath(storyPath);
+                        storyPathLibrary.setCurrentStoryPathFile(storyPath.getFileLocation()); // VERIFY THIS
+                    }
 
                     /*
                     GsonBuilder gBuild = new GsonBuilder();
@@ -591,20 +627,23 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     story.setFileLocation(mStoryPathLibrary.getCurrentStoryPath().buildZipPath(jsonFile));
                     */
 
-
+                    newStoryPath = true;
+                    break;
                 }
             }
         }
 
-        if (storyPath == null) {
-            System.err.println("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
-            return;
+        Card card = null;
+
+        if ((storyPathLibrary != null) && storyPathLibrary.getId().equals(pathParts[0])) {
+            card = storyPathLibrary.getCardById(cardPath);
+        }
+        if ((storyPath != null) && storyPath.getId().equals(pathParts[0])) {
+            card = storyPath.getCardById(cardPath);
         }
 
-        Card card = storyPath.getCardById(cardPath);
-
         if (card == null) {
-            System.err.println("CARD ID " + pathParts[1] + " WAS NOT FOUND");
+            Log.e("REFERENCES", "CARD ID " + pathParts[1] + " WAS NOT FOUND");
             return;
         }
 
@@ -648,8 +687,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     return;
                 }
 
-                Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
-//                Card c = mStoryPathLibrary.getCardById(pathId); // FIXME temporarily routing around this to test clipcard
+                Card c = null;
+                if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+                    c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+                }
+                if (c == null) {
+                    c = mStoryPathLibrary.getCardById(pathId); // FIXME temporarily routing around this to test clipcard
+                }
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
@@ -675,7 +719,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     return;
                 }
 
-                Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+                Card c = null;
+                if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+                    c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+                }
+                if (c == null) {
+                    c = mStoryPathLibrary.getCardById(pathId); // FIXME temporarily routing around this to test clipcard
+                }
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
@@ -702,7 +752,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     return;
                 }
 
-                Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+                Card c = null;
+                if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+                    c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
+                }
+                if (c == null) {
+                    c = mStoryPathLibrary.getCardById(pathId); // FIXME temporarily routing around this to test clipcard
+                }
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
