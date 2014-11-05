@@ -316,29 +316,31 @@ public class JsonHelper {
 
     private static void copyObbFile(Context context, String fromFilename, String toPath) {
         AssetManager assetManager = context.getAssets();
+        File file = new File(toPath);
+        if (!(file.exists())) {
+//            file.mkdirs();
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                Log.i("tag", "copyObbFile() " + fromFilename);
+                in = assetManager.open(fromFilename);
+                out = new FileOutputStream(toPath);
 
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            Log.i("tag", "copyObbFile() "+fromFilename);
-            in = assetManager.open(fromFilename);
-            out = new FileOutputStream(toPath);
-
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                in.close();
+                in = null;
+                out.flush();
+                out.close();
+                out = null;
+            } catch (Exception e) {
+                Log.e("tag", "Exception in copyObbFile() of " + toPath);
+                Log.e("tag", "Exception in copyObbFile() " + e.toString());
             }
-            in.close();
-            in = null;
-            out.flush();
-            out.close();
-            out = null;
-        } catch (Exception e) {
-            Log.e("tag", "Exception in copyObbFile() of "+toPath);
-            Log.e("tag", "Exception in copyObbFile() "+e.toString());
         }
-
     }
 
     public static void setupFileStructure(Context context) {
@@ -365,10 +367,10 @@ public class JsonHelper {
             String zipFilename = ZipHelper.getExtensionZipFilename(context, inputAssetFilename);
             String zipFullpath = zipPath + zipFilename;
 
-//            Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
-//            new File(zipPath).mkdirs();
+            Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
+            new File(zipPath).mkdirs();
             // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
-//            copyObbFile(context, inputAssetFilename, zipFullpath);
+            copyObbFile(context, inputAssetFilename, zipFullpath);
         } else {
             Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }
@@ -380,55 +382,55 @@ public class JsonHelper {
         // rebuild list to pick up new save files
         // if (jsonFileNamesList == null) {
             File ligerFile_1 = new File(sdLigerFilePath + "/default/default_library/default_library.json");
-            File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_1/learning_guide_1.json");
-            File ligerFile_3 = new File(sdLigerFilePath + "/default/learning_guide_2/learning_guide_2.json");
-            File ligerFile_4 = new File(sdLigerFilePath + "/default/learning_guide_3/learning_guide_3.json");
-            File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
-            File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
+//            File ligerFile_2 = new File(sdLigerFilePath + "/default/learning_guide_1/learning_guide_1.json");
+//            File ligerFile_3 = new File(sdLigerFilePath + "/default/learning_guide_2/learning_guide_2.json");
+//            File ligerFile_4 = new File(sdLigerFilePath + "/default/learning_guide_3/learning_guide_3.json");
+//            File ligerFile_5 = new File(sdLigerFilePath + "/default/learning_guide_library.json");
+//            File ligerFile_6 = new File(sdLigerFilePath + "/default/learning_guide_library_SAVE.json");
             File ligerFile_7 = new File(sdLigerFilePath + "/default/learning_guide_1/learning_guide_1_library.json");
             File ligerFile_8 = new File(sdLigerFilePath + "/default/learning_guide_2/learning_guide_2_library.json");
             File ligerFile_9= new File(sdLigerFilePath + "/default/learning_guide_3/learning_guide_3_library.json");
 
             jsonFileNamesList = new ArrayList<String>();
             jsonFileNamesList.add(ligerFile_1.getName());
-            jsonFileNamesList.add(ligerFile_2.getName());
-            jsonFileNamesList.add(ligerFile_3.getName());
-            jsonFileNamesList.add(ligerFile_4.getName());
-            jsonFileNamesList.add(ligerFile_5.getName());
-            jsonFileNamesList.add(ligerFile_6.getName());
+//            jsonFileNamesList.add(ligerFile_2.getName());
+//            jsonFileNamesList.add(ligerFile_3.getName());
+//            jsonFileNamesList.add(ligerFile_4.getName());
+//            jsonFileNamesList.add(ligerFile_5.getName());
+//            jsonFileNamesList.add(ligerFile_6.getName());
             jsonFileNamesList.add(ligerFile_7.getName());
             jsonFileNamesList.add(ligerFile_8.getName());
             jsonFileNamesList.add(ligerFile_9.getName());
 
             jsonFileList = new ArrayList<File>();
             jsonFileList.add(ligerFile_1);
-            jsonFileList.add(ligerFile_2);
-            jsonFileList.add(ligerFile_3);
-            jsonFileList.add(ligerFile_4);
-            jsonFileList.add(ligerFile_5);
-            jsonFileList.add(ligerFile_6);
+//            jsonFileList.add(ligerFile_2);
+//            jsonFileList.add(ligerFile_3);
+//            jsonFileList.add(ligerFile_4);
+//            jsonFileList.add(ligerFile_5);
+//            jsonFileList.add(ligerFile_6);
             jsonFileList.add(ligerFile_7);
             jsonFileList.add(ligerFile_8);
             jsonFileList.add(ligerFile_9);
 
             jsonPathList = new ArrayList<String>();
             jsonPathList.add("default/default_library/default_library.json");
-            jsonPathList.add("default/learning_guide_1/learning_guide_1.json");
-            jsonPathList.add("default/learning_guide_2/learning_guide_2.json");
-            jsonPathList.add("default/learning_guide_3/learning_guide_3.json");
-            jsonPathList.add("default/learning_guide_library.json");
-            jsonPathList.add("default/learning_guide_library_SAVE.json");
+//            jsonPathList.add("default/learning_guide_1/learning_guide_1.json");
+//            jsonPathList.add("default/learning_guide_2/learning_guide_2.json");
+//            jsonPathList.add("default/learning_guide_3/learning_guide_3.json");
+//            jsonPathList.add("default/learning_guide_library.json");
+//            jsonPathList.add("default/learning_guide_library_SAVE.json");
             jsonPathList.add("default/learning_guide_1/learning_guide_1_library.json");
             jsonPathList.add("default/learning_guide_2/learning_guide_2_library.json");
             jsonPathList.add("default/learning_guide_3/learning_guide_3_library.json");
 
             jsonKeyToPath = new HashMap<String, String>();
             jsonKeyToPath.put("default_library", "default/default_library/default_library.json");
-            jsonKeyToPath.put("learning_guide_1.json", "default/learning_guide_1/learning_guide_1.json");
-            jsonKeyToPath.put("learning_guide_2.json", "default/learning_guide_2/learning_guide_2.json");
-            jsonKeyToPath.put("learning_guide_3.json", "default/learning_guide_3/learning_guide_3.json");
-            jsonKeyToPath.put("learning_guide_library", "default/learning_guide_library.json");
-            jsonKeyToPath.put("learning_guide_library_SAVE", "default/learning_guide_library_SAVE.json");
+//            jsonKeyToPath.put("learning_guide_1.json", "default/learning_guide_1/learning_guide_1.json");
+//            jsonKeyToPath.put("learning_guide_2.json", "default/learning_guide_2/learning_guide_2.json");
+//            jsonKeyToPath.put("learning_guide_3.json", "default/learning_guide_3/learning_guide_3.json");
+//            jsonKeyToPath.put("learning_guide_library", "default/learning_guide_library.json");
+//            jsonKeyToPath.put("learning_guide_library_SAVE", "default/learning_guide_library_SAVE.json");
             jsonKeyToPath.put("learning_guide_1_library", "default/learning_guide_1/learning_guide_1_library.json");
             jsonKeyToPath.put("learning_guide_2_library", "default/learning_guide_2/learning_guide_2_library.json");
             jsonKeyToPath.put("learning_guide_3_library", "default/learning_guide_3/learning_guide_3_library.json");
