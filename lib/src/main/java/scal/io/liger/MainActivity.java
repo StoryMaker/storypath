@@ -792,6 +792,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(uri.toString(), Constants.VIDEO);
                     cc.saveMediaFile(mf);
+
+                    // SEEMS LIKE A REASONABLE TIME TO SAVE
+                    saveStoryFile();
+
                     mCardAdapter.changeCard(cc);
                     scrollRecyclerViewToCard(cc);
                 } else {

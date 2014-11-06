@@ -234,6 +234,9 @@ public class StoryPathLibrary extends StoryPath {
                 }
                 setCurrentStoryPath(story);
 
+                // SEEMS LIKE A REASONABLE TIME TO SAVE
+                mainActivity.saveStoryFile();
+
                 mainActivity.refreshCardList();
 
             //} catch (com.google.gson.JsonSyntaxException e) {
