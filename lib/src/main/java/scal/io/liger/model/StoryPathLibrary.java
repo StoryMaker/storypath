@@ -57,7 +57,7 @@ public class StoryPathLibrary extends StoryPath {
         }
 
         // SEEMS LIKE A REASONABLE TIME TO SAVE
-        ((MainActivity)context).saveStoryFile();
+        ((MainActivity)context).saveStoryPathLibrary(true);
     }
 
     public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {
@@ -232,11 +232,11 @@ public class StoryPathLibrary extends StoryPath {
                     story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, mainActivity.getLanguage());
                     Log.e("FILES", "LOADED FROM ZIP: " + checkPath);
                 }
+
                 setCurrentStoryPath(story);
+                setCurrentStoryPathFile(storyPathTemplateFile);
 
-                // SEEMS LIKE A REASONABLE TIME TO SAVE
-                mainActivity.saveStoryFile();
-
+                mainActivity.saveStoryPathLibrary(false);
                 mainActivity.refreshCardList();
 
             //} catch (com.google.gson.JsonSyntaxException e) {
