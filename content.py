@@ -58,13 +58,13 @@ def zip_content():
 def adb_push_obb():
     """adb push to /sdcard/Android/<package>/obb"""
 
-    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/%s/main.1.%s.obb" % (packagename, packagename))
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/%s/main.2.%s.obb" % (packagename, packagename))
     
 @cli.command()  
 def adb_push_files():
     """adb push to /sdcard/Android/<package>/files"""
 
-    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/data/%s/files/main.1.%s.obb" % (packagename, packagename))
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/data/%s/files/main.2.%s.obb" % (packagename, packagename))
     
 @cli.command()  
 def adb_push():

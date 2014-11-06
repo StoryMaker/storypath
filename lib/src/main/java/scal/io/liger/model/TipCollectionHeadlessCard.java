@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 /**
- * Created by mnbogner on 10/21/14.
+ * @author Matt Bogner
+ * @author Josh Steiner
  */
 public class TipCollectionHeadlessCard extends HeadlessCard {
 
