@@ -477,7 +477,7 @@ public class StoryPath {
         }
 
         // SEEMS LIKE A REASONABLE TIME TO SAVE
-        ((MainActivity)context).saveStoryFile();
+        ((MainActivity)context).saveStoryPathLibrary(true);
     }
 
     /**

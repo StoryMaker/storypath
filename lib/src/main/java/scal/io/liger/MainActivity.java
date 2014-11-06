@@ -701,7 +701,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     cc.saveMediaFile(mf);
 
                     // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    saveStoryFile();
+                    saveStoryPathLibrary(true);
 
                     mCardAdapter.changeCard(cc);
                     scrollRecyclerViewToCard(cc);
@@ -733,7 +733,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     cc.saveMediaFile(mf);
 
                     // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    saveStoryFile();
+                    saveStoryPathLibrary(true);
 
                     mCardAdapter.changeCard(cc);
                     scrollRecyclerViewToCard(cc);
@@ -766,7 +766,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     cc.saveMediaFile(mf);
 
                     // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    saveStoryFile();
+                    saveStoryPathLibrary(true);
 
                     mCardAdapter.changeCard(cc);
                     scrollRecyclerViewToCard(cc);
@@ -792,6 +792,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     ClipCard cc = (ClipCard)c;
                     MediaFile mf = new MediaFile(uri.toString(), Constants.VIDEO);
                     cc.saveMediaFile(mf);
+
+                    // SEEMS LIKE A REASONABLE TIME TO SAVE
+                    saveStoryPathLibrary(true);
+
                     mCardAdapter.changeCard(cc);
                     scrollRecyclerViewToCard(cc);
                 } else {
@@ -802,7 +806,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         }
     }
 
-    public void saveStoryFile() {
+    public void saveStoryPathLibrary(boolean savePath) {
         //Gson gson = new Gson();
 
         if (mStoryPathLibrary == null) {
@@ -819,7 +823,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             Log.d("FILES", "EXISTING NAME: " + savedStoryPathLibraryFile);
         }
 
-        if (mStoryPathLibrary.getCurrentStoryPath() != null) {
+        if (savePath && (mStoryPathLibrary.getCurrentStoryPath() != null)) {
             mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibraryFile(savedStoryPathLibraryFile);
             String savedStoryPathFile = mStoryPathLibrary.getCurrentStoryPath().getSavedFileName();
             if (savedStoryPathFile == null) {

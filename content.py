@@ -3,10 +3,12 @@
 import os
 import click
     
+
+packagename = "scal.io.liger.sample"
+
 @click.group()
 def cli():
     pass
-
     
 @cli.command()    
 def clone():
@@ -14,7 +16,7 @@ def clone():
 
     os.system('git clone https://github.com/scalio/liger-content.git')
 
-@cli.command()    
+@cli.command()
 def pull():
     """update the liger content repo"""
 
@@ -51,12 +53,23 @@ def zip_content():
     """this creates the zipped blob of content and copies it in to storymaker's assets folder as its .obb file"""
 
     os.system("cd liger-content/assets ; zip -n .mp4 -r zipped .")
+
+@cli.command()
+def adb_push_obb():
+    """adb push to /sdcard/Android/<package>/obb"""
+
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/%s/main.1.%s.obb" % (packagename, packagename))
+    
+@cli.command()  
+def adb_push_files():
+    """adb push to /sdcard/Android/<package>/files"""
+
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/data/%s/files/main.1.%s.obb" % (packagename, packagename))
     
 @cli.command()  
 def adb_push():
-    """adb push zipped blob to /sdcard/Android/obb/scal.io.liger.sample/main.1.scal.io.liger.sample.obb"""
-
-    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/scal.io.liger.sample/main.1.scal.io.liger.sample.obb")
+    """adb push to /sdcard/Android/<package>/files"""
+    adb_push_files()
     
 @cli.command()  
 def build_zip_push():
@@ -73,6 +86,8 @@ cli.add_command(push_strings)
 cli.add_command(update_strings)
 cli.add_command(zip_content)
 cli.add_command(adb_push)
+cli.add_command(adb_push_obb)
+cli.add_command(adb_push_files)
 cli.add_command(build_zip_push)
 
 cli()

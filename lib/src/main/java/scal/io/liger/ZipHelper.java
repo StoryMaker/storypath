@@ -38,16 +38,33 @@ public class ZipHelper {
             // Build the full path to the app's expansion files
             String packageName = ctx.getPackageName();
             File root = Environment.getExternalStorageDirectory();
-            String fullPath = root.toString() + "/Android/obb/" + packageName + "/";
-            return fullPath;
+
+            // check and/or attempt to create obb folder
+            String checkPath = root.toString() + "/Android/obb/" + packageName + "/";
+            File checkDir = new File(checkPath);
+            if (checkDir.isDirectory() || checkDir.mkdirs()) {
+                Log.d("DIRECTORIES", "GOT OBB DIRECTORY: " + checkPath);
+                return checkPath;
+            }
+
+            // check and/or attempt to create files folder
+            checkPath = root.toString() + "/Android/data/" + packageName + "/files/";
+            checkDir = new File(checkPath);
+            if (checkDir.isDirectory() || checkDir.mkdirs()) {
+                Log.d("DIRECTORIES", "GOT FILES DIRECTORY: " + checkPath);
+                return checkPath;
+            }
         }
+
+        Log.e("DIRECTORIES", "NO OBB DIRECTORY AND NO FILES DIRECTORY");
         return null;
     }
 
     public static InputStream getFileInputStream(String path, Context context) {
         try {
             // resource file contains main file and patch file
-            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
+//            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
+            ZipResourceFile resourceFile = new ZipResourceFile(getExtensionFolderPath(context) + getExtensionZipFilename(context, "main.1.obb"));
 
             // multi-patch attempt
             /*
