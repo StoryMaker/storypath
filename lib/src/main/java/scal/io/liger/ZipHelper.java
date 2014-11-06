@@ -38,10 +38,25 @@ public class ZipHelper {
             // Build the full path to the app's expansion files
             String packageName = ctx.getPackageName();
             File root = Environment.getExternalStorageDirectory();
-//            String fullPath = root.toString() + "/Android/obb/" + packageName + "/";
-//            return fullPath;
-            return root.toString() + "/Android/data/" + packageName + "/files/";
+
+            // check and/or attempt to create obb folder
+            String checkPath = root.toString() + "/Android/obb/" + packageName + "/";
+            File checkDir = new File(checkPath);
+            if (checkDir.isDirectory() || checkDir.mkdirs()) {
+                Log.d("DIRECTORIES", "GOT OBB DIRECTORY: " + checkPath);
+                return checkPath;
+            }
+
+            // check and/or attempt to create files folder
+            checkPath = root.toString() + "/Android/data/" + packageName + "/files/";
+            checkDir = new File(checkPath);
+            if (checkDir.isDirectory() || checkDir.mkdirs()) {
+                Log.d("DIRECTORIES", "GOT FILES DIRECTORY: " + checkPath);
+                return checkPath;
+            }
         }
+
+        Log.e("DIRECTORIES", "NO OBB DIRECTORY AND NO FILES DIRECTORY");
         return null;
     }
 
