@@ -368,7 +368,7 @@ public class JsonHelper {
             String zipFullpath = zipPath + zipFilename;
 
             Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
-            new File(zipPath).mkdirs();
+            // new File(zipPath).mkdirs();
             // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
             copyObbFile(context, inputAssetFilename, zipFullpath);
         } else {
