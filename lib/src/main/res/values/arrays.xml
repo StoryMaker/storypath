@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="clipcard_overflow">
+        <item>@string/edit_card</item>
+        <item>@string/change_goal</item>
+        <item>@string/duplicate_card</item>
+        <item>@string/duplicate_clip</item>
+        <item>@string/remove_card</item>
+    </string-array>
+</resources>

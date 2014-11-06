@@ -31,12 +31,11 @@
     <string name="dialog_stop">STOP</string>
     <string name="dialog_redo">REDO</string>
 
-    <string-array name="clipcard_overflow">
-        <item>Change Goal</item>
-        <item>Duplicate Card</item>
-        <item>Duplicate Clip</item>
-        <item>Remove Card</item>
-    </string-array>
+    <string name="edit_card">Edit Card</string>
+    <string name="change_goal">Change Goal</string>
+    <string name="duplicate_card">Duplicate Card</string>
+    <string name="duplicate_clip">Duplicate Clip</string>
+    <string name="remove_card">Remove Card</string>
 
     <!-- THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values -->
 
