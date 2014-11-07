@@ -64,13 +64,13 @@ public class ZipHelper {
         try {
             // resource file contains main file and patch file
 //            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
-            ZipResourceFile resourceFile = new ZipResourceFile(getExtensionFolderPath(context) + getExtensionZipFilename(context, "main.2.obb"));
+            ZipResourceFile resourceFile = new ZipResourceFile(getExtensionFolderPath(context) + getExtensionZipFilename(context, "main.1.obb"));
 
             // multi-patch attempt
             /*
             String packageName = context.getPackageName();
             File root = Environment.getExternalStorageDirectory();
-            String expPath_1 = root.toString() + "/Android/obb/" + packageName + "/main.2.scal.io.liger.sample.obb";
+            String expPath_1 = root.toString() + "/Android/obb/" + packageName + "/main.1.scal.io.liger.sample.obb";
             String expPath_2 = root.toString() + "/Android/obb/" + packageName + "/patch.1.scal.io.liger.sample.obb";
             String expPath_3 = root.toString() + "/Android/obb/" + packageName + "/patch.2.scal.io.liger.sample.obb";
 

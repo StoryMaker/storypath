@@ -2,15 +2,15 @@
 
 import os
 import click
-    
+
 
 packagename = "scal.io.liger.sample"
 
 @click.group()
 def cli():
     pass
-    
-@cli.command()    
+
+@cli.command()
 def clone():
     """clone the liger content git repo"""
 
@@ -28,7 +28,7 @@ def generate_json():
 
     os.system("cd liger-content ; python generate_content.py")
 
-@cli.command()    
+@cli.command()
 def push_strings():
     """First generates the content to extract the latest source strings, then pushes them to transifex"""
 
@@ -47,8 +47,8 @@ def update_strings():
 
     click.echo("\n\ngenerating localized content...\n\n")
     os.system('cd liger-content ; python generate_localized_content.py ')
-   
-@cli.command()  
+
+@cli.command()
 def zip_content():
     """this creates the zipped blob of content and copies it in to storymaker's assets folder as its .obb file"""
 
@@ -58,23 +58,23 @@ def zip_content():
 def adb_push_obb():
     """adb push to /sdcard/Android/<package>/obb"""
 
-    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/%s/main.2.%s.obb" % (packagename, packagename))
-    
-@cli.command()  
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/obb/%s/main.1.%s.obb" % (packagename, packagename))
+
+@cli.command()
 def adb_push_files():
     """adb push to /sdcard/Android/<package>/files"""
 
-    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/data/%s/files/main.2.%s.obb" % (packagename, packagename))
-    
-@cli.command()  
+    os.system("cd liger-content/assets ; adb push zipped.zip /sdcard/Android/data/%s/files/main.1.%s.obb" % (packagename, packagename))
+
+@cli.command()
 def adb_push():
     """adb push to /sdcard/Android/<package>/files"""
     adb_push_files()
-    
-@cli.command()  
+
+@cli.command()
 def build_zip_push():
     """build the json, zip it, push it to sd"""
-    
+
     generate_json()
     zip_content()
     adb_push()

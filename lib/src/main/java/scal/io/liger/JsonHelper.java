@@ -362,7 +362,7 @@ public class JsonHelper {
 //            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
 
             // copy the zipped assets to the right folder
-            String inputAssetFilename = "main.2.obb"; // FIXME we should parse this out from the assets so its always right
+            String inputAssetFilename = "main.1.obb"; // FIXME we should parse this out from the assets so its always right
             String zipPath = ZipHelper.getExtensionFolderPath(context);
             String zipFilename = ZipHelper.getExtensionZipFilename(context, inputAssetFilename);
             String zipFullpath = zipPath + zipFilename;
