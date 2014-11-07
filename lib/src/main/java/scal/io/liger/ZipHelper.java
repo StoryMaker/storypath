@@ -24,12 +24,9 @@ public class ZipHelper {
     private static int mainVersion = 1;
     private static int patchVersion = 0;
 
-    public static String getExtensionZipFilename(Context ctx, String assetName) {
-        String[] splits = assetName.split("\\.");
-        String version = splits[1];
-        String name = splits[0];
+    public static String getExtensionZipFilename(Context ctx, String mainOrPatch, int version) {
         String packageName = ctx.getPackageName();
-        String filename = name + "." + version + "." + packageName + ".obb";
+        String filename = mainOrPatch + "." + version + "." + packageName + ".obb";
         return filename;
     }
 
@@ -64,7 +61,7 @@ public class ZipHelper {
         try {
             // resource file contains main file and patch file
 //            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
-            ZipResourceFile resourceFile = new ZipResourceFile(getExtensionFolderPath(context) + getExtensionZipFilename(context, "main.1.obb"));
+            ZipResourceFile resourceFile = new ZipResourceFile(getExtensionFolderPath(context) + getExtensionZipFilename(context, "main", 1));
 
             // multi-patch attempt
             /*

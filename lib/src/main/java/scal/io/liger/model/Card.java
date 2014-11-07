@@ -369,11 +369,19 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
 
         // check for attached story path/story path library
         if (storyPath.getStoryPathLibrary() != null) {
+            String libraryPath = storyPath.getStoryPathLibrary().getId() + fullPath.substring(fullPath.indexOf(":"));
+            pathArray.clear();
+            pathArray.add(libraryPath);
+            Log.d("CARDS", "LIBRARY REFERENCE: " + libraryPath);
             matchingCards.addAll(storyPath.getStoryPathLibrary().getCards(pathArray));
         }
         if (storyPath instanceof StoryPathLibrary) {
             StoryPathLibrary storyPathLibrary = ((StoryPathLibrary)storyPath);
             if (storyPathLibrary.getCurrentStoryPath() != null) {
+                String path = storyPathLibrary.getCurrentStoryPath().getId() + fullPath.substring(fullPath.indexOf(":"));
+                pathArray.clear();
+                pathArray.add(path);
+                Log.d("CARDS", "PATH REFERENCE: " + path);
                 matchingCards.addAll(storyPathLibrary.getCurrentStoryPath().getCards(pathArray));
             }
         }

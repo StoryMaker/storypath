@@ -48,6 +48,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.Constants;
+import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
@@ -589,6 +590,11 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     public void onClick(DialogInterface dialog, int which) {
                         mCardModel.getSelectedClip().setStartTime(clipStartMs.get());
                         mCardModel.getSelectedClip().setStopTime(clipStopMs.get());
+
+                        // need to save here
+                        Log.d("CLIPS", "SAVING START/STOP TIME");
+                        MainActivity mainActivity = (MainActivity)(mCardModel.getStoryPath().getContext());
+                        mainActivity.saveStoryPathLibrary(true);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

@@ -314,16 +314,19 @@ public class JsonHelper {
 
     }
 
-    private static void copyObbFile(Context context, String fromFilename, String toPath) {
+    private static void copyObbFile(Context context, String mainOrPatch, int version, String toPath) {
         AssetManager assetManager = context.getAssets();
+
+        String obbFileName = mainOrPatch + "." + version + ".obb";
+
         File file = new File(toPath);
         if (!(file.exists())) {
 //            file.mkdirs();
             InputStream in = null;
             OutputStream out = null;
             try {
-                Log.i("tag", "copyObbFile() " + fromFilename);
-                in = assetManager.open(fromFilename);
+                Log.i("tag", "copyObbFile() " + obbFileName);
+                in = assetManager.open(obbFileName);
                 out = new FileOutputStream(toPath);
 
                 byte[] buffer = new byte[1024];
@@ -362,15 +365,16 @@ public class JsonHelper {
 //            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
 
             // copy the zipped assets to the right folder
-            String inputAssetFilename = "main.1.obb"; // FIXME we should parse this out from the assets so its always right
+            String mainOrPatch = "main"; // FIXME we should parse this out from the assets so its always right
+            int version = 1;
             String zipPath = ZipHelper.getExtensionFolderPath(context);
-            String zipFilename = ZipHelper.getExtensionZipFilename(context, inputAssetFilename);
+            String zipFilename = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
             String zipFullpath = zipPath + zipFilename;
 
-            Log.d("JsonHelper", "copying obb file '" + inputAssetFilename + "' to '" + zipFullpath + "'");
+            Log.d("JsonHelper", "copying obb file " + mainOrPatch + "." + version + ".obb" + " to '" + zipFullpath);
             // new File(zipPath).mkdirs();
             // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
-            copyObbFile(context, inputAssetFilename, zipFullpath);
+            copyObbFile(context, mainOrPatch, version, zipFullpath);
         } else {
             Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }
