@@ -35,4 +35,11 @@ public class Constants {
 
     /** StoryMaker Intent Actions */
     public static final String ACTION_PUBLISH = "io.scal.liger.PUBLISH";
+
+    /** expansion file management */
+    public static final String LIGER_URL = "http://storymaker.cc/appdata/";
+    public static final String MAIN = "main";
+    public static final String PATCH = "patch";
+    public static final int MAIN_VERSION = 1;
+    public static final int PATCH_VERSION = 0;
 }

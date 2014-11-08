@@ -365,16 +365,14 @@ public class JsonHelper {
 //            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
 
             // copy the zipped assets to the right folder
-            String mainOrPatch = "main"; // FIXME we should parse this out from the assets so its always right
-            int version = 1;
             String zipPath = ZipHelper.getExtensionFolderPath(context);
-            String zipFilename = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
+            String zipFilename = ZipHelper.getExtensionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION);
             String zipFullpath = zipPath + zipFilename;
 
-            Log.d("JsonHelper", "copying obb file " + mainOrPatch + "." + version + ".obb" + " to '" + zipFullpath);
+            Log.d("JsonHelper", "copying obb file " + Constants.MAIN + "." + Constants.MAIN_VERSION + ".obb" + " to '" + zipFullpath);
             // new File(zipPath).mkdirs();
             // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
-            copyObbFile(context, mainOrPatch, version, zipFullpath);
+            copyObbFile(context, Constants.MAIN, Constants.MAIN_VERSION, zipFullpath);
         } else {
             Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.vending.expansion.downloader.impl.DownloaderService;
 import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
@@ -57,6 +58,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // NEW: check expansion files, initiate downloads if necessary
+        DownloadHelper.checkAndDownload(MainActivity.this);
+
         setContentView(R.layout.activity_main);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

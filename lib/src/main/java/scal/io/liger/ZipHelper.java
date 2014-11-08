@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -20,9 +21,6 @@ import java.util.Vector;
  * @author Josh Steiner
  */
 public class ZipHelper {
-    // move values into constants
-    private static int mainVersion = 1;
-    private static int patchVersion = 0;
 
     public static String getExtensionZipFilename(Context ctx, String mainOrPatch, int version) {
         String packageName = ctx.getPackageName();
@@ -60,41 +58,30 @@ public class ZipHelper {
     public static InputStream getFileInputStream(String path, Context context) {
         try {
             // resource file contains main file and patch file
-//            ZipResourceFile resourceFile = APKExpansionSupport.getAPKExpansionZipFile(context, mainVersion, patchVersion);
-            ZipResourceFile resourceFile = new ZipResourceFile(getExtensionFolderPath(context) + getExtensionZipFilename(context, "main", 1));
 
-            // multi-patch attempt
-            /*
-            String packageName = context.getPackageName();
-            File root = Environment.getExternalStorageDirectory();
-            String expPath_1 = root.toString() + "/Android/obb/" + packageName + "/main.1.scal.io.liger.sample.obb";
-            String expPath_2 = root.toString() + "/Android/obb/" + packageName + "/patch.1.scal.io.liger.sample.obb";
-            String expPath_3 = root.toString() + "/Android/obb/" + packageName + "/patch.2.scal.io.liger.sample.obb";
+            ArrayList<String> paths = new ArrayList<String>();
+            paths.add(getExtensionFolderPath(context) + getExtensionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+            if (Constants.PATCH_VERSION > 0) {
+                paths.add(getExtensionFolderPath(context) + getExtensionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+            }
 
-            String[] paths = new String[3];
-            paths[0] = expPath_1;
-            paths[1] = expPath_2;
-            paths[2] = expPath_3;
-
-            ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths);
-            */
+            ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths.toArray(new String[paths.size()]));
 
             if (resourceFile == null) {
                 return null;
             }
 
-
             // file path must be relative to the root of the resource file
             InputStream resourceStream = resourceFile.getInputStream(path);
 
             if (resourceStream == null) {
-                Log.d(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");
+                Log.d(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             } else {
-                Log.d(" *** TESTING *** ", "Found file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");
+                Log.d(" *** TESTING *** ", "Found file " + path + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             }
             return resourceStream;
         } catch (IOException ioe) {
-            Log.e(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + mainVersion + ", patch version " + patchVersion + ")");
+            Log.e(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             return null;
         }
     }
