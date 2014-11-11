@@ -12,15 +12,13 @@ import java.io.File;
 public class DownloadHelper {
 
     public static boolean checkExpansionFiles(Context context, String mainOrPatch, int version) {
-        String expansionFilePath = ZipHelper.getExtensionFolderPath(context);
-        String expansionFileName = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
-        File expansionFile = new File(expansionFilePath + expansionFileName);
+        String expansionFilePath = ZipHelper.getExtensionFolderPath(context, mainOrPatch, version);
 
-        if (expansionFile.exists()) {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + expansionFile.getPath() + " FOUND");
+        if (expansionFilePath != null) {
+            Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExtensionZipFilename(context, mainOrPatch, version) + " FOUND IN " + expansionFilePath);
             return true;
         } else {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + expansionFile.getPath() + " NOT FOUND");
+            Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExtensionZipFilename(context, mainOrPatch, version) + " NOT FOUND");
             return false;
         }
     }

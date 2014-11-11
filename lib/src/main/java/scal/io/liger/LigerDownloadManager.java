@@ -80,7 +80,9 @@ public class LigerDownloadManager implements Runnable {
         String ligerObb = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
 
         try {
-            File targetFolder = new File(ZipHelper.getExtensionFolderPath(context));
+            // if we're managing the download, download only to the files folder
+            // if we're using the google play api, download only to the obb folder
+            File targetFolder = new File(ZipHelper.getFileFolderName(context));
 
             Log.e("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
 
