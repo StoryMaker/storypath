@@ -361,18 +361,7 @@ public class JsonHelper {
             Log.d("FILES", "NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
 
             new File(sdLigerFilePath).mkdirs();
-            // based on http://stackoverflow.com/questions/4447477/android-how-to-copy-files-from-assets-folder-to-sdcard/8366081#8366081
-//            copyFilesToSdCard(context, sdLigerFilePath); // this used to copy all assets to /sdcard/Liger
-
-            // copy the zipped assets to the right folder
-            String zipPath = ZipHelper.getExtensionFolderPath(context);
-            String zipFilename = ZipHelper.getExtensionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION);
-            String zipFullpath = zipPath + zipFilename;
-
-            Log.d("JsonHelper", "copying obb file " + Constants.MAIN + "." + Constants.MAIN_VERSION + ".obb" + " to '" + zipFullpath);
-            // new File(zipPath).mkdirs();
-            // FIXME check size & datestamp and don't copy if it exists?  maybe we can check hash? key?
-            copyObbFile(context, Constants.MAIN, Constants.MAIN_VERSION, zipFullpath);
+            
         } else {
             Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }

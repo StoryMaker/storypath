@@ -28,30 +28,44 @@ public class ZipHelper {
         return filename;
     }
 
-    public static String getExtensionFolderPath(Context ctx) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            // Build the full path to the app's expansion files
-            String packageName = ctx.getPackageName();
-            File root = Environment.getExternalStorageDirectory();
+    public static String getObbFolderName(Context ctx) {
+        String packageName = ctx.getPackageName();
+        File root = Environment.getExternalStorageDirectory();
+        return root.toString() + "/Android/obb/" + packageName + "/";
+    }
 
+    public static String getFileFolderName(Context ctx) {
+        String packageName = ctx.getPackageName();
+        File root = Environment.getExternalStorageDirectory();
+        return root.toString() + "/Android/data/" + packageName + "/files/";
+    }
+
+    public static String getExtensionFolderPath(Context ctx, String mainOrPatch, int version) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create obb folder
-            String checkPath = root.toString() + "/Android/obb/" + packageName + "/";
+            String checkPath = getObbFolderName(ctx);
             File checkDir = new File(checkPath);
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
-                Log.d("DIRECTORIES", "GOT OBB DIRECTORY: " + checkPath);
-                return checkPath;
+                File checkFile = new File(checkPath + getExtensionZipFilename(ctx, mainOrPatch, version));
+                if (checkFile.exists()) {
+                    Log.d("DIRECTORIES", "FOUND OBB IN OBB DIRECTORY: " + checkFile.getPath());
+                    return checkPath;
+                }
             }
 
             // check and/or attempt to create files folder
-            checkPath = root.toString() + "/Android/data/" + packageName + "/files/";
+            checkPath = getFileFolderName(ctx);
             checkDir = new File(checkPath);
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
-                Log.d("DIRECTORIES", "GOT FILES DIRECTORY: " + checkPath);
-                return checkPath;
+                File checkFile = new File(checkPath + getExtensionZipFilename(ctx, mainOrPatch, version));
+                if (checkFile.exists()) {
+                    Log.d("DIRECTORIES", "FOUND OBB IN FILES DIRECTORY: " + checkFile.getPath());
+                    return checkPath;
+                }
             }
         }
 
-        Log.e("DIRECTORIES", "NO OBB DIRECTORY AND NO FILES DIRECTORY");
+        Log.e("DIRECTORIES", "FILE NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
         return null;
     }
 
@@ -60,9 +74,9 @@ public class ZipHelper {
             // resource file contains main file and patch file
 
             ArrayList<String> paths = new ArrayList<String>();
-            paths.add(getExtensionFolderPath(context) + getExtensionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+            paths.add(getExtensionFolderPath(context, Constants.MAIN, Constants.MAIN_VERSION) + getExtensionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
             if (Constants.PATCH_VERSION > 0) {
-                paths.add(getExtensionFolderPath(context) + getExtensionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+                paths.add(getExtensionFolderPath(context, Constants.PATCH, Constants.PATCH_VERSION) + getExtensionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
             }
 
             ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths.toArray(new String[paths.size()]));
