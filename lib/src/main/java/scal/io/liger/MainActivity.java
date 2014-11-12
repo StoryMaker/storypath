@@ -47,6 +47,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     CardAdapter mCardAdapter = null;
     String language = null;
 
+    /** Preferences received via launching intent */
+    String mRequestedLanguage;
+    int mPhotoSlideDuration;
+
     public String getLanguage() {
         return language;
     }
@@ -103,6 +107,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             }
             actionBar.setDisplayHomeAsUpEnabled(true);
 
+            // TODO : Should these be serialized with StoryPathLibrary?
+            mPhotoSlideDuration = i.getIntExtra(Constants.EXTRA_PHOTO_SLIDE_DURATION, 0);
+            mRequestedLanguage = i.getStringExtra(Constants.EXTRA_LANG);
+
             if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_ID)) {
                 String jsonFilePath = JsonHelper.getJsonPathByKey(i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
                 String json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
@@ -131,7 +139,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 ArrayList<String> referencedFiles = new ArrayList<String>();
 
                 mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(jsonSPL, null, referencedFiles, this);
-
+                configureStoryPathLibrary();
                 mStoryPathLibrary.setStoryPathLibraryListener(this);
 
                 setupCardView();
@@ -144,6 +152,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 }
             }
         }
+    }
+
+    /**
+     * Apply user preferences delivered via Intent extras to StoryPathLibrary
+     */
+    private void configureStoryPathLibrary() {
+        mStoryPathLibrary.language = mRequestedLanguage;
+        mStoryPathLibrary.photoSlideDurationMs = mPhotoSlideDuration;
     }
 
     public void activateCard(Card card) {
@@ -240,7 +256,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     }
 
                     mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
-
+                    configureStoryPathLibrary();
                     mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
 
                     setupCardView();
