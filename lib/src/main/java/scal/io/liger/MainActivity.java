@@ -716,10 +716,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
-                String path = getLastImagePath();
+                String path = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.EXTRA_FILE_LOCATION, null);
                 Log.d(TAG, "onActivityResult, path:" + path);
                 String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
-
                 if (null == pathId || null == path) {
                     return;
                 }
@@ -963,6 +962,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         }
     }
 
+    /**
+     * Deprecated. Remove after testing that we have no issues with devices not storing
+     * image files where specified via the EXTRA_OUTPUT extra of the ACTION_IMAGE_CAPTURE intent.
+     */
+    @Deprecated
     private String getLastImagePath() {
         final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
         final String imageOrderBy = MediaStore.Images.Media._ID + " DESC";
