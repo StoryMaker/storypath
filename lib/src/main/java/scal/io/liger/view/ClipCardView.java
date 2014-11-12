@@ -215,7 +215,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         // Collapse clip view, without change
                         toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
                         toggleFooterVisibility(collapsableContainer);
-                    } else {
+                    } else if (mCardModel.getMedium().equals(Constants.VIDEO)) { //TODO : Support audio trimming
                         //show trim dialog
                         showClipPlaybackAndTrimming();
                     }
