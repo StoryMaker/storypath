@@ -16,6 +16,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,8 +41,11 @@ import com.edmodo.rangebar.RangeBar;
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -115,6 +119,15 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
                 } else if (medium.equals(Constants.PHOTO)) {
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                        Log.e(TAG, "Unable to make image file");
+                        return;
+                    }
+                    mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                     requestId = Constants.REQUEST_IMAGE_CAPTURE;
 
                 } else if (medium.equals(Constants.AUDIO)) {
@@ -148,7 +161,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 // file (as opposed to a list of contacts or timezones)
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                // Currently no recognized epub MIME type
+                // TODO : Adjust based on medium?
                 intent.setType("*/*");
 
                 String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
@@ -202,7 +215,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         // Collapse clip view, without change
                         toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
                         toggleFooterVisibility(collapsableContainer);
-                    } else {
+                    } else if (mCardModel.getMedium().equals(Constants.VIDEO)) { //TODO : Support audio trimming
                         //show trim dialog
                         showClipPlaybackAndTrimming();
                     }
@@ -270,6 +283,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
 
     /**
+     * Inflate and add to clipCandidatesContainer an ImageView populated with a thumbnail appropriate for the given mediaFile.
      * Note: zOrder 0 is the bottom of the clip list.
      * @return the view inflated and added to clipCandidatesContainer
      */
@@ -279,7 +293,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         LayoutInflater inflater = (LayoutInflater) clipCandidatesContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ImageView thumbnail = (ImageView) inflater.inflate(R.layout.clip_thumbnail, clipCandidatesContainer, false);
-//        TextView example = (TextView) inflater.inflate(R.layout.clip_example, clipCandidatesContainer, false);
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) thumbnail.getLayoutParams();
         params.topMargin = topMarginPerZ * (zTop - zOrder);
         //Log.i("inflate", String.format("Inflating thumbnail for z %d with top margin %d", zOrder, params.topMargin));
@@ -798,4 +811,18 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             return false;
         }// onTouch()
     };
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        return image;
+    }
 }

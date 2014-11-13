@@ -13,7 +13,12 @@ public class Constants {
     /** Intent extras used for external Media Capture via
      *  {@link android.app.Activity#startActivityForResult(android.content.Intent, int)} */
     public static final String EXTRA_PATH_ID         = "EXTRA_PATH_ID";
+    public static final String EXTRA_FILE_LOCATION   = "FILE_LOCATION";
     public static final String PREFS_CALLING_CARD_ID = "PREFS_CALLING_CARD_ID";
+
+    /** Intent extras used when launching MainActivity */
+    public static final String EXTRA_LANG                 = "lang";
+    public static final String EXTRA_PHOTO_SLIDE_DURATION = "photo_essay_slide_duration";
 
     /** Values for {@link scal.io.liger.model.ExampleCard#medium} and
      * {@link scal.io.liger.model.MediaFile#medium} */

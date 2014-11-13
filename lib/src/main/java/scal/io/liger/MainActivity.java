@@ -47,6 +47,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     CardAdapter mCardAdapter = null;
     String language = null;
 
+    /** Preferences received via launching intent */
+    String mRequestedLanguage;
+    int mPhotoSlideDuration;
+
     public String getLanguage() {
         return language;
     }
@@ -103,6 +107,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             }
             actionBar.setDisplayHomeAsUpEnabled(true);
 
+            // TODO : Should these be serialized with StoryPathLibrary?
+            mPhotoSlideDuration = i.getIntExtra(Constants.EXTRA_PHOTO_SLIDE_DURATION, 0);
+            mRequestedLanguage = i.getStringExtra(Constants.EXTRA_LANG);
+
             if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_ID)) {
                 String jsonFilePath = JsonHelper.getJsonPathByKey(i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
                 String json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
@@ -131,7 +139,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 ArrayList<String> referencedFiles = new ArrayList<String>();
 
                 mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(jsonSPL, null, referencedFiles, this);
-
+                configureStoryPathLibrary();
                 mStoryPathLibrary.setStoryPathLibraryListener(this);
 
                 setupCardView();
@@ -144,6 +152,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 }
             }
         }
+    }
+
+    /**
+     * Apply user preferences delivered via Intent extras to StoryPathLibrary
+     */
+    private void configureStoryPathLibrary() {
+        mStoryPathLibrary.language = mRequestedLanguage;
+        mStoryPathLibrary.photoSlideDurationMs = mPhotoSlideDuration;
     }
 
     public void activateCard(Card card) {
@@ -240,7 +256,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     }
 
                     mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
-
+                    configureStoryPathLibrary();
                     mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
 
                     setupCardView();
@@ -716,10 +732,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
-                String path = getLastImagePath();
+                String path = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.EXTRA_FILE_LOCATION, null);
                 Log.d(TAG, "onActivityResult, path:" + path);
                 String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
-
                 if (null == pathId || null == path) {
                     return;
                 }
@@ -963,6 +978,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         }
     }
 
+    /**
+     * Deprecated. Remove after testing that we have no issues with devices not storing
+     * image files where specified via the EXTRA_OUTPUT extra of the ACTION_IMAGE_CAPTURE intent.
+     */
+    @Deprecated
     private String getLastImagePath() {
         final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
         final String imageOrderBy = MediaStore.Images.Media._ID + " DESC";
