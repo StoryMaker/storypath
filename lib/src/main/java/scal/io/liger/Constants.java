@@ -38,6 +38,7 @@ public class Constants {
     public static final String ACTION_PUBLISH = "io.scal.liger.PUBLISH";
 
     /** expansion file management */
+    // TODO switch to .org & https
     public static final String LIGER_URL = "http://storymaker.cc/appdata/";
     public static final String MAIN = "main";
     public static final String PATCH = "patch";

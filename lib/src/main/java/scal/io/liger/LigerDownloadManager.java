@@ -25,6 +25,10 @@ import java.net.URI;
  */
 public class LigerDownloadManager implements Runnable {
 
+
+    // TODO use HTTPS
+    // TODO pickup Tor settings
+
     private String mainOrPatch;
     private int version;
     private Context context;
@@ -76,7 +80,7 @@ public class LigerDownloadManager implements Runnable {
     public void run() {
         Log.e("DOWNLOAD", "DOWNLOADING EXTENSION");
 
-        String ligerUrl = Constants.LIGER_URL + "obb" + "/" + mainOrPatch + "/" + version + "/";
+        String ligerUrl = Constants.LIGER_URL + "obb" + "/";
         String ligerObb = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
 
         try {

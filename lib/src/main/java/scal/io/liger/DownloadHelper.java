@@ -11,6 +11,8 @@ import java.io.File;
  */
 public class DownloadHelper {
 
+    // TODO use HTTPS
+    // TODO pickup Tor settings
     public static boolean checkExpansionFiles(Context context, String mainOrPatch, int version) {
         String expansionFilePath = ZipHelper.getExtensionFolderPath(context, mainOrPatch, version);
 
