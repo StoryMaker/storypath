@@ -7,7 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
+
+import com.google.android.vending.licensing.AESObfuscator;
+import com.google.android.vending.licensing.APKExpansionPolicy;
+import com.google.android.vending.licensing.LicenseChecker;
+import com.google.android.vending.licensing.LicenseCheckerCallback;
+import com.google.android.vending.licensing.util.Base64;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,6 +39,20 @@ public class LigerDownloadManager implements Runnable {
     boolean useManager = true;
     private DownloadManager manager;
     private long lastDownload = -1L;
+
+    // THESE NEED TO BE REPLACED WITH SOMETHING RANDOM
+    private static final byte[] ligerSALT = new byte[] {
+            65, 18, 41, 71, 57,
+            75, 33,  1, 39, 80,
+            58, 40, 64, 46, 81,
+            76, 11, 63, 23, 99
+    };
+    private static final String ligerId = "scal.io.liger";
+    private static final String ligerDevice = Build.MODEL;
+
+    AESObfuscator ligerObfuscator = null;
+    APKExpansionPolicy ligerPolicy = null;
+    LicenseChecker ligerChecker = null;
 
     public LigerDownloadManager (String mainOrPatch, int version, Context context, boolean useManager) {
         this.mainOrPatch = mainOrPatch;
@@ -74,9 +95,34 @@ public class LigerDownloadManager implements Runnable {
 
     @Override
     public void run() {
+        // SHOULD BE ABLE TO ATTEMPT TO GET URL FROM GOOGLE LICENSING AND FALL BACK ON OUR SERVER
+
+        ligerObfuscator = new AESObfuscator(ligerSALT, ligerId, ligerDevice);
+        ligerPolicy = new APKExpansionPolicy(context, ligerObfuscator);
+        try {
+            ligerChecker = new LicenseChecker(context, ligerPolicy, context.getResources().getString(R.string.base64_public_key));
+        } catch (Exception e) {
+            // need to catch exception thrown if publisher key is invalid
+            // default to downloading from our servers
+            Log.d("DOWNLOAD", "LICENSE CHECK EXCEPTION THROWN: " + e.getClass().getName() + ", DOWNLOADING FROM LIGER SERVER");
+            downloadFromLigerServer();
+            return;
+        }
+
+        // callback will download from our servers if licence check fails
+        LigerCallback ligerCallback = new LigerCallback();
+
+        Log.d("DOWNLOAD", "ABOUT TO CHECK ACCESS");
+
+        ligerChecker.checkAccess(ligerCallback);
+
+        Log.d("DOWNLOAD", "ACCESS CHECK WAS INITIATED");
+    }
+
+    private void downloadFromLigerServer() {
         Log.e("DOWNLOAD", "DOWNLOADING EXTENSION");
 
-        String ligerUrl = Constants.LIGER_URL + "obb" + "/" + mainOrPatch + "/" + version + "/";
+        String ligerUrl = Constants.LIGER_URL + "obb" + "/";
         String ligerObb = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
 
         try {
@@ -84,14 +130,14 @@ public class LigerDownloadManager implements Runnable {
             // if we're using the google play api, download only to the obb folder
             File targetFolder = new File(ZipHelper.getFileFolderName(context));
 
-            Log.e("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
+            Log.d("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
 
             URI expansionFileUri = null;
             HttpGet request = null;
             HttpResponse response = null;
 
             try {
-                Log.e("DOWNLOAD", "TARGET URL: " + ligerUrl + ligerObb);
+                Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl + ligerObb);
 
                 if (useManager) {
                     File targetFile = new File(targetFolder, ligerObb);
@@ -192,4 +238,64 @@ public class LigerDownloadManager implements Runnable {
             // ???
         }
     };
+
+    private class LigerCallback implements LicenseCheckerCallback {
+
+        @Override
+        public void allow(int reason) {
+            Log.d("DOWNLOAD", "LICENSE CHECK ALLOWED, DOWNLOADING FROM GOOGLE PLAY");
+
+            String ligerUrl = null;
+            String ligerObb = null;
+
+            int count = ligerPolicy.getExpansionURLCount();
+            if (mainOrPatch.equals(Constants.MAIN)) {
+                if (count < 1) {
+                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count);
+                    return;
+                } else {
+                    ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.MAIN_FILE_URL_INDEX);
+                    ligerObb = ligerPolicy.getExpansionFileName(APKExpansionPolicy.MAIN_FILE_URL_INDEX);
+                }
+            }
+            if (mainOrPatch.equals(Constants.PATCH)) {
+                if (count < 2) {
+                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count);
+                    return;
+                } else {
+                    ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.PATCH_FILE_URL_INDEX);
+                    ligerObb = ligerPolicy.getExpansionFileName(APKExpansionPolicy.PATCH_FILE_URL_INDEX);
+                }
+            }
+
+            // if we're managing the download, download only to the files folder
+            // if we're using the google play api, download only to the obb folder
+            File targetFolder = new File(ZipHelper.getObbFolderName(context));
+
+            Log.d("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
+
+            Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl);
+
+            if (useManager) {
+                File targetFile = new File(targetFolder, ligerObb);
+                downloadWithManager(Uri.parse(ligerUrl), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
+            } else {
+                Log.e("DOWNLOAD", "GOOGLE PLAY DOWNLOADS MUST USE DOWNLOAD MANAGER");
+            }
+        }
+
+        @Override
+        public void dontAllow(int reason) {
+            Log.d("DOWNLOAD", "LICENSE CHECK NOT ALLOWED, DOWNLOADING FROM LIGER SERVER");
+            downloadFromLigerServer();
+        }
+
+        @Override
+        public void applicationError(int errorCode) {
+            // if your app or version is not managed by google play the result appears
+            // to be an application error (code 3?) rather than "do not allow"
+            Log.d("DOWNLOAD", "LICENSE CHECK ERROR CODE " + errorCode + ", DOWNLOADING FROM LIGER SERVER");
+            downloadFromLigerServer();
+        }
+    }
 }
