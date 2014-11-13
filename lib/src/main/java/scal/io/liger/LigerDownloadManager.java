@@ -246,7 +246,8 @@ public class LigerDownloadManager implements Runnable {
             int count = ligerPolicy.getExpansionURLCount();
             if (mainOrPatch.equals(Constants.MAIN)) {
                 if (count < 1) {
-                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count);
+                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
+                    downloadFromLigerServer();
                     return;
                 } else {
                     ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.MAIN_FILE_URL_INDEX);
@@ -255,7 +256,8 @@ public class LigerDownloadManager implements Runnable {
             }
             if (mainOrPatch.equals(Constants.PATCH)) {
                 if (count < 2) {
-                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count);
+                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
+                    downloadFromLigerServer();
                     return;
                 } else {
                     ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.PATCH_FILE_URL_INDEX);
