@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Liger</string>
+  <string name="hello_world">¡Hola, mundo!</string>
+  <string name="action_settings">Configuración</string>
+  <string name="lbl_level">Nivel:</string>
+  <string name="lbl_time">Tiempo:</string>
+  <string name="lbl_continue">Continuar</string>
+  <string name="lbl_next">Siguiente</string>
+  <string name="lbl_congrats_or">--- o ---</string>
+  <string name="choose_medium">Escoja el medio</string>
+  <string name="lbl_video">Vídeo</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Fotografía</string>
+  <string name="lbl_record">Grabar corte de vídeo</string>
+  <string name="lbl_order_media_desc">Ahora ponga sus cortes de vídeo en orden para presentar un principio, parte intermedia, y final claros.</string>
+  <string name="lbl_card_tap">Pulse para seleccionar un corte de vídeo diferente.</string>
+  <string name="lbl_import">Importar</string>
+  <string name="lbl_capture">Capturar</string>
+  <string name="menu_done">Hecho</string>
+  <string name="clip_order">Orden de los cortes</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">GRABAR</string>
+  <string name="dialog_done">HECHO</string>
+  <string name="dialog_pause">PAUSA</string>
+  <string name="dialog_resume">REANUDAR</string>
+  <string name="dialog_stop">PARAR</string>
+  <string name="dialog_redo">REHACER</string>
+  <string name="edit_card">Editar carta</string>
+  <string name="change_goal">Cambiar objetivo</string>
+  <string name="duplicate_card">Duplicar carta</string>
+  <string name="duplicate_clip">Duplicar corte de vídeo</string>
+  <string name="remove_card">Eliminar carta</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Descarga completa</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Descarga fallida</string>
+  <string name="state_unknown">Iniciando...\"</string>
+  <string name="state_idle">Esperando a que comience la descarga</string>
+  <string name="state_fetching_url">Buscando recursos para descargar</string>
+  <string name="state_connecting">Conectando al servidor de descargas</string>
+  <string name="state_downloading">Descargando recursos</string>
+  <string name="state_completed">Descarga finalizada</string>
+  <string name="state_paused_network_unavailable">Descarga en pausa porque no hay red disponible</string>
+  <string name="state_paused_network_setup_failure">Descarga en pausa. Pruebe un sitio web en el navegador</string>
+  <string name="state_paused_by_request">Descarga en pausa</string>
+  <string name="state_paused_wifi_unavailable">Descarga en pausa porque el wifi no está disponible</string>
+  <string name="state_paused_wifi_disabled">Descarga en pausa porque el wifi está deshabilitado</string>
+  <string name="state_paused_roaming">Descarga en pausa porque usted está conectado por roaming</string>
+  <string name="state_paused_sdcard_unavailable">Descarga en pausa porque el almacenamiento externo no está disponible</string>
+  <string name="state_failed_unlicensed">La descarga falló porque puede que no haya comprado esta aplicación</string>
+  <string name="state_failed_fetching_url">La descarga falló porque no se pudieron encontrar los recursos</string>
+  <string name="state_failed_sdcard_full">La descarga falló porque el almacenamiento externo está lleno</string>
+  <string name="state_failed_cancelled">Descarga cancelada</string>
+  <string name="state_failed">Descarga fallida</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Tiempo restante: %1$s</string>
+  <string name="time_remaining_notification">falta %1$s</string>
+  <string name="add_clips_before_narrating">Añada algunos cortes de vídeo antes de añadir la narración</string>
+  <string name="add_clips_before_reordering">Añada los cortes de vídeo antes de cambiar su orden</string>
+</resources>
