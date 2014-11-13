@@ -40,13 +40,6 @@ public class LigerDownloadManager implements Runnable {
     private DownloadManager manager;
     private long lastDownload = -1L;
 
-    // THESE NEED TO BE REPLACED WITH SOMETHING RANDOM
-    private static final byte[] ligerSALT = new byte[] {
-            65, 18, 41, 71, 57,
-            75, 33,  1, 39, 80,
-            58, 40, 64, 46, 81,
-            76, 11, 63, 23, 99
-    };
     private static final String ligerId = "scal.io.liger";
     private static final String ligerDevice = Build.MODEL;
 
@@ -96,6 +89,8 @@ public class LigerDownloadManager implements Runnable {
     @Override
     public void run() {
         // SHOULD BE ABLE TO ATTEMPT TO GET URL FROM GOOGLE LICENSING AND FALL BACK ON OUR SERVER
+
+        byte[] ligerSALT = context.getResources().getString(R.string.liger_salt).getBytes();
 
         ligerObfuscator = new AESObfuscator(ligerSALT, ligerId, ligerDevice);
         ligerPolicy = new APKExpansionPolicy(context, ligerObfuscator);

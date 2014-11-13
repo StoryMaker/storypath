@@ -2,4 +2,5 @@
 <resources>
     <!-- "In the Services & APIs page, locate the Licensing & In-App Billing section. Your public key for licensing is given in the Your License Key For This Application field."  -->
     <string name="base64_public_key">foo</string>
+    <string name="liger_salt">foo</string>
 </resources>
