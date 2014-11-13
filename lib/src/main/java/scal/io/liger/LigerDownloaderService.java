@@ -11,12 +11,12 @@ public class LigerDownloaderService extends DownloaderService {
 
     @Override
     public String getPublicKey() {
-        return null;
+        return null; // need Base64-encoded RSA public key of publisher account
     }
 
     @Override
     public byte[] getSALT() {
-        return new byte[0];
+        return new byte[0]; // how to create a valid SALT?
     }
 
     @Override

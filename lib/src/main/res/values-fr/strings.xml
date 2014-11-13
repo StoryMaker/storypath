@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Liger</string>
+  <string name="hello_world">Bonjour tout le monde!</string>
+  <string name="action_settings">Paramètres </string>
+  <string name="lbl_level">Niveau:</string>
+  <string name="lbl_time">Temps:</string>
+  <string name="lbl_continue">Continuer</string>
+  <string name="lbl_next">Suivant</string>
+  <string name="lbl_congrats_or">--- ou bien ---</string>
+  <string name="choose_medium">Choisir Moyenne</string>
+  <string name="lbl_video">Vidéo</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Photo</string>
+  <string name="lbl_record">Enregistrer un Clip</string>
+  <string name="lbl_order_media_desc">Maintenant mettez vos clips en ordre pour présenter un début clair, un milieu et une fin.</string>
+  <string name="lbl_card_tap">Taper pour sélectionner un clip différent</string>
+  <string name="lbl_import">Importer</string>
+  <string name="lbl_capture">Capturer</string>
+  <string name="menu_done">Fait</string>
+  <string name="clip_order">Mettre en Ordre les clips</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">ENREGISTRER</string>
+  <string name="dialog_done">FAIT</string>
+  <string name="dialog_pause">PAUSE</string>
+  <string name="dialog_resume">REPRENDRE</string>
+  <string name="dialog_stop">STOP</string>
+  <string name="dialog_redo">REFAIRE</string>
+  <string name="edit_card">Editer la Carte</string>
+  <string name="change_goal">Changer de But</string>
+  <string name="duplicate_card">Dupliquer la Carte</string>
+  <string name="duplicate_clip">Dupliquer le Clip</string>
+  <string name="remove_card">Supprimer la carte</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Téléchargement terminé</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Téléchargement non réussi</string>
+  <string name="state_unknown">Début...\"</string>
+  <string name="state_idle">Attente de début de téléchargement</string>
+  <string name="state_fetching_url">Recherche des ressources à télécharger </string>
+  <string name="state_connecting">Connexion au serveur de téléchargement</string>
+  <string name="state_downloading">téléchargement des ressources</string>
+  <string name="state_completed">Téléchargement terminé</string>
+  <string name="state_paused_network_unavailable">Téléchargement mis en pause parce qu\'il n\'y a pas de réseau disponible.</string>
+  <string name="state_paused_network_setup_failure">Téléchargement mis en pause. Tester un site web dans le navigateur</string>
+  <string name="state_paused_by_request">Téléchargement mis en pause</string>
+  <string name="state_paused_wifi_unavailable">Téléchargement mis en pause parce que le Wifi n\'est pas disponible.</string>
+  <string name="state_paused_wifi_disabled">Téléchargement mis en pause parce que le Wifi est fermé.</string>
+  <string name="state_paused_roaming">Télécharger en pause parce que vous êtes en itinérance</string>
+  <string name="state_paused_sdcard_unavailable">Télécharger en pause parce que le stockage externe est indisponible</string>
+  <string name="state_failed_unlicensed">Le téléchargement a échoué parce qu\'il se peut que vous n\'avez pas  acheté cette application</string>
+  <string name="state_failed_fetching_url">Le téléchargement a échoué parce que les ressources sont introuvables</string>
+  <string name="state_failed_sdcard_full">Le téléchargement a échoué parce que la mémoire externe est pleine</string>
+  <string name="state_failed_cancelled">Téléchargement annulé</string>
+  <string name="state_failed">Téléchargement a échoué</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Temps restant: %1$s</string>
+  <string name="time_remaining_notification">Reste %1$s</string>
+  <string name="add_clips_before_narrating">Ajouter quelques Clips avant d\'ajouter une narration</string>
+  <string name="add_clips_before_reordering">Ajouter quelques clips avant de changer leur ordre</string>
+</resources>
