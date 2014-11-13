@@ -160,7 +160,7 @@ public class ReviewCardView implements DisplayableCard {
                     // TODO
                     break;
                 case Constants.PHOTO:
-                    // TODO
+                    setThumbnailForClip(ivCardPhoto, (ClipCard) mMediaCards.get(0));
                     break;
             }
         } else {

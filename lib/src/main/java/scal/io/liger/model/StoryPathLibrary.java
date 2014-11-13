@@ -28,6 +28,15 @@ public class StoryPathLibrary extends StoryPath {
     private StoryPath currentStoryPath; // not serialized
     @Expose private HashMap<String, MediaFile> mediaFiles;
 
+    /**
+     * User preferences set by MainActivity. Delivered to MainActivity via Intent extras
+     * from liger library client.
+     *
+     * TODO : Should these be serialized in StoryPathLibrary?
+     */
+    public int photoSlideDurationMs;
+    public String language;
+
     StoryPathLibraryListener mListener;
 
     public static interface StoryPathLibraryListener {
