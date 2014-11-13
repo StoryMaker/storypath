@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="hello_world">Привет, мир!</string>
+  <string name="action_settings">Настройки</string>
+  <string name="lbl_next">Следующий </string>
+  <string name="lbl_video">Видео</string>
+  <string name="lbl_audio">Аудио</string>
+  <string name="lbl_photo">Фото</string>
+  <!--Record Narration Dialog-->
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+</resources>

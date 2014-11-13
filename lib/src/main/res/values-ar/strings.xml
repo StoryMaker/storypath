@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="hello_world">هالو وورلد!</string>
+  <string name="action_settings">إعدادات</string>
+  <string name="lbl_level">المستوى:</string>
+  <string name="lbl_time">الوقت:</string>
+  <string name="lbl_continue">متابعة</string>
+  <string name="lbl_next">التالي</string>
+  <string name="lbl_congrats_or">--- أو ---</string>
+  <string name="choose_medium">اختر متوسط</string>
+  <string name="lbl_video">الفيديو</string>
+  <string name="lbl_audio">الصوت</string>
+  <string name="lbl_photo">الصورة</string>
+  <string name="lbl_record">سجل مقطعا</string>
+  <string name="lbl_order_media_desc">الآن رتب مقاطعك لتقدم بداية واضحة ، وسطا و نهاية.</string>
+  <string name="lbl_card_tap">أنقر لاختبار مقطعا آخر</string>
+  <string name="lbl_import">استورد</string>
+  <string name="lbl_capture">التقط</string>
+  <string name="menu_done">انتهى</string>
+  <string name="clip_order">ترتيب المقاطع</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">تسجيل</string>
+  <string name="dialog_done">انتهى</string>
+  <string name="dialog_pause">توقف</string>
+  <string name="dialog_resume">استأنف</string>
+  <string name="dialog_stop">نهاية</string>
+  <string name="dialog_redo">أعِد</string>
+  <string name="edit_card">تعديل البطاقة</string>
+  <string name="change_goal">غير الهدف</string>
+  <string name="duplicate_card">كرر البطاقة</string>
+  <string name="duplicate_clip">كرّر المقطع</string>
+  <string name="remove_card">أزِل البطاقة</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">انتهى التحميل</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">فشل التحميل</string>
+  <string name="state_unknown">بداية...\"</string>
+  <string name="state_idle">انتظر بداية التحميل</string>
+  <string name="state_fetching_url">البحث عن مصادر للتحميل</string>
+  <string name="state_connecting">الإتصال بخادم التحميل</string>
+  <string name="state_downloading">تحميل المصادر</string>
+  <string name="state_completed">انتهى التحميل</string>
+  <string name="state_paused_network_unavailable">أُوقفَ التحميل نظرا لانعدام الاتصال بالشبكة</string>
+  <string name="state_paused_network_setup_failure">أوقفَ التحميل. تجربة الأتصال بالموقع في المتصفح</string>
+  <string name="state_paused_by_request">اوقفَ التحميل</string>
+  <string name="state_paused_wifi_unavailable">أُوقفَ التحميل نظرا لانعدام الواي فاي</string>
+  <string name="state_paused_wifi_disabled">أُوقفَ التحميل نظرا لأن الواي فاي غير شغال</string>
+  <string name="state_paused_sdcard_unavailable">أُوقفَ التحميل نظرا لعدم وجود ذاكرة خارجية</string>
+  <string name="state_failed_unlicensed">فشل التحميل لأنك قد لا تكون قد اشتريت هذا التطبيق</string>
+  <string name="state_failed_fetching_url">فشل التحميل لتعذّر العثور على المصادر</string>
+  <string name="state_failed_sdcard_full">فشل التحميل لأن الذاكرة الخارجية مليئة</string>
+  <string name="state_failed_cancelled">ألغيَ التحميل</string>
+  <string name="state_failed">فشل التحميل</string>
+  <string name="kilobytes_per_second">%1$s ك ب/ث</string>
+  <string name="time_remaining">الوقت المتبقي: %1$s</string>
+  <string name="time_remaining_notification">باقي %1$s</string>
+  <string name="add_clips_before_narrating">إضافة بعض المقاطع قبل إضافة التعليق</string>
+  <string name="add_clips_before_reordering">إضافة مقاطع قبل تغيير ترتيبهم</string>
+</resources>
