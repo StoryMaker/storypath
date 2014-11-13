@@ -410,9 +410,16 @@ Then you can push this to your phone for testing:
 adb push my.json  /sdcard/Liger/
 ```
 
-The file ./lib/src/main/res/values/google_play.xml must be updated to include the public key belonging to your publisher account. You can find the key in the Developer Console under your profile information.  You must also provide a string containing an array of random bytes that will be used for obfuscation.
+Create a credentials file for the Google Play API:
 
 ```
+vim ./lib/src/main/res/values/google_play.xml
+```
+
+The file must include the public key belonging to your publisher account. You can find the key in the Developer Console under your profile information.  You must also provide a string containing an array of random bytes that will be used for obfuscation.
+
+```
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="base64_public_key">REPLACE WITH YOUR PUBLIC KEY</string>
     <string name="liger_salt">REPLACE WITH A STRING OF BYTES</string>
