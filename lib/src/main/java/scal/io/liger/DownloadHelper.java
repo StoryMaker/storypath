@@ -31,7 +31,7 @@ public class DownloadHelper {
             final LigerDownloadManager mainDownload = new LigerDownloadManager(Constants.MAIN, Constants.MAIN_VERSION, context, true);
             Thread mainDownloadThread = new Thread(mainDownload);
 
-            Toast.makeText(context, "Starting download of main expansion file", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Starting download of content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
             mainDownloadThread.start();
         }
@@ -45,7 +45,7 @@ public class DownloadHelper {
                 final LigerDownloadManager patchDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
                 Thread patchDownloadThread = new Thread(patchDownload);
 
-                Toast.makeText(context, "Starting download of patch expansion file", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Starting download of path for content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                 patchDownloadThread.start();
             }
