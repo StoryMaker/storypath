@@ -4,21 +4,19 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.File;
-
 /**
  * Created by mnbogner on 11/6/14.
  */
 public class DownloadHelper {
 
     public static boolean checkExpansionFiles(Context context, String mainOrPatch, int version) {
-        String expansionFilePath = ZipHelper.getExtensionFolderPath(context, mainOrPatch, version);
+        String expansionFilePath = ZipHelper.getExpansionFileFolder(context, mainOrPatch, version);
 
         if (expansionFilePath != null) {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExtensionZipFilename(context, mainOrPatch, version) + " FOUND IN " + expansionFilePath);
+            Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExpansionZipFilename(context, mainOrPatch, version) + " FOUND IN " + expansionFilePath);
             return true;
         } else {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExtensionZipFilename(context, mainOrPatch, version) + " NOT FOUND");
+            Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExpansionZipFilename(context, mainOrPatch, version) + " NOT FOUND");
             return false;
         }
     }
