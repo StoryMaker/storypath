@@ -486,7 +486,7 @@ public class ReviewCardView implements DisplayableCard {
 
         Timer timer;
         final int TIMER_INTERVAL_MS = 100;
-        int currentPhotoElapsedTime; // Keep track of how long current photo has been "playing" so we can advance state
+        volatile int currentPhotoElapsedTime; // Keep track of how long current photo has been "playing" so we can advance state
 
         public VideoSurfaceTextureListener(@NonNull TextureView textureView, @NonNull List<Card> mediaCards, @Nullable ImageView thumbnailView) {
             ivThumbnail = thumbnailView;
@@ -541,9 +541,16 @@ public class ReviewCardView implements DisplayableCard {
                                                    }
                                                    break;
                                                case Constants.PHOTO:
+                                                   //Log.i("Timer", String.format("Photo elapsed time %d / %d", currentPhotoElapsedTime, mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs));
                                                    currentPhotoElapsedTime += TIMER_INTERVAL_MS; // For Photo cards, this is reset on each call to advanceToNextClip
                                                    currentClipElapsedTime = currentPhotoElapsedTime;
-                                                   if (currentClipElapsedTime > mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs) advanceToNextClip(null);
+
+                                                   if (currentClipElapsedTime > mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs) {
+                                                       //Log.i("Timer", "advancing photo");
+                                                       advanceToNextClip(null);
+                                                       currentPhotoElapsedTime = 0;
+                                                       currentClipElapsedTime = 0;
+                                                   }
                                                    break;
                                            }
 
@@ -554,7 +561,7 @@ public class ReviewCardView implements DisplayableCard {
                                            if (sbPlaybackProgress != null) {
                                                sbPlaybackProgress.setProgress((int) (sbPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / clipCollectionDuration.get())); // Show progress relative to clip collection duration
                                            }
-                                          // Log.i(TAG, "current clip elapsed time: " + currentClipElapsedTime);
+                                           //Log.i(TAG, String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs, sbPlaybackProgress.getProgress()));
                                        }
                                    } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
                                }
@@ -567,44 +574,51 @@ public class ReviewCardView implements DisplayableCard {
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
             surface = new Surface(surfaceTexture);
 
-            try {
-                mediaPlayer = new MediaPlayer();
-                mediaPlayer.setDataSource(mContext, Uri.parse(currentlyPlayingCard.getSelectedMediaFile().getPath()));
-                mediaPlayer.setSurface(surface);
-                mediaPlayer.prepareAsync();
-                mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mediaPlayer.seekTo(currentlyPlayingCard.getSelectedClip().getStartTime());
+            switch (currentlyPlayingCard.getMedium()) {
+                case Constants.VIDEO:
+                case Constants.AUDIO:
+                    try {
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setDataSource(mContext, Uri.parse(currentlyPlayingCard.getSelectedMediaFile().getPath()));
+                        mediaPlayer.setSurface(surface);
+                        mediaPlayer.prepareAsync();
+                        mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                mediaPlayer.seekTo(currentlyPlayingCard.getSelectedClip().getStartTime());
 
-                        int currentClipIdx = mediaCards.indexOf(currentlyPlayingCard);
-                        if (currentClipIdx == 0) {
-                            Log.i(TAG, "prepared finished for first clip");
-                            // This is the first clip
-                            // Setup initial views requiring knowledge of clip media
-                            if (currentlyPlayingCard.getSelectedClip().getStopTime() == 0)
-                                currentlyPlayingCard.getSelectedClip().setStopTime(mediaPlayer.getDuration());
-                            mediaPlayer.seekTo(currentlyPlayingCard.getSelectedClip().getStartTime());
+                                int currentClipIdx = mediaCards.indexOf(currentlyPlayingCard);
+                                if (currentClipIdx == 0) {
+                                    Log.i(TAG, "prepared finished for first clip");
+                                    // This is the first clip
+                                    // Setup initial views requiring knowledge of clip media
+                                    if (currentlyPlayingCard.getSelectedClip().getStopTime() == 0)
+                                        currentlyPlayingCard.getSelectedClip().setStopTime(mediaPlayer.getDuration());
+                                    mediaPlayer.seekTo(currentlyPlayingCard.getSelectedClip().getStartTime());
 
-                            // TODO Handle outside of this class
-                            //clipLength.setText("Total : " + Util.makeTimeString(clipCollectionDuration.get()));
-                        } else {
-                            Log.i(TAG, "Auto starting subsequent clip");
-                            // automatically begin playing subsequent clips
-                            mediaPlayer.start();
-                        }
+                                    // TODO Handle outside of this class
+                                    //clipLength.setText("Total : " + Util.makeTimeString(clipCollectionDuration.get()));
+                                } else {
+                                    Log.i(TAG, "Auto starting subsequent clip");
+                                    // automatically begin playing subsequent clips
+                                    mediaPlayer.start();
+                                }
+                            }
+                        });
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                advanceToNextClip(mp);
+                            }
+                        });
+                    } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
+                        e.printStackTrace();
                     }
-                });
-                /** MediaPlayer for narration recording */
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        advanceToNextClip(mp);
-                    }
-                });
-            } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
-                e.printStackTrace();
+                    break;
+                case Constants.PHOTO:
+                    // do nothing
+                    break;
             }
         }
 
@@ -722,8 +736,8 @@ public class ReviewCardView implements DisplayableCard {
                 currentlyPlayingCard = (ClipCard) mediaCards.get(0);
             } else {
                 // Advance to next clip
-                Log.i(TAG, "Advancing to next clip");
                 currentlyPlayingCard = (ClipCard) mediaCards.get(++currentClipIdx);
+                Log.i(TAG, "Advancing to next clip " + mediaCards.indexOf(currentlyPlayingCard));
             }
 
             switch (currentlyPlayingCard.getMedium()) {
@@ -744,17 +758,16 @@ public class ReviewCardView implements DisplayableCard {
                     break;
 
                 case Constants.PHOTO:
-                    currentPhotoElapsedTime = 0;
+                    Log.i(TAG, "set currentelapsedtime to 0");
                     if (mediaCards.indexOf(currentlyPlayingCard) == 0) {
                         // Stop playback. With video / audio this would be handled onPreparedListener
                         isPlaying = false;
-                        currentPhotoElapsedTime = 0;
                     }
                     ivThumbnail.post(new Runnable() {
                         @Override
                         public void run() {
                             setThumbnailForClip(ivThumbnail, currentlyPlayingCard);
-                            mediaPlayer.seekTo(currentlyPlayingCard.getSelectedClip().getStartTime());
+                            sbPlaybackProgress.setProgress(0);
                         }
                     });
                     break;
