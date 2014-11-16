@@ -361,7 +361,6 @@ public class JsonHelper {
             Log.d("FILES", "NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
 
             new File(sdLigerFilePath).mkdirs();
-            
         } else {
             Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }

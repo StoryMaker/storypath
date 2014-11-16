@@ -4,7 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by mnbogner on 10/10/14.
+ * @author Matt Bogner
+ * @author Josh Steiner
  */
 public class FullMetadata implements Parcelable {
 
