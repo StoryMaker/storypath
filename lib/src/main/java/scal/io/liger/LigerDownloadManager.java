@@ -14,10 +14,8 @@ import com.google.android.vending.licensing.AESObfuscator;
 import com.google.android.vending.licensing.APKExpansionPolicy;
 import com.google.android.vending.licensing.LicenseChecker;
 import com.google.android.vending.licensing.LicenseCheckerCallback;
-import com.google.android.vending.licensing.util.Base64;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -122,7 +120,7 @@ public class LigerDownloadManager implements Runnable {
         Log.e("DOWNLOAD", "DOWNLOADING EXTENSION");
 
         String ligerUrl = Constants.LIGER_URL + "obb" + "/";
-        String ligerObb = ZipHelper.getExtensionZipFilename(context, mainOrPatch, version);
+        String ligerObb = ZipHelper.getExpansionZipFilename(context, mainOrPatch, version);
 
         try {
             // if we're managing the download, download only to the files folder
@@ -139,7 +137,7 @@ public class LigerDownloadManager implements Runnable {
                 Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl + ligerObb);
 
                 if (useManager) {
-                    File targetFile = new File(targetFolder, ligerObb);
+                    File targetFile = new File(targetFolder, ligerObb + ".tmp");
                     downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
                 } else {
                     expansionFileUri = new URI(ligerUrl + ligerObb);
@@ -220,6 +218,14 @@ public class LigerDownloadManager implements Runnable {
                         File savedFile = new File(Uri.parse(uriString).getPath());
                         Log.d("DOWNLOAD", "MANAGER SAVED DOWNLOAD TO " + savedFile.getPath());
 
+                        // move .tmp file to actual file
+                        try {
+                            Process p = Runtime.getRuntime().exec("mv " + savedFile.getPath() + " " + savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+                            Log.d("DOWNLOAD", "MOVED TEMP FILE " + savedFile.getPath() + " TO " + savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+                        } catch (IOException ioe) {
+                            Log.d("DOWNLOAD", "EXCEPTION THROWN WHILE MOVING TEMP FILE " + savedFile.getPath() + " TO " + savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")) + " -> " + ioe.getMessage());
+                        }
+
                     } else {
                         Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK");
                     }
@@ -250,7 +256,8 @@ public class LigerDownloadManager implements Runnable {
             int count = ligerPolicy.getExpansionURLCount();
             if (mainOrPatch.equals(Constants.MAIN)) {
                 if (count < 1) {
-                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count);
+                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
+                    downloadFromLigerServer();
                     return;
                 } else {
                     ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.MAIN_FILE_URL_INDEX);
@@ -259,7 +266,8 @@ public class LigerDownloadManager implements Runnable {
             }
             if (mainOrPatch.equals(Constants.PATCH)) {
                 if (count < 2) {
-                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count);
+                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
+                    downloadFromLigerServer();
                     return;
                 } else {
                     ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.PATCH_FILE_URL_INDEX);
@@ -276,7 +284,7 @@ public class LigerDownloadManager implements Runnable {
             Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl);
 
             if (useManager) {
-                File targetFile = new File(targetFolder, ligerObb);
+                File targetFile = new File(targetFolder, ligerObb + ".tmp");
                 downloadWithManager(Uri.parse(ligerUrl), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
             } else {
                 Log.e("DOWNLOAD", "GOOGLE PLAY DOWNLOADS MUST USE DOWNLOAD MANAGER");
