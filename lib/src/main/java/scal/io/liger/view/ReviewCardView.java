@@ -499,6 +499,7 @@ public class ReviewCardView implements DisplayableCard {
          */
         public void setPlaybackProgressSeekBar(SeekBar progress) {
             sbPlaybackProgress = progress;
+            sbPlaybackProgress.setEnabled(false); // TODO Enable dragging once we support recording narration mid-clip
         }
 
         /**
