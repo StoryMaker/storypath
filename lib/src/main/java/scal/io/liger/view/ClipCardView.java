@@ -761,7 +761,45 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         // instead of a callback here. wtf.
         //Log.i("spinner", "count " + mItemSelectedCount + " position " + position);
         mItemSelectedCount++;
-        if (mItemSelectedCount > 1)
+        if (mItemSelectedCount > 1) {
+            switch(position) {
+                case 0: // Edit Card
+                    // Show trim dialog
+                    if (mCardModel.getSelectedClip() != null) {
+                        showClipPlaybackAndTrimming();
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.add_clips_generic), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case 1: // Change Goal
+
+                    break;
+                case 2: // Duplicate Card
+                    try {
+                        int thisCardIndex = mCardModel.getStoryPath().getCardIndex(mCardModel);
+                        if (thisCardIndex == -1) {
+                            Log.w(TAG, "Could not find index of this card in StoryPath or StoryPathLibrary. Cannot duplicate");
+                            return;
+                        }
+                        Card newCard = (Card) mCardModel.clone();
+                        mCardModel.getStoryPath().addCardAtPosition(newCard, thisCardIndex);
+                        mCardModel.getStoryPath().notifyCardChanged(newCard);
+                    } catch (CloneNotSupportedException e) {
+                        Log.e(TAG, "Failed to clone this ClipCard");
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3: // Duplicate Clip
+                    if (mCardModel.getSelectedClip() != null) {
+                        // TODO duplicate clip
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.add_clips_generic), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case 4: // Remove Card
+                    break;
+            }
+        }
             Toast.makeText(mContext, "Selected " + (String) parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
     }
 

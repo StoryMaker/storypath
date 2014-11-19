@@ -20,7 +20,7 @@ import scal.io.liger.Constants;
 /**
  * Created by mnbogner on 9/29/14.
  */
-public class MediaFile {
+public class MediaFile implements Cloneable {
 
     @Expose protected String path;
     @Expose protected String medium; // mime type?
@@ -113,5 +113,13 @@ public class MediaFile {
         }
 
         return thumbnail;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        MediaFile clone = new MediaFile(this.path, this.medium);
+        clone.thumbnailFilePath = this.thumbnailFilePath;
+
+        return clone;
     }
 }

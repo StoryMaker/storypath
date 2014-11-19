@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.annotations.Expose;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -18,10 +19,15 @@ import scal.io.liger.ReferenceHelper;
 import scal.io.liger.view.DisplayableCard;
 
 /**
+ * Base model for a Card.
+ *
+ * All subclasses of that wish to implement Cloneable must
+ * include a no-arg constructor. See {@link #clone()}
+ *
  * @author Matthew Bogner
  * @author Josh Steiner
  */
-public abstract class Card extends Observable implements Observer {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
+public abstract class Card extends Observable implements Observer, Cloneable {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
 
     @Expose protected String type;
     @Expose private String id;
@@ -435,5 +441,27 @@ public abstract class Card extends Observable implements Observer {  // REFACTOR
         } else {
             Log.e(this.getClass().getName(), "cannot initiate a story path load from a story path card (use a link card)");
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        try {
+            // Card is abstract so this method will only ever be called from a concrete
+            // subclass. We use reflection to construct an instance of the child class.
+            // NOTE : This requires all children of Card to have a no-arg constructor
+            Card clone = getClass().getDeclaredConstructor().newInstance();
+            // TODO : How to assign a new unique id for this card?
+            clone.id = this.id; // Strings are immutable
+            clone.title = this.title;
+            clone.storyPath = this.storyPath; // do not copy
+            if (this.references != null) clone.references = (ArrayList<String>) this.references.clone();
+            if (this.values != null) clone.values = (HashMap<String, String>) this.values.clone();
+            return clone;
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
+                SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            Log.e("Card#clone", "Failed to clone Card");
+            e.printStackTrace();
+        }
+        return null;
     }
 }

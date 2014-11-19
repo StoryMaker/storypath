@@ -90,11 +90,16 @@ public class StoryPath {
     }
 
     public void addCard(Card card) {
-        if (this.cards == null)
-            this.cards = new ArrayList<Card>();
+        if (this.cards == null) this.cards = new ArrayList<>();
 
         this.cards.add(card);
         // add it to the adapter
+    }
+
+    public void addCardAtPosition(Card card, int position) {
+        if (this.cards == null) this.cards = new ArrayList<>();
+
+        this.cards.add(position, card);
     }
 
     public void activateCard(Card card) {
