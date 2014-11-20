@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.model.Tip;
 import scal.io.liger.model.TipCollectionHeadlessCard;
 
 import static android.test.ViewAsserts.assertOnScreen;
@@ -26,7 +27,7 @@ import static org.hamcrest.Matchers.hasToString;
  */
 public class TipCollectionHeadlessCardTest extends TestCase {
 
-    ArrayList<TipCollectionHeadlessCard.Tip> tips;
+    ArrayList<Tip> tips;
     TipCollectionHeadlessCard card;
 
     final static String TIP1 = "This is the first tip";
@@ -50,20 +51,20 @@ public class TipCollectionHeadlessCardTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-//        tips = new ArrayList<TipCollectionHeadlessCard.Tip>();
-//        tips.add(new TipCollectionHeadlessCard.Tip("This is the first tip", new ArrayList<String>(Arrays.asList("tag1", "tag2"))));
-        tips = new ArrayList<TipCollectionHeadlessCard.Tip>(Arrays.asList(
-                new TipCollectionHeadlessCard.Tip(TIP1, new ArrayList<String>(Arrays.asList(
+//        tips = new ArrayList<Tip>();
+//        tips.add(new Tip("This is the first tip", new ArrayList<String>(Arrays.asList("tag1", "tag2"))));
+        tips = new ArrayList<Tip>(Arrays.asList(
+                new Tip(TIP1, new ArrayList<String>(Arrays.asList(
                         TAG1
                         ))),
-                new TipCollectionHeadlessCard.Tip(TIP2, new ArrayList<String>(Arrays.asList(
+                new Tip(TIP2, new ArrayList<String>(Arrays.asList(
                         TAG2
                         ))),
-                new TipCollectionHeadlessCard.Tip(TIP3, new ArrayList<String>(Arrays.asList(
+                new Tip(TIP3, new ArrayList<String>(Arrays.asList(
                         TAG3
                         ))),
-                new TipCollectionHeadlessCard.Tip(TIP_NONE, new ArrayList<String>()),
-                new TipCollectionHeadlessCard.Tip(TIP_ALL_3, new ArrayList<String>(Arrays.asList(
+                new Tip(TIP_NONE, new ArrayList<String>()),
+                new Tip(TIP_ALL_3, new ArrayList<String>(Arrays.asList(
                         TAG1,
                         TAG2,
                         TAG3
@@ -82,23 +83,23 @@ public class TipCollectionHeadlessCardTest extends TestCase {
 
         assertEquals(tips.size(), 5);
 
-        ArrayList<TipCollectionHeadlessCard.Tip> tag1Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG1)));
+        ArrayList<Tip> tag1Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG1)));
         assertEquals(tag1Tips.size(), 2);
 
-        ArrayList<TipCollectionHeadlessCard.Tip> tag2Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG2)));
+        ArrayList<Tip> tag2Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG2)));
         assertEquals(tag2Tips.size(), 2);
 
-        ArrayList<TipCollectionHeadlessCard.Tip> tag3Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG3)));
+        ArrayList<Tip> tag3Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG3)));
         assertEquals(tag3Tips.size(), 2);
 
-        ArrayList<TipCollectionHeadlessCard.Tip> tagAllTips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(
+        ArrayList<Tip> tagAllTips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(
                 TAG1,
                 TAG2,
                 TAG3
         )));
         assertEquals(tagAllTips.size(), 4);
 
-        ArrayList<TipCollectionHeadlessCard.Tip> tag4Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG4)));
+        ArrayList<Tip> tag4Tips = card.getTipsByTags(new ArrayList<String>(Arrays.asList(TAG4)));
         assertEquals(tag4Tips.size(), 0);
     }
 

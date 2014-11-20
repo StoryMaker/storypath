@@ -20,4 +20,9 @@ public class Util {
         return new GeneralSwipeAction(Swipe.FAST, GeneralLocation.BOTTOM_CENTER,
                 GeneralLocation.TOP_CENTER, Press.FINGER);
     }
+
+    public static ViewAction swipeUpLess() {
+        return new GeneralSwipeAction(Swipe.SLOW, GeneralLocation.BOTTOM_CENTER,
+                GeneralLocation.CENTER, Press.FINGER);
+    }
 }

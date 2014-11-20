@@ -964,6 +964,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     */
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
+
+        // work-around to handle normal paths
+        if (contentUri.toString().startsWith(File.separator)) {
+            return contentUri.toString();
+        }
+
         Cursor cursor = null;
         try {
             String[] proj = { MediaStore.Images.Media.DATA };
