@@ -337,7 +337,8 @@ public class ReviewCardView implements DisplayableCard {
 
             //set background image
             String clipType = clipCard.getClipType();
-            setClipExampleDrawables(clipType, thumbnail);
+            thumbnail.setImageResource(R.drawable.audio_waveform);
+            //setClipExampleDrawables(clipType, thumbnail);
             thumbnail.setVisibility(View.VISIBLE);
         }
     }
@@ -529,12 +530,13 @@ public class ReviewCardView implements DisplayableCard {
                                @Override
                                public void run() {
                                    try {
-                                       if (isPlaying ) {
+                                       if (isPlaying) {
+                                           Log.i("Timer", "isPlaying");
                                            int currentClipElapsedTime = 0;
                                            switch (currentlyPlayingCard.getMedium()) {
                                                case Constants.VIDEO:
                                                case Constants.AUDIO:
-                                                   currentClipElapsedTime = Math.min(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration());// Seen issues where getCurrentPosition returns
+                                                   currentClipElapsedTime = Math.min(mediaPlayer.getCurrentPosition(), mediaPlayer.getDuration()); // Seen issues where getCurrentPosition returns
                                                    if (currentClipElapsedTime == 1957962536) {
                                                        Log.i("Timer", "WTF");
                                                    }
@@ -664,6 +666,7 @@ public class ReviewCardView implements DisplayableCard {
                     clipDuration = 0;
                     switch (((ClipCard) card).getMedium()) {
                         case Constants.VIDEO:
+                        case Constants.AUDIO:
                             ClipMetadata clipMeta = ((ClipCard) card).getSelectedClip();
                             MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(((ClipCard)card).getSelectedMediaFile().getPath()));
                             clipDuration = ( clipMeta.getStopTime() == 0 ? mp.getDuration() : (clipMeta.getStopTime() - clipMeta.getStartTime()) );
@@ -715,7 +718,8 @@ public class ReviewCardView implements DisplayableCard {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (currentlyPlayingCard.getMedium().equals(Constants.VIDEO) && mediaPlayer == null) return;
+                    if (( currentlyPlayingCard.getMedium().equals(Constants.VIDEO) ||
+                            currentlyPlayingCard.getMedium().equals(Constants.AUDIO)) && mediaPlayer == null) return;
 
                     if (isPlaying) {
                         pausePlayback();
@@ -759,6 +763,10 @@ public class ReviewCardView implements DisplayableCard {
 
             switch(currentlyPlayingCard.getMedium()) {
                 case Constants.VIDEO:
+                    if (ivThumbnail.getVisibility() == View.VISIBLE) {
+                        ivThumbnail.setVisibility(View.GONE);
+                    }
+                case Constants.AUDIO:
                     // Mute the main media volume if we're recording narration
                     if (mRecordNarrationState.equals(RecordNarrationState.RECORDING)) {
                         mediaPlayer.setVolume(0, 0);
@@ -767,10 +775,7 @@ public class ReviewCardView implements DisplayableCard {
                     }
 
                     mediaPlayer.start();
-
-                    if (ivThumbnail.getVisibility() == View.VISIBLE) {
-                        ivThumbnail.setVisibility(View.GONE);
-                    }
+                    ivThumbnail.setVisibility(View.VISIBLE);
                     break;
                 case Constants.PHOTO:
                     ivThumbnail.setVisibility(View.VISIBLE);
@@ -825,8 +830,10 @@ public class ReviewCardView implements DisplayableCard {
         protected void advanceToNextClip(MediaPlayer player) {
             advancingClip = true;
 
+            Uri media;
             int currentClipIdx = mediaCards.indexOf(currentlyPlayingCard);
             if (currentClipIdx == (mediaCards.size() - 1)) {
+                isPlaying = false;
                 // We've played through all the clips
                 if (mRecordNarrationState == RecordNarrationState.RECORDING) {
                     stopRecordingNarration();
@@ -837,13 +844,8 @@ public class ReviewCardView implements DisplayableCard {
                         }
                     });
                 }
-            }
-            // We need to check the current clip index *before* calling super(), which will advance it
-            Uri video;
-            if (currentClipIdx == (mediaCards.size() - 1)) {
                 // We've played through all the clips
                 Log.i(TAG, "Played all clips. stopping");
-                isPlaying = false;
                 stopPlayback();
             } else {
                 // Advance to next clip
@@ -853,14 +855,15 @@ public class ReviewCardView implements DisplayableCard {
 
             switch (currentlyPlayingCard.getMedium()) {
                 case Constants.VIDEO:
+                case Constants.AUDIO:
                     tvVideo.setVisibility(View.VISIBLE); // In case previous card wasn't video medium
-                    video = Uri.parse(currentlyPlayingCard.getSelectedMediaFile().getPath());
+                    media = Uri.parse(currentlyPlayingCard.getSelectedMediaFile().getPath());
                     try {
                         // Don't set isPlaying false. We're only 'stopping' to switch media sources
                         player.stop();
                         player.reset();
-                        Log.i(TAG, "Setting player data source " + video.toString());
-                        player.setDataSource(mContext, video);
+                        Log.i(TAG, "Setting player data source " + media.toString());
+                        player.setDataSource(mContext, media);
                         player.setSurface(surface);
                         player.prepareAsync();
                     } catch (IOException e) {
