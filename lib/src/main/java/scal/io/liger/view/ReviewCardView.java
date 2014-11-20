@@ -761,11 +761,11 @@ public class ReviewCardView implements DisplayableCard {
                 narrationPlayer.start();
             }
 
+            ivThumbnail.setVisibility(View.VISIBLE);
+
             switch(currentlyPlayingCard.getMedium()) {
                 case Constants.VIDEO:
-                    if (ivThumbnail.getVisibility() == View.VISIBLE) {
-                        ivThumbnail.setVisibility(View.GONE);
-                    }
+                    ivThumbnail.setVisibility(View.GONE);
                 case Constants.AUDIO:
                     // Mute the main media volume if we're recording narration
                     if (mRecordNarrationState.equals(RecordNarrationState.RECORDING)) {
@@ -775,10 +775,8 @@ public class ReviewCardView implements DisplayableCard {
                     }
 
                     mediaPlayer.start();
-                    ivThumbnail.setVisibility(View.VISIBLE);
                     break;
                 case Constants.PHOTO:
-                    ivThumbnail.setVisibility(View.VISIBLE);
                     setThumbnailForClip(ivThumbnail, currentlyPlayingCard);
                     break;
             }
