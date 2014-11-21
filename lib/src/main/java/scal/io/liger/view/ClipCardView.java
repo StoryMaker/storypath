@@ -215,7 +215,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         // Collapse clip view, without change
                         toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
                         toggleFooterVisibility(collapsableContainer);
-                    } else if (mCardModel.getMedium().equals(Constants.VIDEO)) { //TODO : Support audio trimming
+                    } else if (mCardModel.getMedium().equals(Constants.VIDEO) ||
+                               mCardModel.getMedium().equals(Constants.AUDIO)) { //TODO : Support audio trimming
                         //show trim dialog
                         showClipPlaybackAndTrimming();
                     }
@@ -440,13 +441,15 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 thumbnail.setImageURI(uri);
                 thumbnail.setVisibility(View.VISIBLE);
             } else if (medium.equals(Constants.AUDIO)) {
-                Uri myUri = Uri.parse(mediaFile.getPath());
-                final MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                Uri myUri = Uri.parse(mediaFile.getPath());
+//                final MediaPlayer mediaPlayer = new MediaPlayer();
+//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
                 //set background image
                 String clipType = mCardModel.getClipType();
-                setClipExampleDrawables(clipType, thumbnail);
+                // TODO : Generate a representative waveform? Show length etc.
+                thumbnail.setImageResource(R.drawable.audio_waveform);
+                //setClipExampleDrawables(clipType, thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
             } else {
                 //TODO handle invalid-medium error
@@ -515,7 +518,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             }
         });
 
-        videoView.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener playbackToggleClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (player.isPlaying()) {
@@ -525,7 +528,10 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     player.start();
                 }
             }
-        });
+        };
+
+        videoView.setOnClickListener(playbackToggleClickListener);
+        thumbnailView.setOnClickListener(playbackToggleClickListener);
 
         videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -545,7 +551,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                             player.seekTo(clipStartMs.get());
                         }
                     });
-                    thumbnailView.setVisibility(View.GONE);
+
+                    if (mCardModel.getMedium().equals(Constants.VIDEO)) thumbnailView.setVisibility(View.GONE);
+
                     clipDurationMs.set(player.getDuration());
                     if (clipStopMs.get() == 0) clipStopMs.set(clipDurationMs.get()); // If no stop point set, play whole clip
 
