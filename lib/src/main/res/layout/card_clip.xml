@@ -44,12 +44,10 @@
         android:layout_toEndOf="@id/itvClipTypeIcon"
         android:layout_below="@id/clipCandidates"/>
 
-    <Spinner
-        android:id="@+id/spOverflow"
+    <ImageView
+        android:id="@+id/ivOverflowButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:padding="@dimen/padding_small"
-        android:background="@color/storymaker_highlight"
         android:layout_below="@id/clipCandidates"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
