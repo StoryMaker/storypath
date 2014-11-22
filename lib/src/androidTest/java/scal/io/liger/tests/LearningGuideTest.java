@@ -40,7 +40,9 @@ public class LearningGuideTest extends ActivityInstrumentationTestCase2<MainActi
 
     private MainActivity mMainActivity;
     private RecyclerView mRecyclerView;
-    private Instrumentation.ActivityMonitor mActivityMonitor;
+    private Instrumentation.ActivityMonitor mVideoActivityMonitor;
+    private Instrumentation.ActivityMonitor mAudioActivityMonitor;
+    private Instrumentation.ActivityMonitor mPhotoActivityMonitor;
 
     public LearningGuideTest() {
         super(MainActivity.class);
@@ -52,21 +54,40 @@ public class LearningGuideTest extends ActivityInstrumentationTestCase2<MainActi
         mMainActivity = getActivity();
         mRecyclerView = (RecyclerView) mMainActivity.findViewById(R.id.recyclerView);
 
-        // create references to dummy files for responses
+        // create references to sample files for dummy responses
+        // sample files assumed to be present (copied by test setup script)
+        // NOTE: can these be refactored into uri's like "content://media/external/video/media/1258"
         String packageName = mMainActivity.getApplicationContext().getPackageName();
         File root = Environment.getExternalStorageDirectory();
         String directory = root.toString() + "/Android/data/" + packageName + "/files/";
         String sampleVideo = directory + "SAMPLE.mp4";
+        String sampleAudio = directory + "SAMPLE.mp3";
+        String samplePhoto = directory + "SAMPLE.jpg";
 
-        // create an activity monitor to intercept media capture requests
-        IntentFilter filter = new IntentFilter(MediaStore.ACTION_VIDEO_CAPTURE);
-        Intent intent = new Intent();
-        Uri uri = Uri.parse(sampleVideo);
-        //Uri uri = Uri.parse("content://media/external/video/media/1258");
-        intent.setData(uri);
-        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
-        mActivityMonitor = new Instrumentation.ActivityMonitor(filter, result, true);
-        getInstrumentation().addMonitor(mActivityMonitor);
+        // create activity monitors to intercept media capture requests
+        IntentFilter videoFilter = new IntentFilter(MediaStore.ACTION_VIDEO_CAPTURE);
+        Intent videoIntent = new Intent();
+        Uri videoUri = Uri.parse(sampleVideo);
+        videoIntent.setData(videoUri);
+        Instrumentation.ActivityResult videoResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, videoIntent);
+        mVideoActivityMonitor = new Instrumentation.ActivityMonitor(videoFilter, videoResult, true);
+        getInstrumentation().addMonitor(mVideoActivityMonitor);
+
+        IntentFilter audioFilter = new IntentFilter(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+        Intent audioIntent = new Intent();
+        Uri audioUri = Uri.parse(sampleAudio);
+        audioIntent.setData(audioUri);
+        Instrumentation.ActivityResult audioResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, audioIntent);
+        mAudioActivityMonitor = new Instrumentation.ActivityMonitor(audioFilter, audioResult, true);
+        getInstrumentation().addMonitor(mAudioActivityMonitor);
+
+        IntentFilter photoFilter = new IntentFilter(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent photoIntent = new Intent();
+        Uri photoUri = Uri.parse(samplePhoto);
+        photoIntent.setData(photoUri);
+        Instrumentation.ActivityResult photoResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, photoIntent);
+        mPhotoActivityMonitor = new Instrumentation.ActivityMonitor(photoFilter, photoResult, true);
+        getInstrumentation().addMonitor(mPhotoActivityMonitor);
     }
 
     public void testPreConditions() {
@@ -81,100 +102,210 @@ public class LearningGuideTest extends ActivityInstrumentationTestCase2<MainActi
     }
 
 
-    public void testClickClickClick() {
+    public void testVideo() {
 
         // obb file assumed to be present (copied by test setup script)
 
         // select file
-        stall(1000, "SELECT FILE");
+        stall(500, "SELECT FILE");
         onData(hasToString(equalToIgnoringCase("learning_guide_1_library.json"))).perform(click());
 
         // select medium
-        stall(1000, "SELECT MEDIUM");
+        stall(500, "SELECT MEDIUM");
         swipe(6);
         onView(withText("Video")).perform(click());
 
         // continue
-        stall(1000, "CONTINUE");
+        stall(500, "CONTINUE");
         swipe(1);
         onView(withText("Start creating")).perform(click());
 
         // media capture
-        stall(1000, "MEDIA CAPTURE 1");
+        stall(500, "MEDIA CAPTURE 1");
         swipe(2);
-        stall(3000, "MEDIA CAPTURE 1b");
+        stall(500, "WAIT FOR UPDATE");
         onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_video_0")))))).perform(click());
 
         // media capture
-        stall(1000, "MEDIA CAPTURE 2");
+        stall(500, "MEDIA CAPTURE 2");
         swipe(2);
-        stall(3000, "MEDIA CAPTURE 2b");
+        stall(500, "WAIT FOR UPDATE");
         onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_video_1")))))).perform(click());
 
         // media capture
-        stall(1000, "MEDIA CAPTURE 3");
+        stall(500, "MEDIA CAPTURE 3");
         swipe(1);
-        stall(3000, "MEDIA CAPTURE 3b");
+        stall(500, "WAIT FOR UPDATE");
         onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_video_2")))))).perform(click());
 
         // continue
-        stall(1000, "CONTINUE");
+        stall(500, "CONTINUE");
         swipe(1);
         onView(withText("Order your clips")).perform(click());
 
         // finish
-        stall(1000, "FINISH");
+        stall(500, "FINISH");
         swipe(1);
         onView(withText("Finish")).perform(click());
 
         // check box
-        stall(1000, "CHECK BOX");
+        stall(500, "CHECK BOX");
         swipe(1);
         onView(withText("Thumbs Up")).perform(click());
 
         // continue
-        stall(1000, "CONTINUE");
+        stall(500, "CONTINUE");
         swipe(1);
         onView(withText("Continue")).perform(click());
 
         // next
-        stall(1000, "NEXT");
+        stall(500, "NEXT");
         swipe(1);
         onView(withText("Next: Add More Detail to Your Story")).perform(click());
 
         // pause before closing
-        stall(10000, "INTERMISSION (LEARNING GUIDE 1 COMPLETE)");
+        stall(2000, "INTERMISSION (LEARNING GUIDE 1 VIDEO COMPLETE)");
 
-        /*
-        // continue
-        stall(1000, "CONTINUE");
-        swipe(2);
-        onView(withText("Add to my story")).perform(click());
+        Log.d("AUTOMATION", "testVideo() COMPLETE");
+    }
 
-        // media capture
-        stall(1000, "MEDIA CAPTURE 4");
-        swipe(2);
-        stall(3000, "MEDIA CAPTURE 4b");
-        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_video_3")))))).perform(click());
+    public void testAudio() {
 
-        // media capture
-        stall(1000, "MEDIA CAPTURE 5");
-        swipe(2);
-        stall(3000, "MEDIA CAPTURE 5b");
-        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_video_4")))))).perform(click());
+        // obb file assumed to be present (copied by test setup script)
+
+        // select file
+        stall(500, "SELECT FILE");
+        onData(hasToString(equalToIgnoringCase("learning_guide_1_library.json"))).perform(click());
+
+        // select medium
+        stall(500, "SELECT MEDIUM");
+        swipe(6);
+        onView(withText("Audio")).perform(click());
 
         // continue
-        stall(1000, "CONTINUE");
+        stall(500, "CONTINUE");
+        swipe(1);
+        onView(withText("Start creating")).perform(click());
+
+        // media capture
+        stall(500, "MEDIA CAPTURE 1");
+        swipe(2);
+        stall(500, "WAIT FOR UPDATE");
+        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_audio_0")))))).perform(click());
+
+        // media capture
+        stall(500, "MEDIA CAPTURE 2");
+        swipe(2);
+        stall(500, "WAIT FOR UPDATE");
+        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_audio_1")))))).perform(click());
+
+        // media capture
+        stall(500, "MEDIA CAPTURE 3");
+        swipe(1);
+        stall(500, "WAIT FOR UPDATE");
+        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_audio_2")))))).perform(click());
+
+        // continue
+        stall(500, "CONTINUE");
         swipe(1);
         onView(withText("Order your clips")).perform(click());
-        */
 
-        Log.d("AUTOMATION", "testClickClickClick() COMPLETE");
+        // finish
+        stall(500, "FINISH");
+        swipe(1);
+        onView(withText("Finish")).perform(click());
+
+        // check box
+        stall(500, "CHECK BOX");
+        swipe(1);
+        onView(withText("Thumbs Up")).perform(click());
+
+        // continue
+        stall(500, "CONTINUE");
+        swipe(1);
+        onView(withText("Continue")).perform(click());
+
+        // next
+        stall(500, "NEXT");
+        swipe(1);
+        onView(withText("Next: Add More Detail to Your Story")).perform(click());
+
+        // pause before closing
+        stall(2000, "INTERMISSION (LEARNING GUIDE 1 AUDIO COMPLETE)");
+
+        Log.d("AUTOMATION", "testAudio() COMPLETE");
+    }
+
+    public void testPhoto() {
+
+        // obb file assumed to be present (copied by test setup script)
+
+        // select file
+        stall(500, "SELECT FILE");
+        onData(hasToString(equalToIgnoringCase("learning_guide_1_library.json"))).perform(click());
+
+        // select medium
+        stall(500, "SELECT MEDIUM");
+        swipe(6);
+        onView(withText("Photo")).perform(click());
+
+        // continue
+        stall(500, "CONTINUE");
+        swipe(1);
+        onView(withText("Start creating")).perform(click());
+
+        // media capture
+        stall(500, "MEDIA CAPTURE 1");
+        swipe(2);
+        stall(500, "WAIT FOR UPDATE");
+        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_photo_0")))))).perform(click());
+
+        // media capture
+        stall(500, "MEDIA CAPTURE 2");
+        swipe(2);
+        stall(500, "WAIT FOR UPDATE");
+        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_photo_1")))))).perform(click());
+
+        // media capture
+        stall(500, "MEDIA CAPTURE 3");
+        swipe(1);
+        stall(500, "WAIT FOR UPDATE");
+        onView(allOf(withText("Capture"), withParent(withParent(withTagValue(is((Object) "clip_photo_2")))))).perform(click());
+
+        // continue
+        stall(500, "CONTINUE");
+        swipe(1);
+        onView(withText("Order your clips")).perform(click());
+
+        // finish
+        stall(500, "FINISH");
+        swipe(1);
+        onView(withText("Finish")).perform(click());
+
+        // check box
+        stall(500, "CHECK BOX");
+        swipe(1);
+        onView(withText("Thumbs Up")).perform(click());
+
+        // continue
+        stall(500, "CONTINUE");
+        swipe(1);
+        onView(withText("Continue")).perform(click());
+
+        // next
+        stall(500, "NEXT");
+        swipe(1);
+        onView(withText("Next: Add More Detail to Your Story")).perform(click());
+
+        // pause before closing
+        stall(2000, "INTERMISSION (LEARNING GUIDE 1 PHOTO COMPLETE)");
+
+        Log.d("AUTOMATION", "testPhoto() COMPLETE");
     }
 
     private void stall(long milliseconds, String message) {
         try {
-            Log.d("AUTOMATION", "SLEEP " + (milliseconds / 1000) + "(" + message + ")");
+            Log.d("AUTOMATION", "SLEEP " + (milliseconds / 1000) + " (" + message + ")");
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             e.printStackTrace();
