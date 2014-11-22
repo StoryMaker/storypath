@@ -23,7 +23,7 @@ As work progresses on the liger data repository you can update your repository a
 # Testing
 ---
 #### Espresso Testing:
-To run the test suite, you simply need add the correct instrumentation runner to the Run config.  In Android Studio, open the 'Run' -> 'Edit Configurations' -> 'General tab.' Expand 'Android Tests' on the left and click 'MainActivityTest.'  Under 'Specific instrumentation runner (optional)', paste the following: com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner.
+To run the test suite, you simply need add the correct instrumentation runner to the Run config.  In Android Studio, open the 'Run' -> 'Edit Configurations' -> 'General tab.' Expand 'Android Tests' on the left and click 'LearningGuideTest' or 'DefaultLibraryTest'.  Under 'Specific instrumentation runner (optional)', paste the following: com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner.  Prior to testing, a current obb file (renamed to main.<version>.scal.io.liger.test.obb) must be placed in the scal.io.liger.test files folder.  Also, the files SAMPLE.jpg, SAMPLE.mp3, SAMPLE.mp4, SAMPLE.png must be placed in the same folder (copied/renamed from the example files in learning guide 1)
 
 ---
 # Story Path format spec
