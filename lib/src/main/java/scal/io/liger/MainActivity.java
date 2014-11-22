@@ -727,7 +727,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     mCardAdapter.changeCard(cc);
                     scrollRecyclerViewToCard(cc);
                 } else {
-                    Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
+                    if (c != null) {
+                        Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
+                    } else {
+                        Log.e(TAG, "c is null!");
+                    }
                 }
 
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
