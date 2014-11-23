@@ -17,6 +17,7 @@ import com.google.android.vending.licensing.LicenseChecker;
 import com.google.android.vending.licensing.LicenseCheckerCallback;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -139,6 +140,29 @@ public class LigerDownloadManager implements Runnable {
                 Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl + ligerObb);
 
                 if (useManager) {
+
+                    // clean up old tmps before downloading
+
+                    String nameFilter = "";
+                    if (ligerObb.startsWith(Constants.MAIN)) {
+                        nameFilter = nameFilter + Constants.MAIN + ".*." + context.getPackageName() + ".*.tmp";
+                    }
+                    if (ligerObb.startsWith(Constants.PATCH)) {
+                        nameFilter = nameFilter + Constants.PATCH + ".*." + context.getPackageName() + ".*.tmp";
+                    }
+
+                    if (nameFilter.length() == 0) {
+                        Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
+                    } else {
+                        Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
+                    }
+
+                    WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
+                    for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
+                        Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                        FileUtils.deleteQuietly(oldFile);
+                    }
+
                     File targetFile = new File(targetFolder, ligerObb + ".tmp");
                     downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
                 } else {
@@ -224,6 +248,29 @@ public class LigerDownloadManager implements Runnable {
                         File newFile = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
                         Log.d(TAG, "newFile: " + newFile.getAbsolutePath());
                         try {
+                            // clean up old obbs before renaming new file
+                            File directory = new File(newFile.getParent());
+
+                            String nameFilter = "";
+                            if (newFile.getName().startsWith(Constants.MAIN)) {
+                                nameFilter = nameFilter + Constants.MAIN + ".*." + context.getPackageName() + ".obb";
+                            }
+                            if (newFile.getName().startsWith(Constants.PATCH)) {
+                                nameFilter = nameFilter + Constants.PATCH + ".*." + context.getPackageName() + ".obb";
+                            }
+
+                            if (nameFilter.length() == 0) {
+                                Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + newFile.getName());
+                            } else {
+                                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
+                            }
+
+                            WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
+                            for (File oldFile : FileUtils.listFiles(directory, oldFileFilter, null)) {
+                                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                                FileUtils.deleteQuietly(oldFile);
+                            }
+
                             FileUtils.moveFile(savedFile, newFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
                             if (savedFile.exists()) {
                                 FileUtils.deleteQuietly(savedFile); // for some reason I was getting an 0kb .tmp file lingereing
@@ -292,6 +339,29 @@ public class LigerDownloadManager implements Runnable {
             Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl);
 
             if (useManager) {
+
+                // clean up old tmps before downloading
+
+                String nameFilter = "";
+                if (ligerObb.startsWith(Constants.MAIN)) {
+                    nameFilter = nameFilter + Constants.MAIN + ".*." + context.getPackageName() + ".*.tmp";
+                }
+                if (ligerObb.startsWith(Constants.PATCH)) {
+                    nameFilter = nameFilter + Constants.PATCH + ".*." + context.getPackageName() + ".*.tmp";
+                }
+
+                if (nameFilter.length() == 0) {
+                    Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
+                } else {
+                    Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
+                }
+
+                WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
+                for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
+                    Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                    FileUtils.deleteQuietly(oldFile);
+                }
+
                 File targetFile = new File(targetFolder, ligerObb + ".tmp");
                 downloadWithManager(Uri.parse(ligerUrl), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
             } else {
