@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.google.android.vending.licensing.AESObfuscator;
@@ -15,6 +16,7 @@ import com.google.android.vending.licensing.APKExpansionPolicy;
 import com.google.android.vending.licensing.LicenseChecker;
 import com.google.android.vending.licensing.LicenseCheckerCallback;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -29,7 +31,7 @@ import java.net.URI;
  * Created by mnbogner on 11/7/14.
  */
 public class LigerDownloadManager implements Runnable {
-
+    private final static String TAG = "LigerDownloadManager";
 
     // TODO use HTTPS
     // TODO pickup Tor settings
@@ -219,12 +221,17 @@ public class LigerDownloadManager implements Runnable {
                         Log.d("DOWNLOAD", "MANAGER SAVED DOWNLOAD TO " + savedFile.getPath());
 
                         // move .tmp file to actual file
+                        File newFile = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+                        Log.d(TAG, "newFile: " + newFile.getAbsolutePath());
                         try {
-                            Process p = Runtime.getRuntime().exec("mv " + savedFile.getPath() + " " + savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
-                            Log.d("DOWNLOAD", "MOVED TEMP FILE " + savedFile.getPath() + " TO " + savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
-                        } catch (IOException ioe) {
-                            Log.d("DOWNLOAD", "EXCEPTION THROWN WHILE MOVING TEMP FILE " + savedFile.getPath() + " TO " + savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")) + " -> " + ioe.getMessage());
+                            FileUtils.moveFile(savedFile, newFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
+                            if (savedFile.exists()) {
+                                FileUtils.deleteQuietly(savedFile); // for some reason I was getting an 0kb .tmp file lingereing
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+                        Log.d("DOWNLOAD", "MOVED TEMP FILE " + savedFile.getPath() + " TO " + newFile.getPath());
 
                     } else {
                         Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK");
@@ -248,6 +255,7 @@ public class LigerDownloadManager implements Runnable {
 
         @Override
         public void allow(int reason) {
+            Log.d("DOWNLOAD", "forcing DOWNLOADING FROM LIGER SERVER"); // FIXME dont check this in
             Log.d("DOWNLOAD", "LICENSE CHECK ALLOWED, DOWNLOADING FROM GOOGLE PLAY");
 
             String ligerUrl = null;
