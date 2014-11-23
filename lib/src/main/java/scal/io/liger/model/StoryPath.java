@@ -3,6 +3,7 @@ package scal.io.liger.model;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import com.google.gson.stream.MalformedJsonException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
@@ -1115,5 +1117,32 @@ public class StoryPath {
         ArrayList<Card> results = story.gatherCards(cardTarget);
 
         return results;
+    }
+
+    /**
+     * Returns the List of ClipCards with attached media within the current StoryPath
+     */
+    public ArrayList<Card> getClipCardsWithAttachedMedia() {
+        ArrayList<Card> mediaCards = gatherCards("<<ClipCard>>");
+        Iterator iterator = mediaCards.iterator();
+        while (iterator.hasNext()) {
+            ClipCard clipCard = (ClipCard) iterator.next();
+            if ( clipCard.getClips() == null || clipCard.getClips().size() < 1 ) {
+                iterator.remove();
+            }
+        }
+        return mediaCards;
+    }
+
+    public Bitmap getCoverImageThumbnail() {
+        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
+        for (Card card: cards) {
+            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+            if (mediaFile != null) {
+                return mediaFile.getThumbnail(context);
+            }
+        }
+        return null;
+//        return ((ClipCard) cards.get(0)).getSelectedMediaFile().getThumbnail(context);
     }
 }

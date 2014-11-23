@@ -143,7 +143,10 @@ public class ReviewCardView implements DisplayableCard {
         });
 
         // Initialize mMediaCards from current StoryPath
-        getClipCardsWithAttachedMedia();
+        initClipCardsWithAttachedMedia();
+
+        // set our medium based on the first clip cards medium
+        mMedium = ((ClipCard)mMediaCards.get(0)).getMedium();
 
         if (mMediaCards.size() > 0) {
             switch (((ClipCard) mMediaCards.get(0)).getMedium()) {
@@ -173,17 +176,8 @@ public class ReviewCardView implements DisplayableCard {
      * Initializes the value of {@link #mMediaCards} to a List of ClipCards with attached media
      * within the current StoryPath
      */
-    private void getClipCardsWithAttachedMedia() {
-        ArrayList<Card> mediaCards = mCardModel.getStoryPath().gatherCards("<<ClipCard>>");
-        Iterator iterator = mediaCards.iterator();
-        while (iterator.hasNext()) {
-            ClipCard clipCard = (ClipCard) iterator.next();
-            mMedium = clipCard.getMedium();
-            if ( clipCard.getClips() == null || clipCard.getClips().size() < 1 ) {
-                iterator.remove();
-            }
-        }
-        mMediaCards = mediaCards;
+    public void initClipCardsWithAttachedMedia() {
+        mMediaCards = mCardModel.getStoryPath().getClipCardsWithAttachedMedia();
     }
 
     /** Record Narration Dialog */

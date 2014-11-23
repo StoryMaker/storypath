@@ -345,7 +345,7 @@ public class JsonHelper {
             }
         }
     }
-
+    // FIXME this seems to be required to have been run to use any of the static methods like getLibraryInstanceFiles, we shouldn't have black magic like this
     public static void setupFileStructure(Context context) {
         String sdCardState = Environment.getExternalStorageState();
 

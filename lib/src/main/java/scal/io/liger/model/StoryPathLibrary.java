@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -210,52 +211,60 @@ public class StoryPathLibrary extends StoryPath {
         }
 
         if (context != null) {
-
             //File jsonTemplateFile = new File(buildZipPath(storyPathTemplateFile));
             //String jsonTemplate = JsonHelper.loadJSONFromPath(jsonTemplateFile.getPath());
 
-            MainActivity mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
 
-            //try {
-                // check for file
-                // paths to actual files should fully qualified
-                // paths within zip files should be relative
-                // (or at least not resolve to actual files)
-                String checkPath = buildZipPath(storyPathTemplateFile);
-                File checkFile = new File(checkPath);
+            MainActivity mainActivity = null;
+            String lang = "en"; // FIXME defaulting to en
+            if (context instanceof MainActivity) {
+                mainActivity = (MainActivity) context; // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                lang = mainActivity.getLanguage();
+            }
 
-                ArrayList<String> referencedFiles = null;
+            // check for file
+            // paths to actual files should fully qualified
+            // paths within zip files should be relative
+            // (or at least not resolve to actual files)
+            String checkPath = buildZipPath(storyPathTemplateFile);
+            File checkFile = new File(checkPath);
 
-                // should not need to insert dependencies into a saved instance file
-                if (checkPath.contains("instance")) {
-                    referencedFiles = new ArrayList<String>();
-                } else {
-                    referencedFiles = JsonHelper.getInstancePaths();
-                }
+            ArrayList<String> referencedFiles = null;
 
-                StoryPath story = null;
-                if (checkFile.exists()) {
-                    story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, mainActivity.getLanguage());
-                    Log.e("FILES", "LOADED FROM FILE: " + checkPath);
-                } else {
-                    story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, mainActivity.getLanguage());
-                    Log.e("FILES", "LOADED FROM ZIP: " + checkPath);
-                }
+            // should not need to insert dependencies into a saved instance file
+            if (checkPath.contains("instance")) {
+                referencedFiles = new ArrayList<String>();
+            } else {
+                referencedFiles = JsonHelper.getInstancePaths();
+            }
 
-                setCurrentStoryPath(story);
-                setCurrentStoryPathFile(storyPathTemplateFile);
+            StoryPath story = null;
+            if (checkFile.exists()) {
+                story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, lang);
+                Log.e("FILES", "LOADED FROM FILE: " + checkPath);
+            } else {
+                story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, lang);
+                Log.e("FILES", "LOADED FROM ZIP: " + checkPath);
+            }
 
-                mainActivity.saveStoryPathLibrary(false);
+            setCurrentStoryPath(story);
+            setCurrentStoryPathFile(storyPathTemplateFile);
+
+            if (mainActivity != null) {
+                mainActivity.saveStoryPathLibrary(false);  // FIXME refactor this stuff out, the loader stuff shouldn't touch UI at all
                 mainActivity.refreshCardList();
-
-            //} catch (com.google.gson.JsonSyntaxException e) {
-            //    Toast.makeText(context, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            //} catch (MalformedJsonException e) {
-            //    Toast.makeText(context, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            //}
-
+            }
         } else {
             Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
+        }
+    }
+
+    @Override
+    public Bitmap getCoverImageThumbnail() {
+        if (getCurrentStoryPath() != null) {
+            return getCurrentStoryPath().getCoverImageThumbnail();
+        } else {
+            return null;
         }
     }
 }

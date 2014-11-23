@@ -38,6 +38,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     public static final String INTENT_KEY_WINDOW_TITLE = "window_title";
     public static final String INTENT_KEY_STORYPATH_LIBRARY_ID = "storypath_library_id";
+    public static final String INTENT_KEY_STORYPATH_INSTANCE_PATH = "storypath_instance_path";
     public static final int INTENT_CODE = 16328;
 
     RecyclerView mRecyclerView;
@@ -111,9 +112,17 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             mPhotoSlideDuration = i.getIntExtra(Constants.EXTRA_PHOTO_SLIDE_DURATION, 0);
             mRequestedLanguage = i.getStringExtra(Constants.EXTRA_LANG);
 
+            String jsonFilePath = null;
+            String json = null;
             if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_ID)) {
-                String jsonFilePath = JsonHelper.getJsonPathByKey(i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
-                String json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
+                jsonFilePath = JsonHelper.getJsonPathByKey(i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
+                json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
+            } else if (i.hasExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH)) {
+                jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH);
+                json = JsonHelper.loadJSON(new File(jsonFilePath), language);
+            }
+
+            if (json != null) {
                 initFromJson(json, jsonFilePath);
             } else {
                 showJsonSelectorPopup();
@@ -244,67 +253,24 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             return;
         }
 
-                    //initHook(json, jsonPath);
+        ArrayList<String> referencedFiles = null;
 
-                    ArrayList<String> referencedFiles = null;
+        // should not need to insert dependencies into a saved instance
+        if (jsonPath.contains("instance")) {
+            referencedFiles = new ArrayList<String>();
+        } else {
+            referencedFiles = JsonHelper.getInstancePaths();
+        }
 
-                    // should not need to insert dependencies into a saved instance
-                    if (jsonPath.contains("instance")) {
-                        referencedFiles = new ArrayList<String>();
-                    } else {
-                        referencedFiles = JsonHelper.getInstancePaths();
-                    }
+        mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
+        configureStoryPathLibrary();
+        mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
 
-                    mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
-                    configureStoryPathLibrary();
-                    mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
-
-                    setupCardView();
-
-        // need to implement selection of story path based on hook
-
-                    /*
-                    jsonFile = new File(mStoryPathLibrary.buildZipPath(mStoryPathLibrary.getStoryPathTemplateFiles().get("NAME_1")));
-                    json = JsonHelper.loadJSONFromPath(jsonFile.getPath());
-
-                    initCardList(json, jsonFile);
-                    */
-
-//                            mStoryPathLibrary.loadStoryPathTemplate("NAME_1");
+        setupCardView();
 
         if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
             mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
         }
-    }
-
-    // FIXME rename this to init initial cards or something
-    private void initHookDELETE(String json) {
-        //initHook(json, null);
-    }
-
-    private void initHookDELETE(String json, String jsonPath) {
-        Log.d(TAG, "initHook called");
-
-        // unsure what needs to be set up for the hook interface
-
-
-
-
-        try {
-            //initStoryPathLibraryModel(json, jsonPath);
-
-
-
-            mStoryPathLibrary.setStoryPathLibraryListener(this);
-            setupCardView();
-
-        } catch (com.google.gson.JsonSyntaxException e) {
-            Toast.makeText(MainActivity.this, "JSON syntax error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } //catch (MalformedJsonException e) {
-       //     Toast.makeText(MainActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-      //      e.printStackTrace();
-      //  }
     }
 
     /*
