@@ -211,7 +211,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
                 if (v.getTag(R.id.view_tag_clip_primary) != null && (boolean) v.getTag(R.id.view_tag_clip_primary)) {
                     // Clicked clip is primary
-                    Log.i("select", "primary");
+                    Log.i(TAG + "-select", "primary");
                     if (mClipsExpanded) {
                         // Collapse clip view, without change
                         toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
@@ -226,7 +226,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     if (mClipsExpanded &&  v.getTag(R.id.view_tag_clip_primary) != null) {
                         // Clicked view is secondary clip and clips are expanded
                         // This indicates a new secondary clip was selected
-                        Log.i("select", "new primary clip selected");
+                        Log.i(TAG + "-select", "new primary clip selected");
                         // If clips expanded, this event means we've been selected as the
                         // new primary clip!
                         setNewSelectedClip(v);
@@ -244,7 +244,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             params.height = 0;
             collapsableContainer.setLayoutParams(params);
 
-            Log.i("clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
+            Log.i(TAG + "-clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
             // Thumbnails are added to the clip stack from back to front. This greatly simplifies producing the desired z-order
             Collections.reverse(clipsToDisplay);
             for (int x = 0; x < clipsToDisplay.size(); x++) {
@@ -618,9 +618,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         mCardModel.getSelectedClip().setStopTime(clipStopMs.get());
 
                         // need to save here
-                        Log.d("CLIPS", "SAVING START/STOP TIME");
-                        MainActivity mainActivity = (MainActivity)(mCardModel.getStoryPath().getContext());
-                        mainActivity.saveStoryPathLibrary(true);
+                        Log.d(TAG, "SAVING START/STOP TIME");
+                        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -698,7 +697,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 // Add pressable background drawable
                 child.setBackgroundResource(R.drawable.clip_card_selectable_bg);
             }
-            Log.i("anim", String.format("Animating margin from %d to %d", ((ViewGroup.MarginLayoutParams) params).topMargin, stopAnimationMargin));
+            Log.i(TAG + "-anim", String.format("Animating margin from %d to %d", ((ViewGroup.MarginLayoutParams) params).topMargin, stopAnimationMargin));
 
             animator = ValueAnimator.ofInt(((ViewGroup.MarginLayoutParams) params).topMargin, stopAnimationMargin);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -787,7 +786,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     private void setNewSelectedClip(View newSelectedClip) {
         // Put the passed clipThumbnail at the top of the stack
         // The top of the stack is the end of mDisplayedClips
-        Log.i("swap", String.format("Swapping card %d for %d", mDisplayedClips.indexOf(newSelectedClip), mDisplayedClips.size()-1));
+        Log.i(TAG + "-swap", String.format("Swapping card %d for %d", mDisplayedClips.indexOf(newSelectedClip), mDisplayedClips.size()-1));
         View oldSelectedClip = mDisplayedClips.get(mDisplayedClips.size()-1);
         mDisplayedClips.remove(mDisplayedClips.indexOf(newSelectedClip));
         mDisplayedClips.add(newSelectedClip);
@@ -803,6 +802,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         // Set new clip as selected
         mCardModel.selectMediaFile((ClipMetadata) newSelectedClip.getTag(R.id.view_tag_clip_metadata));
+
+        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
     }
 
     private View.OnTouchListener mClipSelectionListener = new View.OnTouchListener() {
@@ -811,12 +812,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.i("select", "setting clip selected");
+                    Log.i(TAG + "-select", "setting clip selected");
                     v.setBackgroundResource(R.drawable.clip_card_selected);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    Log.i("select", "setting clip unselected");
+                    Log.i(TAG + "-select", "setting clip unselected");
                     v.setBackgroundResource(0);
                     break;
             }
