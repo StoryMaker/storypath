@@ -526,6 +526,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View.OnClickListener playbackToggleClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                thumbnailView.setVisibility(View.GONE);
+
                 if (player.isPlaying()) {
                     player.pause();
                 } else {
@@ -556,8 +558,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                             player.seekTo(clipStartMs.get());
                         }
                     });
-
-                    if (mCardModel.getMedium().equals(Constants.VIDEO)) thumbnailView.setVisibility(View.GONE);
 
                     clipDurationMs.set(player.getDuration());
                     if (clipStopMs.get() == 0) clipStopMs.set(clipDurationMs.get()); // If no stop point set, play whole clip
