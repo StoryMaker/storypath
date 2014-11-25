@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -244,6 +245,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             collapsableContainer.setLayoutParams(params);
 
             Log.i("clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
+            // Thumbnails are added to the clip stack from back to front. This greatly simplifies producing the desired z-order
+            Collections.reverse(clipsToDisplay);
             for (int x = 0; x < clipsToDisplay.size(); x++) {
                 // Create view for new clip
                 MediaFile mediaFile = mCardModel.loadMediaFile(clipsToDisplay.get(x));
@@ -258,6 +261,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 clipThumb.setTag(R.id.view_tag_clip_metadata, clipsToDisplay.get(x));
                 mDisplayedClips.add(clipThumb);
             }
+            // Restore order of clipsToDisplay, since it's a reference to the StoryPath model
+            Collections.reverse(clipsToDisplay);
         } else {
             // Begin in the expanded state
             View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
