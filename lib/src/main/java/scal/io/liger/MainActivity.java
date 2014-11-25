@@ -777,10 +777,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                 Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
 
-                // TODO Support photo, audio import
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(uri.toString(), Constants.VIDEO);
+
+                    MediaFile mf = new MediaFile(uri.toString(), cc.getMedium());
                     cc.saveMediaFile(mf);
 
                     // SEEMS LIKE A REASONABLE TIME TO SAVE
