@@ -1143,6 +1143,16 @@ public class StoryPath {
             }
         }
         return null;
-//        return ((ClipCard) cards.get(0)).getSelectedMediaFile().getThumbnail(context);
+    }
+
+    public String getMedium() {
+        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
+        for (Card card: cards) {
+            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+            if (mediaFile != null) {
+                return mediaFile.getMedium();
+            }
+        }
+        return null;
     }
 }
