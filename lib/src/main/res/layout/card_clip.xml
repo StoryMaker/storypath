@@ -52,6 +52,12 @@
         android:textColor="@color/storymaker_highlight"
         android:layout_toRightOf="@id/itvClipTypeIcon"
         android:layout_toEndOf="@id/itvClipTypeIcon"
+        android:layout_below="@id/clipCandidates"/>
+
+    <ImageView
+        android:id="@+id/ivOverflowButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_below="@id/clipCandidates"
         android:layout_alignBottom="@id/spOverflow"
         android:layout_toStartOf="@id/spOverflow"
