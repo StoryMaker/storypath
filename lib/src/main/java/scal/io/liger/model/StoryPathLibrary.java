@@ -23,6 +23,8 @@ import scal.io.liger.MainActivity;
  */
 public class StoryPathLibrary extends StoryPath {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private HashMap<String, String> storyPathTemplateFiles;
     @Expose private ArrayList<String> storyPathInstanceFiles;
     @Expose private String currentStoryPathFile;
@@ -45,6 +47,7 @@ public class StoryPathLibrary extends StoryPath {
         public void onCardChanged(Card changedCard);
         public void onCardsSwapped(Card cardOne, Card cardTwo);
         public void onCardRemoved(Card removedCard);
+        public void onStoryPathLoaded();
     }
 
     @Override
@@ -67,7 +70,7 @@ public class StoryPathLibrary extends StoryPath {
         }
 
         // SEEMS LIKE A REASONABLE TIME TO SAVE
-        ((MainActivity)context).saveStoryPathLibrary(true);
+        save(true);
     }
 
     public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {
@@ -199,14 +202,14 @@ public class StoryPathLibrary extends StoryPath {
 
         if (storyPathTemplateKey.equals("CURRENT")) { // ADD TO CONSTANTS
             storyPathTemplateFile = getCurrentStoryPathFile();
-            Log.e("FILES", "CURRENT STORY PATH: " + storyPathTemplateFile); // FIXME at least toast the user
+            Log.e(TAG, "Loading current StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
         } else {
             storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
-            Log.e("FILES", "STORY PATH TEMPLATE: " + storyPathTemplateFile); // FIXME at least toast the user
+            Log.e(TAG, "Loading template StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
         }
 
         if (storyPathTemplateFile == null) {
-            Log.e(this.getClass().getName(), "could not find file name corresponding to " + storyPathTemplateKey); // FIXME at least toast the user
+            Log.e(TAG, "Loading failed. Could not find file: " + storyPathTemplateKey); // FIXME at least toast the user
             return;
         }
 
@@ -241,19 +244,18 @@ public class StoryPathLibrary extends StoryPath {
             StoryPath story = null;
             if (checkFile.exists()) {
                 story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, lang);
-                Log.e("FILES", "LOADED FROM FILE: " + checkPath);
+                Log.e(TAG, "Loaded StoryPath from file: " + checkPath);
             } else {
                 story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, lang);
-                Log.e("FILES", "LOADED FROM ZIP: " + checkPath);
+                Log.e(TAG, "Loaded StoryPath from zip: " + checkPath);
             }
 
             setCurrentStoryPath(story);
             setCurrentStoryPathFile(storyPathTemplateFile);
 
-            if (mainActivity != null) {
-                mainActivity.saveStoryPathLibrary(false);  // FIXME refactor this stuff out, the loader stuff shouldn't touch UI at all
-                mainActivity.refreshCardList();
-            }
+            save(false);
+            if (mListener != null) mListener.onStoryPathLoaded();
+
         } else {
             Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
         }
@@ -266,5 +268,125 @@ public class StoryPathLibrary extends StoryPath {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Serialize this object to disk.
+     *
+     * @param saveCurrentStoryPath whether to also save the StoryPath returned by
+     *                             {@link #getCurrentStoryPath()}
+     */
+    public void save(boolean saveCurrentStoryPath) {
+        //Gson gson = new Gson();
+
+        String savedStoryPathLibraryFile = getSavedFileName();
+        if (savedStoryPathLibraryFile == null) {
+            savedStoryPathLibraryFile = JsonHelper.getStoryPathLibrarySaveFileName(this);
+            setSavedFileName(savedStoryPathLibraryFile);
+            Log.d(TAG, "Saving to new file: " + savedStoryPathLibraryFile);
+        } else {
+            Log.d(TAG, "Saving to existing file: " + savedStoryPathLibraryFile);
+        }
+
+        if (saveCurrentStoryPath && (getCurrentStoryPath() != null)) {
+            getCurrentStoryPath().setStoryPathLibraryFile(savedStoryPathLibraryFile);
+            String savedStoryPathFile = getCurrentStoryPath().getSavedFileName();
+            if (savedStoryPathFile == null) {
+                savedStoryPathFile = JsonHelper.getStoryPathSaveFileName(getCurrentStoryPath());
+                getCurrentStoryPath().setSavedFileName(savedStoryPathFile);
+                Log.d(TAG, "Saving current StoryPath to new file: " + savedStoryPathFile);
+            } else {
+                Log.d(TAG, "Saving current StoryPath to existing file: " + savedStoryPathFile);
+            }
+            setCurrentStoryPathFile(savedStoryPathFile);
+            JsonHelper.saveStoryPath(getCurrentStoryPath(), savedStoryPathFile);
+            Log.d(TAG, "Current StoryPath with id " + getCurrentStoryPath().getId() + " was saved to file " + savedStoryPathFile);
+        } else {
+            Log.d(TAG, "Id " + getId() + " has no current StoryPath, but save was explicitly requested. Ignoring.");
+        }
+
+        JsonHelper.saveStoryPathLibrary(this, savedStoryPathLibraryFile);
+        Log.d(TAG, "Id " + getId() + " was saved to file " + savedStoryPathLibraryFile);
+
+        //String savedFilePath = JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath());
+        //mStoryPathLibrary.setCurrentStoryPathFile(savedFilePath);
+        //JsonHelper.saveStoryPathLibrary(mStoryPathLibrary);
+
+        /*
+        // prep and serialize story path library
+        String json3 = gson.toJson(mStoryPathLibrary);
+
+        // write to file, store path
+        try {
+            File storyPathLibraryFile = new File("/storage/emulated/0/Liger/default/TEST_LIB.json"); // need file naming plan
+            FileOutputStream fos = new FileOutputStream(storyPathLibraryFile);
+            if (!storyPathLibraryFile.exists()) {
+                storyPathLibraryFile.createNewFile();
+            }
+            byte data[] = json3.getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+            mStory.setStoryPathLibrary(null);
+            mStory.setStoryPathLibraryFile(storyPathLibraryFile.getPath());
+        } catch (IOException ioe) {
+            Log.e(TAG, ioe.getMessage());
+        }
+        */
+
+        /*
+        // prep and serialize current story path
+        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibrary(null);
+        mStoryPathLibrary.getCurrentStoryPath().clearObservers();
+        mStoryPathLibrary.getCurrentStoryPath().clearCardReferences(); // FIXME move this stuff into the model itself so we dont have to worry about it
+        mStoryPathLibrary.getCurrentStoryPath().setContext(null);
+        String json1 = gson.toJson(mStoryPathLibrary.getCurrentStoryPath());
+
+        StoryPath sp = mStoryPathLibrary.getCurrentStoryPath();
+
+        // write to file, store path
+        try {
+            File currentStoryPathFile = new File("/storage/emulated/0/Liger/default/TEST_PATH.json"); // need file naming plan
+            FileOutputStream fos = new FileOutputStream(currentStoryPathFile);
+            if (!currentStoryPathFile.exists()) {
+                currentStoryPathFile.createNewFile();
+            }
+            byte data[] = json1.getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+            mStoryPathLibrary.setCurrentStoryPath(null);
+            mStoryPathLibrary.setCurrentStoryPathFile(currentStoryPathFile.getPath());
+        } catch (IOException ioe) {
+            Log.e(TAG, ioe.getMessage());
+        }
+
+        // prep and serialize top level story
+        String json2 = gson.toJson(mStoryPathLibrary);
+
+        // write to file
+        try {
+            File storyFile = new File("/storage/emulated/0/Liger/default/TEST_STORY.json");  // need file naming plan
+            FileOutputStream fos = new FileOutputStream(storyFile);
+            if (!storyFile.exists()) {
+                storyFile.createNewFile();
+            }
+            byte data[] = json2.getBytes();
+            fos.write(data);
+            fos.flush();
+            fos.close();
+        } catch (IOException ioe) {
+            Log.e(TAG, ioe.getMessage());
+        }
+
+        // restore links and continue
+        // mStory.setStoryPathLibrary(mStoryPathLibrary);
+        mStoryPathLibrary.setCurrentStoryPath(sp);
+
+        mStoryPathLibrary.getCurrentStoryPath().setContext(this);
+        mStoryPathLibrary.getCurrentStoryPath().setCardReferences();
+        mStoryPathLibrary.getCurrentStoryPath().initializeObservers();
+        mStoryPathLibrary.getCurrentStoryPath().setStoryPathLibrary(mStoryPathLibrary);
+        */
     }
 }

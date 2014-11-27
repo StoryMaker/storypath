@@ -33,6 +33,16 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/clipCandidates"/>
 
+    <Spinner
+        android:id="@+id/spOverflow"
+        android:layout_width="32dp"
+        android:layout_height="40dp"
+        android:padding="@dimen/padding_small"
+        android:background="@color/storymaker_highlight"
+        android:layout_below="@id/clipCandidates"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
     <TextView
         style="@style/p"
         android:id="@+id/tvHeader"
@@ -44,15 +54,14 @@
         android:layout_toEndOf="@id/itvClipTypeIcon"
         android:layout_below="@id/clipCandidates"/>
 
-    <Spinner
-        android:id="@+id/spOverflow"
+    <ImageView
+        android:id="@+id/ivOverflowButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:padding="@dimen/padding_small"
-        android:background="@color/storymaker_highlight"
         android:layout_below="@id/clipCandidates"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignBottom="@id/spOverflow"
+        android:layout_toStartOf="@id/spOverflow"
+        android:layout_toLeftOf="@id/spOverflow"/>
 
     <RelativeLayout
         android:id="@+id/collapsable"

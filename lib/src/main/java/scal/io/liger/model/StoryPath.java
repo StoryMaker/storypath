@@ -92,11 +92,16 @@ public class StoryPath {
     }
 
     public void addCard(Card card) {
-        if (this.cards == null)
-            this.cards = new ArrayList<Card>();
+        if (this.cards == null) this.cards = new ArrayList<>();
 
         this.cards.add(card);
         // add it to the adapter
+    }
+
+    public void addCardAtPosition(Card card, int position) {
+        if (this.cards == null) this.cards = new ArrayList<>();
+
+        this.cards.add(position, card);
     }
 
     public void activateCard(Card card) {
@@ -486,7 +491,7 @@ public class StoryPath {
         }
 
         // SEEMS LIKE A REASONABLE TIME TO SAVE
-        ((MainActivity)context).saveStoryPathLibrary(true);
+        getStoryPathLibrary().save(true);
     }
 
     /**
@@ -1143,6 +1148,16 @@ public class StoryPath {
             }
         }
         return null;
-//        return ((ClipCard) cards.get(0)).getSelectedMediaFile().getThumbnail(context);
+    }
+
+    public String getMedium() {
+        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
+        for (Card card: cards) {
+            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+            if (mediaFile != null) {
+                return mediaFile.getMedium();
+            }
+        }
+        return null;
     }
 }

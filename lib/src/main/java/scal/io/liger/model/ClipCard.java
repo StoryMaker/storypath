@@ -13,7 +13,7 @@ import scal.io.liger.view.ClipCardView;
 import scal.io.liger.view.DisplayableCard;
 
 
-public class ClipCard extends ExampleCard {
+public class ClipCard extends ExampleCard implements Cloneable {
 
     @Expose private String clipType;
     @Expose private ArrayList<ClipMetadata> clips;
@@ -79,15 +79,21 @@ public class ClipCard extends ExampleCard {
         this.clips = clips;
     }
 
+    /**
+     * Add a new Clip to this card and make it the currently "selected" clip.
+     */
     public void addClip(ClipMetadata clip) {
         addClip(clip, true);
     }
 
+    /**
+     * Add a new Clip to this card and make it the currently "selected" clip.
+     */
     public void addClip(ClipMetadata clip, boolean notify) {
         if (this.clips == null) {
-            this.clips = new ArrayList<ClipMetadata>();
+            this.clips = new ArrayList<>();
         }
-        // by default, the last recorded clip is considered "selected"
+        // by default, the first recorded clip is considered "selected"
         this.clips.add(0, clip);
 
         // send notification that a clip has been saved so that cards will be refreshed
@@ -161,5 +167,16 @@ public class ClipCard extends ExampleCard {
         }
 
         clips.remove(index);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ClipCard clone = (ClipCard) super.clone();
+        clone.clipType = this.clipType; // Strings are immutable
+        if (this.goals != null) clone.goals = (ArrayList<String>) this.goals.clone();
+        if (this.clips != null) clone.clips = (ArrayList<ClipMetadata>) this.clips.clone();
+        clone.type = this.getClass().getName();
+
+        return clone;
     }
 }

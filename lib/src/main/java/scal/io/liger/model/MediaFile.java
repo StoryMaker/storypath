@@ -11,16 +11,18 @@ import android.util.Log;
 import com.google.gson.annotations.Expose;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
 import scal.io.liger.Constants;
+import scal.io.liger.R;
 
 /**
  * Created by mnbogner on 9/29/14.
  */
-public class MediaFile {
+public class MediaFile implements Cloneable {
 
     @Expose protected String path;
     @Expose protected String medium; // mime type?
@@ -100,11 +102,41 @@ public class MediaFile {
 
                 }
             } else if (medium.equals(Constants.AUDIO)) {
-                // TODO create audio thumbnails
+                thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.audio_waveform);
             } else if (medium.equals(Constants.PHOTO)) {
-                // TODO return the image directly
+                if (getPath().contains("content:/")) {
+                    // path of form : content://com.android.providers.media.documents/document/video:183
+                    // An Android Document Provider URI. Thumbnail already generated
+                    // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
+                    long id = Long.parseLong(Uri.parse(getPath()).getLastPathSegment().split(":")[1]);
+                    thumbnail = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
+                } else {
+                    File originalFile = new File(path);
+                    String fileName = originalFile.getName();
+                    String[] tokens = fileName.split("\\.(?=[^\\.]+$)");
+                    thumbnailFilePath = path.substring(0, path.lastIndexOf(File.separator) + 1) + tokens[0] + "_thumbnail.png";
+                    File thumbnailFile = new File(thumbnailFilePath);
+                    if (thumbnailFile.exists()) {
+                        thumbnail = BitmapFactory.decodeFile(thumbnailFilePath);
+                    } else {
+                        Bitmap bitMap = BitmapFactory.decodeFile(path);
+
+                        try {
+                            FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
+                            thumbnail = ThumbnailUtils.extractThumbnail(bitMap, 400, 300); // FIXME figure out the real aspect ratio and size needed
+                            thumbnail.compress(Bitmap.CompressFormat.PNG, 75, thumbnailStream); // FIXME make compression level configurable
+                            thumbnailStream.flush();
+                            thumbnailStream.close();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             } else {
                 Log.e(this.getClass().getName(), "can't create thumbnail file for " + path + ", unsupported medium: " + medium);
+                thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_thumbnail);
             }
         } else {
             //Log.d(" *** TESTING *** ", "LOADING THUMBNAIL FILE FOR " + path);
@@ -113,5 +145,13 @@ public class MediaFile {
         }
 
         return thumbnail;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        MediaFile clone = new MediaFile(this.path, this.medium);
+        clone.thumbnailFilePath = this.thumbnailFilePath;
+
+        return clone;
     }
 }

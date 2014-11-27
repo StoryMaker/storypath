@@ -12,7 +12,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -23,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
@@ -30,10 +30,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.IconTextView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -61,7 +63,7 @@ import scal.io.liger.model.ExampleMediaFile;
 import scal.io.liger.model.MediaFile;
 
 
-public class ClipCardView extends ExampleCardView implements AdapterView.OnItemSelectedListener {
+public class ClipCardView extends ExampleCardView {
     public static final String TAG = "ClipCardView";
 
     public ClipCard mCardModel;
@@ -97,12 +99,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
-        itvClipTypeIcon = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
-        TextView tvHeader  = (TextView) view.findViewById(R.id.tvHeader);
-        TextView tvBody    = (TextView) view.findViewById(R.id.tvBody);
-        TextView tvImport = (TextView) view.findViewById(R.id.tvImport);
-        TextView tvCapture = (TextView) view.findViewById(R.id.tvCapture);
-        Spinner spOverflow = (Spinner) view.findViewById(R.id.spOverflow);
+        itvClipTypeIcon         = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
+        TextView tvHeader       = (TextView) view.findViewById(R.id.tvHeader);
+        TextView tvBody         = (TextView) view.findViewById(R.id.tvBody);
+        TextView tvImport       = (TextView) view.findViewById(R.id.tvImport);
+        TextView tvCapture      = (TextView) view.findViewById(R.id.tvCapture);
+        ImageView ivOverflow    = (ImageView) view.findViewById(R.id.ivOverflowButton);
 
         /** Capture Media Button Click Listener */
         View.OnClickListener captureClickListener = new View.OnClickListener() {
@@ -183,9 +185,13 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         drwCapture.setBounds(0, 0, drawableSizePx, drawableSizePx);
         tvCapture.setCompoundDrawables( drwCapture, null, null, null);
 
+        IconDrawable iconDrawable = new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert).colorRes(R.color.storymaker_highlight);
+        iconDrawable.setBounds(0, 0, drawableSizePx, drawableSizePx);
+        ivOverflow.setImageDrawable(iconDrawable);
+
         //a-ic_card_capture_photo
 
-        setupSpinner(spOverflow);
+        setupOverflowMenu(ivOverflow);
 
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
@@ -210,7 +216,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
                 if (v.getTag(R.id.view_tag_clip_primary) != null && (boolean) v.getTag(R.id.view_tag_clip_primary)) {
                     // Clicked clip is primary
-                    Log.i("select", "primary");
+                    Log.i(TAG + "-select", "primary");
                     if (mClipsExpanded) {
                         // Collapse clip view, without change
                         toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
@@ -225,7 +231,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                     if (mClipsExpanded &&  v.getTag(R.id.view_tag_clip_primary) != null) {
                         // Clicked view is secondary clip and clips are expanded
                         // This indicates a new secondary clip was selected
-                        Log.i("select", "new primary clip selected");
+                        Log.i(TAG + "-select", "new primary clip selected");
                         // If clips expanded, this event means we've been selected as the
                         // new primary clip!
                         setNewSelectedClip(v);
@@ -243,7 +249,9 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
             params.height = 0;
             collapsableContainer.setLayoutParams(params);
 
-            Log.i("clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
+            Log.i(TAG + "-clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
+            // Thumbnails are added to the clip stack from back to front. This greatly simplifies producing the desired z-order
+            Collections.reverse(clipsToDisplay);
             for (int x = 0; x < clipsToDisplay.size(); x++) {
                 // Create view for new clip
                 MediaFile mediaFile = mCardModel.loadMediaFile(clipsToDisplay.get(x));
@@ -258,6 +266,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 clipThumb.setTag(R.id.view_tag_clip_metadata, clipsToDisplay.get(x));
                 mDisplayedClips.add(clipThumb);
             }
+            // Restore order of clipsToDisplay, since it's a reference to the StoryPath model
+            Collections.reverse(clipsToDisplay);
         } else {
             // Begin in the expanded state
             View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
@@ -437,9 +447,16 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 //                    }
 //                });
             } else if (medium.equals(Constants.PHOTO)) {
-                Uri uri = Uri.parse(mediaFile.getPath());
-                thumbnail.setImageURI(uri);
                 thumbnail.setVisibility(View.VISIBLE);
+                Bitmap bitmap = null;
+                if (mediaFile instanceof ExampleMediaFile) {
+                    bitmap = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
+                } else {
+                    bitmap = mediaFile.getThumbnail(mContext);
+                }
+                if(null != bitmap) {
+                    thumbnail.setImageBitmap(bitmap);
+                }
             } else if (medium.equals(Constants.AUDIO)) {
 //                Uri myUri = Uri.parse(mediaFile.getPath());
 //                final MediaPlayer mediaPlayer = new MediaPlayer();
@@ -521,6 +538,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         View.OnClickListener playbackToggleClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                thumbnailView.setVisibility(View.GONE);
+
                 if (player.isPlaying()) {
                     player.pause();
                 } else {
@@ -551,8 +570,6 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                             player.seekTo(clipStartMs.get());
                         }
                     });
-
-                    if (mCardModel.getMedium().equals(Constants.VIDEO)) thumbnailView.setVisibility(View.GONE);
 
                     clipDurationMs.set(player.getDuration());
                     if (clipStopMs.get() == 0) clipStopMs.set(clipDurationMs.get()); // If no stop point set, play whole clip
@@ -613,9 +630,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                         mCardModel.getSelectedClip().setStopTime(clipStopMs.get());
 
                         // need to save here
-                        Log.d("CLIPS", "SAVING START/STOP TIME");
-                        MainActivity mainActivity = (MainActivity)(mCardModel.getStoryPath().getContext());
-                        mainActivity.saveStoryPathLibrary(true);
+                        Log.d(TAG, "SAVING START/STOP TIME");
+                        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
                     }
                 })
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -693,7 +709,7 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
                 // Add pressable background drawable
                 child.setBackgroundResource(R.drawable.clip_card_selectable_bg);
             }
-            Log.i("anim", String.format("Animating margin from %d to %d", ((ViewGroup.MarginLayoutParams) params).topMargin, stopAnimationMargin));
+            Log.i(TAG + "-anim", String.format("Animating margin from %d to %d", ((ViewGroup.MarginLayoutParams) params).topMargin, stopAnimationMargin));
 
             animator = ValueAnimator.ofInt(((ViewGroup.MarginLayoutParams) params).topMargin, stopAnimationMargin);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -747,42 +763,62 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
     }
     */
 
-    private void setupSpinner(Spinner spinner) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
-                R.array.clipcard_overflow, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner.
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-        spinner.setBackground(new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert));
+    private void setupOverflowMenu(ImageView imageView) {
+        final PopupMenu popupMenu = new PopupMenu(mContext, imageView);
+        popupMenu.inflate(R.menu.popup_clip_card);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId(); // Can't treat Ids as constants in library modules
+
+                if (itemId == R.id.menu_edit_card) {
+                    if (mCardModel.getSelectedClip() != null) {
+                        showClipPlaybackAndTrimming();
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.add_clips_generic), Toast.LENGTH_SHORT).show();
+                    }
+                } else if (itemId == R.id.menu_change_goal) {
+
+                } else if (itemId == R.id.menu_duplicate_card) {
+                    try {
+                        int thisCardIndex = mCardModel.getStoryPath().getCardIndex(mCardModel);
+                        if (thisCardIndex == -1) {
+                            Log.w(TAG, "Could not find index of this card in StoryPath or StoryPathLibrary. Cannot duplicate");
+                            return true;
+                        }
+                        Card newCard = (Card) mCardModel.clone();
+                        mCardModel.getStoryPath().addCardAtPosition(newCard, thisCardIndex);
+                        mCardModel.getStoryPath().notifyCardChanged(newCard);
+                        // TODO Make Card#stateVisiblity true
+                    } catch (CloneNotSupportedException e) {
+                        Log.e(TAG, "Failed to clone this ClipCard");
+                        e.printStackTrace();
+                    }
+                } else if (itemId == R.id.menu_duplicate_clip) {
+                    if (mCardModel.getSelectedClip() != null) {
+                        // TODO duplicate clip
+                    } else {
+                        Toast.makeText(mContext, mContext.getString(R.string.add_clips_generic), Toast.LENGTH_SHORT).show();
+                    }
+                } else if (itemId == R.id.menu_remove_card) {
+
+                }
+                Toast.makeText(mContext, "Selected " + (String) item.getTitleCondensed(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupMenu.show();
+            }
+        });
     }
-
-    /** Spinner OnItemSelectedListener */
-
-    private int mItemSelectedCount = 0;
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // Android bug: http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to
-        // This fixes the issue but intro's a new problem:
-        // Whenever the 0 position element is the first selected I get
-        // scal.io.liger W/InputEventReceiver﹕ Attempted to finish an input event but the input event receiver has already been disposed.
-        // instead of a callback here. wtf.
-        //Log.i("spinner", "count " + mItemSelectedCount + " position " + position);
-        mItemSelectedCount++;
-        if (mItemSelectedCount > 1)
-            Toast.makeText(mContext, "Selected " + (String) parent.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
-
-    /** End Spinner OnItemSelectedListener */
 
     private void setNewSelectedClip(View newSelectedClip) {
         // Put the passed clipThumbnail at the top of the stack
         // The top of the stack is the end of mDisplayedClips
-        Log.i("swap", String.format("Swapping card %d for %d", mDisplayedClips.indexOf(newSelectedClip), mDisplayedClips.size()-1));
+        Log.i(TAG + "-swap", String.format("Swapping card %d for %d", mDisplayedClips.indexOf(newSelectedClip), mDisplayedClips.size()-1));
         View oldSelectedClip = mDisplayedClips.get(mDisplayedClips.size()-1);
         mDisplayedClips.remove(mDisplayedClips.indexOf(newSelectedClip));
         mDisplayedClips.add(newSelectedClip);
@@ -798,6 +834,8 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
 
         // Set new clip as selected
         mCardModel.selectMediaFile((ClipMetadata) newSelectedClip.getTag(R.id.view_tag_clip_metadata));
+
+        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
     }
 
     private View.OnTouchListener mClipSelectionListener = new View.OnTouchListener() {
@@ -806,12 +844,12 @@ public class ClipCardView extends ExampleCardView implements AdapterView.OnItemS
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    Log.i("select", "setting clip selected");
+                    Log.i(TAG + "-select", "setting clip selected");
                     v.setBackgroundResource(R.drawable.clip_card_selected);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    Log.i("select", "setting clip unselected");
+                    Log.i(TAG + "-select", "setting clip unselected");
                     v.setBackgroundResource(0);
                     break;
             }

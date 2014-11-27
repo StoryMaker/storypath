@@ -16,7 +16,7 @@ import scal.io.liger.ZipHelper;
 /**
  * Created by mnbogner on 9/29/14.
  */
-public class ExampleMediaFile extends MediaFile{
+public class ExampleMediaFile extends MediaFile implements Cloneable {
 
     public ExampleMediaFile() {
       // required for JSON/GSON
@@ -125,5 +125,12 @@ public class ExampleMediaFile extends MediaFile{
         } else {
             return media.getPath();
         }
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ExampleMediaFile clone = (ExampleMediaFile) super.clone();
+
+        return clone;
     }
 }
