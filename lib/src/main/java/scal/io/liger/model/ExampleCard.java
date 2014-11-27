@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
+
 import scal.io.liger.view.ExampleCardView;
 
 
-public class ExampleCard extends Card {
+public class ExampleCard extends Card implements Cloneable {
 
     @Expose private String header;
     @Expose private String medium;
@@ -56,5 +58,17 @@ public class ExampleCard extends Card {
 
     public void setExampleMediaFile(ExampleMediaFile exampleMediaFile) {
         this.exampleMediaFile = exampleMediaFile;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ExampleCard clone = (ExampleCard) super.clone();
+        clone.header = this.header; // Strings are immutable
+        clone.medium = this.medium;
+        clone.exampleMediaPath = this.exampleMediaPath;
+        if (this.exampleMediaFile != null) clone.exampleMediaFile = (ExampleMediaFile) this.exampleMediaFile.clone();
+        clone.type = this.getClass().getName();
+
+        return clone;
     }
 }

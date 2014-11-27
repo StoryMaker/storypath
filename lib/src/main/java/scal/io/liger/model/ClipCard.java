@@ -13,7 +13,7 @@ import scal.io.liger.view.ClipCardView;
 import scal.io.liger.view.DisplayableCard;
 
 
-public class ClipCard extends ExampleCard {
+public class ClipCard extends ExampleCard implements Cloneable {
 
     @Expose private String clipType;
     @Expose private ArrayList<ClipMetadata> clips;
@@ -167,5 +167,16 @@ public class ClipCard extends ExampleCard {
         }
 
         clips.remove(index);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ClipCard clone = (ClipCard) super.clone();
+        clone.clipType = this.clipType; // Strings are immutable
+        if (this.goals != null) clone.goals = (ArrayList<String>) this.goals.clone();
+        if (this.clips != null) clone.clips = (ArrayList<ClipMetadata>) this.clips.clone();
+        clone.type = this.getClass().getName();
+
+        return clone;
     }
 }

@@ -78,5 +78,6 @@
     <string name="time_remaining_notification">%1$s left</string>
     <string name="add_clips_before_narrating">Add some clips before adding narration</string>
     <string name="add_clips_before_reordering">Add clips before changing their order</string>
+    <string name="add_clips_generic">Add clips first</string>
 
 </resources>
