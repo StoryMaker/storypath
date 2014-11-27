@@ -39,3 +39,6 @@ lib/src/main/assets/main.1.scal.io.liger.sample.obb
 liger-content/
 sample/assets/
 lib/src/main/res/values/google_play.xml
+
+#Mac OS X
+.DS_Store
