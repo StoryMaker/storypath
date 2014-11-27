@@ -1,11 +1,10 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.0.0"
 
     defaultConfig {
-        applicationId "com.joanzapata.android.iconify"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
