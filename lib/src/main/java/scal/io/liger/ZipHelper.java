@@ -13,6 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import scal.io.liger.model.ExpansionIndexItem;
 
 /**
  * @author Matt Bogner
@@ -36,6 +39,19 @@ public class ZipHelper {
         String packageName = ctx.getPackageName();
         File root = Environment.getExternalStorageDirectory();
         return root.toString() + "/Android/data/" + packageName + "/files/";
+    }
+
+    public static String getFileFolderName(Context context, String fileName) {
+
+        ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(fileName);
+
+        if (expansionIndexItem == null) {
+            Log.e("DIRECTORIES", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + fileName);
+            return null;
+        }
+
+        File root = Environment.getExternalStorageDirectory();
+        return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
     }
 
     public static String getExpansionFileFolder(Context ctx, String mainOrPatch, int version) {
@@ -67,6 +83,30 @@ public class ZipHelper {
         return null;
     }
 
+    // for additional expansion files, check files folder for specified file
+    public static String getExpansionFileFolder(Context ctx, String fileName) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            // check and/or attempt to create files folder
+            String checkPath = getFileFolderName(ctx, fileName);
+
+            if (checkPath == null) {
+                return null;
+            }
+
+            File checkDir = new File(checkPath);
+            if (checkDir.isDirectory() || checkDir.mkdirs()) {
+                File checkFile = new File(checkPath + fileName);
+                if (checkFile.exists()) {
+                    Log.d("DIRECTORIES", "FOUND OBB IN DIRECTORY: " + checkFile.getPath());
+                    return checkPath;
+                }
+            }
+        }
+
+        Log.e("DIRECTORIES", "FILE NOT FOUND");
+        return null;
+    }
+
     public static InputStream getFileInputStream(String path, Context context) {
         try {
             // resource file contains main file and patch file
@@ -75,6 +115,24 @@ public class ZipHelper {
             paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
             if (Constants.PATCH_VERSION > 0) {
                 paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+            }
+
+            // add 3rd party stuff
+            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
+
+            for (int i = 1; i <= expansionIndex.size(); i++) {
+                ExpansionIndexItem item = expansionIndex.get("" + i);
+                if (item == null) {
+                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING FOR INDEX " + i);
+                } else {
+                    String fileName = item.getExpansionFileName();
+                    if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                        // Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
+                        paths.add(getExpansionFileFolder(context, fileName) + fileName);
+                    } else {
+                        Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
+                    }
+                }
             }
 
             ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths.toArray(new String[paths.size()]));

@@ -1,0 +1,5 @@
+[
+    {"expansionId":"peace_essay", "patchOrder":"1", "expansionFileName":"peace_essay.ZIP", "expansionFileVersion":"0", "expansionFilePath":"Android/data/scal.io.liger.sample/files/test/", "expansionFileUrl":"http://www.colorado.edu/conflict/peace/download/"},
+    {"expansionId":"peace_example", "patchOrder":"2", "expansionFileName":"peace_example.ZIP", "expansionFileVersion":"0", "expansionFilePath":"Android/data/scal.io.liger.sample/files/test/", "expansionFileUrl":"http://www.colorado.edu/conflict/peace/download/"},
+    {"expansionId":"peace_problem", "patchOrder":"3", "expansionFileName":"peace_problem.ZIP", "expansionFileVersion":"0", "expansionFilePath":"Android/data/scal.io.liger.sample/files/test/", "expansionFileUrl":"http://www.colorado.edu/conflict/peace/download/"}
+]

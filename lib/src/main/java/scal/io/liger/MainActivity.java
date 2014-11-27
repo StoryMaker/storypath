@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.vending.expansion.downloader.impl.DownloaderService;
 import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
@@ -64,7 +63,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // NEW: check expansion files, initiate downloads if necessary
+        // NEW: copy index files
+        IndexManager.copyAvailableIndex(MainActivity.this);
+        IndexManager.copyInstalledIndex(MainActivity.this);
+
+        // check expansion files, initiate downloads if necessary
         DownloadHelper.checkAndDownload(MainActivity.this);
 
         setContentView(R.layout.activity_main);

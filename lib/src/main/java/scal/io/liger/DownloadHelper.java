@@ -4,6 +4,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
+import scal.io.liger.model.ExpansionIndexItem;
+
 /**
  * Created by mnbogner on 11/6/14.
  */
@@ -19,6 +23,19 @@ public class DownloadHelper {
             return true;
         } else {
             Log.d("DOWNLOAD", "EXPANSION FILE " + ZipHelper.getExpansionZipFilename(context, mainOrPatch, version) + " NOT FOUND");
+            return false;
+        }
+    }
+
+    // for additional expansion files, check files folder for specified file
+    public static boolean checkExpansionFiles(Context context, String fileName) {
+        String expansionFilePath = ZipHelper.getExpansionFileFolder(context, fileName);
+
+        if (expansionFilePath != null) {
+            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " FOUND IN " + expansionFilePath);
+            return true;
+        } else {
+            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " NOT FOUND");
             return false;
         }
     }
@@ -47,9 +64,26 @@ public class DownloadHelper {
                 final LigerDownloadManager patchDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
                 Thread patchDownloadThread = new Thread(patchDownload);
 
-                Toast.makeText(context, "Starting download of path for content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+                Toast.makeText(context, "Starting download of patch for content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                 patchDownloadThread.start();
+            }
+        }
+
+        HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledFileIndex(context);
+
+        for (String fileName : expansionIndex.keySet()) {
+            if (checkExpansionFiles(context, fileName)) {
+                Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " FOUND (NO DOWNLOAD)");
+            } else {
+                Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " NOT FOUND (DOWNLOADING)");
+
+                final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(fileName, context, true);
+                Thread expansionDownloadThread = new Thread(expansionDownload);
+
+                Toast.makeText(context, "Starting download of expansion file.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+
+                expansionDownloadThread.start();
             }
         }
     }

@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.google.android.vending.licensing.AESObfuscator;
@@ -28,35 +27,36 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 
+import scal.io.liger.model.ExpansionIndexItem;
+
 /**
  * Created by mnbogner on 11/7/14.
  */
-public class LigerDownloadManager implements Runnable {
-    private final static String TAG = "LigerDownloadManager";
+public class LigerAltDownloadManager implements Runnable {
+    private final static String TAG = "LigerAltDownloadManager";
 
     // TODO use HTTPS
     // TODO pickup Tor settings
 
-    private String mainOrPatch;
-    private int version;
+    private String fileName;
     private Context context;
 
     boolean useManager = true;
     private DownloadManager manager;
     private long lastDownload = -1L;
 
-    private static final String ligerId = "scal.io.liger";
-    private static final String ligerDevice = Build.MODEL;
-
-    AESObfuscator ligerObfuscator = null;
-    APKExpansionPolicy ligerPolicy = null;
-    LicenseChecker ligerChecker = null;
-
-    public LigerDownloadManager (String mainOrPatch, int version, Context context, boolean useManager) {
-        this.mainOrPatch = mainOrPatch;
-        this.version = version;
+    public LigerAltDownloadManager(String fileName, Context context, boolean useManager) {
+        this.fileName = fileName;
         this.context = context;
         this.useManager = useManager;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public Context getContext() {
@@ -65,22 +65,6 @@ public class LigerDownloadManager implements Runnable {
 
     public void setContext(Context context) {
         this.context = context;
-    }
-
-    public String getMainOrPatch() {
-        return mainOrPatch;
-    }
-
-    public void setMainOrPatch(String mainOrPatch) {
-        this.mainOrPatch = mainOrPatch;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 
     public boolean isUseManager() {
@@ -93,42 +77,26 @@ public class LigerDownloadManager implements Runnable {
 
     @Override
     public void run() {
-        // SHOULD BE ABLE TO ATTEMPT TO GET URL FROM GOOGLE LICENSING AND FALL BACK ON OUR SERVER
-
-        byte[] ligerSALT = context.getResources().getString(R.string.liger_salt).getBytes();
-
-        ligerObfuscator = new AESObfuscator(ligerSALT, ligerId, ligerDevice);
-        ligerPolicy = new APKExpansionPolicy(context, ligerObfuscator);
-        try {
-            ligerChecker = new LicenseChecker(context, ligerPolicy, context.getResources().getString(R.string.base64_public_key));
-        } catch (Exception e) {
-            // need to catch exception thrown if publisher key is invalid
-            // default to downloading from our servers
-            Log.d("DOWNLOAD", "LICENSE CHECK EXCEPTION THROWN: " + e.getClass().getName() + ", DOWNLOADING FROM LIGER SERVER");
-            downloadFromLigerServer();
-            return;
-        }
-
-        // callback will download from our servers if licence check fails
-        LigerCallback ligerCallback = new LigerCallback();
-
-        Log.d("DOWNLOAD", "ABOUT TO CHECK ACCESS");
-
-        ligerChecker.checkAccess(ligerCallback);
-
-        Log.d("DOWNLOAD", "ACCESS CHECK WAS INITIATED");
+        downloadFromLigerServer();
+        return;
     }
 
     private void downloadFromLigerServer() {
         Log.e("DOWNLOAD", "DOWNLOADING EXTENSION");
 
-        String ligerUrl = Constants.LIGER_URL + "obb" + "/";
-        String ligerObb = ZipHelper.getExpansionZipFilename(context, mainOrPatch, version);
+        ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(fileName);
+
+        if (expansionIndexItem == null) {
+            Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + fileName);
+            return;
+        }
+
+        String ligerUrl = expansionIndexItem.getExpansionFileUrl();
+        String ligerObb = fileName;
 
         try {
-            // if we're managing the download, download only to the files folder
-            // if we're using the google play api, download only to the obb folder
-            File targetFolder = new File(ZipHelper.getFileFolderName(context));
+            // we're managing the download, download only to the files folder
+            File targetFolder = new File(ZipHelper.getFileFolderName(context, fileName));
 
             Log.d("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
 
@@ -144,18 +112,14 @@ public class LigerDownloadManager implements Runnable {
                     // clean up old tmps before downloading
 
                     String nameFilter = "";
-                    if (ligerObb.startsWith(Constants.MAIN)) {
-                        nameFilter = nameFilter + Constants.MAIN + ".*." + context.getPackageName() + ".*.tmp";
-                    }
-                    if (ligerObb.startsWith(Constants.PATCH)) {
-                        nameFilter = nameFilter + Constants.PATCH + ".*." + context.getPackageName() + ".*.tmp";
+
+                    if (ligerObb.contains(expansionIndexItem.getExpansionFileVersion())) {
+                        nameFilter = fileName.replace(expansionIndexItem.getExpansionFileVersion(), "*") + "*.tmp";
+                    } else {
+                        nameFilter = fileName + "*.tmp";
                     }
 
-                    if (nameFilter.length() == 0) {
-                        Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
-                    } else {
-                        Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
-                    }
+                    Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
 
                     WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
                     for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
@@ -164,7 +128,7 @@ public class LigerDownloadManager implements Runnable {
                     }
 
                     File targetFile = new File(targetFolder, ligerObb + ".tmp");
-                    downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
+                    downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
                 } else {
                     expansionFileUri = new URI(ligerUrl + ligerObb);
 
@@ -224,7 +188,7 @@ public class LigerDownloadManager implements Runnable {
         if (manager == null) {
             manager = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
 
-            FilteredBroadcastReceiver onComplete = new FilteredBroadcastReceiver(ZipHelper.getExpansionZipFilename(context, mainOrPatch, version));
+            FilteredBroadcastReceiver onComplete = new FilteredBroadcastReceiver(fileName);
             BroadcastReceiver onNotificationClick = new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
                     // ???
@@ -274,19 +238,21 @@ public class LigerDownloadManager implements Runnable {
                             // clean up old obbs before renaming new file
                             File directory = new File(newFile.getParent());
 
-                            String nameFilter = "";
-                            if (newFile.getName().startsWith(Constants.MAIN)) {
-                                nameFilter = nameFilter + Constants.MAIN + ".*." + context.getPackageName() + ".obb";
-                            }
-                            if (newFile.getName().startsWith(Constants.PATCH)) {
-                                nameFilter = nameFilter + Constants.PATCH + ".*." + context.getPackageName() + ".obb";
+                            ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(newFile.getName());
+
+                            if (expansionIndexItem == null) {
+                                Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + newFile.getName());
+                                return;
                             }
 
-                            if (nameFilter.length() == 0) {
-                                Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + newFile.getName());
+                            String nameFilter = "";
+                            if (newFile.getName().contains(expansionIndexItem.getExpansionFileVersion())) {
+                                nameFilter = newFile.getName().replace(expansionIndexItem.getExpansionFileVersion(), "*");
                             } else {
-                                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
+                                nameFilter = newFile.getName();
                             }
+
+                            Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
 
                             WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
                             for (File oldFile : FileUtils.listFiles(directory, oldFileFilter, null)) {
@@ -312,92 +278,6 @@ public class LigerDownloadManager implements Runnable {
             } else {
                 Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");
             }
-        }
-    }
-
-    private class LigerCallback implements LicenseCheckerCallback {
-
-        @Override
-        public void allow(int reason) {
-            Log.d("DOWNLOAD", "forcing DOWNLOADING FROM LIGER SERVER"); // FIXME dont check this in
-            Log.d("DOWNLOAD", "LICENSE CHECK ALLOWED, DOWNLOADING FROM GOOGLE PLAY");
-
-            String ligerUrl = null;
-            String ligerObb = null;
-
-            int count = ligerPolicy.getExpansionURLCount();
-            if (mainOrPatch.equals(Constants.MAIN)) {
-                if (count < 1) {
-                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
-                    downloadFromLigerServer();
-                    return;
-                } else {
-                    ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.MAIN_FILE_URL_INDEX);
-                    ligerObb = ligerPolicy.getExpansionFileName(APKExpansionPolicy.MAIN_FILE_URL_INDEX);
-                }
-            }
-            if (mainOrPatch.equals(Constants.PATCH)) {
-                if (count < 2) {
-                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
-                    downloadFromLigerServer();
-                    return;
-                } else {
-                    ligerUrl = ligerPolicy.getExpansionURL(APKExpansionPolicy.PATCH_FILE_URL_INDEX);
-                    ligerObb = ligerPolicy.getExpansionFileName(APKExpansionPolicy.PATCH_FILE_URL_INDEX);
-                }
-            }
-
-            // if we're managing the download, download only to the files folder
-            // if we're using the google play api, download only to the obb folder
-            File targetFolder = new File(ZipHelper.getObbFolderName(context));
-
-            Log.d("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
-
-            Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl);
-
-            if (useManager) {
-
-                // clean up old tmps before downloading
-
-                String nameFilter = "";
-                if (ligerObb.startsWith(Constants.MAIN)) {
-                    nameFilter = nameFilter + Constants.MAIN + ".*." + context.getPackageName() + ".*.tmp";
-                }
-                if (ligerObb.startsWith(Constants.PATCH)) {
-                    nameFilter = nameFilter + Constants.PATCH + ".*." + context.getPackageName() + ".*.tmp";
-                }
-
-                if (nameFilter.length() == 0) {
-                    Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
-                } else {
-                    Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
-                }
-
-                WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
-                for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
-                    Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
-                    FileUtils.deleteQuietly(oldFile);
-                }
-
-                File targetFile = new File(targetFolder, ligerObb + ".tmp");
-                downloadWithManager(Uri.parse(ligerUrl), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
-            } else {
-                Log.e("DOWNLOAD", "GOOGLE PLAY DOWNLOADS MUST USE DOWNLOAD MANAGER");
-            }
-        }
-
-        @Override
-        public void dontAllow(int reason) {
-            Log.d("DOWNLOAD", "LICENSE CHECK NOT ALLOWED, DOWNLOADING FROM LIGER SERVER");
-            downloadFromLigerServer();
-        }
-
-        @Override
-        public void applicationError(int errorCode) {
-            // if your app or version is not managed by google play the result appears
-            // to be an application error (code 3?) rather than "do not allow"
-            Log.d("DOWNLOAD", "LICENSE CHECK ERROR CODE " + errorCode + ", DOWNLOADING FROM LIGER SERVER");
-            downloadFromLigerServer();
         }
     }
 }
