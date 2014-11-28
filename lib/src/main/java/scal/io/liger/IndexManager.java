@@ -169,7 +169,7 @@ public class IndexManager {
             return indexList;
         }
 
-        if (indexJson != null) {
+        if ((indexJson != null) && (indexJson.length() > 0)) {
             GsonBuilder gBuild = new GsonBuilder();
             Gson gson = gBuild.create();
 
