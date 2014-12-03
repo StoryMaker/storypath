@@ -131,7 +131,8 @@ public class Util {
         ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
         Intent i = new Intent();
         i.setAction(Constants.ACTION_PUBLISH);
-        i.putParcelableArrayListExtra("export_metadata", exportMetadata);
+        i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
+        i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
         host.startActivity(i);
         host.finish(); // Do we definitely want to finish the host Activity?
     }
