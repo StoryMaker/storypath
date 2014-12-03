@@ -133,6 +133,32 @@ public class IndexManager {
         return indexMap;
     }
 
+    public static HashMap<String, ExpansionIndexItem> loadAvailableIdIndex(Context context) {
+
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
+
+        HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+
+        for (ExpansionIndexItem item : indexList) {
+            indexMap.put(item.getExpansionId(), item);
+        }
+
+        return indexMap;
+    }
+
+    public static HashMap<String, ExpansionIndexItem> loadInstalledIdIndex(Context context) {
+
+        ArrayList<ExpansionIndexItem> indexList  = loadIndex(context, installedIndexName);
+
+        HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+
+        for (ExpansionIndexItem item : indexList) {
+            indexMap.put(item.getExpansionId(), item);
+        }
+
+        return indexMap;
+    }
+
     private static ArrayList<ExpansionIndexItem> loadIndex(Context context, String jsonFileName) {
 
         String indexJson = null;
