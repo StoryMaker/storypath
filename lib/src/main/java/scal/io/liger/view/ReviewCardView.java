@@ -146,7 +146,9 @@ public class ReviewCardView implements DisplayableCard {
         initClipCardsWithAttachedMedia();
 
         // set our medium based on the first clip cards medium
-        mMedium = ((ClipCard)mMediaCards.get(0)).getMedium();
+        if (mMediaCards.size() > 0) {
+            mMedium = ((ClipCard) mMediaCards.get(0)).getMedium();
+        }
 
         if (mMediaCards.size() > 0) {
             switch (((ClipCard) mMediaCards.get(0)).getMedium()) {
