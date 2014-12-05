@@ -77,6 +77,16 @@
             android:paddingTop="@dimen/padding_medium"
             android:paddingBottom="@dimen/padding_medium"/>
 
+        <LinearLayout
+            android:id="@+id/vumeter_layout"
+            android:layout_below="@id/tvBody"
+            android:layout_width="fill_parent"
+            android:layout_height="24dip"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+        </LinearLayout>
+
         <TextView
             style="@style/p"
             android:id="@+id/tvImport"
@@ -86,7 +96,7 @@
             android:paddingBottom="@dimen/padding_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvBody"
+            android:layout_below="@+id/vumeter_layout"
             android:gravity="center_vertical"
             android:text="@string/lbl_import"
             android:textColor="@color/storymaker_highlight"
@@ -106,6 +116,22 @@
             android:text="@string/lbl_capture"
             android:textColor="@color/storymaker_highlight"
             android:drawablePadding="@dimen/padding_xsmall"/>
+
+        <TextView
+            style="@style/p"
+            android:id="@+id/tvStop"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingRight="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvCapture"
+            android:gravity="center_vertical"
+            android:text="@string/dialog_stop"
+            android:textColor="@color/storymaker_highlight"
+            android:drawablePadding="@dimen/padding_xsmall"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 </RelativeLayout>

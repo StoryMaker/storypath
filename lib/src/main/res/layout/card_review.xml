@@ -38,10 +38,10 @@
         style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
-        android:drawableLeft="@drawable/ic_whoknows"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
-        android:text="Jumble" />
+        android:text="Jumble"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_order"
@@ -51,7 +51,6 @@
         android:layout_below="@id/btn_jumble"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
-        android:drawableLeft="@drawable/ic_capture"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
         android:text="Order" />
@@ -64,7 +63,6 @@
         android:layout_below="@id/btn_order"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
-        android:drawableLeft="@drawable/ic_whoknows"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
         android:text="Narrate" />
@@ -77,7 +75,6 @@
         android:layout_below="@id/btn_narrate"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
-        android:drawableLeft="@drawable/ic_capture"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
         android:text="Publish" />

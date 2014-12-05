@@ -148,6 +148,8 @@
     <string name="sd_card_not_available">SD card is not available</string>
     <string name="open_file_explorer">Open file explorer</string>
     <string name="alert_message_delete_record">Do you want to delete selected record?</string>
-    
+    <string name="recording_narration">Recording Narration</string>
+    <string name="could_not_start_narration">Could not start narration!</string>
+
     <!-- add for libra end -->
 </resources>

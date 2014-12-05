@@ -119,7 +119,8 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         }
         String title = null;
         if (cm.getTitle() == null || cm.getTitle().length() == 0) {
-            title = String.format("Untitled %s clip", ((ClipCard) cm).getClipType());
+            String goal = ((ClipCard) cm).getFirstGoal();
+            title = String.format("%s: %s", ((ClipCard) cm).getClipType(), goal);
         } else {
             title = cm.getTitle();
         }
@@ -155,24 +156,14 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
                 }
                 return;
             } else if (mMedium.equals(Constants.PHOTO)) {
-                viewHolder.thumbnail.setImageURI(mediaURI);
+                viewHolder.thumbnail.setImageURI(mediaURI); // FIXME use mediaFile.getThumbnail()
+                return;
+            } else if (mMedium.equals(Constants.AUDIO)) {
+                int drawable = R.drawable.audio_waveform; // FIXME use mediaFile.getThumbnail()
+                viewHolder.thumbnail.setImageDrawable(context.getResources().getDrawable(drawable));
                 return;
             }
         }
-
-        //handle fall-through cases: (media==null || medium==AUDIO)
-
-        String clipType = ccm.getClipType();
-        int drawable = R.drawable.ic_launcher;
-
-        if (clipType.equals(Constants.CHARACTER)) {
-            drawable = R.drawable.cliptype_close;
-        } else if (clipType.equals(Constants.ACTION)) {
-            drawable = R.drawable.cliptype_medium;
-        } else if (clipType.equals(Constants.RESULT)) {
-            drawable = R.drawable.cliptype_long;
-        }
-        viewHolder.thumbnail.setImageDrawable(context.getResources().getDrawable(drawable));
     }
 
     @Override

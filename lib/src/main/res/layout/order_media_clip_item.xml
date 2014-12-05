@@ -38,6 +38,9 @@
         android:textSize="@dimen/text_medium"
         android:layout_alignTop="@id/thumbnail"
         android:layout_alignBottom="@id/thumbnail"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="3"/>
 
 </RelativeLayout>

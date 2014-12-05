@@ -28,11 +28,9 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.IconTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -63,7 +61,7 @@ import scal.io.liger.model.ExampleMediaFile;
 import scal.io.liger.model.MediaFile;
 
 
-public class ClipCardView extends ExampleCardView {
+public class ClipCardView extends BaseRecordCardView {
     public static final String TAG = "ClipCardView";
 
     public ClipCard mCardModel;
@@ -74,6 +72,14 @@ public class ClipCardView extends ExampleCardView {
 
     private final float PRIMARY_CLIP_ALPHA = 1.0f;
     private final float SECONDARY_CLIP_ALPHA = .7f;
+
+
+    TextView tvHeader;
+    TextView tvBody;
+    TextView tvImport;
+    TextView tvCapture;
+    TextView tvStop;
+    ImageView ivOverflow;
 
     private IconTextView itvClipTypeIcon;
 
@@ -99,12 +105,15 @@ public class ClipCardView extends ExampleCardView {
         final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
-        itvClipTypeIcon         = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
-        TextView tvHeader       = (TextView) view.findViewById(R.id.tvHeader);
-        TextView tvBody         = (TextView) view.findViewById(R.id.tvBody);
-        TextView tvImport       = (TextView) view.findViewById(R.id.tvImport);
-        TextView tvCapture      = (TextView) view.findViewById(R.id.tvCapture);
-        ImageView ivOverflow    = (ImageView) view.findViewById(R.id.ivOverflowButton);
+        itvClipTypeIcon = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
+        tvHeader        = (TextView) view.findViewById(R.id.tvHeader);
+        tvBody          = (TextView) view.findViewById(R.id.tvBody);
+        tvImport        = (TextView) view.findViewById(R.id.tvImport);
+        tvCapture       = (TextView) view.findViewById(R.id.tvCapture);
+        tvStop          = (TextView) view.findViewById(R.id.tvStop);
+        ivOverflow      = (ImageView) view.findViewById(R.id.ivOverflowButton);
+
+        mVUMeterLayout  = (LinearLayout) view.findViewById(R.id.vumeter_layout);
 
         /** Capture Media Button Click Listener */
         View.OnClickListener captureClickListener = new View.OnClickListener() {
@@ -131,21 +140,48 @@ public class ClipCardView extends ExampleCardView {
                     mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                     requestId = Constants.REQUEST_IMAGE_CAPTURE;
-
-                } else if (medium.equals(Constants.AUDIO)) {
-                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
                 }
 
-                if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
+                if (medium.equals(Constants.AUDIO)) {
+                    changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
+                    startRecordingNarration();
+
+                    // FIXME hide butons, replace with stop button (and eventually a pause button
+
+//                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+//                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
+                } else if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
                     mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
                     ((Activity) mContext).startActivityForResult(intent, requestId);
                 }
             }
         };
 
+        /** Stop Button Click Listener */
+        View.OnClickListener stopClickListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                MediaFile mf = stopRecordingNarration();
+
+                mCardModel.saveMediaFile(mf);
+
+                // SEEMS LIKE A REASONABLE TIME TO SAVE
+                mCardModel.getStoryPath().getStoryPathLibrary().save(true);
+                ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel); // FIXME this isn't pretty
+//                ((MainActivity) mContext).scrollRecyclerViewToCard(mCardModel);
+
+//                mCardModel.setNarration(mf);
+                // FIXME save the audio file
+                changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
+            }
+        };
+
         // Set click listeners for actions
         tvCapture.setOnClickListener(captureClickListener);
+
+        tvStop.setOnClickListener(stopClickListener);
 
         tvImport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -465,7 +501,7 @@ public class ClipCardView extends ExampleCardView {
                 //set background image
                 String clipType = mCardModel.getClipType();
                 // TODO : Generate a representative waveform? Show length etc.
-                thumbnail.setImageResource(R.drawable.audio_waveform);
+                thumbnail.setImageResource(R.drawable.audio_waveform); // FIXME use mediaFile.getThumbnail()
                 //setClipExampleDrawables(clipType, thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
             } else {
@@ -870,5 +906,38 @@ public class ClipCardView extends ExampleCardView {
         );
 
         return image;
+    }
+    /**
+     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
+     */
+    @Override
+    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
+        super.changeRecordNarrationStateChanged(newState);
+        switch(mRecordNarrationState) {
+            case READY:
+                tvImport.setVisibility(View.VISIBLE);
+                tvCapture.setVisibility(View.VISIBLE);
+                tvStop.setVisibility(View.GONE);
+                mVUMeterLayout.setVisibility(View.GONE);
+                break;
+            case RECORDING:
+                tvImport.setVisibility(View.GONE);
+                tvCapture.setVisibility(View.GONE);
+                tvStop.setVisibility(View.VISIBLE);
+                mVUMeterLayout.setVisibility(View.VISIBLE);
+                break;
+            case PAUSED:
+                tvImport.setVisibility(View.GONE);
+                tvCapture.setVisibility(View.GONE);
+                tvStop.setVisibility(View.VISIBLE);
+                mVUMeterLayout.setVisibility(View.VISIBLE);
+                break;
+            case STOPPED:
+                tvImport.setVisibility(View.VISIBLE);
+                tvCapture.setVisibility(View.VISIBLE);
+                tvStop.setVisibility(View.GONE);
+                mVUMeterLayout.setVisibility(View.GONE);
+                break;
+        }
     }
 }

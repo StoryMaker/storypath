@@ -29,11 +29,20 @@
         android:text="Total 0:03"
         android:fontFamily="sans-serif-light"/>
 
+    <LinearLayout
+        android:id="@+id/vumeter_layout"
+        android:layout_below="@id/clipLength"
+        android:layout_width="fill_parent"
+        android:layout_height="24dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
     <SeekBar
         android:id="@+id/playbackProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/clipLength"
+        android:layout_below="@id/vumeter_layout"
         android:thumb="@drawable/scrubber_control_normal_holo"
         android:enabled="false"
         android:max="@integer/trim_bar_tick_count" />
