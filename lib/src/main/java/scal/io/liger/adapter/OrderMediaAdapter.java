@@ -156,10 +156,10 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
                 }
                 return;
             } else if (mMedium.equals(Constants.PHOTO)) {
-                viewHolder.thumbnail.setImageURI(mediaURI);
+                viewHolder.thumbnail.setImageURI(mediaURI); // FIXME use mediaFile.getThumbnail()
                 return;
             } else if (mMedium.equals(Constants.AUDIO)) {
-                int drawable = R.drawable.audio_waveform;
+                int drawable = R.drawable.audio_waveform; // FIXME use mediaFile.getThumbnail()
                 viewHolder.thumbnail.setImageDrawable(context.getResources().getDrawable(drawable));
                 return;
             }

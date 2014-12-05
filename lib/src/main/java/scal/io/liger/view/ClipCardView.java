@@ -169,8 +169,8 @@ public class ClipCardView extends BaseRecordCardView {
 
                 // SEEMS LIKE A REASONABLE TIME TO SAVE
                 mCardModel.getStoryPath().getStoryPathLibrary().save(true);
-                ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel);
-                ((MainActivity) mContext).scrollRecyclerViewToCard(mCardModel);
+                ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel); // FIXME this isn't pretty
+//                ((MainActivity) mContext).scrollRecyclerViewToCard(mCardModel);
 
 //                mCardModel.setNarration(mf);
                 // FIXME save the audio file
@@ -501,7 +501,7 @@ public class ClipCardView extends BaseRecordCardView {
                 //set background image
                 String clipType = mCardModel.getClipType();
                 // TODO : Generate a representative waveform? Show length etc.
-                thumbnail.setImageResource(R.drawable.audio_waveform);
+                thumbnail.setImageResource(R.drawable.audio_waveform); // FIXME use mediaFile.getThumbnail()
                 //setClipExampleDrawables(clipType, thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
             } else {
