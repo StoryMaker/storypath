@@ -202,10 +202,10 @@ public class StoryPathLibrary extends StoryPath {
 
         if (storyPathTemplateKey.equals("CURRENT")) { // ADD TO CONSTANTS
             storyPathTemplateFile = getCurrentStoryPathFile();
-            Log.e(TAG, "Loading current StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
+            Log.d(TAG, "Loading current StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
         } else {
             storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
-            Log.e(TAG, "Loading template StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
+            Log.d(TAG, "Loading template StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
         }
 
         if (storyPathTemplateFile == null) {
@@ -244,10 +244,10 @@ public class StoryPathLibrary extends StoryPath {
             StoryPath story = null;
             if (checkFile.exists()) {
                 story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, lang);
-                Log.e(TAG, "Loaded StoryPath from file: " + checkPath);
+                Log.d(TAG, "Loaded StoryPath from file: " + checkPath);
             } else {
                 story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, lang);
-                Log.e(TAG, "Loaded StoryPath from zip: " + checkPath);
+                Log.d(TAG, "Loaded StoryPath from zip: " + checkPath);
             }
 
             setCurrentStoryPath(story);
