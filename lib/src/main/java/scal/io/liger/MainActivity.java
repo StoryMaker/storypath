@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     RecyclerView mRecyclerView;
     StoryPathLibrary mStoryPathLibrary;
-    CardAdapter mCardAdapter = null;
+    public CardAdapter mCardAdapter = null;
     String language = null;
 
     /** Preferences received via launching intent */

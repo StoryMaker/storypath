@@ -60,34 +60,12 @@ import scal.io.liger.model.ReviewCard;
  * attached to a ReviewCard's Story Path. This card will also support
  * adding narration, changing the order of clips, and jumbling the order.
  */
-public class ReviewCardView implements DisplayableCard {
+public class ReviewCardView extends BaseRecordCardView {
     public static final String TAG = "ReviewCardView";
 
     private ReviewCard mCardModel;
-    private Context mContext;
+//    private Context mContext;
     private String mMedium;
-
-    /** Current Narration State. To change use
-     * {@link #changeRecordNarrationStateChanged(scal.io.liger.view.ReviewCardView.RecordNarrationState)}
-    */
-    private RecordNarrationState mRecordNarrationState = RecordNarrationState.READY;
-
-    /** The ReviewCard Narration Dialog State */
-    static enum RecordNarrationState {
-
-        /** Done / Record Buttons present */
-        READY,
-
-        /** Recording countdown then Pause / Stop Buttons present */
-        RECORDING,
-
-        /** Recording paused. Resume / Stop Buttons present */
-        PAUSED,
-
-        /** Recording stopped. Done / Redo Buttons present */
-        STOPPED
-
-    }
 
     public ReviewCardView(Context context, Card cardModel) {
         Log.d("RevieCardView", "constructor");
@@ -212,20 +190,12 @@ public class ReviewCardView implements DisplayableCard {
 
     /** Record Narration Dialog */
 
-    /** Collection of ClipCards with attached media within the current StoryPath. */
-    ArrayList<Card> mMediaCards;
-
-    /** Records audio */
-    MediaRecorder mMediaRecorder;
-    File mNarrationOutput;
-
     /** Record Narration Dialog Views */
     Button mDonePauseResumeBtn;
     Button mRecordStopRedoBtn;
-    LinearLayout mVUMeterLayout;
-    private final Handler mHandler = new Handler();
 
-    private int mPreviousVUMax;
+    /** Collection of ClipCards with attached media within the current StoryPath. */
+    ArrayList<Card> mMediaCards;
 
     /**
      * Show a dialog allowing the user to record narration for a Clip
@@ -320,7 +290,8 @@ public class ReviewCardView implements DisplayableCard {
                         // Stop Button
                         surfaceListener.stopPlayback();
                         surfaceListener.isPlaying = false;
-                        stopRecordingNarration();
+                        MediaFile mf = stopRecordingNarration();
+                        mCardModel.setNarration(mf);
                         changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
                         break;
                     case STOPPED:
@@ -339,66 +310,6 @@ public class ReviewCardView implements DisplayableCard {
     }
 
 
-
-    private Runnable mUpdateVUMetur = new Runnable() {
-        @Override
-        public void run() {
-            if (mRecordNarrationState != RecordNarrationState.STOPPED) {
-                updateVUMeterView();
-            }
-        }
-    };
-
-    private void updateVUMeterView() {
-        final int MAX_VU_SIZE = 11;
-        boolean showVUArray[] = new boolean[MAX_VU_SIZE];
-
-        if (mVUMeterLayout.getVisibility() == View.VISIBLE
-                &&  mRecordNarrationState != RecordNarrationState.STOPPED) {
-            int amp = mMediaRecorder.getMaxAmplitude();
-            int vuSize = MAX_VU_SIZE * amp / 32768;
-            if (vuSize >= MAX_VU_SIZE) {
-                vuSize = MAX_VU_SIZE - 1;
-            }
-
-            if (vuSize >= mPreviousVUMax) {
-                mPreviousVUMax = vuSize;
-            } else if (mPreviousVUMax > 0) {
-                mPreviousVUMax--;
-            }
-
-            for (int i = 0; i < MAX_VU_SIZE; i++) {
-                if (i <= vuSize) {
-                    showVUArray[i] = true;
-                } else if (i == mPreviousVUMax) {
-                    showVUArray[i] = true;
-                } else {
-                    showVUArray[i] = false;
-                }
-            }
-
-            mHandler.postDelayed(mUpdateVUMetur, 100);
-        } else if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
-            mPreviousVUMax = 0;
-            for (int i = 0; i < MAX_VU_SIZE; i++) {
-                showVUArray[i] = false;
-            }
-        }
-
-        if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
-            mVUMeterLayout.removeAllViews();
-            for (boolean show : showVUArray) {
-                ImageView imageView = new ImageView(mContext);
-                imageView.setBackgroundResource(R.drawable.background_vumeter);
-                if (show) {
-                    imageView.setImageResource(R.drawable.icon_vumeter);
-                }
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
-                mVUMeterLayout.addView(imageView);
-            }
-        }
-    }
 
     /**
      * Set a thumbnail on the given ImageView for the given ClipCard
@@ -462,91 +373,6 @@ public class ReviewCardView implements DisplayableCard {
         }
         imageView.setImageDrawable(drawable);
     }
-
-    /**
-     * Start recording an audio narration track synced and instruct player to
-     * begin playback simultaneously.
-     */
-    private void startRecordingNarration() {
-        DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String now = df.format(new Date());
-        mNarrationOutput = new File(Environment.getExternalStorageDirectory(), now + /*".aac"*/ ".mp4");
-
-        if (mMediaRecorder == null) mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioEncodingBitRate(96 * 1000); // FIXME we need to probe the hardware for these values
-        mMediaRecorder.setAudioSamplingRate(44100);
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // raw AAC ADTS container records properly but results in Unknown MediaPlayer errors when playback attempted. :/
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mMediaRecorder.setOutputFile(mNarrationOutput.getAbsolutePath());
-
-        try {
-            mMediaRecorder.prepare();
-            mMediaRecorder.start();
-            Toast.makeText(mContext, mContext.getString(R.string.recording_narration), Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Log.e(TAG, "prepare() failed");
-            Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
-        }
-//        mClipCollectionPlayer.setVolume(0, 0); // Mute track volume while recording narration
-//        mClipCollectionPlayer.start();
-        updateVUMeterView();
-    }
-
-    /**
-     * Stop and reset {@link #mMediaRecorder} so it may be used again
-     */
-    private void stopRecordingNarration() {
-//        if (mClipCollectionPlayer.isPlaying()) mClipCollectionPlayer.pause();
-//        mClipCollectionPlayer.setVolume(1, 1); // Restore track volume when finished recording narration
-
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
-
-        // Attach the just-recorded narration to ReviewCard
-        MediaFile narrationMediaFile = new MediaFile(mNarrationOutput.getAbsolutePath(), Constants.AUDIO);
-        mCardModel.setNarration(narrationMediaFile);
-        Log.i(TAG, "Saving narration file " + mNarrationOutput.getAbsolutePath());
-    }
-
-    private void pauseRecordingNarration(MediaPlayer player) {
-        throw new UnsupportedOperationException("Pausing and resuming a recording is not yet supported!");
-        // TODO This is going to require Android 4.3's MediaCodec APIs or
-        // TODO file concatenation of multiple recordings.
-    }
-
-    /**
-     * Release {@link #mMediaRecorder} when no more recordings will be made
-     */
-    private void releaseMediaRecorder() {
-        if (mMediaRecorder != null) mMediaRecorder.release();
-    }
-
-    /**
-     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
-     */
-    private void changeRecordNarrationStateChanged(RecordNarrationState newState) {
-        mRecordNarrationState = newState;
-        switch(mRecordNarrationState) {
-            case READY:
-                mRecordStopRedoBtn.setText(R.string.dialog_record);
-                mDonePauseResumeBtn.setText(R.string.dialog_done);
-                break;
-            case RECORDING:
-                mRecordStopRedoBtn.setText(R.string.dialog_stop);
-                mDonePauseResumeBtn.setText(R.string.dialog_pause);
-                break;
-            case PAUSED:
-                mRecordStopRedoBtn.setText(R.string.dialog_stop);
-                mDonePauseResumeBtn.setText(R.string.dialog_resume);
-                break;
-            case STOPPED:
-                mRecordStopRedoBtn.setText(R.string.dialog_redo);
-                mDonePauseResumeBtn.setText(R.string.dialog_done);
-                break;
-        }
-    }
-
 
     /** A convenience SurfaceTextureListener to configure a TextureView for video playback of a Collection
      * of ClipCards. Note the constructor argument is a list of Cards due to the nature of {@link scal.io.liger.model.StoryPath#gatherCards(String)}
@@ -926,7 +752,8 @@ public class ReviewCardView implements DisplayableCard {
                 isPlaying = false;
                 // We've played through all the clips
                 if (mRecordNarrationState == RecordNarrationState.RECORDING) {
-                    stopRecordingNarration();
+                    MediaFile mf = stopRecordingNarration();
+                    mCardModel.setNarration(mf);
                     ivThumbnail.post(new Runnable() {
                         @Override
                         public void run() {
@@ -982,5 +809,29 @@ public class ReviewCardView implements DisplayableCard {
             }
         }
     }
-
+    /**
+     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
+     */
+    @Override
+    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
+        super.changeRecordNarrationStateChanged(newState);
+        switch(mRecordNarrationState) {
+            case READY:
+                mRecordStopRedoBtn.setText(R.string.dialog_record);
+                mDonePauseResumeBtn.setText(R.string.dialog_done);
+                break;
+            case RECORDING:
+                mRecordStopRedoBtn.setText(R.string.dialog_stop);
+                mDonePauseResumeBtn.setText(R.string.dialog_pause);
+                break;
+            case PAUSED:
+                mRecordStopRedoBtn.setText(R.string.dialog_stop);
+                mDonePauseResumeBtn.setText(R.string.dialog_resume);
+                break;
+            case STOPPED:
+                mRecordStopRedoBtn.setText(R.string.dialog_redo);
+                mDonePauseResumeBtn.setText(R.string.dialog_done);
+                break;
+        }
+    }
 }

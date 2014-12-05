@@ -21,7 +21,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ExampleCard;
 
-public class ExampleCardView implements DisplayableCard{
+public class ExampleCardView implements DisplayableCard {
 
     public ExampleCard mCardModel;
     public Context mContext;
@@ -29,7 +29,7 @@ public class ExampleCardView implements DisplayableCard{
 
     public MediaController mMediaController;
 
-    public ExampleCardView () {
+    public ExampleCardView() {
         // empty, required for ClipCardView
     }
 
