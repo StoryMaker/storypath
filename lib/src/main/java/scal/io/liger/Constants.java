@@ -48,4 +48,9 @@ public class Constants {
     public static final String PATCH = "patch";
     public static final int MAIN_VERSION = 1006;
     public static final int PATCH_VERSION = 0;
+
+    public static final String EXTRA_STORY_TITLE = "story_title";
+    public static final String EXTRA_EXPORT_CLIPS = "export_clips";
+
+    public final static String DEFAULT_AUDIO_SAMPLE_RATE = "22050";  // FIXME probe if a better audio rate is supported on this device
 }

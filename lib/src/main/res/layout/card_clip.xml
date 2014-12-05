@@ -35,7 +35,7 @@
 
     <Spinner
         android:id="@+id/spOverflow"
-        android:layout_width="32dp"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:padding="@dimen/padding_small"
         android:background="@color/storymaker_highlight"

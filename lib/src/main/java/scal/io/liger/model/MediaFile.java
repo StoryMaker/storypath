@@ -89,9 +89,11 @@ public class MediaFile implements Cloneable {
                             FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
 
                             thumbnail = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
-                            thumbnail.compress(Bitmap.CompressFormat.PNG, 75, thumbnailStream); // FIXME make compression level configurable
-                            thumbnailStream.flush();
-                            thumbnailStream.close();
+                            if (thumbnail != null) {
+                                thumbnail.compress(Bitmap.CompressFormat.PNG, 75, thumbnailStream); // FIXME make compression level configurable
+                                thumbnailStream.flush();
+                                thumbnailStream.close();
+                            }
                         }
 
                         //Log.d(" *** TESTING *** ", "THUMBNAIL FILE SAVED AS " + thumbnailFilePath);
