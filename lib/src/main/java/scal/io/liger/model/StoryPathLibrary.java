@@ -236,9 +236,23 @@ public class StoryPathLibrary extends StoryPath {
 
             // should not need to insert dependencies into a saved instance file
             if (checkPath.contains("instance")) {
+                Log.d(TAG, "Load from saved instance");
                 referencedFiles = new ArrayList<String>();
             } else {
-                referencedFiles = JsonHelper.getInstancePaths();
+                Log.d(TAG, "Load from template");
+                referencedFiles = new ArrayList<String>();
+                // pass through files referenced by library (which were pulled from intent)
+                // does there need to be a way to select references when loading a path?
+                // referencedFiles = JsonHelper.getInstancePaths();
+                if ((dependencies != null) && (dependencies.size() > 0)) {
+                    // support multiple referenced files?
+                    Log.d(TAG, "Found " + dependencies.size() + " referenced files in library");
+                    for (Dependency dependency : dependencies) {
+                        referencedFiles.add(dependency.getDependencyFile());
+                    }
+                } else {
+                    Log.d(TAG, "Found no referenced files in library");
+                }
             }
 
             StoryPath story = null;
