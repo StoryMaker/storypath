@@ -248,7 +248,9 @@ public class StoryPathLibrary extends StoryPath {
                     // support multiple referenced files?
                     Log.d(TAG, "Found " + dependencies.size() + " referenced files in library");
                     for (Dependency dependency : dependencies) {
-                        referencedFiles.add(dependency.getDependencyFile());
+                        if(dependency.getDependencyFile().contains("-instance")) {
+                            referencedFiles.add(dependency.getDependencyFile());
+                        }
                     }
                 } else {
                     Log.d(TAG, "Found no referenced files in library");
