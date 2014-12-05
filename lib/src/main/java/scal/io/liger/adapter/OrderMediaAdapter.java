@@ -119,7 +119,8 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         }
         String title = null;
         if (cm.getTitle() == null || cm.getTitle().length() == 0) {
-            title = String.format("Untitled %s clip", ((ClipCard) cm).getClipType());
+            String goal = ((ClipCard) cm).getFirstGoal();
+            title = String.format("%s: %s", ((ClipCard) cm).getClipType(), goal);
         } else {
             title = cm.getTitle();
         }
