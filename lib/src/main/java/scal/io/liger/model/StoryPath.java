@@ -125,7 +125,7 @@ public class StoryPath {
 
         // sanity check
         if (!this.id.equals(pathParts[0])) {
-            System.err.println("STORY PATH ID " + pathParts[0] + " DOES NOT MATCH");
+            Log.e(TAG, "STORY PATH ID " + pathParts[0] + " DOES NOT MATCH (vs. " + this.id + ")");
             return null;
         }
 
@@ -135,7 +135,7 @@ public class StoryPath {
             }
         }
 
-        System.err.println("CARD ID " + pathParts[1] + " WAS NOT FOUND");
+        Log.e(TAG, "CARD ID " + pathParts[1] + " WAS NOT FOUND");
         return null;
     }
 
@@ -185,7 +185,7 @@ public class StoryPath {
         for (Card card : cards) {
             if (card.checkReferencedValues()) {
                 if (card instanceof HeadlessCard) {
-                    Log.d(this.getClass().getName(), "headless card " + card.getId() + " should not return " + card.checkReferencedValues() + " for checkReferencedValues()");
+                    Log.d(TAG, "headless card " + card.getId() + " should not return " + card.checkReferencedValues() + " for checkReferencedValues()");
                 } else {
                     validCards.add(card);
                 }
@@ -329,10 +329,10 @@ public class StoryPath {
         StoryPath story = null;
 
         if (dependencies == null) {
-            Log.e(this.getClass().getName(), "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS NULL");
+            Log.e(TAG, "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS NULL");
             return null;
         } else if (dependencies.size() == 0) {
-            Log.e(this.getClass().getName(), "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS EMPTY");
+            Log.e(TAG, "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS EMPTY");
             return null;
         }
 
@@ -377,7 +377,7 @@ public class StoryPath {
         }
 
         if (story == null) {
-            Log.e(this.getClass().getName(), "STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
+            Log.e(TAG, "STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
             return null;
         }
 
@@ -421,7 +421,7 @@ public class StoryPath {
             relativePath = relativePath + File.separator + originalPath;
             return relativePath;
         } else {
-            Log.e(this.getClass().getName(), "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
+            Log.e(TAG, "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
             return originalPath;
         }
     }
@@ -442,7 +442,7 @@ public class StoryPath {
             relativePath = relativePath + File.separator + originalPath;
             return relativePath;
         } else {
-            Log.e(this.getClass().getName(), "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
+            Log.e(TAG, "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
             return originalPath;
         }
     }
@@ -831,7 +831,7 @@ public class StoryPath {
             }
             mf.setPath(path);
             if (mf == null) {
-                Log.e(this.getClass().getName(), "no media file was found for uuid " + cm.getUuid());
+                Log.e(TAG, "no media file was found for uuid " + cm.getUuid());
             } else {
                 FullMetadata fm = new FullMetadata(cm, mf);
                 allMetadata.add(fm);
@@ -1081,10 +1081,10 @@ public class StoryPath {
         StoryPath story = null;
 
         if (dependencies == null) {
-            Log.e(this.getClass().getName(), "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS NULL");
+            Log.e(TAG, "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS NULL");
             return null;
         } else if (dependencies.size() == 0) {
-            Log.e(this.getClass().getName(), "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS EMPTY");
+            Log.e(TAG, "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS EMPTY");
             return null;
         }
 
@@ -1115,7 +1115,7 @@ public class StoryPath {
         }
 
         if (story == null) {
-            Log.e(this.getClass().getName(), "STORY PATH ID " + pathTarget + " WAS NOT FOUND");
+            Log.e(TAG, "STORY PATH ID " + pathTarget + " WAS NOT FOUND");
             return null;
         }
 

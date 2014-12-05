@@ -664,10 +664,12 @@ public class JsonHelper {
 
         // a story path library model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
-        if ((jsonFilePath == null) || (jsonFilePath.length() == 0)) {
+        if ((jsonFilePath == null) || (jsonFilePath.length() == 0) || (jsonFilePath.equals("SAVED_STATE"))) {
             if ((storyPathLibrary.getFileLocation() == null) || (storyPathLibrary.getFileLocation().length() == 0)) {
                 Log.e(TAG, "file location for story path library " + storyPathLibrary.getId() + " could not be determined");
                 return null;
+            } else {
+                Log.d(TAG, "incoming path is <" + jsonFilePath + ">, using existing file location: " + storyPathLibrary.getFileLocation());
             }
         } else {
             File checkFile = new File(jsonFilePath);
