@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -20,8 +21,10 @@ import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -194,7 +197,10 @@ public class ReviewCardView implements DisplayableCard {
     /** Record Narration Dialog Views */
     Button mDonePauseResumeBtn;
     Button mRecordStopRedoBtn;
+    LinearLayout mVUMeterLayout;
+    private final Handler mHandler = new Handler();
 
+    private int mPreviousVUMax;
 
     /**
      * Show a dialog allowing the user to record narration for a Clip
@@ -210,6 +216,7 @@ public class ReviewCardView implements DisplayableCard {
         final SeekBar playbackBar       = (SeekBar) v.findViewById(R.id.playbackProgress);
         mDonePauseResumeBtn             = (Button) v.findViewById(R.id.donePauseResumeButton);
         mRecordStopRedoBtn              = (Button) v.findViewById(R.id.recordStopRedoButton);
+        mVUMeterLayout                  = (LinearLayout) v.findViewById(R.id.vumeter_layout);
 
         /** Configure views for initial state */
         changeRecordNarrationStateChanged(RecordNarrationState.READY);
@@ -306,6 +313,68 @@ public class ReviewCardView implements DisplayableCard {
         });
     }
 
+
+
+    private Runnable mUpdateVUMetur = new Runnable() {
+        @Override
+        public void run() {
+            if (mRecordNarrationState != RecordNarrationState.STOPPED) {
+                updateVUMeterView();
+            }
+        }
+    };
+
+    private void updateVUMeterView() {
+        final int MAX_VU_SIZE = 11;
+        boolean showVUArray[] = new boolean[MAX_VU_SIZE];
+
+        if (mVUMeterLayout.getVisibility() == View.VISIBLE
+                &&  mRecordNarrationState != RecordNarrationState.STOPPED) {
+            int amp = mMediaRecorder.getMaxAmplitude();
+            int vuSize = MAX_VU_SIZE * amp / 32768;
+            if (vuSize >= MAX_VU_SIZE) {
+                vuSize = MAX_VU_SIZE - 1;
+            }
+
+            if (vuSize >= mPreviousVUMax) {
+                mPreviousVUMax = vuSize;
+            } else if (mPreviousVUMax > 0) {
+                mPreviousVUMax--;
+            }
+
+            for (int i = 0; i < MAX_VU_SIZE; i++) {
+                if (i <= vuSize) {
+                    showVUArray[i] = true;
+                } else if (i == mPreviousVUMax) {
+                    showVUArray[i] = true;
+                } else {
+                    showVUArray[i] = false;
+                }
+            }
+
+            mHandler.postDelayed(mUpdateVUMetur, 100);
+        } else if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
+            mPreviousVUMax = 0;
+            for (int i = 0; i < MAX_VU_SIZE; i++) {
+                showVUArray[i] = false;
+            }
+        }
+
+        if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
+            mVUMeterLayout.removeAllViews();
+            for (boolean show : showVUArray) {
+                ImageView imageView = new ImageView(mContext);
+                imageView.setBackgroundResource(R.drawable.background_vumeter);
+                if (show) {
+                    imageView.setImageResource(R.drawable.icon_vumeter);
+                }
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
+                mVUMeterLayout.addView(imageView);
+            }
+        }
+    }
+
     /**
      * Set a thumbnail on the given ImageView for the given ClipCard
      */
@@ -379,7 +448,7 @@ public class ReviewCardView implements DisplayableCard {
         mNarrationOutput = new File(Environment.getExternalStorageDirectory(), now + /*".aac"*/ ".mp4");
 
         if (mMediaRecorder == null) mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioEncodingBitRate(96 * 1000);
+        mMediaRecorder.setAudioEncodingBitRate(96 * 1000); // FIXME we need to probe the hardware for these values
         mMediaRecorder.setAudioSamplingRate(44100);
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // raw AAC ADTS container records properly but results in Unknown MediaPlayer errors when playback attempted. :/
@@ -389,12 +458,14 @@ public class ReviewCardView implements DisplayableCard {
         try {
             mMediaRecorder.prepare();
             mMediaRecorder.start();
-            Toast.makeText(mContext, "Recording Narration", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.recording_narration), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e(TAG, "prepare() failed");
+            Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
         }
 //        mClipCollectionPlayer.setVolume(0, 0); // Mute track volume while recording narration
 //        mClipCollectionPlayer.start();
+        updateVUMeterView();
     }
 
     /**
