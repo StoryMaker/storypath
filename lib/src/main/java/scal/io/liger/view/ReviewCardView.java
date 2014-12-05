@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -106,6 +108,29 @@ public class ReviewCardView implements DisplayableCard {
         Button btnNarrate = ((Button) view.findViewById(R.id.btn_narrate));
         Button btnPublish = ((Button) view.findViewById(R.id.btn_publish));
 
+        //prepare drawable
+        final int drawableSizeDp = 30;
+        Resources r = mContext.getResources();
+        int drawableSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, drawableSizeDp, r.getDisplayMetrics());
+
+        //set drawables for actions
+        Drawable drwTemp = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_jumble).colorRes(R.color.storymaker_highlight);
+        drwTemp.setBounds(0, 0, drawableSizePx, drawableSizePx);
+        btnJumble.setCompoundDrawables(drwTemp, null, null, null);
+
+        drwTemp = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_order).colorRes(R.color.storymaker_highlight);
+        drwTemp.setBounds(0, 0, drawableSizePx, drawableSizePx);
+        btnOrder.setCompoundDrawables(drwTemp, null, null, null);
+
+        drwTemp = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_narrate).colorRes(R.color.storymaker_highlight);
+        drwTemp.setBounds(0, 0, drawableSizePx, drawableSizePx);
+        btnNarrate.setCompoundDrawables(drwTemp, null, null, null);
+
+        drwTemp = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_upload).colorRes(R.color.storymaker_highlight);
+        drwTemp.setBounds(0, 0, drawableSizePx, drawableSizePx);
+        btnPublish.setCompoundDrawables(drwTemp, null, null, null);
+
+        //set OnClickListeners
         btnJumble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
