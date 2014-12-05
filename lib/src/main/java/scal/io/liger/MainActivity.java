@@ -135,6 +135,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 String jsonSPL = savedInstanceState.getString("storyPathLibraryJson");
 
                 if (jsonSPL != null) {
+                    // fyi: story path (if any) is restored from saved instance, not saved state
                     initFromJson(jsonSPL, "SAVED_STATE");
                 } else {
                     Log.e(TAG, "SAVED INSTANCE STATE DOES NOT CONTAIN A VALID STORY PATH LIBRARY");
@@ -233,7 +234,21 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             referencedFiles = new ArrayList<String>();
         } else {
             Log.d(TAG, "INIT FROM TEMPLATE");
-            referencedFiles = JsonHelper.getInstancePaths();
+            referencedFiles = new ArrayList<String>();
+            // referenced instances should be passed in with the intent somehow
+            // referencedFiles = JsonHelper.getInstancePaths();
+            Intent i = getIntent();
+            if (i.hasExtra("referenced_files")) {
+                String referencedFilesString = i.getExtras().getString("referenced_files");
+                // support multiple referenced files?
+                String[] referencedFilesArray = referencedFilesString.split(":");
+                Log.d(TAG, "Found " + referencedFilesArray.length + " referenced files in intent");
+                for (String referencedFile : referencedFilesArray) {
+                    referencedFiles.add(referencedFile);
+                }
+            } else {
+                Log.d(TAG, "Found no referenced files in intent");
+            }
         }
 
         mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
@@ -334,6 +349,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     File checkFile = new File(checkPath);
 
                     // add reference to previous path and gather references from that path
+                    // (not sure it makes sense to add reference to previous path automatically?)
                     ArrayList<String> referencedFiles = new ArrayList<String>();
                     if (currentPath.getSavedFileName() != null) {
                         Log.d("DEPENDENCIES", "ADDING REFERENCE TO CURRENT PATH " + currentPath.getSavedFileName());
