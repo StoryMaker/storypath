@@ -1,7 +1,10 @@
 package scal.io.liger.model;
 
+import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import scal.io.liger.view.Util;
 
 /**
  * @author Matt Bogner
@@ -13,6 +16,7 @@ public class FullMetadata implements Parcelable {
 
     private int startTime;
     private int stopTime;
+    private int duration; // duration in millisecond
     private int volume;
     private String effect;
     private String type;
@@ -27,6 +31,12 @@ public class FullMetadata implements Parcelable {
         this.type = cm.getType();
         this.medium = mf.getMedium();
         this.filePath = mf.getPath();
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(this.filePath);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInmillisec = Long.parseLong( time );
+        this.duration = Util.safeLongToInt(timeInmillisec);
     }
 
     public FullMetadata(Parcel in) {
@@ -41,6 +51,12 @@ public class FullMetadata implements Parcelable {
         this.type = data[4];
         this.medium = data[5];
         this.filePath = data[6];
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(this.filePath);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInmillisec = Long.parseLong( time );
+        this.duration = Util.safeLongToInt(timeInmillisec);
     }
 
     public static final Parcelable.Creator<FullMetadata> CREATOR
@@ -96,6 +112,14 @@ public class FullMetadata implements Parcelable {
 
     public void setVolume(int volume) {
         this.volume = volume;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int volume) {
+        this.duration = duration;
     }
 
     public String getEffect() {
