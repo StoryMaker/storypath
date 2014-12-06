@@ -103,7 +103,8 @@ public class ReviewCardView extends BaseRecordCardView {
         drwTemp.setBounds(0, 0, drawableSizePx, drawableSizePx);
         btnOrder.setCompoundDrawables(drwTemp, null, null, null);
 
-        drwTemp = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_narrate).colorRes(R.color.storymaker_highlight);
+        //drwTemp = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_narrate).colorRes(R.color.storymaker_highlight);
+        drwTemp = r.getDrawable(R.drawable.ic_card_narrate);
         drwTemp.setBounds(0, 0, drawableSizePx, drawableSizePx);
         btnNarrate.setCompoundDrawables(drwTemp, null, null, null);
 
