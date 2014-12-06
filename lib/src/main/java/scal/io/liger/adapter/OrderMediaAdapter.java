@@ -110,58 +110,32 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         });
 
         Card cm = mClipCards.get(position);
-        ClipCard ccm = null;
+        ClipCard ccm;
 
         if (cm instanceof ClipCard) {
             ccm = (ClipCard) cm;
         } else {
             return; // Should filter ArrayList at construction so we don't have meaningless list items
         }
-        String title = null;
-        if (cm.getTitle() == null || cm.getTitle().length() == 0) {
-            String goal = ((ClipCard) cm).getFirstGoal();
-            title = String.format("%s: %s", ((ClipCard) cm).getClipType(), goal);
+
+        String title;
+        if (ccm.getTitle() == null || ccm.getTitle().length() == 0) {
+            String goal = ccm.getFirstGoal();
+            title = String.format("%s: %s", ccm.getClipType(), goal);
         } else {
-            title = cm.getTitle();
+            title = ccm.getTitle();
         }
+
         viewHolder.title.setText(title);
 
-        String mediaPath = null;
         MediaFile mf = ccm.getSelectedMediaFile();
-
         if (mf == null) {
             Log.e(this.getClass().getName(), "no media file was found");
         } else {
-            mediaPath = mf.getPath();
-        }
+            Bitmap thumbnail = mf.getThumbnail(viewHolder.title.getContext());
 
-        //File mediaFile = null;
-        Uri mediaURI = null;
-
-        if (mediaPath != null) {
-                /*
-                mediaFile = MediaHelper.loadFileFromPath(ccm.getStoryPath().buildZipPath(mediaPath));
-                if(mediaFile.exists() && !mediaFile.isDirectory()) {
-                    mediaURI = Uri.parse(mediaFile.getPath());
-                }
-                */
-            mediaURI = Uri.parse(mediaPath);
-        }
-
-        if (mMedium != null && mediaURI != null) {
-            if (mMedium.equals(Constants.VIDEO)) {
-                Bitmap videoFrame = mf.getThumbnail(viewHolder.title.getContext());
-                if (videoFrame != null) {
-                    viewHolder.thumbnail.setImageBitmap(videoFrame);
-                }
-                return;
-            } else if (mMedium.equals(Constants.PHOTO)) {
-                viewHolder.thumbnail.setImageURI(mediaURI); // FIXME use mediaFile.getThumbnail()
-                return;
-            } else if (mMedium.equals(Constants.AUDIO)) {
-                int drawable = R.drawable.audio_waveform; // FIXME use mediaFile.getThumbnail()
-                viewHolder.thumbnail.setImageDrawable(context.getResources().getDrawable(drawable));
-                return;
+            if (thumbnail != null) {
+                viewHolder.thumbnail.setImageBitmap(thumbnail);
             }
         }
     }
