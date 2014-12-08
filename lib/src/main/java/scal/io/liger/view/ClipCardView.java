@@ -221,7 +221,7 @@ public class ClipCardView extends BaseRecordCardView {
         drwCapture.setBounds(0, 0, drawableSizePx, drawableSizePx);
         tvCapture.setCompoundDrawables( drwCapture, null, null, null);
 
-        IconDrawable iconDrawable = new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert).colorRes(R.color.storymaker_highlight);
+        IconDrawable iconDrawable = new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert_48px).colorRes(R.color.storymaker_highlight);
         iconDrawable.setBounds(0, 0, drawableSizePx, drawableSizePx);
         ivOverflow.setImageDrawable(iconDrawable);
 
