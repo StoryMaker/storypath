@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import scal.io.liger.model.ExpansionIndexItem;
+import scal.io.liger.model.InstanceIndexItem;
 
 /**
  * Created by mnbogner on 11/24/14.
@@ -27,6 +28,7 @@ public class IndexManager {
 
     private static String availableIndexName = "available_index.json";
     private static String installedIndexName = "installed_index.json";
+    private static String instanceIndexName = "instance_index.json";
 
     public static void copyAvailableIndex(Context context) {
 
@@ -41,6 +43,16 @@ public class IndexManager {
 
         return;
     }
+
+    // shouldn't need this, instance index shouldn't be part of assets
+    /*
+    public static void copyInstanceIndex(Context context) {
+
+        copyIndex(context, instanceIndexName);
+
+        return;
+    }
+    */
 
     private static void copyIndex(Context context, String jsonFileName) {
 
@@ -205,6 +217,59 @@ public class IndexManager {
         return indexList;
     }
 
+    // only one key option for instance index
+    public static HashMap<String, InstanceIndexItem> loadInstanceIndex(Context context) {
+
+        HashMap<String, InstanceIndexItem> indexMap = new HashMap<String, InstanceIndexItem>();
+
+        String indexJson = null;
+        ArrayList<InstanceIndexItem> indexList = new ArrayList<InstanceIndexItem>();
+
+        String jsonFilePath = ZipHelper.getFileFolderName(context);
+
+        Log.d("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
+
+        File jsonFile = new File(jsonFilePath + instanceIndexName);
+        if (!jsonFile.exists()) {
+            Log.e("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
+            return indexMap;
+        }
+
+        String sdCardState = Environment.getExternalStorageState();
+
+        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                InputStream jsonStream = new FileInputStream(jsonFile);
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                jsonStream = null;
+                indexJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
+                return indexMap;
+            }
+        } else {
+            Log.e("INDEX", "SD CARD WAS NOT FOUND");
+            return indexMap;
+        }
+
+        if ((indexJson != null) && (indexJson.length() > 0)) {
+            GsonBuilder gBuild = new GsonBuilder();
+            Gson gson = gBuild.create();
+
+            indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {}.getType());
+        }
+
+        for (InstanceIndexItem item : indexList) {
+            indexMap.put(item.getInstanceFilePath(), item);
+        }
+
+        return indexMap;
+    }
+
     public static void registerAvailableIndexItem (Context context, ExpansionIndexItem indexItem) {
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
@@ -271,6 +336,54 @@ public class IndexManager {
 
             } catch (IOException ioe) {
                 Log.e("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
+                return;
+            }
+        } else {
+            Log.e("INDEX", "SD CARD WAS NOT FOUND");
+            return;
+        }
+    }
+
+    public static void updateInstanceIndex(Context context, InstanceIndexItem newItem, HashMap<String, InstanceIndexItem> indexList) {
+
+        indexList.put(newItem.getInstanceFilePath(), newItem);
+
+        ArrayList <InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+
+        String indexJson = "";
+
+        String jsonFilePath = ZipHelper.getFileFolderName(context);
+
+        Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + instanceIndexName + " TO SD CARD");
+
+        File jsonFile = new File(jsonFilePath + instanceIndexName + ".tmp"); // write to temp and rename
+        if (jsonFile.exists()) {
+            jsonFile.delete();
+        }
+
+        String sdCardState = Environment.getExternalStorageState();
+
+        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                jsonFile.createNewFile();
+
+                FileOutputStream jsonStream = new FileOutputStream(jsonFile);
+
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                indexJson = gson.toJson(indexArray);
+
+                byte[] buffer = indexJson.getBytes();
+                jsonStream.write(buffer);
+                jsonStream.flush();
+                jsonStream.close();
+                jsonStream = null;
+
+                Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + instanceIndexName + ".tmp " + jsonFilePath + instanceIndexName);
+
+            } catch (IOException ioe) {
+                Log.e("INDEX", "WRITING JSON FILE " + jsonFilePath + instanceIndexName + " TO SD CARD FAILED");
                 return;
             }
         } else {

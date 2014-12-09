@@ -22,11 +22,13 @@ import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
+import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -49,6 +51,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     String mRequestedLanguage;
     int mPhotoSlideDuration;
 
+    // new, store info to minimize file access
+    public HashMap<String, InstanceIndexItem> instanceIndex;
+
     public String getLanguage() {
         return language;
     }
@@ -61,9 +66,20 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // NEW: copy index files
+        // copy index files
         IndexManager.copyAvailableIndex(MainActivity.this);
         IndexManager.copyInstalledIndex(MainActivity.this);
+
+        // NEW: load instance index
+        //      if there is no file, this should be an empty hash map
+        instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
+
+        // TEMP
+        if (instanceIndex.size() > 0) {
+            Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+        } else {
+            Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
+        }
 
         // check expansion files, initiate downloads if necessary
         DownloadHelper.checkAndDownload(MainActivity.this);
