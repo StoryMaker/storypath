@@ -13,8 +13,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
+import scal.io.liger.IndexManager;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
 
@@ -131,6 +133,20 @@ public class StoryPathLibrary extends StoryPath {
             this.mediaFiles = new HashMap<String, MediaFile>();
         }
 
+        // use thumbnail of most recent media file for instance index
+        if (((MainActivity)context).instanceIndex.containsKey(getSavedFileName()))  {
+            // force thumbnail creation
+            file.getThumbnail(context);
+
+            InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
+            item.setStoryThumbnailPath(file.getThumbnailFilePath());
+            IndexManager.updateInstanceIndex(context, item, ((MainActivity)context).instanceIndex);
+            Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
+        } else {
+            // index item must be initialized by a save action
+            Log.e(TAG, "can't update index item with thumbnail path (no index item found for " + getSavedFileName() + ")");
+        }
+
         this.mediaFiles.put(uuid, file);
     }
 
@@ -143,7 +159,7 @@ public class StoryPathLibrary extends StoryPath {
     // need to determine whether to automatically delete files when they are no longer referenced
     public void deleteMediaFile(String uuid) {
         if ((mediaFiles == null) || (!mediaFiles.keySet().contains(uuid))) {
-            Log.e(this.getClass().getName(), "key was not found, cannot delete file");
+            Log.e(TAG, "key was not found, cannot delete file");
             return;
         }
 
@@ -177,9 +193,9 @@ public class StoryPathLibrary extends StoryPath {
             // NOT YET SURE HOW TO HANDLE VERSIONS OR DUPLICATES
             this.addStoryPathInstanceFile(oldPathFile.getPath());
         } catch (FileNotFoundException fnfe) {
-            Log.e(this.getClass().getName(), "could not file file: " + fnfe.getMessage());
+            Log.e(TAG, "could not file file: " + fnfe.getMessage());
         } catch (Exception e) {
-            Log.e(this.getClass().getName(), "other exception: " + e.getMessage());
+            Log.e(TAG, "other exception: " + e.getMessage());
         }
 
         // import clip metadata
@@ -273,7 +289,7 @@ public class StoryPathLibrary extends StoryPath {
             if (mListener != null) mListener.onStoryPathLoaded();
 
         } else {
-            Log.e(this.getClass().getName(), "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
+            Log.e(TAG, "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
         }
     }
 
@@ -300,6 +316,17 @@ public class StoryPathLibrary extends StoryPath {
             savedStoryPathLibraryFile = JsonHelper.getStoryPathLibrarySaveFileName(this);
             setSavedFileName(savedStoryPathLibraryFile);
             Log.d(TAG, "Saving to new file: " + savedStoryPathLibraryFile);
+
+            // create new item for instance index
+            Date now = new Date();
+            InstanceIndexItem newItem = new InstanceIndexItem(savedStoryPathLibraryFile, now.getTime());
+
+            // need source for title/description/type
+
+            IndexManager.updateInstanceIndex(context, newItem, ((MainActivity)context).instanceIndex);
+
+            Log.d(TAG, "Added index item for new instance file : " + savedStoryPathLibraryFile);
+
         } else {
             Log.d(TAG, "Saving to existing file: " + savedStoryPathLibraryFile);
         }
