@@ -221,7 +221,7 @@ public class ClipCardView extends BaseRecordCardView {
         drwCapture.setBounds(0, 0, drawableSizePx, drawableSizePx);
         tvCapture.setCompoundDrawables( drwCapture, null, null, null);
 
-        IconDrawable iconDrawable = new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert).colorRes(R.color.storymaker_highlight);
+        IconDrawable iconDrawable = new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert_48px).colorRes(R.color.storymaker_highlight);
         iconDrawable.setBounds(0, 0, drawableSizePx, drawableSizePx);
         ivOverflow.setImageDrawable(iconDrawable);
 
@@ -399,113 +399,29 @@ public class ClipCardView extends BaseRecordCardView {
         itvClipTypeIcon.setTextColor(getClipTypeColor(clipType));
     }
 
-    private void setThumbnailForClip(@NonNull ImageView thumbnail, MediaFile media) {
-        // not sure i undertand this logic...
-        /*
-        String mediaPath = null;
-        if ((mCardModel.getClips() != null) && (mCardModel.getClips().size() > 0)) {
-            if (media == null) {
-                Log.e(TAG, "no media file was found");
-            } else {
-                mediaPath = media.getPath();
-            }
-        }
-
-        final File mediaFile = getValidFile(mediaPath, mCardModel.getExampleMediaPath());
-        */
-
-        MediaFile mediaFile = null;
+    private void setThumbnailForClip(@NonNull ImageView ivThumbnail, MediaFile media) {
+        MediaFile mediaFile;
         if (media != null) {
             mediaFile = media;
         } else {
             mediaFile = mCardModel.getExampleMediaFile();
         }
 
-
-
         if ((mediaFile == null) ||
            ((mediaFile instanceof ExampleMediaFile) &&
-           ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel) == null))
-        {
+           ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel) == null)) {
+            Log.e(this.getClass().getName(), "no media file was found");
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType();
 
-            setClipExampleDrawables(clipType, thumbnail);
-            thumbnail.setVisibility(View.VISIBLE);
-        } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
-            // Clip has attached media. Show an appropriate preview
-            // e.g: A thumbnail for video
-            String medium = mCardModel.getMedium();
-            if (medium.equals(Constants.VIDEO)) {
+            setClipExampleDrawables(clipType, ivThumbnail);
+            ivThumbnail.setVisibility(View.VISIBLE);
+        } else {
+            Bitmap thumbnail = mediaFile.getThumbnail(mContext);
 
-                //set up image as preview
-                /*
-                Bitmap videoFrame = null;
-                if (media != null) {
-                    videoFrame = media.getThumbnail();
-                } else {
-                    videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
-                }
-                */
-
-                Bitmap videoFrame = null;
-                if (mediaFile instanceof ExampleMediaFile) {
-                    videoFrame = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
-                } else {
-                    videoFrame = mediaFile.getThumbnail(mContext);
-                }
-                if(null != videoFrame) {
-                    thumbnail.setImageBitmap(videoFrame);
-                }
-                thumbnail.setVisibility(View.VISIBLE);
-//                btnMediaPlay.setVisibility(View.VISIBLE);
-//                btnMediaPlay.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Uri video = Uri.parse(mediaFile.getPath());
-//                        vvCardVideo.setVideoURI(video);
-//                        vvCardVideo.seekTo(5);
-//                        vvCardVideo.setMediaController(null);
-//                        vvCardVideo.setVisibility(View.VISIBLE);
-//                        thumbnail.setVisibility(View.GONE);
-//                        btnMediaPlay.setVisibility(View.GONE);
-//                        vvCardVideo.start();
-//                    }
-//                });
-//
-//                //revert back to image on video completion
-//                vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                    public void onCompletion(MediaPlayer mp) {
-//                        vvCardVideo.setVisibility(View.GONE);
-//                        ivCardPhoto.setVisibility(View.VISIBLE);
-//                        btnMediaPlay.setVisibility(View.VISIBLE);
-//                        btnMediaPlay.setChecked(false);
-//                    }
-//                });
-            } else if (medium.equals(Constants.PHOTO)) {
-                thumbnail.setVisibility(View.VISIBLE);
-                Bitmap bitmap = null;
-                if (mediaFile instanceof ExampleMediaFile) {
-                    bitmap = ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel);
-                } else {
-                    bitmap = mediaFile.getThumbnail(mContext);
-                }
-                if(null != bitmap) {
-                    thumbnail.setImageBitmap(bitmap);
-                }
-            } else if (medium.equals(Constants.AUDIO)) {
-//                Uri myUri = Uri.parse(mediaFile.getPath());
-//                final MediaPlayer mediaPlayer = new MediaPlayer();
-//                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-                //set background image
-                String clipType = mCardModel.getClipType();
-                // TODO : Generate a representative waveform? Show length etc.
-                thumbnail.setImageResource(R.drawable.audio_waveform); // FIXME use mediaFile.getThumbnail()
-                //setClipExampleDrawables(clipType, thumbnail);
-                thumbnail.setVisibility(View.VISIBLE);
-            } else {
-                //TODO handle invalid-medium error
+            if (thumbnail != null) {
+                ivThumbnail.setImageBitmap(thumbnail);
+                ivThumbnail.setVisibility(View.VISIBLE);
             }
         }
     }
