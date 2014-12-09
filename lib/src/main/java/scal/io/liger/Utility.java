@@ -28,4 +28,8 @@ public class Utility {
 //        return videoFrame;
         return ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MINI_KIND);
     }
+
+    public static boolean isNullOrEmpty(String s) {
+        return (s == null) || (s.length() == 0);
+    }
 }

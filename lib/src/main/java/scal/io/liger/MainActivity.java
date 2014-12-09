@@ -475,6 +475,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                 Uri uri = intent.getData();
                 String path = getRealPathFromURI(getApplicationContext(), uri);
+
+                if (Utility.isNullOrEmpty(path)) {
+                    Log.e(TAG, "onActivityResult got null path");
+                    return;
+                }
+
                 Log.d(TAG, "onActivityResult, video path:" + path);
                 String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
@@ -605,6 +611,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
+        if (contentUri == null)
+            return null;
 
         // work-around to handle normal paths
         if (contentUri.toString().startsWith(File.separator)) {
