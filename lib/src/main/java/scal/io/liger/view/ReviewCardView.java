@@ -586,9 +586,11 @@ public class ReviewCardView extends BaseRecordCardView {
                         case Constants.VIDEO:
                         case Constants.AUDIO:
                             ClipMetadata clipMeta = ((ClipCard) card).getSelectedClip();
-                            MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(((ClipCard)card).getSelectedMediaFile().getPath()));
-                            clipDuration = ( clipMeta.getStopTime() == 0 ? mp.getDuration() : (clipMeta.getStopTime() - clipMeta.getStartTime()) );
-                            mp.release();
+                            MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(((ClipCard) card).getSelectedMediaFile().getPath()));
+                            clipDuration = (clipMeta.getStopTime() == 0 ? mp.getDuration() : (clipMeta.getStopTime() - clipMeta.getStartTime()));
+                            if (mp != null) {
+                                mp.release();
+                            }
                             break;
                         case Constants.PHOTO:
                             clipDuration += mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs;
