@@ -35,8 +35,11 @@ public class FullMetadata implements Parcelable {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(this.filePath);
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInmillisec = Long.parseLong( time );
-        this.duration = Util.safeLongToInt(timeInmillisec);
+        long timeMs = 0;
+        if (time != null) {
+            timeMs = Long.parseLong(time);
+        }
+        this.duration = Util.safeLongToInt(timeMs);
     }
 
     public FullMetadata(Parcel in) {
