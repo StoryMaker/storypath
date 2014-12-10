@@ -149,6 +149,8 @@ public class StoryPathLibrary extends StoryPath {
                 // thumbnail path method only checks story path, will return null if media is somehow
                 // captured by a library card, index items with null thumbnail paths shouldn't be an issue
                 item.setStoryThumbnailPath(this.getCoverImageThumbnailPath());
+                item.setStoryType(this.getMedium());
+
                 IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
                 Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
             }
@@ -296,6 +298,25 @@ public class StoryPathLibrary extends StoryPath {
             setCurrentStoryPathFile(storyPathTemplateFile);
 
             save(false);
+
+            // update instance index with title
+            if (((MainActivity)context).instanceIndex.containsKey(getSavedFileName()))  {
+                InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
+
+                // check current title to minimize file access
+                if ((item.getStoryTitle() != null) && (item.getStoryTitle().equals(story.getTitle()))) {
+                    Log.d(TAG, "can't update index item with title (index item found for " + getSavedFileName() + " already has the same title)");
+                } else {
+                    item.setStoryTitle(story.getTitle());
+
+                    IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
+                    Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
+                }
+            } else {
+                // index item must be initialized by a save action
+                Log.e(TAG, "can't update index item with title (no index item found for " + getSavedFileName() + ")");
+            }
+
             if (mListener != null) mListener.onStoryPathLoaded();
 
         } else {
@@ -321,12 +342,21 @@ public class StoryPathLibrary extends StoryPath {
         }
     }
 
-    /**
-     * Serialize this object to disk.
-     *
-     * @param saveCurrentStoryPath whether to also save the StoryPath returned by
-     *                             {@link #getCurrentStoryPath()}
-     */
+    @Override
+    public String getMedium() {
+        if (getCurrentStoryPath() != null) {
+            return getCurrentStoryPath().getMedium();
+        } else {
+            return null;
+        }
+    }
+
+        /**
+         * Serialize this object to disk.
+         *
+         * @param saveCurrentStoryPath whether to also save the StoryPath returned by
+         *                             {@link #getCurrentStoryPath()}
+         */
     public void save(boolean saveCurrentStoryPath) {
         //Gson gson = new Gson();
 
