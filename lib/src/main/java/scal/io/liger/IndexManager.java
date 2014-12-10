@@ -308,27 +308,13 @@ public class IndexManager {
 
                 newItem.setStoryThumbnailPath(spl.getCoverImageThumbnailPath());
 
-                String title = "(no title)";
-                String medium = "(no medium)"; // FIXME move to strings
                 StoryPath currentStoryPath = spl.getCurrentStoryPath();
 
                 if (currentStoryPath != null) {
-                    title = currentStoryPath.getTitle();
-                    medium = currentStoryPath.getMedium();
-                    if (medium == null) {
-                        medium = "(no medium)"; // FIXME move to strings
-                    } else if (medium.equals("video")) {
-                        medium = context.getString(R.string.lbl_video);
-                    } else if (medium.equals("audio")) {
-                        medium = context.getString(R.string.lbl_audio);
-                    } else if (medium.equals("photo")) {
-                        medium = context.getString(R.string.lbl_photo);
-                    }
+                    // null values will be handled by the index card builder
+                    newItem.setStoryTitle(currentStoryPath.getTitle());
+                    newItem.setStoryType(currentStoryPath.getMedium());
                 }
-
-                // are these the right values to put here?
-                newItem.setStoryTitle(title);
-                newItem.setStoryType(medium);
 
                 indexList.put(newItem.getInstanceFilePath(), newItem);
             }
