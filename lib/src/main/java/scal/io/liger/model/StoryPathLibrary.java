@@ -133,15 +133,25 @@ public class StoryPathLibrary extends StoryPath {
             this.mediaFiles = new HashMap<String, MediaFile>();
         }
 
-        // use thumbnail of most recent media file for instance index
+        // update instance index with thumbnail in case thumbnail has changed
         if (((MainActivity)context).instanceIndex.containsKey(getSavedFileName()))  {
             // force thumbnail creation
             file.getThumbnail(context);
 
             InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
-            item.setStoryThumbnailPath(file.getThumbnailFilePath());
-            IndexManager.updateInstanceIndex(context, item, ((MainActivity)context).instanceIndex);
-            Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
+
+            // item.setStoryThumbnailPath(file.getThumbnailFilePath()); <- use existing method instead
+
+            // check current thumbnail to minimize file access
+            if ((item.getStoryThumbnailPath() != null) && (item.getStoryThumbnailPath().equals(this.getCoverImageThumbnailPath()))) {
+                Log.d(TAG, "can't update index item with thumbnail path (index item found for " + getSavedFileName() + " already has the same path)");
+            } else {
+                // thumbnail path method only checks story path, will return null if media is somehow
+                // captured by a library card, index items with null thumbnail paths shouldn't be an issue
+                item.setStoryThumbnailPath(this.getCoverImageThumbnailPath());
+                IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
+                Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
+            }
         } else {
             // index item must be initialized by a save action
             Log.e(TAG, "can't update index item with thumbnail path (no index item found for " + getSavedFileName() + ")");
@@ -297,6 +307,15 @@ public class StoryPathLibrary extends StoryPath {
     public Bitmap getCoverImageThumbnail() {
         if (getCurrentStoryPath() != null) {
             return getCurrentStoryPath().getCoverImageThumbnail();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getCoverImageThumbnailPath() {
+        if (getCurrentStoryPath() != null) {
+            return getCurrentStoryPath().getCoverImageThumbnailPath();
         } else {
             return null;
         }

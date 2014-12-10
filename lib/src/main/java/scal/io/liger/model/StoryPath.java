@@ -1150,6 +1150,17 @@ public class StoryPath {
         return null;
     }
 
+    public String getCoverImageThumbnailPath() {
+        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
+        for (Card card: cards) {
+            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+            if (mediaFile != null) {
+                return mediaFile.getThumbnailFilePath();
+            }
+        }
+        return null;
+    }
+
     public String getMedium() {
         ArrayList<Card> cards = getClipCardsWithAttachedMedia();
         for (Card card: cards) {
