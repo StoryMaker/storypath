@@ -239,6 +239,7 @@ public class LigerDownloadManager implements Runnable {
     private class FilteredBroadcastReceiver extends BroadcastReceiver {
 
         public String fileFilter;
+        public boolean fileReceived = false;
 
         public FilteredBroadcastReceiver(String fileFilter) {
             this.fileFilter = fileFilter;
@@ -259,15 +260,32 @@ public class LigerDownloadManager implements Runnable {
                         File savedFile = new File(Uri.parse(uriString).getPath());
                         Log.d("DOWNLOAD", "MANAGER SAVED DOWNLOAD TO " + savedFile.getPath());
 
+                        // additional error checking
+                        if (savedFile.exists()) {
+                            if (savedFile.length() == 0) {
+                                Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + savedFile.getPath() + " BUT IT IS A ZERO BYTE FILE");
+                                return;
+                            } else {
+                                Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + savedFile.getPath() + " AND FILE LOOKS OK");
+                            }
+                        } else {
+                            Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + savedFile.getPath() + " BUT IT DOES NOT EXIST");
+                            return;
+                        }
+
                         // move .tmp file to actual file
                         File newFile = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
                         Log.d(TAG, "newFile: " + newFile.getAbsolutePath());
 
-                        if (!newFile.getName().equals(fileFilter)) {
+                        if (fileReceived) {
+                            Log.d("DOWNLOAD", "GOT FILE " + newFile.getName() + " BUT THAT FILE WAS ALREADY PROCESSED");
+                            return;
+                        } else if (!newFile.getName().equals(fileFilter)) {
                             Log.d("DOWNLOAD", "GOT FILE " + newFile.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
                             return;
                         } else {
                             Log.d("DOWNLOAD", "GOT FILE " + newFile.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                            fileReceived = true;
                         }
 
                         try {
