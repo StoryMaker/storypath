@@ -70,17 +70,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         IndexManager.copyAvailableIndex(MainActivity.this);
         IndexManager.copyInstalledIndex(MainActivity.this);
 
-        // NEW: load instance index
-        //      if there is no file, this should be an empty hash map
-        instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
-
-        // TEMP
-        if (instanceIndex.size() > 0) {
-            Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
-        } else {
-            Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
-        }
-
         // check expansion files, initiate downloads if necessary
         DownloadHelper.checkAndDownload(MainActivity.this);
 
@@ -109,6 +98,19 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             JsonHelper.setupFileStructure(this);
             MediaHelper.setupFileStructure(this);
+
+
+            // NEW: load instance index
+            //      only fill on startup to minimize disk access
+            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, IndexManager.loadInstanceIndex(MainActivity.this));
+
+            // TEMP
+            if (instanceIndex.size() > 0) {
+                Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+            } else {
+                Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
+            }
+
 
             Intent i = getIntent();
             if (i.hasExtra("lang")) {
@@ -145,6 +147,18 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 showJsonSelectorPopup();
             }
         } else {
+
+            // NEW: load instance index
+            //      if there is no file, this should be an empty hash map
+            instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
+
+            // TEMP
+            if (instanceIndex.size() > 0) {
+                Log.d(TAG, "ONCREATE(STATE) - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+            } else {
+                Log.d(TAG, "ONCREATE(STATE) - FOUND INSTANCE INDEX WITH NO ITEMS");
+            }
+
             if (savedInstanceState.containsKey("storyPathLibraryJson")) {
                 Log.d(TAG, "LOAD STORY PATH LIBRARY FROM SAVED INSTANCE STATE");
 
