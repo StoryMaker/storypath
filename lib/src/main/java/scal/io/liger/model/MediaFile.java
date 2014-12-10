@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import scal.io.liger.Constants;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 
 /**
  * Created by mnbogner on 9/29/14.
@@ -63,13 +64,17 @@ public class MediaFile implements Cloneable {
         Bitmap thumbnail = null;
 
         if (thumbnailFilePath == null) {
+            Uri uri = Uri.parse(getPath());
+            String lastSegment = uri.getLastPathSegment();
+            boolean isDocumentProviderUri = getPath().contains("content:/") && (lastSegment.contains(":"));
             if (medium.equals(Constants.VIDEO)) {
-                if (getPath().contains("content:/")) {
-                    // path of form : content://com.android.providers.media.documents/document/video:183
+                // path of form : content://com.android.providers.media.documents/document/video:183
+                if (isDocumentProviderUri) {
                     // An Android Document Provider URI. Thumbnail already generated
-                    // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
-                    long videoId = Long.parseLong(Uri.parse(getPath()).getLastPathSegment().split(":")[1]);
-                    return MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), videoId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+
+                    long id = 0;
+                    id = Long.parseLong(lastSegment.split(":")[1]);
+                    return MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
                 } else {
                     // Regular old File path
                     try {
@@ -78,6 +83,9 @@ public class MediaFile implements Cloneable {
                         // FIXME should not be stored in the source location, but a cache dir in our app folder on the sd or internal cache if there is no SD
                         // FIXME need to check datestamp on original file to check if our thumbnail is up to date
                         // FIXME this should be run from a background thread as it does disk access
+                        if (path.contains("content:/")) {
+                            path = Utility.getRealPathFromURI(context, uri);
+                        }
                         File originalFile = new File(path);
                         String fileName = originalFile.getName();
                         String[] tokens = fileName.split("\\.(?=[^\\.]+$)");
@@ -106,13 +114,16 @@ public class MediaFile implements Cloneable {
             } else if (medium.equals(Constants.AUDIO)) {
                 thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.audio_waveform);
             } else if (medium.equals(Constants.PHOTO)) {
-                if (getPath().contains("content:/")) {
+                if (isDocumentProviderUri) {
                     // path of form : content://com.android.providers.media.documents/document/video:183
                     // An Android Document Provider URI. Thumbnail already generated
                     // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
                     long id = Long.parseLong(Uri.parse(getPath()).getLastPathSegment().split(":")[1]);
                     thumbnail = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
                 } else {
+                    if (path.contains("content:/")) {
+                        path = Utility.getRealPathFromURI(context, uri);
+                    }
                     File originalFile = new File(path);
                     String fileName = originalFile.getName();
                     String[] tokens = fileName.split("\\.(?=[^\\.]+$)");
