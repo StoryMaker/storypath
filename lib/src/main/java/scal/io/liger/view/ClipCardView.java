@@ -54,6 +54,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -93,7 +94,7 @@ public class ClipCardView extends BaseRecordCardView {
     }
 
     @Override
-    public View getCardView(Context context) {
+    public View getCardView(final Context context) {
         if (mCardModel == null) {
             return null;
         }
@@ -135,6 +136,7 @@ public class ClipCardView extends BaseRecordCardView {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
                         Log.e(TAG, "Unable to make image file");
+                        Utility.toastOnUiThread((Activity) context, "Unable to make image file");
                         return;
                     }
                     mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
@@ -815,6 +817,7 @@ public class ClipCardView extends BaseRecordCardView {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        storageDir.mkdirs();
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
