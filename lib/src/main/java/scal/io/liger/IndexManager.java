@@ -281,6 +281,8 @@ public class IndexManager {
 
         ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles();
 
+        int initialSize = indexList.size();
+
         for (final File f : instanceFiles) {
             if (indexList.containsKey(f.getAbsolutePath())) {
                 Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
@@ -332,9 +334,14 @@ public class IndexManager {
             }
         }
 
-        // persist updated index
-        ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
-        saveInstanceIndex(context, indexArray, instanceIndexName);
+        // persist updated index (if necessary)
+        if (indexList.size() == initialSize) {
+            Log.d("INDEX", "NOTHING ADDED TO INSTANCE INDEX, NO SAVE");
+        } else {
+            Log.d("INDEX", (indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, SAVING");
+            ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+            saveInstanceIndex(context, indexArray, instanceIndexName);
+        }
 
         return indexList;
     }
