@@ -289,31 +289,53 @@ public class IndexManager {
             } else {
                 Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
 
-                String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
-
-                // should not need to insert dependencies to grab thumbnails
-                ArrayList<String> referencedFiles = new ArrayList<String>();
-
-                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context);
-
-                if ((spl != null) && (spl.getCurrentStoryPathFile() != null)) {
-                    spl.loadStoryPathTemplate("CURRENT");
-                }
-
                 String[] parts = FilenameUtils.removeExtension(f.getName()).split("-");
                 String datePart = parts[parts.length - 1]; // FIXME make more robust
                 Date date = new Date(Long.parseLong(datePart));
 
                 InstanceIndexItem newItem = new InstanceIndexItem(f.getAbsolutePath(), date.getTime());
 
-                newItem.setStoryThumbnailPath(spl.getCoverImageThumbnailPath());
+                String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
+                ArrayList<String> referencedFiles = new ArrayList<String>(); // should not need to insert dependencies to check metadata
+                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context);
 
-                StoryPath currentStoryPath = spl.getCurrentStoryPath();
+                if (spl == null) {
+                    return indexList;
+                }
 
-                if (currentStoryPath != null) {
-                    // null values will be handled by the index card builder
-                    newItem.setStoryTitle(currentStoryPath.getTitle());
-                    newItem.setStoryType(currentStoryPath.getMedium());
+                // first check local metadata fields
+                newItem.setStoryTitle(spl.getMetaTitle());
+                newItem.setStoryType(spl.getMetaDescription()); // this seems more useful than medium
+                newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
+
+                // unsure where to put additional fields
+
+                // if anything is missing, open story path
+                if ((newItem.getStoryTitle() == null) ||
+                    (newItem.getStoryType() == null) ||
+                    (newItem.getStoryThumbnailPath() == null)) {
+                    Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
+
+                    if (spl.getCurrentStoryPathFile() != null) {
+                        spl.loadStoryPathTemplate("CURRENT");
+                    }
+
+                    StoryPath currentStoryPath = spl.getCurrentStoryPath();
+
+                    if (currentStoryPath != null) {
+                        // null values will be handled by the index card builder
+                        if (newItem.getStoryTitle() == null) {
+                            newItem.setStoryTitle(currentStoryPath.getTitle());
+                        }
+                        if (newItem.getStoryType() == null) {
+                            newItem.setStoryType(currentStoryPath.getMedium());
+                        }
+                        if (newItem.getStoryThumbnailPath() == null) {
+                            newItem.setStoryThumbnailPath(currentStoryPath.getCoverImageThumbnailPath());
+                        }
+                    }
+                } else {
+                    Log.d("INDEX", "METADATA COMPLETE FOR INSTANCE FILE " + f.getAbsolutePath());
                 }
 
                 indexList.put(newItem.getInstanceFilePath(), newItem);

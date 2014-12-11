@@ -33,6 +33,14 @@ public class StoryPathLibrary extends StoryPath {
     private StoryPath currentStoryPath; // not serialized
     @Expose private HashMap<String, MediaFile> mediaFiles;
 
+    // additional metadata for publishing
+    @Expose private String metaTitle;
+    @Expose private String metaDescription;
+    @Expose private String metaThumbnail;
+    @Expose private String metaSection;
+    @Expose private String metaLocation;
+    @Expose private ArrayList<String> metaTags;
+
     /**
      * User preferences set by MainActivity. Delivered to MainActivity via Intent extras
      * from liger library client.
@@ -180,6 +188,63 @@ public class StoryPathLibrary extends StoryPath {
         mediaFiles.remove(uuid);
 
         // delete actual file?
+    }
+
+    // additional metadata for publishing
+    public String getMetaTitle() {
+        return metaTitle;
+    }
+
+    public void setMetaTitle(String metaTitle) {
+        this.metaTitle = metaTitle;
+    }
+
+    public String getMetaDescription() {
+        return metaDescription;
+    }
+
+    public void setMetaDescription(String metaDescription) {
+        this.metaDescription = metaDescription;
+    }
+
+    public String getMetaThumbnail() {
+        return metaThumbnail;
+    }
+
+    public void setMetaThumbnail(String metaThumbnail) {
+        this.metaThumbnail = metaThumbnail;
+    }
+
+    public String getMetaSection() {
+        return metaSection;
+    }
+
+    public void setMetaSection(String metaSection) {
+        this.metaSection = metaSection;
+    }
+
+    public String getMetaLocation() {
+        return metaLocation;
+    }
+
+    public void setMetaLocation(String metaLocation) {
+        this.metaLocation = metaLocation;
+    }
+
+    public ArrayList<String> getMetaTags() {
+        return metaTags;
+    }
+
+    public void setMetaTags(ArrayList<String> metaTags) {
+        this.metaTags = metaTags;
+    }
+
+    public void addMetaTag(String metaTag) {
+        if (this.metaTags == null) {
+            this.metaTags = new ArrayList<String>();
+        }
+
+        this.metaTags.add(metaTag);
     }
 
     // need to determine where to present path options and deserialize new path
