@@ -3,7 +3,9 @@ package scal.io.liger.model;
 import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import scal.io.liger.Constants;
 import scal.io.liger.view.Util;
 
 /**
@@ -11,6 +13,7 @@ import scal.io.liger.view.Util;
  * @author Josh Steiner
  */
 public class FullMetadata implements Parcelable {
+    private static final String TAG = "FullMetadata";
 
     // class used for export, not serialized
 
@@ -32,14 +35,19 @@ public class FullMetadata implements Parcelable {
         this.medium = mf.getMedium();
         this.filePath = mf.getPath();
 
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(this.filePath);
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeMs = 0;
-        if (time != null) {
-            timeMs = Long.parseLong(time);
+        if (this.medium == Constants.VIDEO || this.medium == Constants.AUDIO) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            Log.d(TAG, "retriever.setDataSource(" + this.filePath + ");");
+            retriever.setDataSource(this.filePath);
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeMs = 0;
+            if (time != null) {
+                timeMs = Long.parseLong(time);
+            }
+            this.duration = Util.safeLongToInt(timeMs);
+        } else {
+            this.duration = 0;
         }
-        this.duration = Util.safeLongToInt(timeMs);
     }
 
     public FullMetadata(Parcel in) {
@@ -55,11 +63,15 @@ public class FullMetadata implements Parcelable {
         this.medium = data[5];
         this.filePath = data[6];
 
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(this.filePath);
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInmillisec = Long.parseLong( time );
-        this.duration = Util.safeLongToInt(timeInmillisec);
+        if (this.medium == Constants.VIDEO || this.medium == Constants.AUDIO) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(this.filePath);
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long timeInmillisec = Long.parseLong( time );
+            this.duration = Util.safeLongToInt(timeInmillisec);
+        } else {
+            this.duration = 0;
+        }
     }
 
     public static final Parcelable.Creator<FullMetadata> CREATOR
