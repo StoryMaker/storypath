@@ -102,7 +102,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             // NEW: load instance index
             //      only fill on startup to minimize disk access
-            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, IndexManager.loadInstanceIndex(MainActivity.this));
+            instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
+            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, instanceIndex);
 
             // TEMP
             if (instanceIndex.size() > 0) {
@@ -290,6 +291,20 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
             mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
         }
+
+        // TEMP METADATA CHECK
+        /*
+        Log.d("METADATA", "TITLE: " + mStoryPathLibrary.getMetaTitle());
+        Log.d("METADATA", "DESCRIPTION: " + mStoryPathLibrary.getMetaDescription());
+        Log.d("METADATA", "THUMBNAIL: " + mStoryPathLibrary.getMetaThumbnail());
+        Log.d("METADATA", "SECTION: " + mStoryPathLibrary.getMetaSection());
+        Log.d("METADATA", "LOCATION: " + mStoryPathLibrary.getMetaLocation());
+        if (mStoryPathLibrary.getMetaTags() != null) {
+            for (String metaTag : mStoryPathLibrary.getMetaTags()) {
+                Log.d("METADATA", "TAG: " + metaTag);
+            }
+        }
+        */
     }
 
     // MNB - IS THIS METHOD NEEDED?
