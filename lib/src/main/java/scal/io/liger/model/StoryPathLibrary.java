@@ -134,7 +134,7 @@ public class StoryPathLibrary extends StoryPath {
         }
 
         // update instance index with thumbnail in case thumbnail has changed
-        if (((MainActivity)context).instanceIndex.containsKey(getSavedFileName()))  {
+        if ((context instanceof MainActivity) && (((MainActivity)context).instanceIndex.containsKey(getSavedFileName())))  {
             // force thumbnail creation
             file.getThumbnail(context);
 
@@ -154,6 +154,8 @@ public class StoryPathLibrary extends StoryPath {
                 IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
                 Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
             }
+        } else if (!(context instanceof MainActivity)) {
+            Log.d(TAG, "can't update index item with thumbnail path outside the context of liger main activity");
         } else {
             // index item must be initialized by a save action
             Log.e(TAG, "can't update index item with thumbnail path (no index item found for " + getSavedFileName() + ")");
@@ -300,7 +302,7 @@ public class StoryPathLibrary extends StoryPath {
             save(false);
 
             // update instance index with title
-            if (((MainActivity)context).instanceIndex.containsKey(getSavedFileName()))  {
+            if ((context instanceof MainActivity) && (((MainActivity)context).instanceIndex.containsKey(getSavedFileName())))  {
                 InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
 
                 // check current title to minimize file access
@@ -312,6 +314,8 @@ public class StoryPathLibrary extends StoryPath {
                     IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
                     Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
                 }
+            } else if (!(context instanceof MainActivity)) {
+                Log.d(TAG, "can't update index item with title outside the context of liger main activity");
             } else {
                 // index item must be initialized by a save action
                 Log.e(TAG, "can't update index item with title (no index item found for " + getSavedFileName() + ")");
