@@ -9,17 +9,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.InstanceIndexItem;
+import scal.io.liger.model.StoryPath;
+import scal.io.liger.model.StoryPathLibrary;
 
 /**
  * Created by mnbogner on 11/24/14.
@@ -108,7 +114,7 @@ public class IndexManager {
 
     public static HashMap<String, ExpansionIndexItem> loadInstalledFileIndex(Context context) {
 
-        ArrayList<ExpansionIndexItem> indexList  = loadIndex(context, installedIndexName);
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
@@ -134,7 +140,7 @@ public class IndexManager {
 
     public static HashMap<String, ExpansionIndexItem> loadInstalledOrderIndex(Context context) {
 
-        ArrayList<ExpansionIndexItem> indexList  = loadIndex(context, installedIndexName);
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
@@ -160,7 +166,7 @@ public class IndexManager {
 
     public static HashMap<String, ExpansionIndexItem> loadInstalledIdIndex(Context context) {
 
-        ArrayList<ExpansionIndexItem> indexList  = loadIndex(context, installedIndexName);
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
@@ -211,7 +217,8 @@ public class IndexManager {
             GsonBuilder gBuild = new GsonBuilder();
             Gson gson = gBuild.create();
 
-            indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<ExpansionIndexItem>>() {}.getType());
+            indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<ExpansionIndexItem>>() {
+            }.getType());
         }
 
         return indexList;
@@ -231,46 +238,123 @@ public class IndexManager {
 
         File jsonFile = new File(jsonFilePath + instanceIndexName);
         if (!jsonFile.exists()) {
-            Log.e("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
-            return indexMap;
-        }
-
-        String sdCardState = Environment.getExternalStorageState();
-
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
-            try {
-                InputStream jsonStream = new FileInputStream(jsonFile);
-
-                int size = jsonStream.available();
-                byte[] buffer = new byte[size];
-                jsonStream.read(buffer);
-                jsonStream.close();
-                jsonStream = null;
-                indexJson = new String(buffer);
-            } catch (IOException ioe) {
-                Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
-                return indexMap;
-            }
+            Log.d("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
         } else {
-            Log.e("INDEX", "SD CARD WAS NOT FOUND");
-            return indexMap;
-        }
 
-        if ((indexJson != null) && (indexJson.length() > 0)) {
-            GsonBuilder gBuild = new GsonBuilder();
-            Gson gson = gBuild.create();
+            String sdCardState = Environment.getExternalStorageState();
 
-            indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {}.getType());
-        }
+            if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+                try {
+                    InputStream jsonStream = new FileInputStream(jsonFile);
 
-        for (InstanceIndexItem item : indexList) {
-            indexMap.put(item.getInstanceFilePath(), item);
+                    int size = jsonStream.available();
+                    byte[] buffer = new byte[size];
+                    jsonStream.read(buffer);
+                    jsonStream.close();
+                    jsonStream = null;
+                    indexJson = new String(buffer);
+                } catch (IOException ioe) {
+                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
+                }
+            } else {
+                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                return indexMap; // if there's no card, there's nowhere to read instance files from, so just stop here
+            }
+
+            if ((indexJson != null) && (indexJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                }.getType());
+            }
+
+            for (InstanceIndexItem item : indexList) {
+                indexMap.put(item.getInstanceFilePath(), item);
+            }
         }
 
         return indexMap;
     }
 
-    public static void registerAvailableIndexItem (Context context, ExpansionIndexItem indexItem) {
+    public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList) {
+
+        ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles();
+
+        int initialSize = indexList.size();
+
+        for (final File f : instanceFiles) {
+            if (indexList.containsKey(f.getAbsolutePath())) {
+                Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+            } else {
+                Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+
+                String[] parts = FilenameUtils.removeExtension(f.getName()).split("-");
+                String datePart = parts[parts.length - 1]; // FIXME make more robust
+                Date date = new Date(Long.parseLong(datePart));
+
+                InstanceIndexItem newItem = new InstanceIndexItem(f.getAbsolutePath(), date.getTime());
+
+                String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
+                ArrayList<String> referencedFiles = new ArrayList<String>(); // should not need to insert dependencies to check metadata
+                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context);
+
+                if (spl == null) {
+                    return indexList;
+                }
+
+                // first check local metadata fields
+                newItem.setStoryTitle(spl.getMetaTitle());
+                newItem.setStoryType(spl.getMetaDescription()); // this seems more useful than medium
+                newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
+
+                // unsure where to put additional fields
+
+                // if anything is missing, open story path
+                if ((newItem.getStoryTitle() == null) ||
+                    (newItem.getStoryType() == null) ||
+                    (newItem.getStoryThumbnailPath() == null)) {
+                    Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
+
+                    if (spl.getCurrentStoryPathFile() != null) {
+                        spl.loadStoryPathTemplate("CURRENT");
+                    }
+
+                    StoryPath currentStoryPath = spl.getCurrentStoryPath();
+
+                    if (currentStoryPath != null) {
+                        // null values will be handled by the index card builder
+                        if (newItem.getStoryTitle() == null) {
+                            newItem.setStoryTitle(currentStoryPath.getTitle());
+                        }
+                        if (newItem.getStoryType() == null) {
+                            newItem.setStoryType(currentStoryPath.getMedium());
+                        }
+                        if (newItem.getStoryThumbnailPath() == null) {
+                            newItem.setStoryThumbnailPath(currentStoryPath.getCoverImageThumbnailPath());
+                        }
+                    }
+                } else {
+                    Log.d("INDEX", "METADATA COMPLETE FOR INSTANCE FILE " + f.getAbsolutePath());
+                }
+
+                indexList.put(newItem.getInstanceFilePath(), newItem);
+            }
+        }
+
+        // persist updated index (if necessary)
+        if (indexList.size() == initialSize) {
+            Log.d("INDEX", "NOTHING ADDED TO INSTANCE INDEX, NO SAVE");
+        } else {
+            Log.d("INDEX", (indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, SAVING");
+            ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+            saveInstanceIndex(context, indexArray, instanceIndexName);
+        }
+
+        return indexList;
+    }
+
+    public static void registerAvailableIndexItem(Context context, ExpansionIndexItem indexItem) {
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
         indexList.add(indexItem);
@@ -278,7 +362,7 @@ public class IndexManager {
         return;
     }
 
-    public static void registerInstalledIndexItem (Context context, ExpansionIndexItem indexItem) {
+    public static void registerInstalledIndexItem(Context context, ExpansionIndexItem indexItem) {
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName);
         indexList.add(indexItem);
@@ -348,15 +432,21 @@ public class IndexManager {
 
         indexList.put(newItem.getInstanceFilePath(), newItem);
 
-        ArrayList <InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+        ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+
+        saveInstanceIndex(context, indexArray, instanceIndexName);
+
+    }
+
+    public static void saveInstanceIndex(Context context, ArrayList<InstanceIndexItem> indexList, String jsonFileName) {
 
         String indexJson = "";
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + instanceIndexName + " TO SD CARD");
+        Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
 
-        File jsonFile = new File(jsonFilePath + instanceIndexName + ".tmp"); // write to temp and rename
+        File jsonFile = new File(jsonFilePath + jsonFileName + ".tmp"); // write to temp and rename
         if (jsonFile.exists()) {
             jsonFile.delete();
         }
@@ -372,7 +462,7 @@ public class IndexManager {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
-                indexJson = gson.toJson(indexArray);
+                indexJson = gson.toJson(indexList);
 
                 byte[] buffer = indexJson.getBytes();
                 jsonStream.write(buffer);
@@ -380,10 +470,10 @@ public class IndexManager {
                 jsonStream.close();
                 jsonStream = null;
 
-                Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + instanceIndexName + ".tmp " + jsonFilePath + instanceIndexName);
+                Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + jsonFileName + ".tmp " + jsonFilePath + jsonFileName);
 
             } catch (IOException ioe) {
-                Log.e("INDEX", "WRITING JSON FILE " + jsonFilePath + instanceIndexName + " TO SD CARD FAILED");
+                Log.e("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
                 return;
             }
         } else {

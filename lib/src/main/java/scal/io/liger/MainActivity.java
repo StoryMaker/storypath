@@ -70,17 +70,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         IndexManager.copyAvailableIndex(MainActivity.this);
         IndexManager.copyInstalledIndex(MainActivity.this);
 
-        // NEW: load instance index
-        //      if there is no file, this should be an empty hash map
-        instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
-
-        // TEMP
-        if (instanceIndex.size() > 0) {
-            Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
-        } else {
-            Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
-        }
-
         // check expansion files, initiate downloads if necessary
         DownloadHelper.checkAndDownload(MainActivity.this);
 
@@ -109,6 +98,20 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             JsonHelper.setupFileStructure(this);
             MediaHelper.setupFileStructure(this);
+
+
+            // NEW: load instance index
+            //      only fill on startup to minimize disk access
+            instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
+            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, instanceIndex);
+
+            // TEMP
+            if (instanceIndex.size() > 0) {
+                Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+            } else {
+                Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
+            }
+
 
             Intent i = getIntent();
             if (i.hasExtra("lang")) {
@@ -145,6 +148,18 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 showJsonSelectorPopup();
             }
         } else {
+
+            // NEW: load instance index
+            //      if there is no file, this should be an empty hash map
+            instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
+
+            // TEMP
+            if (instanceIndex.size() > 0) {
+                Log.d(TAG, "ONCREATE(STATE) - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+            } else {
+                Log.d(TAG, "ONCREATE(STATE) - FOUND INSTANCE INDEX WITH NO ITEMS");
+            }
+
             if (savedInstanceState.containsKey("storyPathLibraryJson")) {
                 Log.d(TAG, "LOAD STORY PATH LIBRARY FROM SAVED INSTANCE STATE");
 
@@ -276,6 +291,20 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
             mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
         }
+
+        // TEMP METADATA CHECK
+        /*
+        Log.d("METADATA", "TITLE: " + mStoryPathLibrary.getMetaTitle());
+        Log.d("METADATA", "DESCRIPTION: " + mStoryPathLibrary.getMetaDescription());
+        Log.d("METADATA", "THUMBNAIL: " + mStoryPathLibrary.getMetaThumbnail());
+        Log.d("METADATA", "SECTION: " + mStoryPathLibrary.getMetaSection());
+        Log.d("METADATA", "LOCATION: " + mStoryPathLibrary.getMetaLocation());
+        if (mStoryPathLibrary.getMetaTags() != null) {
+            for (String metaTag : mStoryPathLibrary.getMetaTags()) {
+                Log.d("METADATA", "TAG: " + metaTag);
+            }
+        }
+        */
     }
 
     // MNB - IS THIS METHOD NEEDED?
@@ -490,7 +519,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 
                 Uri uri = intent.getData();
-                String path = getRealPathFromURI(getApplicationContext(), uri);
+                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
 
                 if (Utility.isNullOrEmpty(path)) {
                     Log.e(TAG, "onActivityResult got null path");
@@ -564,7 +593,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             } else if(requestCode == Constants.REQUEST_AUDIO_CAPTURE) {
 
                 Uri uri = intent.getData();
-                String path = getRealPathFromURI(getApplicationContext(), uri);
+                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, audio path:" + path);
                 String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
@@ -601,7 +630,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
 
-                String path = getRealPathFromURI(getApplicationContext(), uri);
+                // FIXME this can get a file:// uri, e.g. from facebook: https://rink.hockeyapp.net/manage/apps/30627/app_versions/62/crash_reasons/24334871
+                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, imported file path:" + path);
                 String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
@@ -622,29 +652,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
 
-            }
-        }
-    }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        // work-around to handle normal paths
-        if (contentUri.toString().startsWith(File.separator)) {
-            return contentUri.toString();
-        }
-
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
             }
         }
     }

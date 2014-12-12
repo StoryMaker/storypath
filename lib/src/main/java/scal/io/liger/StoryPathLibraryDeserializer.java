@@ -10,6 +10,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -75,6 +76,37 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
             spl.setCurrentStoryPathFile(currentStoryPathFile);
         }
 
+        // additional metadata for publishing
+        tempElement = jObj.get("metaTitle");
+        if (tempElement != null) {
+            String metaTitle = jObj.get("metaTitle").getAsString();
+            spl.setMetaTitle(metaTitle);
+        }
+
+        tempElement = jObj.get("metaDescription");
+        if (tempElement != null) {
+            String metaDescription = jObj.get("metaDescription").getAsString();
+            spl.setMetaDescription(metaDescription);
+        }
+
+        tempElement = jObj.get("metaThumbnail");
+        if (tempElement != null) {
+            String metaThumbnail = jObj.get("metaThumbnail").getAsString();
+            spl.setMetaThumbnail(metaThumbnail);
+        }
+
+        tempElement = jObj.get("metaSection");
+        if (tempElement != null) {
+            String metaSection = jObj.get("metaSection").getAsString();
+            spl.setMetaSection(metaSection);
+        }
+
+        tempElement = jObj.get("metaLocation");
+        if (tempElement != null) {
+            String metaLocation = jObj.get("metaLocation").getAsString();
+            spl.setMetaLocation(metaLocation);
+        }
+
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(MilestoneCardDeserializer.class, new MilestoneCardDeserializer());
         gBuild.registerTypeAdapter(VideoCaptureTypeCard.class, new VideoCaptureTypeCardDeserializer());
@@ -90,14 +122,6 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
             spl.setStoryPathTemplateFiles(storyPathTemplateFiles);
         }
 
-        ArrayList<String> storyPathInstanceFiles = new ArrayList<String>();
-        tempElement = jObj.get("storyPathInstanceFiles");
-        if (tempElement != null) {
-            tempObj = tempElement.getAsJsonObject();
-            storyPathInstanceFiles = gson.fromJson(tempObj, storyPathInstanceFiles.getClass());
-            spl.setStoryPathInstanceFiles(storyPathInstanceFiles);
-        }
-
         HashMap<String, MediaFile> mediaFiles = new HashMap<String, MediaFile>();
         tempElement = jObj.get("mediaFiles");
         if (tempElement != null) {
@@ -106,7 +130,26 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
             spl.setMediaFiles(mediaFiles);
         }
 
-        JsonElement jEle = jObj.get("dependencies");
+        // additional metadata for publishing
+        JsonElement jEle = jObj.get("metaTags");
+        if (jEle != null) {
+            JsonArray jArr = jEle.getAsJsonArray();
+            for (int i = 0; i < jArr.size(); i++) {
+                String metaTag = jArr.get(i).getAsString();
+                spl.addMetaTag(metaTag);
+            }
+        }
+
+        jEle = jObj.get("storyPathInstanceFiles");
+        if (jEle != null) {
+            JsonArray jArr = jEle.getAsJsonArray();
+            for (int i = 0; i < jArr.size(); i++) {
+                String storyPathInstanceFile = jArr.get(i).getAsString();
+                spl.addStoryPathInstanceFile(storyPathInstanceFile);
+            }
+        }
+
+        jEle = jObj.get("dependencies");
         if (jEle != null) {
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
