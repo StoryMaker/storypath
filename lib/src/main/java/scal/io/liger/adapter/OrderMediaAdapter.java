@@ -30,8 +30,8 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
     public static final String TAG = "OrderMediaAdapter";
 
     private ReorderableRecyclerView mRecyclerView;
-    private HashMap<Card, Long> mCardToStableId = new HashMap<>();
-    private List<Card> mClipCards;
+    private HashMap<ClipCard, Long> mCardToStableId = new HashMap<>();
+    private List<ClipCard> mClipCards;
     private String mMedium;
 
     private OnReorderListener mReorderListener;
@@ -46,7 +46,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
     @Override
     public void swapItems(int positionOne, int positionTwo) {
-        Card itemOne = mClipCards.get(positionOne);
+        ClipCard itemOne = mClipCards.get(positionOne);
         mClipCards.set(positionOne, mClipCards.get(positionTwo));
         mClipCards.set(positionTwo, itemOne);
         notifyItemChanged(positionOne);
@@ -69,12 +69,12 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         }
     }
 
-    public OrderMediaAdapter(ReorderableRecyclerView recyclerView, List<Card> cards, String medium) {
+    public OrderMediaAdapter(ReorderableRecyclerView recyclerView, List<ClipCard> cards, String medium) {
         mRecyclerView = recyclerView;
         mClipCards = cards;
         mMedium = medium;
         long id = 0;
-        for (Card card : mClipCards) {
+        for (ClipCard card : mClipCards) {
             mCardToStableId.put(card, id++);
         }
     }

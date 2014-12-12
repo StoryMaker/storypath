@@ -21,6 +21,7 @@ import java.util.List;
 import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.Card;
+import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.view.ReorderableRecyclerView;
 
@@ -35,7 +36,7 @@ public class OrderMediaPopup {
      * on it, not the host Activity. Alternatively we might be able to set windowActionModeOverlay true:
      * http://stackoverflow.com/questions/26443403/toolbar-and-contextual-actionbar-with-appcompat-v7
      */
-    public static void show(final Activity activity, final String medium, final List<Card> cards) {
+    public static void show(final Activity activity, final String medium, final List<ClipCard> cards) {
         final View decorView = activity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override

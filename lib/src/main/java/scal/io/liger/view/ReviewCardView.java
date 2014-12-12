@@ -196,7 +196,7 @@ public class ReviewCardView extends BaseRecordCardView {
     Button mRecordStopRedoBtn;
 
     /** Collection of ClipCards with attached media within the current StoryPath. */
-    ArrayList<Card> mMediaCards;
+    ArrayList<ClipCard> mMediaCards;
 
     /**
      * Show a dialog allowing the user to record narration for a Clip
@@ -388,7 +388,7 @@ public class ReviewCardView extends BaseRecordCardView {
         protected boolean isPaused = false;
 
         protected ClipCard currentlyPlayingCard;
-        protected final List<Card> mediaCards;
+        protected final List<ClipCard> mediaCards;
         /**
          * Collection of cumulative duration parallel to mMediaCards.
          * e.g: the first entry is the duration of the first clip, the second is the duration
@@ -408,7 +408,7 @@ public class ReviewCardView extends BaseRecordCardView {
 
         volatile boolean advancingClip = false;
 
-        public VideoSurfaceTextureListener(@NonNull TextureView textureView, @NonNull List<Card> mediaCards, @Nullable ImageView thumbnailView) {
+        public VideoSurfaceTextureListener(@NonNull TextureView textureView, @NonNull List<ClipCard> mediaCards, @Nullable ImageView thumbnailView) {
             ivThumbnail = thumbnailView;
             tvVideo = textureView;
             this.mediaCards = mediaCards;
@@ -576,7 +576,7 @@ public class ReviewCardView extends BaseRecordCardView {
          *
          * Note we don't accept an ArrayList<ClipCard> due to the current operation of StoryPath#gatherCards(..)
          */
-        private int calculateTotalClipCollectionLengthMs(List<Card> cards) {
+        private int calculateTotalClipCollectionLengthMs(List<ClipCard> cards) {
             int totalDuration = 0;
             int clipDuration;
             accumulatedDurationByMediaCard = new ArrayList<>(cards.size());
@@ -623,7 +623,7 @@ public class ReviewCardView extends BaseRecordCardView {
 
         MediaPlayer narrationPlayer;
 
-        public VideoWithNarrationSurfaceTextureListener(@NonNull TextureView textureView, @NonNull List<Card> mediaCards, @Nullable ImageView thumbnailView) {
+        public VideoWithNarrationSurfaceTextureListener(@NonNull TextureView textureView, @NonNull List<ClipCard> mediaCards, @Nullable ImageView thumbnailView) {
             super(textureView, mediaCards, thumbnailView);
         }
 

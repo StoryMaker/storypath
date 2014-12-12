@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
@@ -700,6 +703,7 @@ public class StoryPath {
      * @param uri The Uri to query.
      * @author paulburke
      */
+    @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -1076,6 +1080,19 @@ public class StoryPath {
         return results;
     }
 
+
+    public <T> ArrayList<T> gatherCardsOfClass(Class<T> clazz) {
+        String simpleName = clazz.getSimpleName();
+        ArrayList<T> results = new ArrayList<>();
+
+        for (Card card : getCards()) {
+            if (card.getType().equals(simpleName)) {
+                results.add((T) card);
+            }
+        }
+        return results;
+    }
+
     public ArrayList<Card> gatherExternalCards(String pathTarget, String cardTarget) {
 
         StoryPath story = null;
@@ -1124,11 +1141,13 @@ public class StoryPath {
         return results;
     }
 
+
     /**
      * Returns the List of ClipCards with attached media within the current StoryPath
      */
-    public ArrayList<Card> getClipCardsWithAttachedMedia() {
-        ArrayList<Card> mediaCards = gatherCards("<<ClipCard>>");
+    public ArrayList<ClipCard> getClipCardsWithAttachedMedia() {
+
+        ArrayList<ClipCard> mediaCards = gatherCardsOfClass(ClipCard.class);
         Iterator iterator = mediaCards.iterator();
         while (iterator.hasNext()) {
             ClipCard clipCard = (ClipCard) iterator.next();
@@ -1140,9 +1159,9 @@ public class StoryPath {
     }
 
     public Bitmap getCoverImageThumbnail() {
-        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
-        for (Card card: cards) {
-            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+        ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
+        for (ClipCard card: cards) {
+            MediaFile mediaFile = card.getSelectedMediaFile();
             if (mediaFile != null) {
                 return mediaFile.getThumbnail(context);
             }
@@ -1151,9 +1170,9 @@ public class StoryPath {
     }
 
     public String getCoverImageThumbnailPath() {
-        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
-        for (Card card: cards) {
-            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+        ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
+        for (ClipCard card: cards) {
+            MediaFile mediaFile = card.getSelectedMediaFile();
             if (mediaFile != null) {
                 return mediaFile.getThumbnailFilePath();
             }
@@ -1162,9 +1181,9 @@ public class StoryPath {
     }
 
     public String getMedium() {
-        ArrayList<Card> cards = getClipCardsWithAttachedMedia();
-        for (Card card: cards) {
-            MediaFile mediaFile = ((ClipCard) card).getSelectedMediaFile();
+        ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
+        for (ClipCard card: cards) {
+            MediaFile mediaFile = card.getSelectedMediaFile();
             if (mediaFile != null) {
                 return mediaFile.getMedium();
             }

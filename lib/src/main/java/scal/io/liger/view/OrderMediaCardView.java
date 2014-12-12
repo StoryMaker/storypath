@@ -30,7 +30,7 @@ public class OrderMediaCardView implements DisplayableCard {
 
     private OrderMediaCard mCardModel;
     private Context mContext;
-    private List<Card> mListCards = new ArrayList<Card>();
+    private List<ClipCard> mListCards = new ArrayList<>();
     private PopupWindow mPopup;
 
     public OrderMediaCardView(Context context, Card cardModel) {
@@ -57,8 +57,14 @@ public class OrderMediaCardView implements DisplayableCard {
 
     public void fillList(ArrayList<String> clipPaths) {
 
-        mListCards = mCardModel.getStoryPath().getCardsByIds(clipPaths);
-
+        // TODO : Modify getCardsById to allow passing type
+        List<Card> cards =  mCardModel.getStoryPath().getCardsByIds(clipPaths);
+        List<ClipCard> clipCards = new ArrayList<>();
+        for (Card card : cards) {
+            if (card instanceof ClipCard)
+                clipCards.add((ClipCard) card);
+        }
+        mListCards = clipCards;
     }
 
     public void loadClips(ArrayList<String> clipPaths, DraggableGridView dgvOrderClips) {
