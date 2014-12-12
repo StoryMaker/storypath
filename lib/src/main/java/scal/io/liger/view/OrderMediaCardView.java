@@ -21,6 +21,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.OrderMediaCard;
+import scal.io.liger.popup.OrderMediaPopup;
 import scal.io.liger.touch.DraggableGridView;
 import scal.io.liger.touch.OnRearrangeListener;
 
@@ -157,7 +158,7 @@ public class OrderMediaCardView implements DisplayableCard {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Unsafe Cast
-                Util.showOrderMediaPopup(((Activity) view.getContext()), mCardModel.getMedium(), mListCards);
+                OrderMediaPopup.show(((Activity) view.getContext()), mCardModel.getMedium(), mListCards);
             }
         });
     }

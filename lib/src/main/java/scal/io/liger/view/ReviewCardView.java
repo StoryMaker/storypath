@@ -54,6 +54,7 @@ import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.ReviewCard;
+import scal.io.liger.popup.OrderMediaPopup;
 
 /**
  * ReviewCardView allows the user to review the order of clips
@@ -123,7 +124,7 @@ public class ReviewCardView extends BaseRecordCardView {
             @Override
             public void onClick(View v) {
                 if (mMediaCards.size() > 0)
-                    Util.showOrderMediaPopup((Activity) mContext, mMedium, mMediaCards);
+                    OrderMediaPopup.show((Activity) mContext, mMedium, mMediaCards);
                 else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_reordering), Toast.LENGTH_SHORT).show();
             }
