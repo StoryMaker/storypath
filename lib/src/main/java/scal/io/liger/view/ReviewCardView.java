@@ -54,6 +54,7 @@ import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.ReviewCard;
+import scal.io.liger.popup.NarrationPopup;
 import scal.io.liger.popup.OrderMediaPopup;
 
 /**
@@ -134,9 +135,10 @@ public class ReviewCardView extends BaseRecordCardView {
             @Override
             public void onClick(View v) {
 
-                if (mMediaCards.size() > 0)
-                    showClipNarrationDialog();
-                else
+                if (mMediaCards.size() > 0) {
+                    NarrationPopup.show((MainActivity) mCardModel.getStoryPath().getContext(), mMediaCards);
+                    //showClipNarrationDialog();
+                } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_narrating), Toast.LENGTH_SHORT).show();
             }
         });
@@ -432,7 +434,7 @@ public class ReviewCardView extends BaseRecordCardView {
 
         private void init() {
             // Setup views
-            currentlyPlayingCard = (ClipCard) mediaCards.get(0);
+            currentlyPlayingCard = mediaCards.get(0);
             setThumbnailForClip(ivThumbnail, currentlyPlayingCard);
             ivThumbnail.setOnClickListener(getVideoPlaybackToggleClickListener());
             tvVideo.setOnClickListener(getVideoPlaybackToggleClickListener());
