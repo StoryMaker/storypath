@@ -29,16 +29,6 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
     private HashMap<ClipCard, Long> mCardToStableId = new HashMap<>();
     private List<ClipCard> mClipCards;
 
-    private OnReorderListener mReorderListener;
-
-    public interface OnReorderListener {
-        /**
-         * The item at firstIndex switched places with the item
-         * at secondIndex
-         */
-        public void onReorder(int firstIndex, int secondIndex);
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView thumbnail;
@@ -62,14 +52,10 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
         }
     }
 
-    public void setOnReorderListener(OnReorderListener listener) {
-        mReorderListener = listener;
-    }
-
     @Override
     public MediaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.order_media_clip_item, parent, false);
+                .inflate(R.layout.narration_clip_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         return new ViewHolder(v);
     }
@@ -77,26 +63,19 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(MediaAdapter.ViewHolder viewHolder, int position) {
 
-        Card cm = mClipCards.get(position);
-        ClipCard ccm;
-
-        if (cm instanceof ClipCard) {
-            ccm = (ClipCard) cm;
-        } else {
-            return; // Should filter ArrayList at construction so we don't have meaningless list items
-        }
+        ClipCard clipCard = mClipCards.get(position);
 
         String title;
-        if (ccm.getTitle() == null || ccm.getTitle().length() == 0) {
-            String goal = ccm.getFirstGoal();
-            title = String.format("%s: %s", ccm.getClipType(), goal);
+        if (clipCard.getTitle() == null || clipCard.getTitle().length() == 0) {
+            String goal = clipCard.getFirstGoal();
+            title = String.format("%s: %s", clipCard.getClipType(), goal);
         } else {
-            title = ccm.getTitle();
+            title = clipCard.getTitle();
         }
 
         viewHolder.title.setText(title);
 
-        MediaFile mf = ccm.getSelectedMediaFile();
+        MediaFile mf = clipCard.getSelectedMediaFile();
         if (mf == null) {
             Log.e(this.getClass().getName(), "no media file was found");
         } else {

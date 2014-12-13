@@ -151,7 +151,6 @@
     <string name="recording_narration">Recording Narration</string>
     <string name="could_not_start_narration">Could not start narration!</string>
     <string name="narration">Narration</string>
-    <string name="start_recording">Start Recording</string>
 
     <!-- add for libra end -->
 </resources>

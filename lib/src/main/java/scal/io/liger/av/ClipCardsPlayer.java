@@ -34,25 +34,25 @@ import scal.io.liger.model.MediaFile;
  *
  * Created by davidbrodsky on 12/12/14.
  */
-public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListener {
+public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     public final String TAG = getClass().getSimpleName();
 
-    private Context mContext;
-    private FrameLayout mContainerLayout;
+    protected Context mContext;
+    protected FrameLayout mContainerLayout;
     private List<ClipCard> mClipCards;
     private ArrayList<Integer> accumulatedDurationByMediaCard;
-    private ClipCard mCurrentlyPlayingCard;
-    private MediaPlayer mMainPlayer;
-    private MediaPlayer mSecondaryPlayer;
+    protected ClipCard mCurrentlyPlayingCard;
+    protected MediaPlayer mMainPlayer;
+    protected MediaPlayer mSecondaryPlayer;
     private Uri mSecondaryAudioUri;
     private Surface mSurface;
-    private ImageView mThumbnailView;
+    protected ImageView mThumbnailView;
     private TextureView mTextureView;
     private SeekBar mPlaybackProgress;
     private Timer mTimer;
 
     private boolean mAdvancingClips;
-    private boolean mIsPlaying;
+    protected boolean mIsPlaying;
     private boolean mIsPaused;
     private int mCurrentPhotoElapsedTime;
     private int mPhotoSlideDurationMs = 5 * 1000;
@@ -69,26 +69,19 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
 
             if (mIsPlaying) {
                 pausePlayback();
-                mIsPaused = true;
-                mIsPlaying = false;
             }
             else if (mIsPaused){
-                // paused
                 resumePlayback();
-                mIsPaused = false;
-                mIsPlaying = true;
             }
             else {
-                // stopped
                 startPlayback();
-                mIsPlaying = true;
             }
         }
     };
 
     // <editor-fold desc="Public API">
 
-    public ClipCardCollectionPlayer(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
+    public ClipCardsPlayer(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         mContainerLayout = container;
         mClipCards = clipCards;
         mContext = container.getContext();
@@ -157,9 +150,6 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
                                             case Constants.VIDEO:
                                             case Constants.AUDIO:
                                                 currentClipElapsedTime = Math.min(mMainPlayer.getCurrentPosition(), mMainPlayer.getDuration()); // Seen issues where getCurrentPosition returns
-                                                if (currentClipElapsedTime == 1957962536) {
-                                                    Log.i("Timer", "WTF");
-                                                }
                                                 // If getStopTime() is equal to 0 or mediaPlayer.getDuration(), clip advancing will be handled by the MediaPlayer onCompletionListener
                                                 int clipStopTimeMs = mCurrentlyPlayingCard.getSelectedClip().getStopTime();
                                                 if (!mAdvancingClips && clipStopTimeMs > 0 && currentClipElapsedTime > clipStopTimeMs && clipStopTimeMs != mMainPlayer.getDuration()) {
@@ -257,6 +247,7 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (mTimer != null) mTimer.cancel();
         release();
         return false;
     }
@@ -266,7 +257,7 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
 
     }
 
-    private void advanceToNextClip(MediaPlayer player) {
+    protected void advanceToNextClip(MediaPlayer player) {
         mAdvancingClips = true;
 
         Uri media;
@@ -333,7 +324,8 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
         }
     }
 
-    private void startPlayback() {
+    protected void startPlayback() {
+        mIsPlaying = true;
         // Connect narrationPlayer to narration mediaFile on each request to start playback
         // to ensure we have the most current narration recording
         if (mSecondaryAudioUri != null) {
@@ -351,7 +343,6 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
             Log.i(TAG, "Starting narration player for uri " + mSecondaryAudioUri.toString());
             mSecondaryPlayer.start();
         }
-        // TODO StartPlayback callback
 
         mThumbnailView.setVisibility(View.VISIBLE);
 
@@ -359,14 +350,6 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
             case Constants.VIDEO:
                 mThumbnailView.setVisibility(View.GONE);
             case Constants.AUDIO:
-                // Mute the main media volume if we're recording narration
-//                if (mRecordNarrationState.equals(BaseRecordCardView.RecordNarrationState.RECORDING)) {
-//                    mediaPlayer.setVolume(0, 0);
-//                } else {
-//                    mediaPlayer.setVolume(1, 1);
-//                }
-                // TODO StartPlayback callback
-
                 mMainPlayer.start();
                 break;
             case Constants.PHOTO:
@@ -383,6 +366,9 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
         if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
             mSecondaryPlayer.pause();
         }
+
+        mIsPaused = true;
+        mIsPlaying = false;
     }
 
     private void resumePlayback() {
@@ -393,9 +379,12 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
         if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
             mSecondaryPlayer.pause();
         }
+
+        mIsPaused = false;
+        mIsPlaying = true;
     }
 
-    private void stopPlayback() {
+    protected void stopPlayback() {
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.stop();
             mMainPlayer.reset();
@@ -418,7 +407,7 @@ public class ClipCardCollectionPlayer implements TextureView.SurfaceTextureListe
     /**
      * Set a thumbnail on the given ImageView for the given ClipCard
      */
-    private void setThumbnailForClip(@NonNull ImageView thumbnail, @NonNull ClipCard clipCard) {
+    protected void setThumbnailForClip(@NonNull ImageView thumbnail, @NonNull ClipCard clipCard) {
         // Clip has attached media. Show an appropriate preview
         // e.g: A thumbnail for video
 

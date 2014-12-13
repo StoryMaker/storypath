@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
@@ -24,8 +25,10 @@ import java.util.List;
 
 import scal.io.liger.R;
 import scal.io.liger.adapter.MediaAdapter;
-import scal.io.liger.av.ClipCardCollectionPlayer;
+import scal.io.liger.av.ClipCardsNarrator;
+import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.ClipCard;
+import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 
 /**
@@ -33,21 +36,38 @@ import scal.io.liger.model.StoryPath;
  */
 public class NarrationPopup {
 
-    public static void show(final Activity activity, final List<ClipCard> cards) {
+    public static void show(final Activity activity, final List<ClipCard> cards, final ClipCardsNarrator.NarrationListener listener) {
         final View decorView = activity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override
             public void run() {
                 // Create a PopupWindow that occupies the entire screen except the status and action bar
                 final View popUpView = LayoutInflater.from(activity).inflate(R.layout.popup_narrate, (ViewGroup) decorView, false);
+                final Button recordButton = (Button) popUpView.findViewById(R.id.record_button);
                 FrameLayout mediaPlayerContainer = (FrameLayout) popUpView.findViewById(R.id.mixed_media_player);
-                ClipCardCollectionPlayer player = new ClipCardCollectionPlayer(mediaPlayerContainer, cards);
+                final ClipCardsNarrator narrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
+                ClipCardsNarrator.NarrationListener narrationListener = new ClipCardsNarrator.NarrationListener() {
+                    @Override
+                    public void onNarrationFinished(MediaFile narration) {
+                        narrator.addAudioTrack(narration);
+                        recordButton.setText(activity.getString(R.string.dialog_record));
+                        if (listener != null) narrator.setNarrationListener(listener);
+                    }
+                };
+                narrator.setNarrationListener(narrationListener);
 
-                Button recordButton = (Button) popUpView.findViewById(R.id.record_button);
                 recordButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(activity, "RECORDING", Toast.LENGTH_SHORT).show();
+                        if (narrator.getState() == ClipCardsNarrator.RecordNarrationState.RECORDING) {
+                            Log.i("NarratePopup", "stopping");
+                            narrator.stopRecordingNarration();
+                            recordButton.setText(activity.getString(R.string.dialog_record));
+                        } else {
+                            Log.i("NarratePopup", "starting");
+                            narrator.startRecordingNarration();
+                            recordButton.setText(activity.getString(R.string.dialog_stop));
+                        }
                     }
                 });
 
