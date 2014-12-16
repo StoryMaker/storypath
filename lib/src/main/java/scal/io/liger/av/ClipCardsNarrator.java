@@ -149,7 +149,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         }
 
         if (indexes != null) {
-            mCurrentlyPlayingCard = mClipCards.get(indexes.first);
+            _advanceToClip(mMainPlayer, mClipCards.get(indexes.first));
         }
         _startPlayback();
     }
@@ -188,6 +188,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             (mSelectedClipIndexes != null && mSelectedClipIndexes.second == mClipCards.indexOf(mCurrentlyPlayingCard))) {
             Log.i(TAG, "Will stop recording. Current clip exceeds narration selection");
             _stopRecordingNarration(true);
+            _advanceToClip(player, mClipCards.get(0));
             return;
         }
 
@@ -219,7 +220,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             }
         } else {
             mMainPlayer.setVolume(1, 1);
-            super.startPlayback();
+            super._startPlayback();
         }
     }
 

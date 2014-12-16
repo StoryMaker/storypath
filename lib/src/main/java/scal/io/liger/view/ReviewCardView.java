@@ -3,19 +3,13 @@ package scal.io.liger.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.joanzapata.android.iconify.IconDrawable;
@@ -23,10 +17,10 @@ import com.joanzapata.android.iconify.Iconify;
 
 import java.util.ArrayList;
 
-import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.av.ClipCardsNarrator;
+import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
@@ -43,7 +37,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     public static final String TAG = "ReviewCardView";
 
     private ReviewCard mCardModel;
-    private ClipCardsNarrator mCardNarrator;
+    private ClipCardsPlayer mCardsPlayer;
 //    private Context mContext;
     private String mMedium;
 
@@ -61,10 +55,10 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_review, null);
-        FrameLayout flNarrator = (FrameLayout) view.findViewById(R.id.card_narrator);
+        FrameLayout flPlayer = (FrameLayout) view.findViewById(R.id.card_player);
 
         initClipCardsWithAttachedMedia();
-        mCardNarrator = new ClipCardsNarrator(flNarrator, mMediaCards);
+        mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards);
 
         Button btnJumble = ((Button) view.findViewById(R.id.btn_jumble));
         Button btnOrder = ((Button) view.findViewById(R.id.btn_order));
