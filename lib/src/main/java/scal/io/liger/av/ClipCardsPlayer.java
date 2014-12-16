@@ -3,6 +3,7 @@ package scal.io.liger.av;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -18,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -531,6 +535,36 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             //setClipExampleDrawables(clipType, thumbnail);
             thumbnail.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Set an example thumbnail on imageView for this clipType
+     *
+     * This should be called if no thumbnail directly representing the clip is available.
+     */
+    private void setClipExampleDrawables(String clipType, ImageView imageView) {
+        Drawable drawable;
+        switch (clipType) {
+            case Constants.CHARACTER:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character);
+                break;
+            case Constants.ACTION:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_action);
+                break;
+            case Constants.RESULT:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_result);
+                break;
+            case Constants.SIGNATURE:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_signature);
+                break;
+            case Constants.PLACE:
+                drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place);
+                break;
+            default:
+                Log.d(TAG, "No clipType matching '" + clipType + "' found.");
+                drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
+        }
+        imageView.setImageDrawable(drawable);
     }
 
     private int calculateTotalClipCollectionLengthMs(List<ClipCard> cards) {
