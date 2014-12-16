@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/card_narrator"
+        android:id="@+id/card_player"
         android:layout_alignParentTop="true"
         android:layout_width="fill_parent"
         android:layout_height="220dp"
@@ -21,7 +21,7 @@
         android:id="@+id/btn_jumble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/card_narrator"
+        android:layout_below="@id/card_player"
         style="@style/button"
         android:background="@android:color/transparent"
         android:textColor="@color/storymaker_highlight"
