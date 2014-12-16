@@ -21,6 +21,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.OrderMediaCard;
+import scal.io.liger.popup.OrderMediaPopup;
 import scal.io.liger.touch.DraggableGridView;
 import scal.io.liger.touch.OnRearrangeListener;
 
@@ -29,7 +30,7 @@ public class OrderMediaCardView implements DisplayableCard {
 
     private OrderMediaCard mCardModel;
     private Context mContext;
-    private List<Card> mListCards = new ArrayList<Card>();
+    private List<ClipCard> mListCards = new ArrayList<>();
     private PopupWindow mPopup;
 
     public OrderMediaCardView(Context context, Card cardModel) {
@@ -56,8 +57,14 @@ public class OrderMediaCardView implements DisplayableCard {
 
     public void fillList(ArrayList<String> clipPaths) {
 
-        mListCards = mCardModel.getStoryPath().getCardsByIds(clipPaths);
-
+        // TODO : Modify getCardsById to allow passing type
+        List<Card> cards =  mCardModel.getStoryPath().getCardsByIds(clipPaths);
+        List<ClipCard> clipCards = new ArrayList<>();
+        for (Card card : cards) {
+            if (card instanceof ClipCard)
+                clipCards.add((ClipCard) card);
+        }
+        mListCards = clipCards;
     }
 
     public void loadClips(ArrayList<String> clipPaths, DraggableGridView dgvOrderClips) {
@@ -157,7 +164,7 @@ public class OrderMediaCardView implements DisplayableCard {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Unsafe Cast
-                Util.showOrderMediaPopup(((Activity) view.getContext()), mCardModel.getMedium(), mListCards);
+                OrderMediaPopup.show(((Activity) view.getContext()), mCardModel.getMedium(), mListCards);
             }
         });
     }

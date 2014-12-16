@@ -145,7 +145,7 @@ public class ClipCardView extends BaseRecordCardView {
                 }
 
                 if (medium.equals(Constants.AUDIO)) {
-                    changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
+//                    changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
                     startRecordingNarration();
 
                     // FIXME hide butons, replace with stop button (and eventually a pause button
@@ -176,7 +176,7 @@ public class ClipCardView extends BaseRecordCardView {
 
 //                mCardModel.setNarration(mf);
                 // FIXME save the audio file
-                changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
+//                changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
             }
         };
 
@@ -826,37 +826,37 @@ public class ClipCardView extends BaseRecordCardView {
 
         return image;
     }
-    /**
-     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
-     */
-    @Override
-    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
-        super.changeRecordNarrationStateChanged(newState);
-        switch(mRecordNarrationState) {
-            case READY:
-                tvImport.setVisibility(View.VISIBLE);
-                tvCapture.setVisibility(View.VISIBLE);
-                tvStop.setVisibility(View.GONE);
-                mVUMeterLayout.setVisibility(View.GONE);
-                break;
-            case RECORDING:
-                tvImport.setVisibility(View.GONE);
-                tvCapture.setVisibility(View.GONE);
-                tvStop.setVisibility(View.VISIBLE);
-                mVUMeterLayout.setVisibility(View.VISIBLE);
-                break;
-            case PAUSED:
-                tvImport.setVisibility(View.GONE);
-                tvCapture.setVisibility(View.GONE);
-                tvStop.setVisibility(View.VISIBLE);
-                mVUMeterLayout.setVisibility(View.VISIBLE);
-                break;
-            case STOPPED:
-                tvImport.setVisibility(View.VISIBLE);
-                tvCapture.setVisibility(View.VISIBLE);
-                tvStop.setVisibility(View.GONE);
-                mVUMeterLayout.setVisibility(View.GONE);
-                break;
-        }
-    }
+//    /**
+//     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
+//     */
+//    @Override
+//    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
+//        super.changeRecordNarrationStateChanged(newState);
+//        switch(mRecordNarrationState) {
+//            case READY:
+//                tvImport.setVisibility(View.VISIBLE);
+//                tvCapture.setVisibility(View.VISIBLE);
+//                tvStop.setVisibility(View.GONE);
+//                mVUMeterLayout.setVisibility(View.GONE);
+//                break;
+//            case RECORDING:
+//                tvImport.setVisibility(View.GONE);
+//                tvCapture.setVisibility(View.GONE);
+//                tvStop.setVisibility(View.VISIBLE);
+//                mVUMeterLayout.setVisibility(View.VISIBLE);
+//                break;
+//            case PAUSED:
+//                tvImport.setVisibility(View.GONE);
+//                tvCapture.setVisibility(View.GONE);
+//                tvStop.setVisibility(View.VISIBLE);
+//                mVUMeterLayout.setVisibility(View.VISIBLE);
+//                break;
+//            case STOPPED:
+//                tvImport.setVisibility(View.VISIBLE);
+//                tvCapture.setVisibility(View.VISIBLE);
+//                tvStop.setVisibility(View.GONE);
+//                mVUMeterLayout.setVisibility(View.GONE);
+//                break;
+//        }
+//    }
 }
