@@ -226,7 +226,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _onTimerTick() {
         try {
             if (mIsPlaying) {
-                Log.i("Timer", "isPlaying");
+                //Log.i("Timer", "isPlaying");
                 int currentClipElapsedTime = 0;
                 switch (mCurrentlyPlayingCard.getMedium()) {
                     case Constants.VIDEO:
@@ -266,7 +266,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (mPlaybackProgress != null) {
                     mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
                 }
-                Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
+                //Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
             }
         } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
     }
@@ -284,23 +284,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     mMainPlayer.setSurface(mSurface);
                     prepareMainMediaPlayer(mMainPlayer);
                     mMainPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-//                    mMainPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                        @Override
-//                        public void onPrepared(MediaPlayer mp) {
-//                            mAdvancingClips = false;
-//                            mMainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
-//
-//                            int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
-//
-//                            if (currentClipIdx != 0) {
-//                                mMainPlayer.start();
-//                            } else {
-//                                mIsPlaying = false;
-//                                mIsPaused = false; // Next touch should initiate startPlaying
-//                                Log.i(TAG, "onPrepared setting isPaused false");
-//                            }
-//                        }
-//                    });
                     mMainPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
