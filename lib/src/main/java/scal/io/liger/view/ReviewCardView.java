@@ -110,7 +110,8 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             public void onClick(View v) {
 
                 if (mMediaCards.size() > 0) {
-                    NarrationPopup.show((MainActivity) mCardModel.getStoryPath().getContext(), mMediaCards, ReviewCardView.this);
+                    NarrationPopup narrationPopup = new NarrationPopup((MainActivity) mCardModel.getStoryPath().getContext());
+                    narrationPopup.show(mMediaCards, ReviewCardView.this);
                 } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_narrating), Toast.LENGTH_SHORT).show();
             }

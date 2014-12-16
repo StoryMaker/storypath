@@ -174,7 +174,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     public int getMaxRecordingAmplitude() {
-        return mMediaRecorder.getMaxAmplitude();
+        return mMediaRecorder == null ? 0 : mMediaRecorder.getMaxAmplitude();
     }
 
     public RecordNarrationState getState() {
