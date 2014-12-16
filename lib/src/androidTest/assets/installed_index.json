@@ -1,0 +1,5 @@
+[
+    {"expansionId":"expansion_test_1", "patchOrder":"1", "expansionFileName":"expansion_test_1.ZIP", "expansionFileVersion":"0", "expansionFilePath":"Android/data/scal.io.liger.test/files/test/", "expansionFileUrl":"https://storymaker.cc/appdata/obb/test/"},
+    {"expansionId":"expansion_test_2a", "patchOrder":"2", "expansionFileName":"expansion_test_2a.ZIP", "expansionFileVersion":"0", "expansionFilePath":"Android/data/scal.io.liger.test/files/test/", "expansionFileUrl":"https://storymaker.cc/appdata/obb/test/"},
+    {"expansionId":"expansion_test_2b", "patchOrder":"3", "expansionFileName":"expansion_test_2b.ZIP", "expansionFileVersion":"0", "expansionFilePath":"Android/data/scal.io.liger.test/files/test/", "expansionFileUrl":"https://storymaker.cc/appdata/obb/test/"}
+]
