@@ -140,10 +140,14 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     public void _stopRecordingNarration() {
+        _stopRecordingNarration(true);
+    }
+
+    public void _stopRecordingNarration(boolean stopPlayback) {
         changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = finishRecordingNarration();
         if (mListener != null) mListener.onNarrationFinished(mf);
-        _stopPlayback();
+        if (stopPlayback) _stopPlayback();
     }
 
     public int getMaxRecordingAmplitude() {
@@ -157,17 +161,11 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     // </editor-fold desc="Public API">
 
     @Override
-    protected void advanceToNextClip(MediaPlayer player) {
-        super.advanceToNextClip(player);
+    protected void _advanceToNextClip(MediaPlayer player) {
+        super._advanceToNextClip(player);
 
         if (!mIsPlaying && mRecordNarrationState == RecordNarrationState.RECORDING) {
-            stopRecordingNarration();
-//            mContainerLayout.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    changeRecordNarrationState(RecordNarrationState.STOPPED);
-//                }
-//            });
+            _stopRecordingNarration(false); // super._advanceToNextClip(player) stopped playback
         }
     }
 

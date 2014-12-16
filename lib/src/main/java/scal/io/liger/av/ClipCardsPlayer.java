@@ -330,7 +330,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.ADVANCE, player));
     }
 
-    private void _advanceToNextClip(MediaPlayer player) {
+    protected void _advanceToNextClip(MediaPlayer player) {
         mAdvancingClips = true;
 
         Uri media;
