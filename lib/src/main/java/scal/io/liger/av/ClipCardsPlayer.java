@@ -337,18 +337,27 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected void _advanceToNextClip(MediaPlayer player) {
         mAdvancingClips = true;
 
-        Uri media;
         int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
         if (currentClipIdx == (mClipCards.size() - 1)) {
-            mIsPlaying = false;
+            mAdvancingClips = false;
             Log.i(TAG, "Played all clips. stopping");
             _stopPlayback();
         } else {
-            // Advance to next clip
-            mCurrentlyPlayingCard = mClipCards.get(++currentClipIdx);
             Log.i(TAG, "Advancing to next clip " + mClipCards.indexOf(mCurrentlyPlayingCard));
+            _advanceToClip(player, mClipCards.get(++currentClipIdx));
+        }
+    }
+
+    protected void _advanceToClip(MediaPlayer player, ClipCard targetClip) {
+        if (mClipCards.indexOf(targetClip) == -1) {
+            Log.e(TAG, "Invalid Card passed to _advanceToClip");
+            return;
         }
 
+        mAdvancingClips = true;
+        mCurrentlyPlayingCard = targetClip;
+
+        Uri media;
         switch (mCurrentlyPlayingCard.getMedium()) {
             case Constants.VIDEO:
             case Constants.AUDIO:
@@ -371,19 +380,21 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 Log.i(TAG, "set currentelapsedtime to 0");
                 if (mClipCards.indexOf(mCurrentlyPlayingCard) == 0) {
                     // Stop playback. With video / audio this would be handled onPreparedListener
-                    mIsPlaying = false;
                     _stopPlayback();
                 }
                 if (mThumbnailView != null) {
-                    mThumbnailView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-                            if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
-                            mAdvancingClips = false;
-                        }
-                    });
+                    setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
+                    if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
+//                    mThumbnailView.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
+//                            if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
+//                            mAdvancingClips = false;
+//                        }
+//                    });
                 }
+                mAdvancingClips = false;
                 break;
         }
     }
