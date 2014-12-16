@@ -3,17 +3,16 @@ package scal.io.liger.av;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,7 +22,6 @@ import scal.io.liger.Constants;
 import scal.io.liger.R;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
-import scal.io.liger.view.BaseRecordCardView;
 
 /**
  * Plays a collection of ClipCards, as well as a secondary audio track.
@@ -54,6 +52,39 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
     }
 
+    protected static class ClipCardsNarratorHandler extends ClipCardsPlayerHandler {
+
+        public static final int START_REC_NARRATION = 7;
+        public static final int STOP_REC_NARRATION  = 8;
+
+        private WeakReference<ClipCardsNarrator> mWeakNarrator;
+
+        public ClipCardsNarratorHandler(ClipCardsPlayer player) {
+            super(player);
+            mWeakNarrator = new WeakReference<>((ClipCardsNarrator) player);
+        }
+
+        @Override
+        public void handleMessage (Message msg) {
+            ClipCardsNarrator narrator = mWeakNarrator.get();
+            if (narrator == null) {
+                Log.w(getClass().getSimpleName(), "ClipCardsNarrator.handleMessage: narrator is null!");
+                return;
+            }
+
+            switch(msg.what) {
+                case START_REC_NARRATION:
+                    narrator._startRecordingNarration();
+                    break;
+                case STOP_REC_NARRATION:
+                    narrator._stopRecordingNarration();
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
     public interface NarrationListener {
         public void onNarrationFinished(MediaFile narration);
     }
@@ -62,6 +93,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
     public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         super(container, clipCards);
+        mHandler = new ClipCardsNarratorHandler(this);
         changeRecordNarrationState(RecordNarrationState.READY);
     }
 
@@ -75,6 +107,10 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     public void startRecordingNarration() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsNarratorHandler.START_REC_NARRATION));
+    }
+
+    private void _startRecordingNarration() {
         changeRecordNarrationState(RecordNarrationState.RECORDING);
         DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String now = df.format(new Date());
@@ -96,14 +132,18 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             Log.e(TAG, "prepare() failed");
             Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
         }
-        startPlayback();
+        _startPlayback();
     }
 
     public void stopRecordingNarration() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsNarratorHandler.STOP_REC_NARRATION));
+    }
+
+    public void _stopRecordingNarration() {
         changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = finishRecordingNarration();
         if (mListener != null) mListener.onNarrationFinished(mf);
-        stopPlayback();
+        _stopPlayback();
     }
 
     public int getMaxRecordingAmplitude() {

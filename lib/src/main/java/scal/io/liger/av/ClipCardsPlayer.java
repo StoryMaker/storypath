@@ -6,6 +6,8 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -50,6 +53,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private TextureView mTextureView;
     private SeekBar mPlaybackProgress;
     private Timer mTimer;
+    protected Handler mHandler;
 
     private boolean mAdvancingClips;
     protected boolean mIsPlaying;
@@ -79,12 +83,65 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
     };
 
+    protected static class ClipCardsPlayerHandler extends Handler {
+
+        public static final int START   = 0;
+        public static final int RESUME  = 1;
+        public static final int PAUSE   = 2;
+        public static final int STOP    = 3;
+        public static final int ADVANCE = 4;
+        public static final int RELEASE = 5;
+        public static final int TIMER   = 6;
+
+        private WeakReference<ClipCardsPlayer> mWeakPlayer;
+
+        public ClipCardsPlayerHandler(ClipCardsPlayer player) {
+            mWeakPlayer = new WeakReference<>(player);
+        }
+
+        @Override
+        public void handleMessage (Message msg) {
+
+            ClipCardsPlayer player = mWeakPlayer.get();
+            if (player == null) {
+                Log.w(getClass().getSimpleName(), "ClipCardsPlayer.handleMessage: player is null!");
+                return;
+            }
+
+            Object obj = msg.obj;
+
+            switch(msg.what) {
+                case START:
+                    player._startPlayback();
+                    break;
+                case RESUME:
+                    player._resumePlayback();
+                    break;
+                case PAUSE:
+                    player._pausePlayback();
+                    break;
+                case STOP:
+                    player._stopPlayback();
+                    break;
+                case ADVANCE:
+                    player._advanceToNextClip((MediaPlayer) obj);
+                    break;
+                case RELEASE:
+                    player._release();
+                    break;
+                case TIMER:
+                    player._onTimerTick();
+                    break;
+            }
+        }
+
+    }
+
     // <editor-fold desc="Public API">
 
     public ClipCardsPlayer(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         mContainerLayout = container;
         mClipCards = clipCards;
-        mContext = container.getContext();
         init();
     }
 
@@ -99,6 +156,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     // </editor-fold desc="Public API">
 
     private void init() {
+        mContext = mContainerLayout.getContext();
+        mHandler = new ClipCardsPlayerHandler(this);
         setupViews(mContainerLayout);
         mCurrentlyPlayingCard = mClipCards.get(0);
         setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
@@ -142,55 +201,63 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mTimer.schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                try {
-                                    if (mIsPlaying) {
-                                        Log.i("Timer", "isPlaying");
-                                        int currentClipElapsedTime = 0;
-                                        switch (mCurrentlyPlayingCard.getMedium()) {
-                                            case Constants.VIDEO:
-                                            case Constants.AUDIO:
-                                                currentClipElapsedTime = Math.min(mMainPlayer.getCurrentPosition(), mMainPlayer.getDuration()); // Seen issues where getCurrentPosition returns
-                                                // If getStopTime() is equal to 0 or mediaPlayer.getDuration(), clip advancing will be handled by the MediaPlayer onCompletionListener
-                                                int clipStopTimeMs = mCurrentlyPlayingCard.getSelectedClip().getStopTime();
-                                                if (!mAdvancingClips && clipStopTimeMs > 0 && currentClipElapsedTime > clipStopTimeMs && clipStopTimeMs != mMainPlayer.getDuration()) {
-                                                    //mediaPlayer.pause();
-                                                    Log.i(TAG, String.format("video mTimer advancing clip. Clip stop time: %d. MediaPlayer duration: %d", clipStopTimeMs, mMainPlayer.getDuration()));
-                                                    advanceToNextClip(mMainPlayer);
-                                                } else if (mAdvancingClips) {
-                                                    // MediaPlayer is transitioning and cannot report progress
-                                                    Log.i("Timer", "MediaPlayer is advancing, using currentClipElapsedTime of 0");
-                                                    currentClipElapsedTime = 0;
-                                                }
-                                                break;
-                                            case Constants.PHOTO:
-                                                //Log.i("Timer", String.format("Photo elapsed time %d / %d", currentPhotoElapsedTime, mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs));
-                                                mCurrentPhotoElapsedTime += TIMER_INTERVAL_MS; // For Photo cards, this is reset on each call to advanceToNextClip
-                                                currentClipElapsedTime = mCurrentPhotoElapsedTime;
-
-                                                if (!mAdvancingClips && currentClipElapsedTime > mPhotoSlideDurationMs) {
-                                                    //Log.i("Timer", "advancing photo");
-                                                    Log.i(TAG, "photo mTimer advancing clip");
-                                                    advanceToNextClip(null);
-                                                    mCurrentPhotoElapsedTime = 0;
-                                                    currentClipElapsedTime = 0;
-                                                }
-                                                break;
-                                        }
-
-                                        int durationOfPreviousClips = 0;
-                                        int currentlyPlayingCardIndex = mClipCards.indexOf(mCurrentlyPlayingCard);
-                                        if (currentlyPlayingCardIndex > 0)
-                                            durationOfPreviousClips = accumulatedDurationByMediaCard.get(currentlyPlayingCardIndex - 1);
-                                        if (mPlaybackProgress != null) {
-                                            mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
-                                        }
-                                        Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
-                                    }
-                                } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
+                                onTimerTick();
                             }
                         },
                 50,                   // Initial delay ms
                 TIMER_INTERVAL_MS);   // Repeat interval ms
+    }
+
+    private void onTimerTick() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.TIMER));
+    }
+
+    private void _onTimerTick() {
+        try {
+            if (mIsPlaying) {
+                Log.i("Timer", "isPlaying");
+                int currentClipElapsedTime = 0;
+                switch (mCurrentlyPlayingCard.getMedium()) {
+                    case Constants.VIDEO:
+                    case Constants.AUDIO:
+                        currentClipElapsedTime = Math.min(mMainPlayer.getCurrentPosition(), mMainPlayer.getDuration()); // Seen issues where getCurrentPosition returns
+                        // If getStopTime() is equal to 0 or mediaPlayer.getDuration(), clip advancing will be handled by the MediaPlayer onCompletionListener
+                        int clipStopTimeMs = mCurrentlyPlayingCard.getSelectedClip().getStopTime();
+                        if (!mAdvancingClips && clipStopTimeMs > 0 && currentClipElapsedTime > clipStopTimeMs && clipStopTimeMs != mMainPlayer.getDuration()) {
+                            //mediaPlayer.pause();
+                            Log.i(TAG, String.format("video mTimer advancing clip. Clip stop time: %d. MediaPlayer duration: %d", clipStopTimeMs, mMainPlayer.getDuration()));
+                            _advanceToNextClip(mMainPlayer);
+                        } else if (mAdvancingClips) {
+                            // MediaPlayer is transitioning and cannot report progress
+                            Log.i("Timer", "MediaPlayer is advancing, using currentClipElapsedTime of 0");
+                            currentClipElapsedTime = 0;
+                        }
+                        break;
+                    case Constants.PHOTO:
+                        //Log.i("Timer", String.format("Photo elapsed time %d / %d", currentPhotoElapsedTime, mCardModel.getStoryPath().getStoryPathLibrary().photoSlideDurationMs));
+                        mCurrentPhotoElapsedTime += TIMER_INTERVAL_MS; // For Photo cards, this is reset on each call to advanceToNextClip
+                        currentClipElapsedTime = mCurrentPhotoElapsedTime;
+
+                        if (!mAdvancingClips && currentClipElapsedTime > mPhotoSlideDurationMs) {
+                            //Log.i("Timer", "advancing photo");
+                            Log.i(TAG, "photo mTimer advancing clip");
+                            _advanceToNextClip(null);
+                            mCurrentPhotoElapsedTime = 0;
+                            currentClipElapsedTime = 0;
+                        }
+                        break;
+                }
+
+                int durationOfPreviousClips = 0;
+                int currentlyPlayingCardIndex = mClipCards.indexOf(mCurrentlyPlayingCard);
+                if (currentlyPlayingCardIndex > 0)
+                    durationOfPreviousClips = accumulatedDurationByMediaCard.get(currentlyPlayingCardIndex - 1);
+                if (mPlaybackProgress != null) {
+                    mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
+                }
+                Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
+            }
+        } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
     }
 
     @Override
@@ -227,7 +294,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             Log.i(TAG, "mediaplayer onComplete. advancing clip");
-                            if (!mAdvancingClips) advanceToNextClip(mp);
+                            if (!mAdvancingClips) {
+                                advanceToNextClip(mp);
+                            }
                         }
                     });
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
@@ -258,6 +327,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     protected void advanceToNextClip(MediaPlayer player) {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.ADVANCE, player));
+    }
+
+    private void _advanceToNextClip(MediaPlayer player) {
         mAdvancingClips = true;
 
         Uri media;
@@ -278,7 +351,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             // TODO StopPlayback callback
             // We've played through all the clips
             Log.i(TAG, "Played all clips. stopping");
-            stopPlayback();
+            _stopPlayback();
         } else {
             // Advance to next clip
             mCurrentlyPlayingCard = mClipCards.get(++currentClipIdx);
@@ -308,7 +381,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (mClipCards.indexOf(mCurrentlyPlayingCard) == 0) {
                     // Stop playback. With video / audio this would be handled onPreparedListener
                     mIsPlaying = false;
-                    stopPlayback();
+                    _stopPlayback();
                 }
                 if (mThumbnailView != null) {
                     mThumbnailView.post(new Runnable() {
@@ -325,6 +398,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     protected void startPlayback() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.START));
+    }
+
+    protected void _startPlayback() {
         mIsPlaying = true;
         // Connect narrationPlayer to narration mediaFile on each request to start playback
         // to ensure we have the most current narration recording
@@ -359,6 +436,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void pausePlayback() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.PAUSE));
+    }
+
+    private void _pausePlayback() {
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.pause();
         }
@@ -372,6 +453,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void resumePlayback() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RESUME));
+    }
+
+    private void _resumePlayback() {
         if (mMainPlayer != null && !mMainPlayer.isPlaying()) {
             mMainPlayer.start();
         }
@@ -385,6 +470,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     protected void stopPlayback() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.STOP));
+    }
+
+    protected void _stopPlayback() {
+        mIsPaused = false;
+        mIsPlaying = false;
+
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.stop();
             mMainPlayer.reset();
@@ -400,6 +492,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void release() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RELEASE));
+    }
+
+    private void _release() {
         if (mMainPlayer != null) mMainPlayer.release();
         if (mSecondaryPlayer != null) mSecondaryPlayer.release();
     }
