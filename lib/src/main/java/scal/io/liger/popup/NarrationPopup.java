@@ -88,7 +88,7 @@ public class NarrationPopup {
                     public void onNarrationFinished(MediaFile narration) {
                         mNarrator.addAudioTrack(narration);
                         recordButton.setText(mActivity.getString(R.string.dialog_record));
-                        if (listener != null) mNarrator.setNarrationListener(listener);
+                        if (listener != null) listener.onNarrationFinished(narration);
                         mVuLayout.setVisibility(View.INVISIBLE);
                     }
                 };
