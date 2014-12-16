@@ -337,15 +337,17 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected void _advanceToNextClip(MediaPlayer player) {
         mAdvancingClips = true;
 
-        int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
-        if (currentClipIdx == (mClipCards.size() - 1)) {
-            mAdvancingClips = false;
+        int nextClipIndex = mClipCards.indexOf(mCurrentlyPlayingCard);
+        if (nextClipIndex == (mClipCards.size() - 1)) {
             Log.i(TAG, "Played all clips. stopping");
+            nextClipIndex = 0;
             _stopPlayback();
         } else {
-            Log.i(TAG, "Advancing to next clip " + mClipCards.indexOf(mCurrentlyPlayingCard));
-            _advanceToClip(player, mClipCards.get(++currentClipIdx));
+            Log.i(TAG, "Advancing to next clip " + nextClipIndex);
+            nextClipIndex++;
         }
+
+        _advanceToClip(player, mClipCards.get(nextClipIndex));
     }
 
     protected void _advanceToClip(MediaPlayer player, ClipCard targetClip) {
