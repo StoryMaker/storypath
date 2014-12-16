@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,6 +96,16 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
             mSelectedItems[x] = true;
             if (notifyChanged) notifyItemChanged(x);
         }
+    }
+
+    public List<ClipCard> getSelectedCards() {
+        ArrayList<ClipCard> result = new ArrayList<>();
+        for (int x = 0; x < mSelectedItems.length; x++) {
+            if (mSelectedItems[x]) {
+                result.add(mClipCards.get(x));
+            }
+        }
+        return result;
     }
 
     @Override

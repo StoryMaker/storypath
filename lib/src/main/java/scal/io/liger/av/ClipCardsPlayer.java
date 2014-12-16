@@ -46,7 +46,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     protected Context mContext;
     protected FrameLayout mContainerLayout;
-    private List<ClipCard> mClipCards;
+    protected List<ClipCard> mClipCards;
     private ArrayList<Integer> accumulatedDurationByMediaCard;
     protected ClipCard mCurrentlyPlayingCard;
     protected MediaPlayer mMainPlayer;
@@ -341,19 +341,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
         if (currentClipIdx == (mClipCards.size() - 1)) {
             mIsPlaying = false;
-            // We've played through all the clips
-//            if (mRecordNarrationState == RecordNarrationState.RECORDING) {
-//                MediaFile mf = stopRecordingNarration();
-//                mCardModel.setNarration(mf);
-//                ivThumbnail.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
-//                    }
-//                });
-//            }
-            // TODO StopPlayback callback
-            // We've played through all the clips
             Log.i(TAG, "Played all clips. stopping");
             _stopPlayback();
         } else {

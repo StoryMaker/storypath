@@ -5,7 +5,9 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     private File mNarrationOutput;
     private RecordNarrationState mRecordNarrationState;
     private NarrationListener mListener;
+    private Pair<Integer, Integer> mSelectedClipIndexes;
 
     public static enum RecordNarrationState {
 
@@ -72,9 +75,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                 return;
             }
 
+            Object obj = msg.obj;
             switch(msg.what) {
                 case START_REC_NARRATION:
-                    narrator._startRecordingNarration();
+                    if (obj != null && obj instanceof Pair)
+                        narrator._startRecordingNarration((Pair<Integer, Integer>) obj);
+                    else
+                        narrator._startRecordingNarration();
                     break;
                 case STOP_REC_NARRATION:
                     narrator._stopRecordingNarration();
@@ -89,15 +96,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         public void onNarrationFinished(MediaFile narration);
     }
 
-    // <editor-fold desc="Public API">
-
     public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         super(container, clipCards);
         mHandler = new ClipCardsNarratorHandler(this);
-        changeRecordNarrationState(RecordNarrationState.READY);
+        _changeRecordNarrationState(RecordNarrationState.READY);
     }
 
-    public void changeRecordNarrationState(RecordNarrationState newState) {
+    private void _changeRecordNarrationState(RecordNarrationState newState) {
         Log.i(TAG, "Changing state to " + newState.toString());
         mRecordNarrationState = newState;
     }
@@ -106,12 +111,22 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         mListener = listener;
     }
 
+    public void startRecordingNarrationForCards(@NonNull List<ClipCard> selectedCards) {
+        Pair<Integer, Integer> indexes = Pair.create(mClipCards.indexOf(selectedCards.get(0)),
+                                                     mClipCards.indexOf(selectedCards.get(selectedCards.size()-1)));
+
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsNarratorHandler.START_REC_NARRATION, indexes));
+    }
+
     public void startRecordingNarration() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsNarratorHandler.START_REC_NARRATION));
     }
 
-    private void _startRecordingNarration() {
-        changeRecordNarrationState(RecordNarrationState.RECORDING);
+    private void _startRecordingNarration(@Nullable Pair<Integer, Integer> indexes) {
+        _changeRecordNarrationState(RecordNarrationState.RECORDING);
+
+        mSelectedClipIndexes = indexes;
+
         DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
         String now = df.format(new Date());
         mNarrationOutput = new File(Environment.getExternalStorageDirectory(), now + /*".aac"*/ ".mp4");
@@ -132,7 +147,15 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             Log.e(TAG, "prepare() failed");
             Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
         }
+
+        if (indexes != null) {
+            mCurrentlyPlayingCard = mClipCards.get(indexes.first);
+        }
         _startPlayback();
+    }
+
+    private void _startRecordingNarration() {
+        _startRecordingNarration(null);
     }
 
     public void stopRecordingNarration() {
@@ -144,7 +167,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     public void _stopRecordingNarration(boolean stopPlayback) {
-        changeRecordNarrationState(RecordNarrationState.STOPPED);
+        _changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = finishRecordingNarration();
         if (mListener != null) mListener.onNarrationFinished(mf);
         if (stopPlayback) _stopPlayback();
@@ -158,10 +181,16 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         return mRecordNarrationState;
     }
 
-    // </editor-fold desc="Public API">
-
     @Override
     protected void _advanceToNextClip(MediaPlayer player) {
+
+        if ((mRecordNarrationState == RecordNarrationState.RECORDING) &&
+            (mSelectedClipIndexes != null && mSelectedClipIndexes.second == mClipCards.indexOf(mCurrentlyPlayingCard))) {
+            Log.i(TAG, "Will stop recording. Current clip exceeds narration selection");
+            _stopRecordingNarration(true);
+            return;
+        }
+
         super._advanceToNextClip(player);
 
         if (!mIsPlaying && mRecordNarrationState == RecordNarrationState.RECORDING) {
@@ -170,7 +199,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     @Override
-    protected void startPlayback() {
+    protected void _startPlayback() {
         if (mRecordNarrationState.equals(RecordNarrationState.RECORDING)) {
             mIsPlaying = true;
 

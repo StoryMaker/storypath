@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -44,6 +45,12 @@ public class NarrationPopup {
                 final Button recordButton = (Button) popUpView.findViewById(R.id.record_button);
                 FrameLayout mediaPlayerContainer = (FrameLayout) popUpView.findViewById(R.id.mixed_media_player);
                 final ClipCardsNarrator narrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
+                RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+                final NarrationMediaAdapter adapter = new NarrationMediaAdapter(recyclerView, cards);
+                recyclerView.setAdapter(adapter);
+
                 ClipCardsNarrator.NarrationListener narrationListener = new ClipCardsNarrator.NarrationListener() {
                     @Override
                     public void onNarrationFinished(MediaFile narration) {
@@ -63,16 +70,16 @@ public class NarrationPopup {
                             recordButton.setText(activity.getString(R.string.dialog_record));
                         } else {
                             Log.i("NarratePopup", "starting");
-                            narrator.startRecordingNarration();
+                            List<ClipCard> selectedCards = adapter.getSelectedCards();
+                            if (selectedCards.size() == 0) {
+                                Toast.makeText(activity, "Please select a range of clips to narrate", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            narrator.startRecordingNarrationForCards(selectedCards);
                             recordButton.setText(activity.getString(R.string.dialog_stop));
                         }
                     }
                 });
-
-                RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
-                recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                NarrationMediaAdapter adapter = new NarrationMediaAdapter(recyclerView, cards);
-                recyclerView.setAdapter(adapter);
 
                 Display display = activity.getWindowManager().getDefaultDisplay();
                 Point size = new Point();
