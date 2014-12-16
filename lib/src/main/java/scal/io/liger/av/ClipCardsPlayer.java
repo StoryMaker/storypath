@@ -39,6 +39,9 @@ import scal.io.liger.model.MediaFile;
 /**
  * Plays a collection of ClipCards, as well as a secondary audio track.
  *
+ * Development Note : All methods prefixed with '_' are intended for exclusive
+ * use by {@link Handler#handleMessage(android.os.Message)} and other '_' prefixed methods.
+ *
  * Created by davidbrodsky on 12/12/14.
  */
 public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
@@ -87,6 +90,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
     };
 
+    /**
+     * Handler to coordinate actions affecting the internal MediaPlayers.
+     * Events may come from the UI or Timer thread.
+     */
     protected static class ClipCardsPlayerHandler extends Handler {
 
         public static final int START   = 0;
@@ -388,20 +395,15 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (mThumbnailView != null) {
                     setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
                     if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
-//                    mThumbnailView.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-//                            if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
-//                            mAdvancingClips = false;
-//                        }
-//                    });
                 }
                 break;
         }
         mAdvancingClips = false;
     }
 
+    /**
+     * Begin playback of the main media files, as well as the secondary auto track if set.
+     */
     protected void startPlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.START));
     }
@@ -440,6 +442,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
     }
 
+    /**
+     * Pause playback, preserving the playback location for a following call to
+     * {@link #resumePlayback()}
+     */
     private void pausePlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.PAUSE));
     }
@@ -457,6 +463,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mIsPlaying = false;
     }
 
+    /**
+     * Resume playback at the location determined by a previous call to
+     * {@link #pausePlayback()}
+     */
     private void resumePlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RESUME));
     }
@@ -474,6 +484,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mIsPlaying = true;
     }
 
+    /**
+     * Stop playback and reset the playback location to the first clip.
+     */
     protected void stopPlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.STOP));
     }
@@ -496,6 +509,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mCurrentPhotoElapsedTime = 0;
     }
 
+    /**
+     * Release all MediaPlayers when playback will no longer be required
+     */
     private void release() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RELEASE));
     }
@@ -514,23 +530,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             Log.e(TAG, "Error preparing mediaplayer");
             e.printStackTrace();
         }
-//        mainPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                mAdvancingClips = false;
-//                mMainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
-//
-//                int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
-//
-//                if (currentClipIdx != 0) {
-//                    mMainPlayer.start();
-//                } else {
-//                    mIsPlaying = false;
-//                    mIsPaused = false; // Next touch should initiate startPlaying
-//                    Log.i(TAG, "onPrepared setting isPaused false");
-//                }
-//            }
-//        });
     }
 
     protected boolean firstClipCurrent() {
