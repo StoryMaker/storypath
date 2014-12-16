@@ -46,8 +46,9 @@ public class NarrationPopup {
                 FrameLayout mediaPlayerContainer = (FrameLayout) popUpView.findViewById(R.id.mixed_media_player);
                 final ClipCardsNarrator narrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
                 RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
-
+                recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+
                 final NarrationMediaAdapter adapter = new NarrationMediaAdapter(recyclerView, cards);
                 recyclerView.setAdapter(adapter);
 
