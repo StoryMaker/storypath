@@ -219,7 +219,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             }
         } else {
             mMainPlayer.setVolume(1, 1);
-            super.startPlayback();
+            super._startPlayback();
         }
     }
 
