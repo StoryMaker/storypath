@@ -96,6 +96,12 @@ public class IndexManager {
             return;
         }
 
+        // check for zero-byte files
+        if (jsonFile.exists() && (jsonFile.length() == 0)) {
+            Log.e("INDEX", "COPYING JSON FILE " + jsonFileName + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            jsonFile.delete();
+        }
+
         return;
     }
 

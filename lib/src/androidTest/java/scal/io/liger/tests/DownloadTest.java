@@ -36,9 +36,6 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
 
         mMainActivity = getActivity();
         mRecyclerView = (RecyclerView) mMainActivity.findViewById(R.id.recyclerView);
-
-        // copy installation index from assets for testing
-        copyIndex(mMainActivity);
     }
 
     // including only this single test case
@@ -56,33 +53,37 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
         // setup
         String testFilePath = ZipHelper.getFileFolderName(mMainActivity);
         File indexFile = new File(testFilePath + "installed_index.json");
-        File testFile1 = new File(testFilePath + "test" + File.separator + "expansion_test_1.ZIP");
-        File testFile2a = new File(testFilePath + "test" + File.separator + "expansion_test_2a.ZIP");
-        File testFile2b = new File(testFilePath + "test" + File.separator + "expansion_test_2b.ZIP");
-        File tempFile1 = new File(testFilePath + "test" + File.separator + "expansion_test_1.ZIP.tmp");
-        File tempFile2a = new File(testFilePath + "test" + File.separator + "expansion_test_2a.ZIP.tmp");
-        File tempFile2b = new File(testFilePath + "test" + File.separator + "expansion_test_2b.ZIP.tmp");
+        File testFile1 = new File(testFilePath + "expansion_test_1.ZIP");
+        File testFile2a = new File(testFilePath + "expansion_test_2a.ZIP");
+        File testFile2b = new File(testFilePath + "expansion_test_2b.ZIP");
+        File tempFile1 = new File(testFilePath + "expansion_test_1.ZIP.tmp");
+        File tempFile2a = new File(testFilePath + "expansion_test_2a.ZIP.tmp");
+        File tempFile2b = new File(testFilePath + "expansion_test_2b.ZIP.tmp");
 
         // delay to allow time for downloads
         stall(30000, "WAITING FOR DOWNLOADS");
 
         // verify index file existence
         assertTrue(indexFile.exists());
+        Log.d("AUTOMATION", "INDEX FILE EXISTS");
 
         // verify test file existence
         assertTrue(testFile1.exists());
         assertTrue(testFile2a.exists());
         assertTrue(testFile2b.exists());
+        Log.d("AUTOMATION", "EXPANSION FILES EXIST");
 
         // verify test file size
         assertTrue(testFile1.length() > 0);
         assertTrue(testFile2a.length() > 0);
         assertTrue(testFile2b.length() > 0);
+        Log.d("AUTOMATION", "EXPANSION FILES NON-ZERO");
 
         // verify test file cleanup
         assertTrue(!tempFile1.exists());
         assertTrue(!tempFile2a.exists());
         assertTrue(!tempFile2b.exists());
+        Log.d("AUTOMATION", "TEMP EXPANSION FILES DELETED");
 
         // verify test file contents
         String testString1 = "";
@@ -100,6 +101,7 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
             Log.e("AUTOMATION", "READING JSON FILE " + "test_file_1.txt" + " FROM ZIP FILE FAILED");
         }
         assertTrue(testString1.contains("THIS IS TEST FILE 1"));
+        Log.d("AUTOMATION", "TEST FILE 1 FOUND");
 
         // contents of file 2b should override contents of file 2a
         String testString2 = "";
@@ -117,9 +119,12 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
             Log.e("AUTOMATION", "READING JSON FILE " + "test_file_2.txt" + " FROM ZIP FILE FAILED");
         }
         assertTrue(testString2.contains("THIS IS TEST FILE 2B"));
+        Log.d("AUTOMATION", "TEST FILE 2 FOUND, CONTENTS CORRECT");
 
         // delete test files so test can be re-run
-        // index file deletion handled by copy method
+        if (indexFile.exists()) {
+            indexFile.delete();
+        }
         if (testFile1.exists()) {
             testFile1.delete();
         }
@@ -138,6 +143,8 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
         if (tempFile2b.exists()) {
             tempFile2b.delete();
         }
+
+        Log.d("AUTOMATION", "FINISHED CLEANUP, TEST COMPLETE");
     }
 
     private void stall(long milliseconds, String message) {
@@ -147,53 +154,5 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void copyIndex(Context context) {
-
-        AssetManager assetManager = context.getAssets();
-
-        String jsonFilePath = ZipHelper.getFileFolderName(context);
-
-        Log.d("AUTOMATION", "COPYING JSON FILE " + "installed_index_test.json" + " FROM ASSETS TO " + jsonFilePath);
-
-        File jsonFile = new File(jsonFilePath + "installed_index_test.json");
-        if (jsonFile.exists()) {
-            jsonFile.delete();
-        }
-
-        InputStream assetIn = null;
-        OutputStream assetOut = null;
-
-        try {
-            assetIn = assetManager.open("installed_index_test.json");
-
-            assetOut = new FileOutputStream(jsonFile);
-
-            byte[] buffer = new byte[1024];
-            int read;
-            while ((read = assetIn.read(buffer)) != -1) {
-                assetOut.write(buffer, 0, read);
-            }
-            assetIn.close();
-            assetIn = null;
-            assetOut.flush();
-            assetOut.close();
-            assetOut = null;
-
-            // rename file to replace actual index file
-            File actualFile = new File(jsonFilePath + "installed_index.json");
-            if (actualFile.exists()) {
-                actualFile.delete();
-            }
-
-            Process p = Runtime.getRuntime().exec("mv " + jsonFile.getPath() + " " + actualFile.getPath());
-
-        } catch (IOException ioe) {
-            Log.e("AUTOMATION", "COPYING JSON FILE " + "installed_index_test.json" + " FROM ASSETS TO " + jsonFilePath + " FAILED");
-            return;
-        }
-
-        return;
     }
 }
