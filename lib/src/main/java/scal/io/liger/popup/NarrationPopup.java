@@ -40,6 +40,7 @@ import scal.io.liger.model.StoryPath;
 public class NarrationPopup {
 
     private Activity mActivity;
+    private ViewGroup mVuLayout;
     private ClipCardsNarrator mNarrator;
     private Handler mHandler;
     private int mPreviousVUMax;
@@ -72,7 +73,7 @@ public class NarrationPopup {
                 // Create a PopupWindow that occupies the entire screen except the status and action bar
                 final View popUpView = LayoutInflater.from(mActivity).inflate(R.layout.popup_narrate, (ViewGroup) decorView, false);
                 final Button recordButton = (Button) popUpView.findViewById(R.id.record_button);
-                final ViewGroup vuMeterLayout = (ViewGroup) popUpView.findViewById(R.id.vumeter_layout);
+                mVuLayout = (ViewGroup) popUpView.findViewById(R.id.vumeter_layout);
                 FrameLayout mediaPlayerContainer = (FrameLayout) popUpView.findViewById(R.id.mixed_media_player);
                 mNarrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
                 RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
@@ -88,6 +89,7 @@ public class NarrationPopup {
                         mNarrator.addAudioTrack(narration);
                         recordButton.setText(mActivity.getString(R.string.dialog_record));
                         if (listener != null) mNarrator.setNarrationListener(listener);
+                        mVuLayout.setVisibility(View.INVISIBLE);
                     }
                 };
                 mNarrator.setNarrationListener(narrationListener);
@@ -108,7 +110,8 @@ public class NarrationPopup {
                             }
                             mNarrator.startRecordingNarrationForCards(selectedCards);
                             recordButton.setText(mActivity.getString(R.string.dialog_stop));
-                            updateVUMeterView(vuMeterLayout);
+                            mVuLayout.setVisibility(View.VISIBLE);
+                            updateVUMeterView(mVuLayout);
                         }
                     }
                 });
