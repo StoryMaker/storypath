@@ -146,11 +146,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         } catch (IOException e) {
             Log.e(TAG, "prepare() failed");
             Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        if (indexes != null) {
-            _advanceToClip(mMainPlayer, mClipCards.get(indexes.first));
-        }
+        _advanceToClip(mMainPlayer,
+                       mClipCards.get(indexes == null ? 0 : indexes.first),
+                       false);
+
         _startPlayback();
     }
 
@@ -188,7 +190,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             (mSelectedClipIndexes != null && mSelectedClipIndexes.second == mClipCards.indexOf(mCurrentlyPlayingCard))) {
             Log.i(TAG, "Will stop recording. Current clip exceeds narration selection");
             _stopRecordingNarration(true);
-            _advanceToClip(player, mClipCards.get(0));
+            _advanceToClip(player, mClipCards.get(0), false);
             return;
         }
 

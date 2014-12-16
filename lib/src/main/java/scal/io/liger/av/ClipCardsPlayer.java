@@ -275,25 +275,25 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     mMainPlayer = new MediaPlayer();
                     mMainPlayer.setDataSource(mContext, Uri.parse(mCurrentlyPlayingCard.getSelectedMediaFile().getPath()));
                     mMainPlayer.setSurface(mSurface);
-                    mMainPlayer.prepareAsync();
+                    prepareMainMediaPlayer(mMainPlayer);
                     mMainPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-                    mMainPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mAdvancingClips = false;
-                            mMainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
-
-                            int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
-
-                            if (currentClipIdx != 0) {
-                                mMainPlayer.start();
-                            } else {
-                                mIsPlaying = false;
-                                mIsPaused = false; // Next touch should initiate startPlaying
-                                Log.i(TAG, "onPrepared setting isPaused false");
-                            }
-                        }
-                    });
+//                    mMainPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+//                            mAdvancingClips = false;
+//                            mMainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
+//
+//                            int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
+//
+//                            if (currentClipIdx != 0) {
+//                                mMainPlayer.start();
+//                            } else {
+//                                mIsPlaying = false;
+//                                mIsPaused = false; // Next touch should initiate startPlaying
+//                                Log.i(TAG, "onPrepared setting isPaused false");
+//                            }
+//                        }
+//                    });
                     mMainPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -347,10 +347,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             nextClipIndex++;
         }
 
-        _advanceToClip(player, mClipCards.get(nextClipIndex));
+        _advanceToClip(player, mClipCards.get(nextClipIndex), !(nextClipIndex == 0));
     }
 
-    protected void _advanceToClip(MediaPlayer player, ClipCard targetClip) {
+    protected void _advanceToClip(MediaPlayer player, ClipCard targetClip, boolean autoPlay) {
         if (mClipCards.indexOf(targetClip) == -1) {
             Log.e(TAG, "Invalid Card passed to _advanceToClip");
             return;
@@ -372,7 +372,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     Log.i(TAG, "Setting player data source " + media.toString());
                     player.setDataSource(mContext, media);
                     player.setSurface(mSurface);
-                    player.prepareAsync();
+                    prepareMainMediaPlayer(player);
+                    if (autoPlay) _resumePlayback();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -380,7 +381,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
             case Constants.PHOTO:
                 Log.i(TAG, "set currentelapsedtime to 0");
-                if (mClipCards.indexOf(mCurrentlyPlayingCard) == 0) {
+                if (firstClipCurrent()) {
                     // Stop playback. With video / audio this would be handled onPreparedListener
                     _stopPlayback();
                 }
@@ -396,9 +397,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 //                        }
 //                    });
                 }
-                mAdvancingClips = false;
                 break;
         }
+        mAdvancingClips = false;
     }
 
     protected void startPlayback() {
@@ -466,7 +467,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
 
         if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
-            mSecondaryPlayer.pause();
+            mSecondaryPlayer.start();
         }
 
         mIsPaused = false;
@@ -502,6 +503,38 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _release() {
         if (mMainPlayer != null) mMainPlayer.release();
         if (mSecondaryPlayer != null) mSecondaryPlayer.release();
+    }
+
+    protected void prepareMainMediaPlayer(MediaPlayer mainPlayer) {
+        try {
+            mainPlayer.prepare();
+            mAdvancingClips = false;
+            mainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
+        } catch (IOException e) {
+            Log.e(TAG, "Error preparing mediaplayer");
+            e.printStackTrace();
+        }
+//        mainPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mAdvancingClips = false;
+//                mMainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
+//
+//                int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
+//
+//                if (currentClipIdx != 0) {
+//                    mMainPlayer.start();
+//                } else {
+//                    mIsPlaying = false;
+//                    mIsPaused = false; // Next touch should initiate startPlaying
+//                    Log.i(TAG, "onPrepared setting isPaused false");
+//                }
+//            }
+//        });
+    }
+
+    protected boolean firstClipCurrent() {
+        return mClipCards.indexOf(mCurrentlyPlayingCard) == 0;
     }
 
     /**
