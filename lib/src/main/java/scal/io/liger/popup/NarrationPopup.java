@@ -19,14 +19,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
-import android.widget.Toast;
 
 import java.util.List;
 
 import scal.io.liger.R;
-import scal.io.liger.adapter.MediaAdapter;
+import scal.io.liger.adapter.NarrationMediaAdapter;
 import scal.io.liger.av.ClipCardsNarrator;
-import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
@@ -73,7 +71,7 @@ public class NarrationPopup {
 
                 RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
                 recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                MediaAdapter adapter = new MediaAdapter(recyclerView, cards);
+                NarrationMediaAdapter adapter = new NarrationMediaAdapter(recyclerView, cards);
                 recyclerView.setAdapter(adapter);
 
                 Display display = activity.getWindowManager().getDefaultDisplay();

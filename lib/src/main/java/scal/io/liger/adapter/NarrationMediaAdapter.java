@@ -4,10 +4,10 @@ import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,19 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 
 import scal.io.liger.R;
-import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 
 /**
  * Created by davidbrodsky on 10/23/14.
  */
-public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
+public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAdapter.ViewHolder> {
     public static final String TAG = "OrderMediaAdapter";
 
     private RecyclerView mRecyclerView;
     private HashMap<ClipCard, Long> mCardToStableId = new HashMap<>();
     private List<ClipCard> mClipCards;
+    private Boolean[] mSelectedItems;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -43,25 +43,62 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
         }
     }
 
-    public MediaAdapter(RecyclerView recyclerView, List<ClipCard> cards) {
+    public NarrationMediaAdapter(RecyclerView recyclerView, List<ClipCard> cards) {
         mRecyclerView = recyclerView;
         mClipCards = cards;
         long id = 0;
         for (ClipCard card : mClipCards) {
             mCardToStableId.put(card, id++);
         }
+        mSelectedItems = new Boolean[cards.size()];
+        for(int x = 0; x < mSelectedItems.length; x++) {
+            mSelectedItems[x] = false;
+        }
     }
 
     @Override
-    public MediaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    public NarrationMediaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.narration_clip_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
+        ((CheckBox) v.findViewById(R.id.check_box)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int checkPosition = (int) buttonView.getTag();
+                mSelectedItems[checkPosition] = isChecked;
+                validateSelectedItems();
+            }
+        });
         return new ViewHolder(v);
     }
 
+    private void validateSelectedItems() {
+        int firstSelectedIdx = Integer.MAX_VALUE;
+        int lastSelectedIdx = -1;
+
+        for (int x = 0; x < mSelectedItems.length; x++) {
+            if (mSelectedItems[x]) {
+
+                if (x < firstSelectedIdx) firstSelectedIdx = x;
+
+                if (x > lastSelectedIdx) lastSelectedIdx = x;
+
+            }
+        }
+
+        if (firstSelectedIdx == Integer.MAX_VALUE) {
+            return;
+        }
+
+        for (int x = firstSelectedIdx; x <= lastSelectedIdx; x++) {
+            boolean notifyChanged = !mSelectedItems[x];
+            mSelectedItems[x] = true;
+            if (notifyChanged) notifyItemChanged(x);
+        }
+    }
+
     @Override
-    public void onBindViewHolder(MediaAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(NarrationMediaAdapter.ViewHolder viewHolder, int position) {
 
         ClipCard clipCard = mClipCards.get(position);
 
@@ -74,6 +111,8 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
         }
 
         viewHolder.title.setText(title);
+        viewHolder.checkBox.setTag(position);
+        if (mSelectedItems[position]) viewHolder.checkBox.setChecked(true);
 
         MediaFile mf = clipCard.getSelectedMediaFile();
         if (mf == null) {
