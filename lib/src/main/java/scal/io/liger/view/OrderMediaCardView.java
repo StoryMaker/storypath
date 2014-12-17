@@ -135,12 +135,17 @@ public class OrderMediaCardView implements DisplayableCard {
             String clipType = ccm.getClipType();
             int drawable = R.drawable.ic_launcher;
 
+            // FIXME these need to be replaced with the real overlays
             if (clipType.equals(Constants.CHARACTER)) {
                 drawable = R.drawable.cliptype_close;
             } else if (clipType.equals(Constants.ACTION)) {
                 drawable = R.drawable.cliptype_medium;
             } else if (clipType.equals(Constants.RESULT)){
                 drawable = R.drawable.cliptype_long;
+            } else if (clipType.equals(Constants.PLACE)){
+                drawable = R.drawable.cliptype_wide;
+            } else if (clipType.equals(Constants.SIGNATURE)){
+                drawable = R.drawable.cliptype_detail;
             }
 
             ivTemp.setImageDrawable(mContext.getResources().getDrawable(drawable));

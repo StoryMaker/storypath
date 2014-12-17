@@ -9,6 +9,8 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import scal.io.liger.Constants;
+import scal.io.liger.R;
 import scal.io.liger.view.ClipCardView;
 import scal.io.liger.view.DisplayableCard;
 
@@ -50,6 +52,10 @@ public class ClipCard extends ExampleCard implements Cloneable {
 
     public String getClipType() {
         return fillReferences(clipType);
+    }
+
+    public String getClipTypeLocalized() {
+        return Constants.getClipTypeLocalized(getStoryPath().getContext(), getClipType());
     }
 
     public String getFirstGoal() {

@@ -121,7 +121,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         String title;
         if (ccm.getTitle() == null || ccm.getTitle().length() == 0) {
             String goal = ccm.getFirstGoal();
-            title = String.format("%s: %s", ccm.getClipType(), goal);
+            title = String.format("%s: %s", Constants.getClipTypeLocalized(context, ccm.getClipType()), goal);
         } else {
             title = ccm.getTitle();
         }

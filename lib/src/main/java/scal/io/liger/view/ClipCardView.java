@@ -315,7 +315,7 @@ public class ClipCardView extends BaseRecordCardView {
             mDisplayedClips.add(clipThumb);
         }
 
-        tvHeader.setText(mCardModel.getClipType().toUpperCase());
+        tvHeader.setText(mCardModel.getClipTypeLocalized().toUpperCase());
         tvHeader.setTextColor(getClipTypeColor(mCardModel.getClipType()));
 
         // Expand / Collapse footer on click
@@ -533,7 +533,7 @@ public class ClipCardView extends BaseRecordCardView {
                     player.seekTo(selectedClip.getStartTime());
                     rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipDurationMs.get()),
                                               getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipDurationMs.get()));
-                    clipLength.setText("Total : " + Util.makeTimeString(clipDurationMs.get()));
+                    clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
                     clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
                     e.printStackTrace();
@@ -577,7 +577,7 @@ public class ClipCardView extends BaseRecordCardView {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(v)
-                .setPositiveButton("TRIM CLIP", new DialogInterface.OnClickListener() {
+                .setPositiveButton(mContext.getString(R.string.trim_clip).toUpperCase(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mCardModel.getSelectedClip().setStartTime(clipStartMs.get());
@@ -588,7 +588,7 @@ public class ClipCardView extends BaseRecordCardView {
                         mCardModel.getStoryPath().getStoryPathLibrary().save(true);
                     }
                 })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                .setNegativeButton(mContext.getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         player.release();

@@ -69,14 +69,14 @@ public class ReviewCardView extends BaseRecordCardView {
     private String mMedium;
 
     public ReviewCardView(Context context, Card cardModel) {
-        Log.d("RevieCardView", "constructor");
+        Log.d(TAG, "constructor");
         mContext = context;
         mCardModel = (ReviewCard) cardModel;
     }
 
     @Override
     public View getCardView(final Context context) {
-        Log.d("RevieCardView", "getCardView");
+        Log.d(TAG, "getCardView");
         if (mCardModel == null) {
             return null;
         }
@@ -221,7 +221,7 @@ public class ReviewCardView extends BaseRecordCardView {
         videoView.setSurfaceTextureListener(surfaceListener);
         surfaceListener.setPlaybackProgressSeekBar(playbackBar);
 
-        clipLength.setText("Total: " + Util.makeTimeString(surfaceListener.getTotalClipCollectionDuration()));
+        clipLength.setText(mContext.getString(R.string.total) + ": " + Util.makeTimeString(surfaceListener.getTotalClipCollectionDuration()));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(v);
@@ -339,7 +339,13 @@ public class ReviewCardView extends BaseRecordCardView {
 
             //set background image
             String clipType = clipCard.getClipType();
-            thumbnail.setImageResource(R.drawable.audio_waveform);
+
+            Bitmap thumbnailBitmap = mediaFile.getThumbnail(mContext);
+            if (thumbnailBitmap != null) {
+                thumbnail.setImageBitmap(thumbnailBitmap);
+            } else {
+                thumbnail.setImageResource(R.drawable.audio_waveform);
+            }
             //setClipExampleDrawables(clipType, thumbnail);
             thumbnail.setVisibility(View.VISIBLE);
         }
