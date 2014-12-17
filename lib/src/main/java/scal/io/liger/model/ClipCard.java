@@ -15,6 +15,8 @@ import scal.io.liger.view.DisplayableCard;
 
 public class ClipCard extends ExampleCard implements Cloneable {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private String clipType;
     @Expose private ArrayList<ClipMetadata> clips;
     @Expose private ArrayList<String> goals;
@@ -178,5 +180,25 @@ public class ClipCard extends ExampleCard implements Cloneable {
         clone.type = this.getClass().getName();
 
         return clone;
+    }
+
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof ClipCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ClipCard");
+            return;
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        ClipCard castCard = (ClipCard)card;
+
+        this.title = castCard.getTitle();
+        this.header = castCard.getHeader();
+        this.clipType = castCard.getClipType();
+        this.goals = castCard.getGoals();
     }
 }

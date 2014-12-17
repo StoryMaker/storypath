@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
@@ -13,6 +14,8 @@ import scal.io.liger.view.IntroCardView;
  * Created by mnbogner on 7/11/14.
  */
 public class VideoCaptureTypeCard extends Card {
+
+    public final String TAG = this.getClass().getSimpleName();
 
     @Expose private ArrayList<Object> body;
 
@@ -39,5 +42,20 @@ public class VideoCaptureTypeCard extends Card {
             this.body = new ArrayList<Object>();
 
         this.body.add(body);
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof TipCollectionHeadlessCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCollectionHeadlessCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        TipCollectionHeadlessCard castCard = (TipCollectionHeadlessCard)card;
+
+        this.title = castCard.getTitle();
     }
 }

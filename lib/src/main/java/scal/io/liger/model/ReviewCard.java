@@ -13,6 +13,8 @@ import scal.io.liger.view.ReviewCardView;
 
 public class ReviewCard extends GenericCard {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private ClipMetadata narration;
 
     public ReviewCard() {
@@ -69,5 +71,22 @@ public class ReviewCard extends GenericCard {
 
     public MediaFile loadMediaFile(ClipMetadata cmd) {
         return getStoryPath().loadMediaFile(cmd.getUuid());
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof ReviewCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ReviewCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        ReviewCard castCard = (ReviewCard)card;
+
+        this.title = castCard.getTitle();
+        this.header = castCard.getHeader();
+        this.text = castCard.getText();
     }
 }

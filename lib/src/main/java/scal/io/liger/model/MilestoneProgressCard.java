@@ -15,6 +15,8 @@ import scal.io.liger.view.MilestoneProgressCardView;
 
 public class MilestoneProgressCard extends Card {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private String text;
     @Expose private ArrayList<String> storyMedium; // why is this an array?
     @Expose private ArrayList<String> videoClipCards;
@@ -429,5 +431,21 @@ public class MilestoneProgressCard extends Card {
         }
 
         return result;
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof MilestoneProgressCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF MilestoneProgressCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        MilestoneProgressCard castCard = (MilestoneProgressCard)card;
+
+        this.title = castCard.getTitle();
+        this.text = castCard.getText();
     }
 }

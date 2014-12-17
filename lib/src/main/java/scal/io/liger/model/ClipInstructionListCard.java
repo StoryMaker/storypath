@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
@@ -13,6 +14,8 @@ import scal.io.liger.view.DisplayableCard;
  * Created by mnbogner on 7/17/14.
  */
 public class ClipInstructionListCard extends Card {
+
+    public final String TAG = this.getClass().getSimpleName();
 
     @Expose private String mediaPath;
     @Expose private String header;
@@ -63,5 +66,23 @@ public class ClipInstructionListCard extends Card {
             this.bulletList = new ArrayList<String>();
 
         this.bulletList.add(bullet_listItem);
+    }
+
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof ClipInstructionListCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ClipInstructionListCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        ClipInstructionListCard castCard = (ClipInstructionListCard)card;
+
+        this.title = castCard.getTitle();
+        this.header = castCard.getHeader();
+        this.bulletList = castCard.getBulletList();
     }
 }

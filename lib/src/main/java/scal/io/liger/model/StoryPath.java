@@ -49,6 +49,10 @@ public class StoryPath {
     @Expose protected String storyPathLibraryFile;
     @Expose protected String savedFileName = null;
 
+    // versioning
+    @Expose protected String language;
+    @Expose protected int version;
+
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
     // also must be cleared before serializing story path
@@ -84,6 +88,22 @@ public class StoryPath {
 
     public void setSavedFileName(String savedFileName) {
         this.savedFileName = savedFileName;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public ArrayList<Card> getCards() {

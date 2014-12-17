@@ -13,6 +13,8 @@ import java.util.Observable;
  */
 public class TipCollectionHeadlessCard extends HeadlessCard {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private ArrayList<Tip> tips; // NOT SURE THIS WILL WORK WITH INNER CLASS...
 
     public TipCollectionHeadlessCard(ArrayList<Tip> tips) {
@@ -84,5 +86,20 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
 //                }
 //            }
 //        }
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof TipCollectionHeadlessCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCollectionHeadlessCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        TipCollectionHeadlessCard castCard = (TipCollectionHeadlessCard)card;
+
+        this.title = castCard.getTitle();
     }
 }

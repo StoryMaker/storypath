@@ -112,7 +112,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
             }
 
-
             Intent i = getIntent();
             if (i.hasExtra("lang")) {
                 language = i.getExtras().getString("lang");
@@ -181,7 +180,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
      * Apply user preferences delivered via Intent extras to StoryPathLibrary
      */
     private void configureStoryPathLibrary() {
-        mStoryPathLibrary.language = mRequestedLanguage;
+        mStoryPathLibrary.lang = mRequestedLanguage;
         mStoryPathLibrary.photoSlideDurationMs = mPhotoSlideDuration;
     }
 

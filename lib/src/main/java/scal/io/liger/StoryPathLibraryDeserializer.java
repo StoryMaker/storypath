@@ -107,6 +107,18 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
             spl.setMetaLocation(metaLocation);
         }
 
+        tempElement = jObj.get("language");
+        if (tempElement != null) {
+            String language = jObj.get("language").getAsString();
+            spl.setLanguage(language);
+        }
+
+        tempElement = jObj.get("version");
+        if (tempElement != null) {
+            int version = jObj.get("version").getAsInt();
+            spl.setVersion(version);
+        }
+
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(MilestoneCardDeserializer.class, new MilestoneCardDeserializer());
         gBuild.registerTypeAdapter(VideoCaptureTypeCard.class, new VideoCaptureTypeCardDeserializer());

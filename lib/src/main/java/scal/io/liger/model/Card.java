@@ -29,9 +29,11 @@ import scal.io.liger.view.DisplayableCard;
  */
 public abstract class Card extends Observable implements Observer, Cloneable {  // REFACTOR TO AVOID CONFLICT w/ UI CARD CLASS
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose protected String type;
     @Expose private String id;
-    @Expose private String title;
+    @Expose protected String title;
     protected StoryPath storyPath; // not serialized
     @Expose protected ArrayList<String> references;
     @Expose private HashMap<String, String> values;
@@ -59,11 +61,11 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
     @Override
     public void update(Observable observable, Object o) {
         if (!(observable instanceof Card)) {
-            Log.e(this.getClass().getName(), "update notification received from non-card observable");
+            Log.e(TAG, "update notification received from non-card observable");
             return;
         }
         if (storyPath == null) {
-            Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            Log.e(TAG, "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
 
@@ -435,11 +437,11 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
     }
 
     public void loadStoryPath(String storyPathTemplateKey) {
-        Log.d(this.getClass().getName(), "loading " + storyPathTemplateKey);
+        Log.d(TAG, "loading " + storyPathTemplateKey);
         if (storyPath instanceof StoryPathLibrary) {
             ((StoryPathLibrary) storyPath).loadStoryPathTemplate(storyPathTemplateKey);
         } else {
-            Log.e(this.getClass().getName(), "cannot initiate a story path load from a story path card (use a link card)");
+            Log.e(TAG, "cannot initiate a story path load from a story path card (use a link card)");
         }
     }
 
@@ -463,5 +465,10 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
             e.printStackTrace();
         }
         return null;
+    }
+
+    // need a method to import text strings from a matching card to support translation/versioning
+    public void copyText(Card card) {
+        Log.e(TAG, "copyText() METHOD SHOULD NOT BE CALLED FROM THE BASE CLASS");
     }
 }

@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
@@ -13,6 +14,8 @@ import scal.io.liger.view.GenericCardView;
  * Created by mnbogner on 7/17/14.
  */
 public class GenericCard extends Card {
+
+    public final String TAG = this.getClass().getSimpleName();
 
     @Expose protected String mediaPath; // FIXME provide a default if they don't specify
     @Expose protected String header;
@@ -68,5 +71,22 @@ public class GenericCard extends Card {
             this.storyPaths = new ArrayList<String>();
 
         this.storyPaths.add(storyPath);
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof GenericCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF GenericCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        GenericCard castCard = (GenericCard)card;
+
+        this.title = castCard.getTitle();
+        this.header = castCard.getHeader();
+        this.text = castCard.getText();
     }
 }

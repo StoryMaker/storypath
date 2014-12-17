@@ -12,7 +12,9 @@ import scal.io.liger.view.ExampleCardView;
 
 public class ExampleCard extends Card implements Cloneable {
 
-    @Expose private String header;
+    public final String TAG = this.getClass().getSimpleName();
+
+    @Expose protected String header;
     @Expose private String medium;
     @Expose private String exampleMediaPath;
     @Expose private ExampleMediaFile exampleMediaFile;
@@ -70,5 +72,21 @@ public class ExampleCard extends Card implements Cloneable {
         clone.type = this.getClass().getName();
 
         return clone;
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof ExampleCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ExampleCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        ExampleCard castCard = (ExampleCard)card;
+
+        this.title = castCard.getTitle();
+        this.header = castCard.getHeader();
     }
 }

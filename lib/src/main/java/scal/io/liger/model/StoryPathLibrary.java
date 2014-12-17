@@ -48,7 +48,7 @@ public class StoryPathLibrary extends StoryPath {
      * TODO : Should these be serialized in StoryPathLibrary?
      */
     public int photoSlideDurationMs;
-    public String language;
+    public String lang;
 
     StoryPathLibraryListener mListener;
 
