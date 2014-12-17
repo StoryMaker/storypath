@@ -29,11 +29,11 @@
     <string name="clip_order">Clip order</string>
 
     <!-- Record Narration Dialog -->
-    <string name="dialog_record">RECORD</string>
+    <string name="dialog_record">START RECORDING</string>
     <string name="dialog_done">DONE</string>
     <string name="dialog_pause">PAUSE</string>
     <string name="dialog_resume">RESUME</string>
-    <string name="dialog_stop">STOP</string>
+    <string name="dialog_stop">STOP RECORDING</string>
     <string name="dialog_redo">REDO</string>
 
     <string name="edit_card">Edit Card</string>
@@ -162,6 +162,7 @@
     <string name="total">Total</string>
     <string name="cancel">Cancel</string>
     <string name="trim_clip">Trim Clip</string>
+    <string name="narration">Narration</string>
 
     <!-- add for libra end -->
 </resources>

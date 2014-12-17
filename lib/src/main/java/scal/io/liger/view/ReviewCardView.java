@@ -1,59 +1,31 @@
 package scal.io.liger.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.TextureView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.av.ClipCardsNarrator;
+import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
-import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.ReviewCard;
+import scal.io.liger.popup.NarrationPopup;
 import scal.io.liger.popup.OrderMediaPopup;
 
 /**
@@ -61,10 +33,11 @@ import scal.io.liger.popup.OrderMediaPopup;
  * attached to a ReviewCard's Story Path. This card will also support
  * adding narration, changing the order of clips, and jumbling the order.
  */
-public class ReviewCardView extends BaseRecordCardView {
+public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator.NarrationListener {
     public static final String TAG = "ReviewCardView";
 
     private ReviewCard mCardModel;
+    private ClipCardsPlayer mCardsPlayer;
 //    private Context mContext;
     private String mMedium;
 
@@ -82,8 +55,10 @@ public class ReviewCardView extends BaseRecordCardView {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_review, null);
-        final ImageView ivCardPhoto = ((ImageView) view.findViewById(R.id.iv_thumbnail));
-        final TextureView tvCardVideo = ((TextureView) view.findViewById(R.id.tv_card_video));
+        FrameLayout flPlayer = (FrameLayout) view.findViewById(R.id.card_player);
+
+        initClipCardsWithAttachedMedia();
+        mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards);
 
         Button btnJumble = ((Button) view.findViewById(R.id.btn_jumble));
         Button btnOrder = ((Button) view.findViewById(R.id.btn_order));
@@ -134,9 +109,10 @@ public class ReviewCardView extends BaseRecordCardView {
             @Override
             public void onClick(View v) {
 
-                if (mMediaCards.size() > 0)
-                    showClipNarrationDialog();
-                else
+                if (mMediaCards.size() > 0) {
+                    NarrationPopup narrationPopup = new NarrationPopup((MainActivity) mCardModel.getStoryPath().getContext());
+                    narrationPopup.show(mMediaCards, ReviewCardView.this);
+                } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_narrating), Toast.LENGTH_SHORT).show();
             }
         });
@@ -148,32 +124,6 @@ public class ReviewCardView extends BaseRecordCardView {
                 Util.startPublishActivity(mainActivity, mCardModel.getStoryPath());
             }
         });
-
-        // Initialize mMediaCards from current StoryPath
-        initClipCardsWithAttachedMedia();
-
-        // set our medium based on the first clip cards medium
-        if (mMediaCards.size() > 0) {
-            mMedium = ((ClipCard) mMediaCards.get(0)).getMedium();
-        }
-
-        if (mMediaCards.size() > 0) {
-            switch (((ClipCard) mMediaCards.get(0)).getMedium()) {
-                case Constants.VIDEO:
-                case Constants.PHOTO:
-                case Constants.AUDIO:
-                    // For now the SurfaceTextureListener handles all kinds of media playback and interaction
-                    // TODO Move as much logic as possible to a "MixedMediaPlayer" that will handle the ImageView / TextureView
-                    // as asppropriate for Audio, Video, and Photos
-                    setThumbnailForClip(ivCardPhoto, (ClipCard) mMediaCards.get(0));
-                    ivCardPhoto.setVisibility(View.VISIBLE);
-                    tvCardVideo.setVisibility(View.VISIBLE);
-                    tvCardVideo.setSurfaceTextureListener(new VideoWithNarrationSurfaceTextureListener(tvCardVideo, mMediaCards, ivCardPhoto));
-                    break;
-            }
-        } else {
-            Log.e(TAG, "No Clips available");
-        }
 
         // supports automated testing
         view.setTag(mCardModel.getId());
@@ -188,12 +138,6 @@ public class ReviewCardView extends BaseRecordCardView {
     public void initClipCardsWithAttachedMedia() {
         mMediaCards = mCardModel.getStoryPath().getClipCardsWithAttachedMedia();
     }
-
-    /** Record Narration Dialog */
-
-    /** Record Narration Dialog Views */
-    Button mDonePauseResumeBtn;
-    Button mRecordStopRedoBtn;
 
     /** Collection of ClipCards with attached media within the current StoryPath. */
     ArrayList<ClipCard> mMediaCards;
@@ -822,25 +766,7 @@ public class ReviewCardView extends BaseRecordCardView {
      * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
      */
     @Override
-    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
-        super.changeRecordNarrationStateChanged(newState);
-        switch(mRecordNarrationState) {
-            case READY:
-                mRecordStopRedoBtn.setText(R.string.dialog_record);
-                mDonePauseResumeBtn.setText(R.string.dialog_done);
-                break;
-            case RECORDING:
-                mRecordStopRedoBtn.setText(R.string.dialog_stop);
-                mDonePauseResumeBtn.setText(R.string.dialog_pause);
-                break;
-            case PAUSED:
-                mRecordStopRedoBtn.setText(R.string.dialog_stop);
-                mDonePauseResumeBtn.setText(R.string.dialog_resume);
-                break;
-            case STOPPED:
-                mRecordStopRedoBtn.setText(R.string.dialog_redo);
-                mDonePauseResumeBtn.setText(R.string.dialog_done);
-                break;
-        }
+    public void onNarrationFinished(MediaFile narration) {
+        mCardModel.setNarration(narration);
     }
 }

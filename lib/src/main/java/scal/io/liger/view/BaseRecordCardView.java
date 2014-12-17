@@ -40,24 +40,8 @@ public class BaseRecordCardView extends ExampleCardView {
     /** Current Narration State. To change use
      * {@link #changeRecordNarrationStateChanged(scal.io.liger.view.ReviewCardView.RecordNarrationState)}
      */
-    RecordNarrationState mRecordNarrationState = RecordNarrationState.READY;
+//    RecordNarrationState mRecordNarrationState = RecordNarrationState.READY;
 
-    /** The ReviewCard Narration Dialog State */
-    static enum RecordNarrationState {
-
-        /** Done / Record Buttons present */
-        READY,
-
-        /** Recording countdown then Pause / Stop Buttons present */
-        RECORDING,
-
-        /** Recording paused. Resume / Stop Buttons present */
-        PAUSED,
-
-        /** Recording stopped. Done / Redo Buttons present */
-        STOPPED
-
-    }
 
     /**
      * Start recording an audio narration track synced and instruct player to
@@ -92,9 +76,9 @@ public class BaseRecordCardView extends ExampleCardView {
     Runnable mUpdateVUMeter = new Runnable() {
         @Override
         public void run() {
-            if (mRecordNarrationState != RecordNarrationState.STOPPED) {
-                updateVUMeterView();
-            }
+//            if (mRecordNarrationState != RecordNarrationState.STOPPED) {
+//                updateVUMeterView();
+//            }
         }
     };
 
@@ -102,51 +86,51 @@ public class BaseRecordCardView extends ExampleCardView {
         final int MAX_VU_SIZE = 11;
         boolean showVUArray[] = new boolean[MAX_VU_SIZE];
 
-        if (mVUMeterLayout.getVisibility() == View.VISIBLE
-                &&  mRecordNarrationState != RecordNarrationState.STOPPED) {
-            int amp = mMediaRecorder.getMaxAmplitude();
-            int vuSize = MAX_VU_SIZE * amp / 32768;
-            if (vuSize >= MAX_VU_SIZE) {
-                vuSize = MAX_VU_SIZE - 1;
-            }
-
-            if (vuSize >= mPreviousVUMax) {
-                mPreviousVUMax = vuSize;
-            } else if (mPreviousVUMax > 0) {
-                mPreviousVUMax--;
-            }
-
-            for (int i = 0; i < MAX_VU_SIZE; i++) {
-                if (i <= vuSize) {
-                    showVUArray[i] = true;
-                } else if (i == mPreviousVUMax) {
-                    showVUArray[i] = true;
-                } else {
-                    showVUArray[i] = false;
-                }
-            }
-
-            mHandler.postDelayed(mUpdateVUMeter, 100);
-        } else if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
-            mPreviousVUMax = 0;
-            for (int i = 0; i < MAX_VU_SIZE; i++) {
-                showVUArray[i] = false;
-            }
-        }
-
-        if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
-            mVUMeterLayout.removeAllViews();
-            for (boolean show : showVUArray) {
-                ImageView imageView = new ImageView(mContext);
-                imageView.setBackgroundResource(R.drawable.background_vumeter);
-                if (show) {
-                    imageView.setImageResource(R.drawable.icon_vumeter);
-                }
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
-                mVUMeterLayout.addView(imageView);
-            }
-        }
+//        if (mVUMeterLayout.getVisibility() == View.VISIBLE
+//                &&  mRecordNarrationState != RecordNarrationState.STOPPED) {
+//            int amp = mMediaRecorder.getMaxAmplitude();
+//            int vuSize = MAX_VU_SIZE * amp / 32768;
+//            if (vuSize >= MAX_VU_SIZE) {
+//                vuSize = MAX_VU_SIZE - 1;
+//            }
+//
+//            if (vuSize >= mPreviousVUMax) {
+//                mPreviousVUMax = vuSize;
+//            } else if (mPreviousVUMax > 0) {
+//                mPreviousVUMax--;
+//            }
+//
+//            for (int i = 0; i < MAX_VU_SIZE; i++) {
+//                if (i <= vuSize) {
+//                    showVUArray[i] = true;
+//                } else if (i == mPreviousVUMax) {
+//                    showVUArray[i] = true;
+//                } else {
+//                    showVUArray[i] = false;
+//                }
+//            }
+//
+//            mHandler.postDelayed(mUpdateVUMeter, 100);
+//        } else if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
+//            mPreviousVUMax = 0;
+//            for (int i = 0; i < MAX_VU_SIZE; i++) {
+//                showVUArray[i] = false;
+//            }
+//        }
+//
+//        if (mVUMeterLayout.getVisibility() == View.VISIBLE) {
+//            mVUMeterLayout.removeAllViews();
+//            for (boolean show : showVUArray) {
+//                ImageView imageView = new ImageView(mContext);
+//                imageView.setBackgroundResource(R.drawable.background_vumeter);
+//                if (show) {
+//                    imageView.setImageResource(R.drawable.icon_vumeter);
+//                }
+//                imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//                        ViewGroup.LayoutParams.WRAP_CONTENT));
+//                mVUMeterLayout.addView(imageView);
+//            }
+//        }
     }
 
     /**
@@ -179,10 +163,10 @@ public class BaseRecordCardView extends ExampleCardView {
         if (mMediaRecorder != null) mMediaRecorder.release();
     }
 
-    /**
-     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
-     */
-    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
-        mRecordNarrationState = newState;
-    }
+//    /**
+//     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
+//     */
+//    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
+//        mRecordNarrationState = newState;
+//    }
 }
