@@ -290,7 +290,7 @@ public class IndexManager {
         int initialSize = indexList.size();
 
         for (final File f : instanceFiles) {
-            if (indexList.containsKey(f.getAbsolutePath())) {
+            if (indexList.containsKey(f.getAbsolutePath()) && language.equals(indexList.get(f.getAbsolutePath()).getLanguage())) {
                 Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
             } else {
                 Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
@@ -308,6 +308,9 @@ public class IndexManager {
                 if (spl == null) {
                     return indexList;
                 }
+
+                // set language
+                newItem.setLanguage(language);
 
                 // first check local metadata fields
                 newItem.setStoryTitle(spl.getMetaTitle());

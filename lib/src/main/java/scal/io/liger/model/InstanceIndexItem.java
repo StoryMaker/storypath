@@ -14,6 +14,7 @@ public class InstanceIndexItem {
     String storyThumbnailPath; // watch/update/persist
     long storyCreationDate;    // static
     long storySaveDate;        // watch/update/persist? (this field would force an update to the index for every update to a path/library)
+    String language;           // set to app language, used to force updates if language changes
 
     public InstanceIndexItem() {
 
@@ -78,5 +79,13 @@ public class InstanceIndexItem {
 
     public void setStorySaveDate(long storySaveDate) {
         this.storySaveDate = storySaveDate;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
