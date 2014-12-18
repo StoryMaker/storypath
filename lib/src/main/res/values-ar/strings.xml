@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="hello_world">هالو وورلد!</string>
   <string name="action_settings">إعدادات</string>
   <string name="lbl_level">المستوى:</string>
@@ -19,11 +19,9 @@
   <string name="menu_done">انتهى</string>
   <string name="clip_order">ترتيب المقاطع</string>
   <!--Record Narration Dialog-->
-  <string name="dialog_record">تسجيل</string>
   <string name="dialog_done">انتهى</string>
   <string name="dialog_pause">توقف</string>
   <string name="dialog_resume">استأنف</string>
-  <string name="dialog_stop">نهاية</string>
   <string name="dialog_redo">أعِد</string>
   <string name="edit_card">تعديل البطاقة</string>
   <string name="change_goal">غير الهدف</string>
@@ -65,4 +63,68 @@
   <string name="time_remaining_notification">باقي %1$s</string>
   <string name="add_clips_before_narrating">إضافة بعض المقاطع قبل إضافة التعليق</string>
   <string name="add_clips_before_reordering">إضافة مقاطع قبل تغيير ترتيبهم</string>
+  <string name="title_section3">القسم 3</string>
+  <string name="title_section2">القسم 2</string>
+  <string name="title_section1">القسم 1</string>
+  <string name="title_activity_test_drag">TestDrag</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">جاري التسجيل</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">تم إيقاف التسجيل</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">التخزين ممتلئ</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">تجاوزت أقصى مدة</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">أدخل بطاقة الذاكرة</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">موافق</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">تسجيلاتك</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">تسجيلات صوتية</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">تسجيلاتي</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">لم يتم التمكن من استخدام مساحة التخزين الخارجية أو الداخلية</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">خطأ داخلي بالتطبيق </string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">لم يتم التمكن من حفظ الصوت المسجل</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">عذرا، لا توجد مساحة كافية للتخزين. الرجاء التثبت من وجود على الإقل %.2f%nMB ثم حاول مجددا!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">سجل بدون عنوان</string>
+  <string name="menu_view_record_list">عرض قائمة السجلات</string>
+  <string name="menu_setting">إعدادات</string>
+  <string name="delete_dialog_title">هل تريد حذف السجل الحالي؟</string>
+  <string name="overwrite_dialog_title">%s موجودة بالفعل. هل تريد الكتابة فوقها؟</string>
+  <string name="preferences_title">إعدادات</string>
+  <string name="pref_title_record_type">نوع ملف السجل</string>
+  <string name="prefDialogTitle_recordType">الرجاء اختيار نوع الملف</string>
+  <string name="prefDefault_recordType">audio/3gpp</string>
+  <string name="pref_title_enable_high_quality">تمكين الجودة العالية</string>
+  <string name="pref_summary_enable_high_quality">يمكن للملف الصوتي بجودة أعلى أن يشغل مساحة أكبر</string>
+  <string name="pref_title_enable_sound_effect">تمكين المؤثرات الصوتية</string>
+  <string name="pref_summary_enable_sound_effect">تشغيل المؤثر الصوتي عند تغيير الحالة</string>
+  <string name="notification_recording">جاري التسجيل...</string>
+  <string name="notification_stopped">تم إيقاف التسجيل</string>
+  <string name="notification_warning">سعة تخزين منخفضة (أقل من %d دقائق)...</string>
+  <string name="sd_card_not_available">بطاقة الذاكرة غير متاحة</string>
+  <string name="open_file_explorer">افتح متصفح الملفات</string>
+  <string name="alert_message_delete_record">هل تريد حذف هذا السجل؟</string>
+  <string name="order">ترتيب</string>
+  <string name="publish">نشر</string>
+  <string name="cancel">إلغاء</string>
+  <!--add for libra end-->
 </resources>

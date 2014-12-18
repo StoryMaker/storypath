@@ -39,6 +39,9 @@ import scal.io.liger.model.MediaFile;
 /**
  * Plays a collection of ClipCards, as well as a secondary audio track.
  *
+ * Development Note : All methods prefixed with '_' are intended for exclusive
+ * use by {@link Handler#handleMessage(android.os.Message)} and other '_' prefixed methods.
+ *
  * Created by davidbrodsky on 12/12/14.
  */
 public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
@@ -87,6 +90,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
     };
 
+    /**
+     * Handler to coordinate actions affecting the internal MediaPlayers.
+     * Events may come from the UI or Timer thread.
+     */
     protected static class ClipCardsPlayerHandler extends Handler {
 
         public static final int START   = 0;
@@ -219,7 +226,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _onTimerTick() {
         try {
             if (mIsPlaying) {
-                Log.i("Timer", "isPlaying");
+                //Log.i("Timer", "isPlaying");
                 int currentClipElapsedTime = 0;
                 switch (mCurrentlyPlayingCard.getMedium()) {
                     case Constants.VIDEO:
@@ -259,7 +266,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (mPlaybackProgress != null) {
                     mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
                 }
-                Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
+                //Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
             }
         } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
     }
@@ -275,25 +282,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     mMainPlayer = new MediaPlayer();
                     mMainPlayer.setDataSource(mContext, Uri.parse(mCurrentlyPlayingCard.getSelectedMediaFile().getPath()));
                     mMainPlayer.setSurface(mSurface);
-                    mMainPlayer.prepareAsync();
+                    prepareMainMediaPlayer(mMainPlayer);
                     mMainPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-                    mMainPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mAdvancingClips = false;
-                            mMainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
-
-                            int currentClipIdx = mClipCards.indexOf(mCurrentlyPlayingCard);
-
-                            if (currentClipIdx != 0) {
-                                mMainPlayer.start();
-                            } else {
-                                mIsPlaying = false;
-                                mIsPaused = false; // Next touch should initiate startPlaying
-                                Log.i(TAG, "onPrepared setting isPaused false");
-                            }
-                        }
-                    });
                     mMainPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -347,10 +337,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             nextClipIndex++;
         }
 
-        _advanceToClip(player, mClipCards.get(nextClipIndex));
+        _advanceToClip(player, mClipCards.get(nextClipIndex), !(nextClipIndex == 0));
     }
 
-    protected void _advanceToClip(MediaPlayer player, ClipCard targetClip) {
+    protected void _advanceToClip(MediaPlayer player, ClipCard targetClip, boolean autoPlay) {
         if (mClipCards.indexOf(targetClip) == -1) {
             Log.e(TAG, "Invalid Card passed to _advanceToClip");
             return;
@@ -372,7 +362,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     Log.i(TAG, "Setting player data source " + media.toString());
                     player.setDataSource(mContext, media);
                     player.setSurface(mSurface);
-                    player.prepareAsync();
+                    prepareMainMediaPlayer(player);
+                    if (autoPlay) _resumePlayback();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -380,27 +371,22 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
             case Constants.PHOTO:
                 Log.i(TAG, "set currentelapsedtime to 0");
-                if (mClipCards.indexOf(mCurrentlyPlayingCard) == 0) {
+                if (firstClipCurrent()) {
                     // Stop playback. With video / audio this would be handled onPreparedListener
                     _stopPlayback();
                 }
                 if (mThumbnailView != null) {
                     setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
                     if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
-//                    mThumbnailView.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-//                            if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
-//                            mAdvancingClips = false;
-//                        }
-//                    });
                 }
-                mAdvancingClips = false;
                 break;
         }
+        mAdvancingClips = false;
     }
 
+    /**
+     * Begin playback of the main media files, as well as the secondary auto track if set.
+     */
     protected void startPlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.START));
     }
@@ -439,6 +425,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
     }
 
+    /**
+     * Pause playback, preserving the playback location for a following call to
+     * {@link #resumePlayback()}
+     */
     private void pausePlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.PAUSE));
     }
@@ -456,6 +446,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mIsPlaying = false;
     }
 
+    /**
+     * Resume playback at the location determined by a previous call to
+     * {@link #pausePlayback()}
+     */
     private void resumePlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RESUME));
     }
@@ -466,13 +460,16 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
 
         if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
-            mSecondaryPlayer.pause();
+            mSecondaryPlayer.start();
         }
 
         mIsPaused = false;
         mIsPlaying = true;
     }
 
+    /**
+     * Stop playback and reset the playback location to the first clip.
+     */
     protected void stopPlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.STOP));
     }
@@ -495,6 +492,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mCurrentPhotoElapsedTime = 0;
     }
 
+    /**
+     * Release all MediaPlayers when playback will no longer be required
+     */
     private void release() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RELEASE));
     }
@@ -502,6 +502,21 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _release() {
         if (mMainPlayer != null) mMainPlayer.release();
         if (mSecondaryPlayer != null) mSecondaryPlayer.release();
+    }
+
+    protected void prepareMainMediaPlayer(MediaPlayer mainPlayer) {
+        try {
+            mainPlayer.prepare();
+            mAdvancingClips = false;
+            mainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
+        } catch (IOException e) {
+            Log.e(TAG, "Error preparing mediaplayer");
+            e.printStackTrace();
+        }
+    }
+
+    protected boolean firstClipCurrent() {
+        return mClipCards.indexOf(mCurrentlyPlayingCard) == 0;
     }
 
     /**

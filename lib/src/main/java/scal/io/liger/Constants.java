@@ -1,6 +1,8 @@
 package scal.io.liger;
 
 
+import android.content.Context;
+
 public class Constants {
 
     /** RequestCodes used for external Media Capture via
@@ -34,6 +36,23 @@ public class Constants {
     public static final String SIGNATURE = "signature";
     public static final String NARRATION = "narration";
 
+    public static String getClipTypeLocalized(Context context, String clipType) {
+        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+            return context.getString(R.string.cliptype_character);
+        } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
+            return context.getString(R.string.cliptype_action);
+        } else if (clipType.equalsIgnoreCase(Constants.RESULT)) {
+            return context.getString(R.string.cliptype_result);
+        } else if (clipType.equalsIgnoreCase(Constants.SIGNATURE)) {
+            return context.getString(R.string.cliptype_signature);
+        } else if (clipType.equalsIgnoreCase(Constants.PLACE)) {
+            return context.getString(R.string.cliptype_place);
+        }
+
+        // else, return the untranslated
+        return clipType;
+    }
+
     /** Value returned by {@link scal.io.liger.model.StoryPath#getReferencedValue(String)}
      * when the requested reference value is external to the StoryPath */
     public static final String EXTERNAL = "value_from_external_story_path";
@@ -47,7 +66,7 @@ public class Constants {
     public static final String MAIN = "main";
     public static final String PATCH = "patch";
     public static final int MAIN_VERSION = 1006;
-    public static final int PATCH_VERSION = 0;
+    public static final int PATCH_VERSION = 1020;
 
     public static final String EXTRA_STORY_TITLE = "story_title";
     public static final String EXTRA_EXPORT_CLIPS = "export_clips";

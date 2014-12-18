@@ -42,14 +42,14 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     private String mMedium;
 
     public ReviewCardView(Context context, Card cardModel) {
-        Log.d("RevieCardView", "constructor");
+        Log.d(TAG, "constructor");
         mContext = context;
         mCardModel = (ReviewCard) cardModel;
     }
 
     @Override
     public View getCardView(final Context context) {
-        Log.d("RevieCardView", "getCardView");
+        Log.d(TAG, "getCardView");
         if (mCardModel == null) {
             return null;
         }
@@ -110,7 +110,8 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             public void onClick(View v) {
 
                 if (mMediaCards.size() > 0) {
-                    NarrationPopup.show((MainActivity) mCardModel.getStoryPath().getContext(), mMediaCards, ReviewCardView.this);
+                    NarrationPopup narrationPopup = new NarrationPopup((MainActivity) mCardModel.getStoryPath().getContext());
+                    narrationPopup.show(mMediaCards, ReviewCardView.this);
                 } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_narrating), Toast.LENGTH_SHORT).show();
             }

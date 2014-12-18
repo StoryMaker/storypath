@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="hello_world">Привет, мир!</string>
   <string name="action_settings">Настройки</string>
   <string name="lbl_next">Следующий </string>
@@ -18,4 +18,68 @@
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="title_section3">Раздел 3</string>
+  <string name="title_section2">Раздел 2</string>
+  <string name="title_section1">Раздел 1</string>
+  <string name="title_activity_test_drag">TestDrag</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Идет запись</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Запись остановлена</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Нет свободного места</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Максимальная длительность</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Требуется SD-карта</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Ваши записи</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Аудио записи</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Мои записи</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Ошибка подключения к внешнему или внутреннему накопителю</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Ошибка внутреннего приложения</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Не могу сохранить записанный аудио-файл</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Упс, у нас кончилось свободное место. Пожалуйста, освободите примерно %.2f%nMB и попробуйте снова!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">запись без названия</string>
+  <string name="menu_view_record_list">Просмотреть список записей</string>
+  <string name="menu_setting">Настройки</string>
+  <string name="delete_dialog_title">Вы хотите удалить текущую запись?</string>
+  <string name="overwrite_dialog_title">%s уже существует. Вы хотите его заменить?</string>
+  <string name="preferences_title">Настройки</string>
+  <string name="pref_title_record_type">Тип файла записи</string>
+  <string name="prefDialogTitle_recordType">Пожалуйста, выберите тип файла</string>
+  <string name="prefDefault_recordType">аудио/3gpp</string>
+  <string name="pref_title_enable_high_quality">Включить высокое качество</string>
+  <string name="pref_summary_enable_high_quality">Аудио-файл с высоким качеством может быть больше</string>
+  <string name="pref_title_enable_sound_effect">Включить звуковые эффекты</string>
+  <string name="pref_summary_enable_sound_effect">Проигрывать звуковой эффект при перемене состояния</string>
+  <string name="notification_recording">Запись...</string>
+  <string name="notification_stopped">Запись остановлена</string>
+  <string name="notification_warning">Недостаточно места на носителе (менее %d минут)...</string>
+  <string name="sd_card_not_available">SD-карта недоступна</string>
+  <string name="open_file_explorer">Открыть файл</string>
+  <string name="alert_message_delete_record">Вы хотите удалить выделенную запись?</string>
+  <string name="order">Порядок</string>
+  <string name="publish">Опубликовать</string>
+  <string name="cancel">Отмена</string>
+  <!--add for libra end-->
 </resources>
