@@ -934,6 +934,9 @@ public class JsonHelper {
             } catch (IOException ioe) {
                 Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + ioe.getMessage());
                 return null;
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + npe.getMessage());
+                return null;
             }
 
         return deserializeStoryPath(storyPathJson, localizedFilePath, storyPathLibrary, referencedFiles, context, language);
@@ -982,13 +985,18 @@ public class JsonHelper {
                         newTemplate = newTemplate + '-' + language;
                     }
                     newTemplate = newTemplate + instanceTemplate.substring(instanceTemplate.lastIndexOf('.'));
-                    Log.d("LANGUAGE", "GETTING STRINGS FROM TEMPLATE: " + newTemplate);
 
                     StoryPath newStoryPath = loadStoryPathFromZip(newTemplate, storyPathLibrary, referencedFiles, context, language);
 
-                    updateStoryPathStrings(storyPath, newStoryPath);
-                    storyPath.setLanguage(language);
-                    storyPath.setTemplatePath(newTemplate);
+                    if (newStoryPath == null) {
+                        Log.d("LANGUAGE", "TEMPLATE " + newTemplate + " FAILED TO LOAD, CAN'T UPDATE STRINGS");
+                        // can't load template, can't fix language
+                    } else {
+                        Log.d("LANGUAGE", "GETTING STRINGS FROM TEMPLATE: " + newTemplate);
+                        updateStoryPathStrings(storyPath, newStoryPath);
+                        storyPath.setLanguage(language);
+                        storyPath.setTemplatePath(newTemplate);
+                    }
                 }
             }
         }  else {

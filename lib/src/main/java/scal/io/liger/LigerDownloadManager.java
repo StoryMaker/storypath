@@ -112,11 +112,18 @@ public class LigerDownloadManager implements Runnable {
         // callback will download from our servers if licence check fails
         LigerCallback ligerCallback = new LigerCallback();
 
-        Log.d("DOWNLOAD", "ABOUT TO CHECK ACCESS");
+        String deviceVersion = Build.VERSION.RELEASE;
 
-        ligerChecker.checkAccess(ligerCallback);
-
-        Log.d("DOWNLOAD", "ACCESS CHECK WAS INITIATED");
+        // not sure what the best way to compare versions is (too many decimal points to convert to a number)
+        if (!deviceVersion.startsWith("5.")) {
+            Log.d("DOWNLOAD", "ABOUT TO CHECK ACCESS ON ANDROID VERSION " + deviceVersion);
+            ligerChecker.checkAccess(ligerCallback);
+            Log.d("DOWNLOAD", "ACCESS CHECK WAS INITIATED");
+        } else {
+            Log.d("DOWNLOAD", "CANNOT CHECK ACCESS ON ANDROID VERSION " + deviceVersion + ", DOWNLOADING FROM LIGER SERVER");
+            downloadFromLigerServer();
+            return;
+        }
     }
 
     private void downloadFromLigerServer() {
