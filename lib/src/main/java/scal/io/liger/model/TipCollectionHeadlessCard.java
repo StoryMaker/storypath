@@ -23,6 +23,10 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
         this.tips = tips;
     }
 
+    public ArrayList<Tip> getTips() {
+        return tips;
+    }
+
     // FIXME opt: this can probably be more efficient
     public ArrayList<Tip> getTipsByTags(ArrayList<String> tags) {
         ArrayList<Tip> matchingTips = new ArrayList<Tip>();
@@ -101,5 +105,6 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
         TipCollectionHeadlessCard castCard = (TipCollectionHeadlessCard)card;
 
         this.title = castCard.getTitle();
+        this.tips = castCard.getTips();
     }
 }

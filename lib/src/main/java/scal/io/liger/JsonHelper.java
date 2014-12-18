@@ -640,8 +640,8 @@ public class JsonHelper {
                 InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && (!localizedFilePath.equals(jsonFilePath))) {
-                    localizedFilePath = jsonFilePath;
+                if ((jsonStream == null) && localizedFilePath.contains("-")) {
+                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
                     jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
                     Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
                 } else {
@@ -918,8 +918,8 @@ public class JsonHelper {
                 InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && (!localizedFilePath.equals(jsonFilePath))) {
-                    localizedFilePath = jsonFilePath;
+                if ((jsonStream == null) && localizedFilePath.contains("-")) {
+                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
                     jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
                     Log.d("LANGUAGE", "loadStoryPathFromZip() - USING DEFAULT FILE: " + localizedFilePath);
                 } else {
