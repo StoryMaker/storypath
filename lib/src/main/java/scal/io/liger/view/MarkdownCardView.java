@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.MarkdownCard;
 
@@ -74,7 +75,7 @@ public class MarkdownCardView implements DisplayableCard {
                 return d;
             }
         }, null);
-        tvText.setText(htmlSpanned);
+        tvText.setText(Utility.trimTrailingWhitespace(htmlSpanned));
 
         // supports automated testing
         view.setTag(mCardModel.getId());
