@@ -283,7 +283,7 @@ public class IndexManager {
         return indexMap;
     }
 
-    public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList) {
+    public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList, String language) {
 
         ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles();
 
@@ -303,7 +303,7 @@ public class IndexManager {
 
                 String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
                 ArrayList<String> referencedFiles = new ArrayList<String>(); // should not need to insert dependencies to check metadata
-                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context);
+                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context, language);
 
                 if (spl == null) {
                     return indexList;

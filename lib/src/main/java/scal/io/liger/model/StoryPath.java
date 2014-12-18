@@ -52,6 +52,7 @@ public class StoryPath {
     // versioning
     @Expose protected String language;
     @Expose protected int version;
+    @Expose protected String templatePath;
 
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
@@ -104,6 +105,14 @@ public class StoryPath {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public String getTemplatePath() {
+        return templatePath;
+    }
+
+    public void setTemplatePath(String templatePath) {
+        this.templatePath = templatePath;
     }
 
     public ArrayList<Card> getCards() {
@@ -159,6 +168,17 @@ public class StoryPath {
         }
 
         Log.e(TAG, "CARD ID " + pathParts[1] + " WAS NOT FOUND");
+        return null;
+    }
+
+    public Card getCardByIdOnly(String idOnly) {
+        for (Card card : cards) {
+            if (card.getId().equals(idOnly)) {
+                return card;
+            }
+        }
+
+        Log.e(TAG, "CARD ID " + idOnly + " WAS NOT FOUND");
         return null;
     }
 

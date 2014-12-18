@@ -92,6 +92,15 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 //                    .build());
 ////        }
 
+        Intent i = getIntent();
+        if (i.hasExtra("lang")) {
+            language = i.getExtras().getString("lang");
+            Log.d("LANGUAGE", "Found language code " + language + " in intent");
+        } else {
+            language = "en";
+            Log.d("LANGUAGE", "Found no language code in intent, defaulting to en");
+        }
+
         Log.d("MainActivity", "onCreate");
         if (savedInstanceState == null) {
             Log.d(TAG, "onCreate called with no savedInstanceState");
@@ -99,25 +108,16 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             JsonHelper.setupFileStructure(this);
             MediaHelper.setupFileStructure(this);
 
-
             // NEW: load instance index
             //      only fill on startup to minimize disk access
             instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
-            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, instanceIndex);
+            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, instanceIndex, language);
 
             // TEMP
             if (instanceIndex.size() > 0) {
                 Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
             } else {
                 Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
-            }
-
-            Intent i = getIntent();
-            if (i.hasExtra("lang")) {
-                language = i.getExtras().getString("lang");
-                Log.d("LANGUAGE", "Found language code " + language + " in intent");
-            } else {
-                Log.d("LANGUAGE", "Found no language code in intent");
             }
 
             final ActionBar actionBar = getActionBar();
@@ -281,7 +281,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             }
         }
 
-        mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this);
+        mStoryPathLibrary = JsonHelper.deserializeStoryPathLibrary(json, jsonPath, referencedFiles, MainActivity.this, language);
         configureStoryPathLibrary();
         mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
 
