@@ -288,7 +288,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         setupCardView();
 
         if ((mStoryPathLibrary != null) && (mStoryPathLibrary.getCurrentStoryPathFile() != null)) {
-            mStoryPathLibrary.loadStoryPathTemplate("CURRENT");
+            mStoryPathLibrary.loadStoryPathTemplate("CURRENT", false);
         }
 
         // TEMP METADATA CHECK

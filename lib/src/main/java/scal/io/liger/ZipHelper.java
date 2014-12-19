@@ -107,6 +107,43 @@ public class ZipHelper {
         return null;
     }
 
+    public static ZipResourceFile getResourceFile(Context context) {
+        try {
+            // resource file contains main file and patch file
+
+            ArrayList<String> paths = new ArrayList<String>();
+            paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+            if (Constants.PATCH_VERSION > 0) {
+                paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+            }
+
+            // add 3rd party stuff
+            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
+
+            for (int i = 1; i <= expansionIndex.size(); i++) {
+                ExpansionIndexItem item = expansionIndex.get("" + i);
+                if (item == null) {
+                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING FOR INDEX " + i);
+                } else {
+                    String fileName = item.getExpansionFileName();
+                    if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                        // Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
+                        paths.add(getExpansionFileFolder(context, fileName) + fileName);
+                    } else {
+                        Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
+                    }
+                }
+            }
+
+            ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths.toArray(new String[paths.size()]));
+
+            return resourceFile;
+        } catch (IOException ioe) {
+            Log.e(" *** TESTING *** ", "Could not open resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+            return null;
+        }
+    }
+
     public static InputStream getFileInputStream(String path, Context context) {
         try {
             // resource file contains main file and patch file

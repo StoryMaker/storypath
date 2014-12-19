@@ -692,8 +692,22 @@ public class JsonHelper {
                 // language mis-match, need to load template
                 String instanceTemplate = storyPathLibrary.getTemplatePath();
                 if (instanceTemplate == null) {
-                    Log.d("LANGUAGE", "NO TEMPLATE, CAN'T UPDATE STRINGS");
+                    Log.d("LANGUAGE", "NO TEMPLATE, TRYING SOMETHING ELSE");
                     // can't identify template, can't fix language
+
+                    HashMap<String, String> templateMap = IndexManager.loadTempateIndex(context);
+
+                    String templateString = jsonFilePath.substring(jsonFilePath.lastIndexOf(File.separator) + 1, jsonFilePath.indexOf("-")) + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+
+                    Log.d("LANGUAGE", "TRYING TO LOOK UP TEMPLATE FOR " + templateString);
+
+                    instanceTemplate = templateMap.get(templateString);
+
+                    Log.d("LANGUAGE", "FOUND TEMPLATE: " + instanceTemplate);
+                }
+
+                if (instanceTemplate == null) {
+                    Log.d("LANGUAGE", "STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
                 } else {
                     // re-construct template name
                     String newTemplate = instanceTemplate.substring(0, instanceTemplate.lastIndexOf('.'));
@@ -771,7 +785,7 @@ public class JsonHelper {
         for (Card card : storyPathLibraryTemplate.getCards()) {
             try {
                 storyPathLibrary.getCardByIdOnly(card.getId()).copyText(card);
-                Log.d("LANGUAGE", "FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
+                // Log.d("LANGUAGE", "FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
             } catch (NullPointerException npe) {
                 Log.e("LANGUAGE", "COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
             }
@@ -973,8 +987,22 @@ public class JsonHelper {
                 Log.d("LANGUAGE", "LANGUAGE DOESN'T MATCH: " + storyPath.getLanguage() + "/" + language);
                 String instanceTemplate = storyPath.getTemplatePath();
                 if (instanceTemplate == null) {
-                    Log.d("LANGUAGE", "NO TEMPLATE, CAN'T UPDATE STRINGS");
+                    Log.d("LANGUAGE", "NO TEMPLATE, TRYING SOMETHING ELSE");
                     // can't identify template, can't fix language
+
+                    HashMap<String, String> templateMap = IndexManager.loadTempateIndex(context);
+
+                    String templateString = jsonFilePath.substring(jsonFilePath.lastIndexOf(File.separator) + 1, jsonFilePath.indexOf("-")) + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+
+                    Log.d("LANGUAGE", "TRYING TO LOOK UP TEMPLATE FOR " + templateString);
+
+                    instanceTemplate = templateMap.get(templateString);
+
+                    Log.d("LANGUAGE", "FOUND TEMPLATE: " + instanceTemplate);
+                }
+
+                if (instanceTemplate == null) {
+                    Log.d("LANGUAGE", "STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
                 } else {
                     // re-construct template name
                     String newTemplate = instanceTemplate.substring(0, instanceTemplate.lastIndexOf('.'));

@@ -439,7 +439,7 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
     public void loadStoryPath(String storyPathTemplateKey) {
         Log.d(TAG, "loading " + storyPathTemplateKey);
         if (storyPath instanceof StoryPathLibrary) {
-            ((StoryPathLibrary) storyPath).loadStoryPathTemplate(storyPathTemplateKey);
+            ((StoryPathLibrary) storyPath).loadStoryPathTemplate(storyPathTemplateKey, true);
         } else {
             Log.e(TAG, "cannot initiate a story path load from a story path card (use a link card)");
         }

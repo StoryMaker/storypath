@@ -292,7 +292,7 @@ public class StoryPathLibrary extends StoryPath {
         // NOTIFY/REFRESH HERE OR LET THAT BE HANDLED BY WHATEVER CALLS THIS?
     }
 
-    public void loadStoryPathTemplate(String storyPathTemplateKey) {
+    public void loadStoryPathTemplate(String storyPathTemplateKey, boolean save) {
         String storyPathTemplateFile = null;
 
         if (storyPathTemplateKey.equals("CURRENT")) { // ADD TO CONSTANTS
@@ -364,7 +364,10 @@ public class StoryPathLibrary extends StoryPath {
             setCurrentStoryPath(story);
             setCurrentStoryPathFile(storyPathTemplateFile);
 
-            save(false);
+            // need to prevent saves when opening instances to extract metadata
+            if (save) {
+                save(false);
+            }
 
             // update instance index with title
             if ((context instanceof MainActivity) && (((MainActivity)context).instanceIndex.containsKey(getSavedFileName())))  {
