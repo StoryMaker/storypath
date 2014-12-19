@@ -15,6 +15,8 @@ import scal.io.liger.view.OrderMediaCardView;
 
 public class OrderMediaCard extends Card {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private String header;
     @Expose private String medium;
     @Expose private ArrayList<String> storyMedium; // why is this an array?
@@ -342,5 +344,21 @@ public class OrderMediaCard extends Card {
         }
 
         return  clipPaths;
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof OrderMediaCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF OrderMediaCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        OrderMediaCard castCard = (OrderMediaCard)card;
+
+        this.title = castCard.getTitle();
+        this.header = castCard.getHeader();
     }
 }

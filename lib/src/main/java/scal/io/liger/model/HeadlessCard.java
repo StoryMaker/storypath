@@ -14,6 +14,8 @@ import scal.io.liger.view.DisplayableCard;
  */
 public abstract class HeadlessCard extends Card {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     public HeadlessCard() {
         super();
 //        this.type = this.getClass().getName();
@@ -62,5 +64,20 @@ public abstract class HeadlessCard extends Card {
         } else {
             return super.checkReferencedValues();
         }
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof HeadlessCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF HeadlessCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        HeadlessCard castCard = (HeadlessCard)card;
+
+        this.title = castCard.getTitle();
     }
 }

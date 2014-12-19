@@ -5,6 +5,7 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 
+import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -283,14 +285,27 @@ public class IndexManager {
         return indexMap;
     }
 
-    public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList) {
+    public static HashMap<String, String> loadTempateIndex (Context context) {
+        HashMap<String, String> templateMap = new HashMap<String, String>();
+
+        ZipResourceFile zrf = ZipHelper.getResourceFile(context);
+        ArrayList<ZipResourceFile.ZipEntryRO> zipEntries = new ArrayList<ZipResourceFile.ZipEntryRO>(Arrays.asList(zrf.getAllEntries()));
+        for (ZipResourceFile.ZipEntryRO zipEntry : zipEntries) {
+            // Log.d("INDEX", "GOT ITEM: " + zipEntry.mFileName);
+            templateMap.put(zipEntry.mFileName.substring(zipEntry.mFileName.lastIndexOf(File.separator) + 1), zipEntry.mFileName);
+        }
+
+        return templateMap;
+    }
+
+    public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList, String language) {
 
         ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles();
 
         int initialSize = indexList.size();
 
         for (final File f : instanceFiles) {
-            if (indexList.containsKey(f.getAbsolutePath())) {
+            if (indexList.containsKey(f.getAbsolutePath()) && language.equals(indexList.get(f.getAbsolutePath()).getLanguage())) {
                 Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
             } else {
                 Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
@@ -303,11 +318,14 @@ public class IndexManager {
 
                 String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
                 ArrayList<String> referencedFiles = new ArrayList<String>(); // should not need to insert dependencies to check metadata
-                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context);
+                StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context, language);
 
                 if (spl == null) {
                     return indexList;
                 }
+
+                // set language
+                newItem.setLanguage(language);
 
                 // first check local metadata fields
                 newItem.setStoryTitle(spl.getMetaTitle());
@@ -323,7 +341,7 @@ public class IndexManager {
                     Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
 
                     if (spl.getCurrentStoryPathFile() != null) {
-                        spl.loadStoryPathTemplate("CURRENT");
+                        spl.loadStoryPathTemplate("CURRENT", false);
                     }
 
                     StoryPath currentStoryPath = spl.getCurrentStoryPath();

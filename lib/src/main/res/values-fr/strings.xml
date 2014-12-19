@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Liger</string>
   <string name="hello_world">Bonjour tout le monde!</string>
   <string name="action_settings">Paramètres </string>
@@ -20,11 +20,9 @@
   <string name="menu_done">Fait</string>
   <string name="clip_order">Mettre en Ordre les clips</string>
   <!--Record Narration Dialog-->
-  <string name="dialog_record">ENREGISTRER</string>
   <string name="dialog_done">FAIT</string>
   <string name="dialog_pause">PAUSE</string>
   <string name="dialog_resume">REPRENDRE</string>
-  <string name="dialog_stop">STOP</string>
   <string name="dialog_redo">REFAIRE</string>
   <string name="edit_card">Editer la Carte</string>
   <string name="change_goal">Changer de But</string>
@@ -67,4 +65,69 @@
   <string name="time_remaining_notification">Reste %1$s</string>
   <string name="add_clips_before_narrating">Ajouter quelques Clips avant d\'ajouter une narration</string>
   <string name="add_clips_before_reordering">Ajouter quelques clips avant de changer leur ordre</string>
+  <string name="title_section3">Section 3</string>
+  <string name="title_section2">Section 2</string>
+  <string name="title_section1">Section 1</string>
+  <string name="title_activity_test_drag">Test de déplacement</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Enregistrement</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Enregistrement arrêté </string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">mémoire pleine</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Longueur Maximale Atteinte</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Carte SD est nécessaire </string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">Ok</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Vos enregistrements</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Enregistrements Audio</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Mes Enregistrements</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Impossible d’accéder au stockage externe ou interne </string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Erreur d\'application Interne</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Impossible de sauvegarder le son enregistré</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Whoops, nous n\'avons pas d\'espace suffisant, veuillez libérer environ %.2f%nMB et essayez de nouveau!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">Enregistrement sans titre</string>
+  <string name="menu_view_record_list">Voir la Liste d\'enregistrement</string>
+  <string name="menu_setting">Paramètres </string>
+  <string name="delete_dialog_title">Voulez-vous supprimer l\'enregistrement en cours?</string>
+  <string name="overwrite_dialog_title">%s existe déjà. Voulez-vous l\'écraser? </string>
+  <string name="preferences_title">Paramètres </string>
+  <string name="pref_title_record_type">Type de Fichier d\'enregistrement</string>
+  <string name="prefDialogTitle_recordType">Veuillez sélectionner le type de fichier</string>
+  <string name="prefDefault_recordType">audio/3gpp</string>
+  <string name="pref_title_enable_high_quality">Activer la haute qualité</string>
+  <string name="pref_summary_enable_high_quality">Le fichier Audio avec une haute qualité peut être plus grand</string>
+  <string name="pref_title_enable_sound_effect">Activer l\'effet audio</string>
+  <string name="pref_summary_enable_sound_effect">Lecture des effets Audio quand l\'état est modifié</string>
+  <string name="notification_recording">Enregistrement...</string>
+  <string name="notification_stopped">Enregistrement arrêté</string>
+  <string name="notification_warning">Mémoire faible(moins que %d minutes)...</string>
+  <string name="sd_card_not_available">Carte SD n\'est pas disponible</string>
+  <string name="open_file_explorer">Ouvrir l\'explorateur de fichier</string>
+  <string name="alert_message_delete_record">Voulez-vous supprimer l\'enregistrement sélectionné?</string>
+  <string name="recording_narration">Enregistrement de la narration</string>
+  <string name="order">Mettre en ordre</string>
+  <string name="publish">Publier</string>
+  <string name="cancel">Annuler</string>
+  <!--add for libra end-->
 </resources>

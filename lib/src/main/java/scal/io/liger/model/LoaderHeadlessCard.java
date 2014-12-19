@@ -11,6 +11,9 @@ import java.util.Observable;
  * @author Josh Steiner
  */
 public class LoaderHeadlessCard extends HeadlessCard {
+
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private String action;
     @Expose private String target;
 
@@ -62,5 +65,20 @@ public class LoaderHeadlessCard extends HeadlessCard {
                 }
             }
         }
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof LoaderHeadlessCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF LoaderHeadlessCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        LoaderHeadlessCard castCard = (LoaderHeadlessCard)card;
+
+        this.title = castCard.getTitle();
     }
 }

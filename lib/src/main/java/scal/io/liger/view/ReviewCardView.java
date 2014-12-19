@@ -46,14 +46,14 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     private String mMedium;
 
     public ReviewCardView(Context context, Card cardModel) {
-        Log.d("RevieCardView", "constructor");
+        Log.d(TAG, "constructor");
         mContext = context;
         mCardModel = (ReviewCard) cardModel;
     }
 
     @Override
     public View getCardView(final Context context) {
-        Log.d("RevieCardView", "getCardView");
+        Log.d(TAG, "getCardView");
         if (mCardModel == null) {
             return null;
         }

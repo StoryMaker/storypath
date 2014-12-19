@@ -27,7 +27,7 @@
         android:textColor="@color/storymaker_highlight"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
-        android:text="Jumble"
+        android:text="@string/jumble"
         android:visibility="gone"/>
 
     <Button
@@ -40,7 +40,7 @@
         android:textColor="@color/storymaker_highlight"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
-        android:text="Order" />
+        android:text="@string/order" />
 
     <Button
         android:id="@+id/btn_narrate"
@@ -52,7 +52,7 @@
         android:textColor="@color/storymaker_highlight"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
-        android:text="Narrate" />
+        android:text="@string/narrate" />
 
     <Button
         android:id="@+id/btn_publish"
@@ -64,5 +64,5 @@
         android:textColor="@color/storymaker_highlight"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
-        android:text="Publish" />
+        android:text="@string/publish" />
 </RelativeLayout>

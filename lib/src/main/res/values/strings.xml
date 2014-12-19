@@ -10,6 +10,11 @@
     <string name="lbl_next">Next</string>
     <string name="lbl_congrats_or">--- or ---</string>
 
+    <string name="cliptype_character">Character</string>
+    <string name="cliptype_action">Action</string>
+    <string name="cliptype_result">Result</string>
+    <string name="cliptype_place">Place</string>
+    <string name="cliptype_signature">Signature</string>
 
     <string name="choose_medium">Choose Medium</string>
     <string name="lbl_video">Video</string>
@@ -150,6 +155,13 @@
     <string name="alert_message_delete_record">Do you want to delete selected record?</string>
     <string name="recording_narration">Recording Narration</string>
     <string name="could_not_start_narration">Could not start narration!</string>
+    <string name="jumble">Jumble</string>
+    <string name="order">Order</string>
+    <string name="narrate">Narrate</string>
+    <string name="publish">Publish</string>
+    <string name="total">Total</string>
+    <string name="cancel">Cancel</string>
+    <string name="trim_clip">Trim Clip</string>
     <string name="narration">Narration</string>
 
     <!-- add for libra end -->

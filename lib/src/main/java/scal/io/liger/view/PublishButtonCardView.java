@@ -38,7 +38,7 @@ public class PublishButtonCardView implements DisplayableCard {
         String btnText = mCardModel.getText();
 
         if(btnText == null || btnText.isEmpty()) {
-            btnText = "Publish"; // FIXME move to strings
+            btnText = context.getString(R.string.publish);
         }
 
         btnCardButton.setText(btnText);

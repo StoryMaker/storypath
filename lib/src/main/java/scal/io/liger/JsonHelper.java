@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import scal.io.liger.model.Card;
 import scal.io.liger.model.Dependency;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -195,7 +196,7 @@ public class JsonHelper {
 
     public static String loadJSONFromZip(String jsonFilePath, Context context, String language) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
 
         if(null == jsonFilePath) {
             return null;
@@ -569,6 +570,8 @@ public class JsonHelper {
         String storyPathLibraryJson = "";
         String sdCardState = Environment.getExternalStorageState();
 
+        // templates are loaded from zips, instances will not have localized file names
+        /*
         String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
@@ -586,6 +589,9 @@ public class JsonHelper {
         } else {
             Log.d("LANGUAGE", "loadStoryPathLibrary() - USING LOCALIZED FILE: " + localizedFilePath);
         }
+        */
+
+        File f = new File(jsonFilePath);
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
@@ -605,7 +611,7 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, f.getPath(), referencedFiles, context);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, f.getPath(), referencedFiles, context, language);
 
     }
 
@@ -613,13 +619,14 @@ public class JsonHelper {
 
     public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
 
         String storyPathLibraryJson = "";
 
         String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
+
         if (language != null) {
             // just in case, check whether country code has already been inserted
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
@@ -633,8 +640,10 @@ public class JsonHelper {
                 InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && (!localizedFilePath.equals(jsonFilePath))) {
-                    jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
+                if ((jsonStream == null) && localizedFilePath.contains("-")) {
+                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
+                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
                 } else {
                     Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
                 }
@@ -645,14 +654,14 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathLibraryJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + ioe.getMessage());
                 return null;
             }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, referencedFiles, context);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
     }
 
-    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, ArrayList<String> referencedFiles, Context context) {
+    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -661,6 +670,78 @@ public class JsonHelper {
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
+
+         if (jsonFilePath.contains("instance")) {
+            Log.d("LANGUAGE", "LOCALIZING AN INSTANCE: " + jsonFilePath);
+
+            // if an instance has been loaded:
+            // - jsonFilePath will not be localized
+            // - compare language code in object to language code argument
+            // - if different, load template, import translated strings
+            // - update template location and language code
+            // - version?
+            if (storyPathLibrary.getLanguage() == null) {
+                // default to en
+                storyPathLibrary.setLanguage("en");
+            }
+            if (storyPathLibrary.getLanguage().equals(language)) {
+                Log.d("LANGUAGE", "LANGUAGE MATCHES: " + storyPathLibrary.getLanguage() + "/" + language);
+                // language matches, all is well
+            } else {
+                Log.d("LANGUAGE", "LANGUAGE DOESN'T MATCH: " + storyPathLibrary.getLanguage() + "/" + language);
+                // language mis-match, need to load template
+                String instanceTemplate = storyPathLibrary.getTemplatePath();
+                if (instanceTemplate == null) {
+                    Log.d("LANGUAGE", "NO TEMPLATE, TRYING SOMETHING ELSE");
+                    // can't identify template, can't fix language
+
+                    HashMap<String, String> templateMap = IndexManager.loadTempateIndex(context);
+
+                    String templateString = jsonFilePath.substring(jsonFilePath.lastIndexOf(File.separator) + 1, jsonFilePath.indexOf("-")) + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+
+                    Log.d("LANGUAGE", "TRYING TO LOOK UP TEMPLATE FOR " + templateString);
+
+                    instanceTemplate = templateMap.get(templateString);
+
+                    Log.d("LANGUAGE", "FOUND TEMPLATE: " + instanceTemplate);
+                }
+
+                if (instanceTemplate == null) {
+                    Log.d("LANGUAGE", "STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
+                } else {
+                    // re-construct template name
+                    String newTemplate = instanceTemplate.substring(0, instanceTemplate.lastIndexOf('.'));
+                    if (newTemplate.lastIndexOf('-') > 0) {
+                        newTemplate = newTemplate.substring(0, newTemplate.lastIndexOf('-'));
+                    }
+                    if (!"en".equals(language)) {
+                        newTemplate = newTemplate + '-' + language;
+                    }
+                    newTemplate = newTemplate + instanceTemplate.substring(instanceTemplate.lastIndexOf('.'));
+                    Log.d("LANGUAGE", "GETTING STRINGS FROM TEMPLATE: " + newTemplate);
+
+                    StoryPathLibrary newStoryPathLibrary = loadStoryPathLibraryFromZip(newTemplate, referencedFiles, context, language);
+
+                    updateStoryPathLibraryStrings(storyPathLibrary, newStoryPathLibrary);
+                    storyPathLibrary.setLanguage(language);
+                    storyPathLibrary.setTemplatePath(newTemplate);
+                }
+            }
+        } else if (jsonFilePath.equals("SAVED_STATE")) {
+            // this method gets called to de-serialize saved states, but no localization should be required in that context
+        } else {
+            Log.d("LANGUAGE", "LOCALIZING A TEMPLATE: " + jsonFilePath);
+
+            // if a template has been loaded:
+            // - jsonFilePath should include the localized file name
+            // - need to set template location in object
+            // - need to set language code in object
+            // - no need to import translated strings
+            // - version?
+            storyPathLibrary.setLanguage(language);
+            storyPathLibrary.setTemplatePath(jsonFilePath);
+            Log.d("LANGUAGE", "SET LANGUAGE/TEMPLATE: " + language + ", " + jsonFilePath);
+        }
 
         // a story path library model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
@@ -700,9 +781,20 @@ public class JsonHelper {
         return storyPathLibrary;
     }
 
+    public static void updateStoryPathLibraryStrings(StoryPathLibrary storyPathLibrary, StoryPathLibrary storyPathLibraryTemplate) {
+        for (Card card : storyPathLibraryTemplate.getCards()) {
+            try {
+                storyPathLibrary.getCardByIdOnly(card.getId()).copyText(card);
+                // Log.d("LANGUAGE", "FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
+            } catch (NullPointerException npe) {
+                Log.e("LANGUAGE", "COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
+            }
+        }
+    }
+
     public static String getStoryPathLibrarySaveFileName(StoryPathLibrary storyPathLibrary) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
 
         Date timeStamp = new Date();
         //String jsonFilePath = storyPathLibrary.buildZipPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
@@ -714,7 +806,7 @@ public class JsonHelper {
 
     public static boolean saveStoryPathLibrary(StoryPathLibrary storyPathLibrary, String jsonFilePath) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId() + " -> " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId() + " -> " + jsonFilePath);
 
         String sdCardState = Environment.getExternalStorageState();
 
@@ -754,7 +846,7 @@ public class JsonHelper {
 
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
@@ -771,6 +863,8 @@ public class JsonHelper {
         String storyPathJson = "";
         String sdCardState = Environment.getExternalStorageState();
 
+        // templates are loaded from zips, instances will not have localized file names
+        /*
         String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
@@ -788,6 +882,9 @@ public class JsonHelper {
         } else {
             Log.d("LANGUAGE", "loadStoryPath() - USING LOCALIZED FILE: " + localizedFilePath);
         }
+        */
+
+        File f = new File(jsonFilePath);
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
@@ -807,20 +904,21 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, referencedFiles, context);
+        return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, referencedFiles, context, language);
     }
 
     // NEW
 
     public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
 
         String storyPathJson = "";
 
         String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
+
         if (language != null) {
             // just in case, check whether country code has already been inserted
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
@@ -834,8 +932,10 @@ public class JsonHelper {
                 InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && (!localizedFilePath.equals(jsonFilePath))) {
-                    jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
+                if ((jsonStream == null) && localizedFilePath.contains("-")) {
+                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
+                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING DEFAULT FILE: " + localizedFilePath);
                 } else {
                     Log.d("LANGUAGE", "loadStoryPathFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
                 }
@@ -846,14 +946,17 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + ioe.getMessage());
+                return null;
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + npe.getMessage());
                 return null;
             }
 
-        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, referencedFiles, context);
+        return deserializeStoryPath(storyPathJson, localizedFilePath, storyPathLibrary, referencedFiles, context, language);
     }
 
-    public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context) {
+    public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
 
@@ -862,6 +965,81 @@ public class JsonHelper {
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
         StoryPath storyPath = gson.fromJson(storyPathJson, StoryPath.class);
+
+        if (jsonFilePath.contains("instance")) {
+            Log.d("LANGUAGE", "LOCALIZING AN INSTANCE: " + jsonFilePath);
+
+            // if an instance has been loaded:
+            // - jsonFilePath will not be localized
+            // - compare language code in object to language code argument
+            // - if different, load template, import translated strings
+            // - update template location and language code
+            // - version?
+            if (storyPath.getLanguage() == null) {
+                // default to en
+                storyPath.setLanguage("en");
+            }
+            if (storyPath.getLanguage().equals(language)) {
+                Log.d("LANGUAGE", "LANGUAGE MATCHES: " + storyPath.getLanguage() + "/" + language);
+                // language matches, all is well
+            } else {
+                // language mis-match, need to load template
+                Log.d("LANGUAGE", "LANGUAGE DOESN'T MATCH: " + storyPath.getLanguage() + "/" + language);
+                String instanceTemplate = storyPath.getTemplatePath();
+                if (instanceTemplate == null) {
+                    Log.d("LANGUAGE", "NO TEMPLATE, TRYING SOMETHING ELSE");
+                    // can't identify template, can't fix language
+
+                    HashMap<String, String> templateMap = IndexManager.loadTempateIndex(context);
+
+                    String templateString = jsonFilePath.substring(jsonFilePath.lastIndexOf(File.separator) + 1, jsonFilePath.indexOf("-")) + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+
+                    Log.d("LANGUAGE", "TRYING TO LOOK UP TEMPLATE FOR " + templateString);
+
+                    instanceTemplate = templateMap.get(templateString);
+
+                    Log.d("LANGUAGE", "FOUND TEMPLATE: " + instanceTemplate);
+                }
+
+                if (instanceTemplate == null) {
+                    Log.d("LANGUAGE", "STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
+                } else {
+                    // re-construct template name
+                    String newTemplate = instanceTemplate.substring(0, instanceTemplate.lastIndexOf('.'));
+                    if (newTemplate.lastIndexOf('-') > 0) {
+                        newTemplate = newTemplate.substring(0, newTemplate.lastIndexOf('-'));
+                    }
+                    if (!"en".equals(language)) {
+                        newTemplate = newTemplate + '-' + language;
+                    }
+                    newTemplate = newTemplate + instanceTemplate.substring(instanceTemplate.lastIndexOf('.'));
+
+                    StoryPath newStoryPath = loadStoryPathFromZip(newTemplate, storyPathLibrary, referencedFiles, context, language);
+
+                    if (newStoryPath == null) {
+                        Log.d("LANGUAGE", "TEMPLATE " + newTemplate + " FAILED TO LOAD, CAN'T UPDATE STRINGS");
+                        // can't load template, can't fix language
+                    } else {
+                        Log.d("LANGUAGE", "GETTING STRINGS FROM TEMPLATE: " + newTemplate);
+                        updateStoryPathStrings(storyPath, newStoryPath);
+                        storyPath.setLanguage(language);
+                        storyPath.setTemplatePath(newTemplate);
+                    }
+                }
+            }
+        }  else {
+            Log.d("LANGUAGE", "LOCALIZING A TEMPLATE: " + jsonFilePath);
+
+            // if a template has been loaded:
+            // - jsonFilePath should include the localized file name
+            // - need to set template location in object
+            // - need to set language code in object
+            // - no need to import translated strings
+            // - version?
+            storyPath.setLanguage(language);
+            storyPath.setTemplatePath(jsonFilePath);
+            Log.d("LANGUAGE", "SET LANGUAGE/TEMPLATE: " + language + ", " + jsonFilePath);
+        }
 
         // a story path model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
@@ -905,9 +1083,20 @@ public class JsonHelper {
         return storyPath;
     }
 
+    public static void updateStoryPathStrings(StoryPath storyPath, StoryPath storyPathTemplate) {
+        for (Card card : storyPathTemplate.getCards()) {
+            try {
+                storyPath.getCardByIdOnly(card.getId()).copyText(card);
+                Log.d("LANGUAGE", "FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
+            } catch (NullPointerException npe) {
+                Log.e("LANGUAGE", "COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
+            }
+        }
+    }
+
     public static String getStoryPathSaveFileName(StoryPath storyPath) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId());
 
         Date timeStamp = new Date();
         //String jsonFilePath = storyPath.buildZipPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
@@ -919,7 +1108,7 @@ public class JsonHelper {
 
     public static boolean saveStoryPath(StoryPath storyPath, String jsonFilePath) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId() + " -> " + jsonFilePath);
+        //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId() + " -> " + jsonFilePath);
 
         String sdCardState = Environment.getExternalStorageState();
 
@@ -959,7 +1148,7 @@ public class JsonHelper {
 
     public static String serializeStoryPath(StoryPath storyPath) {
 
-        Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
+        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();

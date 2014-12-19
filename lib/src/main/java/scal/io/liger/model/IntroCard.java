@@ -13,6 +13,8 @@ import scal.io.liger.view.IntroCardView;
  */
 public class IntroCard extends Card {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private String headline;
     @Expose private String level;
     @Expose private String time;
@@ -68,5 +70,23 @@ public class IntroCard extends Card {
 
     public void setExampleMediaFile(ExampleMediaFile exampleMediaFile) {
         this.exampleMediaFile = exampleMediaFile;
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof IntroCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF IntroCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        IntroCard castCard = (IntroCard)card;
+
+        this.title = castCard.getTitle();
+        this.headline = castCard.getHeadline();
+        this.level = castCard.getLevel();
+        this.time = castCard.getTime();
     }
 }

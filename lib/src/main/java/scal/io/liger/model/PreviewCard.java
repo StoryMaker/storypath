@@ -15,6 +15,8 @@ import scal.io.liger.view.PreviewCardView;
 
 public class PreviewCard extends Card {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     @Expose private String text;
     @Expose private ArrayList<String> storyMedium; // why is this an array?
     @Expose private ArrayList<String> videoClipCards;
@@ -329,5 +331,21 @@ public class PreviewCard extends Card {
         }
 
         return  clipPaths;
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof PreviewCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF PreviewCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        PreviewCard castCard = (PreviewCard)card;
+
+        this.title = castCard.getTitle();
+        this.text = castCard.getText();
     }
 }

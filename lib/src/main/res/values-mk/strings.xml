@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="hello_world">Здраво свету!</string>
+  <string name="action_settings">Нагодувања</string>
+  <string name="lbl_video">Видео</string>
+  <string name="lbl_audio">Аудио</string>
+  <string name="lbl_photo">Фото</string>
+  <!--Record Narration Dialog-->
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="title_section3">Секција 3</string>
+  <string name="title_section2">Секција 2</string>
+  <string name="title_section1">Секција 1</string>
+  <string name="title_activity_test_drag">Тест на повлекување</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Снимање</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Снимањето е запрено</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Нема повеќе простор</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Достигната е максимална должина</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Потребна е СД картичка</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">ОК</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Твои снимки</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Аудио снимки</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Мои снимки</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Невозможно е да се пристапи до надворешниот или внатрешниот уред за складирање</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Внатрешна грешка во апликацијата</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Невозможно е да се зачува снименото аудио</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Упс, нема повеќе простор. Ослободете приближно %.2f%nMB и пробајте повторно.</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">снимка без име</string>
+  <string name="menu_view_record_list">Види ја листата на снимки</string>
+  <string name="menu_setting">Нагодувања</string>
+  <string name="delete_dialog_title">Дали сакате да ја избришете оваа снимка?</string>
+  <string name="overwrite_dialog_title">%s веќе постои. Дали саката да го пребришете?</string>
+  <string name="preferences_title">Нагодувања</string>
+  <string name="pref_title_record_type">Тип на датотека за снимање</string>
+  <string name="prefDialogTitle_recordType">Ве молиме одберете тип на датотека</string>
+  <string name="prefDefault_recordType">аудио/3gpp</string>
+  <string name="pref_title_enable_high_quality">Уклучи висок квалитет</string>
+  <string name="pref_summary_enable_high_quality">Аудио датотеката со висок квалитет може да биде поголема</string>
+  <string name="pref_title_enable_sound_effect">Уклучи звучни ефекти</string>
+  <string name="pref_summary_enable_sound_effect">Репродукција на звучни ефекти кога состојбата ќе се промени</string>
+  <string name="notification_recording">Снимање...</string>
+  <string name="notification_stopped">Снимањето е запрено</string>
+  <string name="notification_warning">Малце меморија(помалце од %d минути)...</string>
+  <string name="sd_card_not_available">СД картичката не е достапна</string>
+  <string name="open_file_explorer">Отвори го file explorer</string>
+  <string name="alert_message_delete_record">Дали сакате да ја избришете селектираната снимка?</string>
+  <string name="publish">Издавање</string>
+  <string name="cancel">Откажи</string>
+  <!--add for libra end-->
+</resources>

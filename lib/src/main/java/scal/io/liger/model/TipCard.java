@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.Random;
  * @author Josh Steiner
  */
 public class TipCard extends MarkdownCard {
+
+    public final String TAG = this.getClass().getSimpleName();
 
     private Random random;
     @Expose private ArrayList<String> tags;
@@ -50,5 +54,22 @@ public class TipCard extends MarkdownCard {
         } else {
             return "(no tips match for tags: " + tags + ")"; // FIXME this is probably the wrong thing to do
         }
+    }
+
+    @Override
+    public void copyText(Card card) {
+        if (!(card instanceof TipCard)) {
+            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCard");
+        }
+        if (!(this.getId().equals(card.getId()))) {
+            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            return;
+        }
+
+        TipCard castCard = (TipCard)card;
+
+        this.title = castCard.getTitle();
+        this.text = castCard.getText();
+        this.tips = castCard.getTips();
     }
 }
