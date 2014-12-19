@@ -3,13 +3,16 @@ package scal.io.liger.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.joanzapata.android.iconify.IconDrawable;
@@ -17,6 +20,7 @@ import com.joanzapata.android.iconify.Iconify;
 
 import java.util.ArrayList;
 
+import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.av.ClipCardsNarrator;
@@ -58,7 +62,10 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         FrameLayout flPlayer = (FrameLayout) view.findViewById(R.id.card_player);
 
         initClipCardsWithAttachedMedia();
-        mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards);
+        if (mMediaCards.size() > 0)
+            mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards);
+        else
+            showNoClipPlaceholder(flPlayer);
 
         Button btnJumble = ((Button) view.findViewById(R.id.btn_jumble));
         Button btnOrder = ((Button) view.findViewById(R.id.btn_order));
@@ -129,6 +136,18 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         view.setTag(mCardModel.getId());
 
         return view;
+    }
+
+    private void showNoClipPlaceholder(ViewGroup container) {
+        ImageView ivPlaceholder = new ImageView(mContext);
+        ivPlaceholder.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Bitmap thumb = mCardModel.getStoryPath().getCoverImageThumbnail();
+        if (thumb != null) {
+            ivPlaceholder.setImageBitmap(thumb);
+        } else {
+            ivPlaceholder.setImageResource(R.drawable.no_thumbnail);
+        }
+        container.addView(ivPlaceholder);
     }
 
     /**
