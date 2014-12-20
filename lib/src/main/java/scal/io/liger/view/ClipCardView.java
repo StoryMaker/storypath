@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -90,7 +91,8 @@ public class ClipCardView extends BaseRecordCardView {
         mCardModel = (ClipCard) cardModel;
 
         Resources r = context.getResources();
-        mCardFooterHeight  = r.getDimensionPixelSize(R.dimen.clip_card_footer_height);
+        mCardFooterHeight  = r.getDimensionPixelSize(R.dimen.clip_body_height) +
+                             r.getDimensionPixelSize(R.dimen.clip_btn_height) * 2;
     }
 
     @Override
@@ -248,7 +250,7 @@ public class ClipCardView extends BaseRecordCardView {
                 if (!hasClips) {
                     // This ClipCard is displaying a single item stack with either example or
                     // fallback drawables. A click should expand the card footer to reveal the Capture / Import feature
-                    toggleFooterVisibility(collapsableContainer);
+                    toggleFooterVisibility(collapsableContainer, tvBody);
                     return;
                 }
 
@@ -258,7 +260,7 @@ public class ClipCardView extends BaseRecordCardView {
                     if (mClipsExpanded) {
                         // Collapse clip view, without change
                         toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
-                        toggleFooterVisibility(collapsableContainer);
+                        toggleFooterVisibility(collapsableContainer, tvBody);
                     } else if (mCardModel.getMedium().equals(Constants.VIDEO) ||
                                mCardModel.getMedium().equals(Constants.AUDIO)) { //TODO : Support audio trimming
                         //show trim dialog
@@ -275,7 +277,7 @@ public class ClipCardView extends BaseRecordCardView {
                         setNewSelectedClip(v);
                     }
                     toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
-                    toggleFooterVisibility(collapsableContainer);
+                    toggleFooterVisibility(collapsableContainer, tvBody);
                 }
             }
         };
@@ -680,8 +682,12 @@ public class ClipCardView extends BaseRecordCardView {
         mClipsExpanded = !mClipsExpanded;
     }
 
-    private void toggleFooterVisibility(final ViewGroup collapsable) {
+    private void toggleFooterVisibility(final ViewGroup collapsable, TextView body) {
         final ViewGroup.LayoutParams params = collapsable.getLayoutParams();
+
+        String targetText = body.getText().toString();
+        Rect textRect = new Rect();
+        body.getPaint().getTextBounds(targetText, 0, targetText.length(), textRect);
 
         ValueAnimator animator = null;
         if (collapsable.getHeight() < mCardFooterHeight) {

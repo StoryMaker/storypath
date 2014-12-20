@@ -72,8 +72,11 @@
         <TextView
             style="@style/h2"
             android:id="@+id/tvBody"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/clip_body_height"
+            android:gravity="center|left"
+            android:maxLines="3"
+            android:ellipsize="end"
             android:paddingTop="@dimen/padding_medium"
             android:paddingBottom="@dimen/padding_medium"/>
 
@@ -95,7 +98,7 @@
             android:paddingEnd="@dimen/padding_medium"
             android:paddingBottom="@dimen/padding_small"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/clip_btn_height"
             android:layout_below="@+id/vumeter_layout"
             android:gravity="center_vertical"
             android:text="@string/lbl_import"
@@ -110,7 +113,7 @@
             android:paddingEnd="@dimen/padding_medium"
             android:paddingBottom="@dimen/padding_small"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/clip_btn_height"
             android:layout_below="@+id/tvImport"
             android:gravity="center_vertical"
             android:text="@string/lbl_capture"

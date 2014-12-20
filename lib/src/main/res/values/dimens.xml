@@ -7,7 +7,6 @@
     <dimen name="clip_stack_margin_top">32dp</dimen> <!-- When multiple clips are stacked in a ClipCard, how much of the partially covered lower clips to show? -->
     <dimen name="card_temperature_size">90.0dp</dimen>
     <dimen name="sticky_height">120dp</dimen>
-    <dimen name="clip_card_footer_height">220dp</dimen>
     <dimen name="card_quiz_response_margin_top">16dp</dimen>
     <dimen name="card_quiz_response_height">60dp</dimen>
     <dimen name="clip_thumb_height">200dp</dimen>
@@ -27,5 +26,15 @@
     <dimen name="padding_xlarge">56.0dp</dimen>
     <dimen name="padding_huge">72.0dp</dimen>
     <dimen name="padding_xhuge">80.0dp</dimen>
+
+    <!-- R.layout.card_clip
+    These pre-determined values allow us to
+    inflate a ClipCard into the "compressed" state
+    and allow us to smoothly animate to the "expanded
+    state without having to pre-layout the views in the
+    "expanded" state.
+    -->
+    <dimen name="clip_body_height">100dp</dimen>
+    <dimen name="clip_btn_height">50dp</dimen>
 
 </resources>
