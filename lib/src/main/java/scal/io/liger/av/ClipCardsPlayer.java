@@ -462,7 +462,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             mMainPlayer.start();
         }
 
-        if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
+        if (mSecondaryPlayer != null && !mSecondaryPlayer.isPlaying()) {
             mSecondaryPlayer.start();
         }
 
