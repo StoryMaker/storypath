@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
@@ -36,6 +37,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
+import scal.io.liger.view.Util;
 
 /**
  * Plays a collection of ClipCards, as well as a secondary audio track.
@@ -57,6 +59,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected MediaPlayer mSecondaryPlayer;
     private Uri mSecondaryAudioUri;
     private Surface mSurface;
+    private TextView mtvTimeCode;
     protected ImageView mThumbnailView;
     private TextureView mTextureView;
     private SeekBar mPlaybackProgress;
@@ -165,6 +168,24 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mSecondaryAudioUri = Uri.parse(mediaFile.getPath());
     }
 
+    /**
+     * Begin playback of the main media files, as well as the secondary auto track if set.
+     */
+    public void startPlayback() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.START));
+    }
+
+    /**
+     * Stop playback and reset the playback location to the first clip.
+     */
+    public void stopPlayback() {
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.STOP));
+    }
+
+    public void setTimecodeVisible(boolean isVisible) {
+        mtvTimeCode.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
     // </editor-fold desc="Public API">
 
     private void init() {
@@ -196,12 +217,21 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         FrameLayout.LayoutParams alignBottomParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
-
         alignBottomParams.gravity = Gravity.BOTTOM;
         mPlaybackProgress = new SeekBar(context);
         mPlaybackProgress.setLayoutParams(alignBottomParams);
         mPlaybackProgress.setEnabled(false);
 
+        FrameLayout.LayoutParams alignTopParams =
+                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        alignTopParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+
+        mtvTimeCode = new TextView(root.getContext());
+        mtvTimeCode.setLayoutParams(alignTopParams);
+        mtvTimeCode.setVisibility(View.INVISIBLE); // Invisible by default
+
+        root.addView(mtvTimeCode);
         root.addView(mTextureView);
         root.addView(mThumbnailView);
         root.addView(mPlaybackProgress);
@@ -268,6 +298,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (mPlaybackProgress != null) {
                     mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
                 }
+                mtvTimeCode.setText(Util.makeTimeString(durationOfPreviousClips + currentClipElapsedTime));
                 //Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
             }
         } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
@@ -387,13 +418,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mAdvancingClips = false;
     }
 
-    /**
-     * Begin playback of the main media files, as well as the secondary auto track if set.
-     */
-    public void startPlayback() {
-        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.START));
-    }
-
     protected void _startPlayback() {
         mIsPlaying = true;
         // Connect narrationPlayer to narration mediaFile on each request to start playback
@@ -468,13 +492,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         mIsPaused = false;
         mIsPlaying = true;
-    }
-
-    /**
-     * Stop playback and reset the playback location to the first clip.
-     */
-    public void stopPlayback() {
-        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.STOP));
     }
 
     protected void _stopPlayback() {
