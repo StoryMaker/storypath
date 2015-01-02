@@ -2,6 +2,7 @@ package scal.io.liger.av;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -180,15 +181,16 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     private void setupViews(@NonNull FrameLayout root) {
         Context context = root.getContext();
-        FrameLayout.LayoutParams matchParentParams =
+        FrameLayout.LayoutParams mediaViewParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                              ViewGroup.LayoutParams.MATCH_PARENT);
+        mediaViewParams.setMargins(0,0,0,20); // TODO DP
 
         mThumbnailView = new ImageView(context);
-        mThumbnailView.setLayoutParams(matchParentParams);
+        mThumbnailView.setLayoutParams(mediaViewParams);
 
         mTextureView = new TextureView(context);
-        mTextureView.setLayoutParams(matchParentParams);
+        mTextureView.setLayoutParams(mediaViewParams);
         mTextureView.setSurfaceTextureListener(this);
 
         FrameLayout.LayoutParams alignBottomParams =
@@ -305,6 +307,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        Log.i(TAG, String.format("Texture size changed to %dx%d", width, height));
 
     }
 
@@ -507,6 +510,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected void prepareMainMediaPlayer(MediaPlayer mainPlayer) {
         try {
             mainPlayer.prepare();
+            adjustAspectRatio(mTextureView, mainPlayer.getVideoWidth(), mainPlayer.getVideoHeight());
             mAdvancingClips = false;
             mainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
         } catch (IOException e) {
@@ -608,5 +612,42 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             Log.i(TAG, "Total duration now " + totalDuration);
         }
         return totalDuration;
+    }
+
+    /**
+     * Sets the TextureView transform to preserve the aspect ratio specified by the
+     * given width and height.
+     *
+     * Courtesy of Andrew McFadden's grafika project:
+     * https://github.com/google/grafika/blob/master/src/com/android/grafika/PlayMovieActivity.java
+     */
+    private void adjustAspectRatio(TextureView textureView, int width, int height) {
+        int viewWidth = textureView.getWidth();
+        int viewHeight = textureView.getHeight();
+        double aspectRatio = (double) height / width;
+
+        int newWidth, newHeight;
+        if (viewHeight > (int) (viewWidth * aspectRatio)) {
+            // limited by narrow width; restrict height
+            newWidth = viewWidth;
+            newHeight = (int) (viewWidth * aspectRatio);
+        } else {
+            // limited by short height; restrict width
+            newWidth = (int) (viewHeight / aspectRatio);
+            newHeight = viewHeight;
+        }
+        int xoff = (viewWidth - newWidth) / 2;
+        int yoff = (viewHeight - newHeight) / 2;
+        Log.v(TAG, "video=" + width + "x" + height +
+                " view=" + viewWidth + "x" + viewHeight +
+                " newView=" + newWidth + "x" + newHeight +
+                " off=" + xoff + "," + yoff);
+
+        Matrix txform = new Matrix();
+        textureView.getTransform(txform);
+        txform.setScale((float) newWidth / viewWidth, (float) newHeight / viewHeight);
+        //txform.postRotate(10);          // just for fun
+        txform.postTranslate(xoff, yoff);
+        textureView.setTransform(txform);
     }
 }
