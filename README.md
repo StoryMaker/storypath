@@ -1,4 +1,4 @@
-liger-prototype
+StoryPath Framework
 ================
 
 ---
