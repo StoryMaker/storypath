@@ -62,9 +62,11 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         FrameLayout flPlayer = (FrameLayout) view.findViewById(R.id.card_player);
 
         initClipCardsWithAttachedMedia();
-        if (mMediaCards.size() > 0)
+        if (mMediaCards.size() > 0) {
             mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards);
-        else
+            MediaFile narrationFile = mCardModel.getSelectedNarrationFile();
+            if (narrationFile != null) mCardsPlayer.addAudioTrack(narrationFile);
+        } else
             showNoClipPlaceholder(flPlayer);
 
         Button btnJumble = ((Button) view.findViewById(R.id.btn_jumble));
@@ -164,5 +166,10 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     @Override
     public void onNarrationFinished(MediaFile narration) {
         mCardModel.setNarration(narration);
+
+        if (mCardsPlayer != null) {
+            mCardsPlayer.addAudioTrack(narration);
+        }
+        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
     }
 }
