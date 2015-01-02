@@ -390,7 +390,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     /**
      * Begin playback of the main media files, as well as the secondary auto track if set.
      */
-    protected void startPlayback() {
+    public void startPlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.START));
     }
 
@@ -473,7 +473,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     /**
      * Stop playback and reset the playback location to the first clip.
      */
-    protected void stopPlayback() {
+    public void stopPlayback() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.STOP));
     }
 
@@ -505,6 +505,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _release() {
         if (mMainPlayer != null) mMainPlayer.release();
         if (mSecondaryPlayer != null) mSecondaryPlayer.release();
+    }
+
+    public boolean isPlaying() {
+        return mIsPlaying;
     }
 
     protected void prepareMainMediaPlayer(MediaPlayer mainPlayer) {
