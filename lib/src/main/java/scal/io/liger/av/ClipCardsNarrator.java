@@ -210,6 +210,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         if (mRecordNarrationState.equals(RecordNarrationState.RECORDING)) {
             mIsPlaying = true;
 
+            mPlayBtn.setVisibility(View.GONE);
             mThumbnailView.setVisibility(View.VISIBLE);
 
             switch(mCurrentlyPlayingCard.getMedium()) {

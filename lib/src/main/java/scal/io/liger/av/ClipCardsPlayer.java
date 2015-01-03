@@ -1,7 +1,9 @@
 package scal.io.liger.av;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
@@ -59,7 +61,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected MediaPlayer mSecondaryPlayer;
     private Uri mSecondaryAudioUri;
     private Surface mSurface;
-    private TextView mtvTimeCode;
+    private TextView mTimeCode;
+    protected ImageView mPlayBtn;
     protected ImageView mThumbnailView;
     private TextureView mTextureView;
     private SeekBar mPlaybackProgress;
@@ -75,7 +78,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     private final int TIMER_INTERVAL_MS = 100;
 
-    private View.OnClickListener PlaybackClickListener = new View.OnClickListener() {
+    private View.OnClickListener mPlaybackClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -85,7 +88,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             if (mIsPlaying) {
                 pausePlayback();
             }
-            else if (mIsPaused){
+            else if (mIsPaused) {
                 resumePlayback();
             }
             else {
@@ -183,7 +186,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     public void setTimecodeVisible(boolean isVisible) {
-        mtvTimeCode.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        mTimeCode.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     // </editor-fold desc="Public API">
@@ -191,21 +194,23 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void init() {
         mContext = mContainerLayout.getContext();
         mHandler = new ClipCardsPlayerHandler(this);
-        setupViews(mContainerLayout);
+        inflateViews(mContainerLayout);
+        attachViewListeners();
         mCurrentlyPlayingCard = mClipCards.get(0);
         setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-        mThumbnailView.setOnClickListener(PlaybackClickListener);
-        mTextureView.setOnClickListener(PlaybackClickListener);
         mClipCollectionDurationMs = calculateTotalClipCollectionLengthMs(mClipCards);
         setupTimer();
     }
 
-    private void setupViews(@NonNull FrameLayout root) {
+    private void inflateViews(@NonNull FrameLayout root) {
         Context context = root.getContext();
         FrameLayout.LayoutParams mediaViewParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                              ViewGroup.LayoutParams.MATCH_PARENT);
-        mediaViewParams.setMargins(0,0,0,20); // TODO DP
+
+        Resources r = context.getResources();
+        int bottomPadPx = r.getDimensionPixelSize(R.dimen.padding_small);
+        mediaViewParams.setMargins(0, 0, 0, bottomPadPx);
 
         mThumbnailView = new ImageView(context);
         mThumbnailView.setLayoutParams(mediaViewParams);
@@ -224,31 +229,48 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         FrameLayout.LayoutParams alignTopParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                                             ViewGroup.LayoutParams.WRAP_CONTENT);
         alignTopParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
 
-        mtvTimeCode = new TextView(root.getContext());
-        mtvTimeCode.setLayoutParams(alignTopParams);
-        mtvTimeCode.setVisibility(View.INVISIBLE); // Invisible by default
+        mTimeCode = new TextView(context);
+        mTimeCode.setLayoutParams(alignTopParams);
+        mTimeCode.setVisibility(View.INVISIBLE); // Invisible by default
+        mTimeCode.setShadowLayer(2, 2, 2, Color.WHITE);
 
-        root.addView(mtvTimeCode);
+        FrameLayout.LayoutParams overlayParams =
+                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+        overlayParams.gravity = Gravity.CENTER;
+        mPlayBtn = new ImageView(context);
+        mPlayBtn.setImageResource(R.drawable.play);
+        mPlayBtn.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
         root.addView(mTextureView);
         root.addView(mThumbnailView);
         root.addView(mPlaybackProgress);
+        root.addView(mTimeCode);
+        root.addView(mPlayBtn);
+    }
+
+    private void attachViewListeners() {
+        mThumbnailView.setOnClickListener(mPlaybackClickListener);
+        mTextureView.setOnClickListener(mPlaybackClickListener);
+        mPlayBtn.setOnClickListener(mPlaybackClickListener);
     }
 
     private void setupTimer() {
         // Poll MediaPlayer for position, ensuring it never exceeds stop point indicated by ClipMetadata
         if (mTimer != null) mTimer.cancel(); // should never happen but JIC
         mTimer = new Timer("mplayer");
-        mTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                onTimerTick();
-                            }
-                        },
-                50,                   // Initial delay ms
-                TIMER_INTERVAL_MS);   // Repeat interval ms
+        mTimer.schedule(
+            new TimerTask() {
+                    @Override
+                    public void run() {
+                        onTimerTick();
+                    }
+            },
+            50,                   // Initial delay ms
+            TIMER_INTERVAL_MS);   // Repeat interval ms
     }
 
     private void onTimerTick() {
@@ -298,7 +320,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (mPlaybackProgress != null) {
                     mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
                 }
-                mtvTimeCode.setText(Util.makeTimeString(durationOfPreviousClips + currentClipElapsedTime));
+                mTimeCode.setText(Util.makeTimeString(durationOfPreviousClips + currentClipElapsedTime));
                 //Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));
             }
         } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
@@ -419,6 +441,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     protected void _startPlayback() {
+        mPlayBtn.setVisibility(View.GONE);
+
         mIsPlaying = true;
         // Connect narrationPlayer to narration mediaFile on each request to start playback
         // to ensure we have the most current narration recording
@@ -461,6 +485,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void _pausePlayback() {
+        mPlayBtn.setVisibility(View.VISIBLE);
+
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.pause();
         }
@@ -482,6 +508,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void _resumePlayback() {
+        mPlayBtn.setVisibility(View.GONE);
+
         if (mMainPlayer != null && !mMainPlayer.isPlaying()) {
             mMainPlayer.start();
         }
@@ -495,6 +523,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     protected void _stopPlayback() {
+        mPlayBtn.setVisibility(View.VISIBLE);
+
         mIsPaused = false;
         mIsPlaying = false;
 
