@@ -1,5 +1,7 @@
 package scal.io.liger.av;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -33,6 +35,7 @@ import scal.io.liger.model.MediaFile;
 public class ClipCardsNarrator extends ClipCardsPlayer {
     public final String TAG = getClass().getSimpleName();
 
+    private AudioManager mAudioManager;
     private MediaRecorder mMediaRecorder;
     private File mNarrationOutput;
     private RecordNarrationState mRecordNarrationState;
@@ -101,6 +104,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
         setTimecodeVisible(true);
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
     }
 
     private void _changeRecordNarrationState(RecordNarrationState newState) {
@@ -123,6 +127,11 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsNarratorHandler.START_REC_NARRATION));
     }
 
+    /**
+     * Start recording narration for a selection of {@link #mClipCards}
+     *
+     * @param indexes the first and last index specifying the selection within {@link #mClipCards}
+     */
     private void _startRecordingNarration(@Nullable Pair<Integer, Integer> indexes) {
         _changeRecordNarrationState(RecordNarrationState.RECORDING);
 
@@ -217,8 +226,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                 case Constants.VIDEO:
                     mThumbnailView.setVisibility(View.GONE);
                 case Constants.AUDIO:
-                    // Mute the main media volume if we're recording narration
-                    mMainPlayer.setVolume(0, 0);
+                    // Mute the main media volume if we're recording narration and headphones
+                    // are not plugged in. Note that because we're not altering the media routing
+                    // of our MediaPlayers, if isWiredHeadsetOn returns true it should be a
+                    // safe assumption that the media will indeed be routed there per system default.
+                    if (!mAudioManager.isWiredHeadsetOn() && !mAudioManager.isBluetoothA2dpOn()) {
+                        mMainPlayer.setVolume(0, 0);
+                    }
                     mMainPlayer.start();
                     break;
                 case Constants.PHOTO:
