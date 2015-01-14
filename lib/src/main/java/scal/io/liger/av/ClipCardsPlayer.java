@@ -19,10 +19,12 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
@@ -52,6 +54,11 @@ import scal.io.liger.view.Util;
 public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     public final String TAG = getClass().getSimpleName();
 
+    private final int TIMER_INTERVAL_MS = 100;
+
+    protected final float FULL_VOLUME = 1.0f;
+    protected final float MUTE_VOLUME = 0.0f;
+
     protected Context mContext;
     protected FrameLayout mContainerLayout;
     protected List<ClipCard> mClipCards;
@@ -61,6 +68,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected MediaPlayer mSecondaryPlayer;
     private Uri mSecondaryAudioUri;
     private Surface mSurface;
+    protected ToggleButton mMuteBtn;
     private TextView mTimeCode;
     protected ImageView mPlayBtn;
     protected ImageView mThumbnailView;
@@ -75,15 +83,15 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private int mCurrentPhotoElapsedTime;
     private int mPhotoSlideDurationMs = 5 * 1000;
     private int mClipCollectionDurationMs;
-
-    private final int TIMER_INTERVAL_MS = 100;
+    protected float mRequestedVolume = FULL_VOLUME;
 
     private View.OnClickListener mPlaybackClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
-            if (( mCurrentlyPlayingCard.getMedium().equals(Constants.VIDEO) ||
-                  mCurrentlyPlayingCard.getMedium().equals(Constants.AUDIO)) && mMainPlayer == null) return;
+            Log.i(TAG, "PlaybackClickListener fired");
+            if ((mCurrentlyPlayingCard.getMedium().equals(Constants.VIDEO) ||
+                 mCurrentlyPlayingCard.getMedium().equals(Constants.AUDIO)) && mMainPlayer == null) return;
 
             if (mIsPlaying) {
                 pausePlayback();
@@ -97,12 +105,21 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
     };
 
+    private ToggleButton.OnCheckedChangeListener mMuteCheckedListener = new ToggleButton.OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            setVolume(isChecked ? MUTE_VOLUME : FULL_VOLUME);
+        }
+    };
+
     /**
      * Handler to coordinate actions affecting the internal MediaPlayers.
      * Events may come from the UI or Timer thread.
      */
     protected static class ClipCardsPlayerHandler extends Handler {
 
+        // NOTE : Avoid conflicts with ClipCardsNarratorHandler constants
         public static final int START   = 0;
         public static final int RESUME  = 1;
         public static final int PAUSE   = 2;
@@ -110,6 +127,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         public static final int ADVANCE = 4;
         public static final int RELEASE = 5;
         public static final int TIMER   = 6;
+        public static final int VOLUME  = 7;
 
         private WeakReference<ClipCardsPlayer> mWeakPlayer;
 
@@ -150,6 +168,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 case TIMER:
                     player._onTimerTick();
                     break;
+                case VOLUME:
+                    player._setVolume((float) obj);
+                    break;
             }
         }
 
@@ -169,6 +190,18 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     public void addAudioTrack(MediaFile mediaFile) {
         mSecondaryAudioUri = Uri.parse(mediaFile.getPath());
+    }
+
+    public void setVolume(float volume) {
+        if (volume == MUTE_VOLUME) mMuteBtn.setChecked(true);
+        else mMuteBtn.setChecked(false);
+        mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.VOLUME, volume));
+    }
+
+    protected void _setVolume(float volume) {
+        if (mMainPlayer != null) mMainPlayer.setVolume(volume, volume);
+        if (mSecondaryPlayer != null) mSecondaryPlayer.setVolume(volume, volume);
+        mRequestedVolume = volume;
     }
 
     /**
@@ -204,6 +237,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     private void inflateViews(@NonNull FrameLayout root) {
         Context context = root.getContext();
+
+        /* Media Views (Image + Texture) */
         FrameLayout.LayoutParams mediaViewParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                              ViewGroup.LayoutParams.MATCH_PARENT);
@@ -219,14 +254,16 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mTextureView.setLayoutParams(mediaViewParams);
         mTextureView.setSurfaceTextureListener(this);
 
+        /* Playback progress */
         FrameLayout.LayoutParams alignBottomParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                                             ViewGroup.LayoutParams.WRAP_CONTENT);
         alignBottomParams.gravity = Gravity.BOTTOM;
         mPlaybackProgress = new SeekBar(context);
         mPlaybackProgress.setLayoutParams(alignBottomParams);
         mPlaybackProgress.setEnabled(false);
 
+        /* Timecode label */
         FrameLayout.LayoutParams alignTopParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                              ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -237,25 +274,43 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mTimeCode.setVisibility(View.INVISIBLE); // Invisible by default
         mTimeCode.setShadowLayer(2, 2, 2, Color.WHITE);
 
+        /* Play Button */
         FrameLayout.LayoutParams overlayParams =
                 new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
+                                             ViewGroup.LayoutParams.MATCH_PARENT);
         overlayParams.gravity = Gravity.CENTER;
+
         mPlayBtn = new ImageView(context);
         mPlayBtn.setImageResource(R.drawable.play);
         mPlayBtn.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+        /* Mute Button */
+        int muteBtnSize = r.getDimensionPixelSize(R.dimen.mute_btn_size);
+        FrameLayout.LayoutParams alignTopRightParams =
+                new FrameLayout.LayoutParams(muteBtnSize,
+                                             muteBtnSize);
+        alignTopRightParams.gravity = Gravity.TOP | Gravity.RIGHT;
+
+        mMuteBtn = new ToggleButton(context);
+        mMuteBtn.setBackgroundResource(R.drawable.btn_mute);
+        mMuteBtn.setLayoutParams(alignTopRightParams);
+        mMuteBtn.setTextOn("");
+        mMuteBtn.setTextOff("");
+        mMuteBtn.setText("");
 
         root.addView(mTextureView);
         root.addView(mThumbnailView);
         root.addView(mPlaybackProgress);
         root.addView(mTimeCode);
         root.addView(mPlayBtn);
+        root.addView(mMuteBtn);
     }
 
     private void attachViewListeners() {
         mThumbnailView.setOnClickListener(mPlaybackClickListener);
         mTextureView.setOnClickListener(mPlaybackClickListener);
         mPlayBtn.setOnClickListener(mPlaybackClickListener);
+        mMuteBtn.setOnCheckedChangeListener(mMuteCheckedListener);
     }
 
     private void setupTimer() {

@@ -30,6 +30,9 @@ import scal.io.liger.model.MediaFile;
 /**
  * Plays a collection of ClipCards, as well as a secondary audio track.
  *
+ * Development Note : All methods prefixed with '_' are intended for exclusive
+ * use by {@link android.os.Handler#handleMessage(android.os.Message)} and other '_' prefixed methods.
+ *
  * Created by davidbrodsky on 12/12/14.
  */
 public class ClipCardsNarrator extends ClipCardsPlayer {
@@ -60,8 +63,9 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
     protected static class ClipCardsNarratorHandler extends ClipCardsPlayerHandler {
 
-        public static final int START_REC_NARRATION = 7;
-        public static final int STOP_REC_NARRATION  = 8;
+        // NOTE : Avoid conflicts with ClipCardsPlayerHandler constants
+        public static final int START_REC_NARRATION = -1;
+        public static final int STOP_REC_NARRATION  = -2;
 
         private WeakReference<ClipCardsNarrator> mWeakNarrator;
 
@@ -231,7 +235,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                     // of our MediaPlayers, if isWiredHeadsetOn returns true it should be a
                     // safe assumption that the media will indeed be routed there per system default.
                     if (!mAudioManager.isWiredHeadsetOn() && !mAudioManager.isBluetoothA2dpOn()) {
-                        mMainPlayer.setVolume(0, 0);
+                        setVolume(MUTE_VOLUME);
                     }
                     mMainPlayer.start();
                     break;
@@ -240,7 +244,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                     break;
             }
         } else {
-            mMainPlayer.setVolume(1, 1);
+            mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
             if (mSelectedClipIndexes != null) {
                 _advanceToClip(mMainPlayer,
                         mClipCards.get(mSelectedClipIndexes.first),
