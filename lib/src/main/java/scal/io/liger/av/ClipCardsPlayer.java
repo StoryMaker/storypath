@@ -291,6 +291,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                                              muteBtnSize);
         alignTopRightParams.gravity = Gravity.TOP | Gravity.RIGHT;
 
+        int topPadPx = r.getDimensionPixelSize(R.dimen.padding_xlarge);
+        int rightPadPx = r.getDimensionPixelSize(R.dimen.padding_medium);
+        alignTopRightParams.setMargins(0, topPadPx, rightPadPx, 0);
+
         mMuteBtn = new ToggleButton(context);
         mMuteBtn.setBackgroundResource(R.drawable.btn_mute);
         mMuteBtn.setLayoutParams(alignTopRightParams);
