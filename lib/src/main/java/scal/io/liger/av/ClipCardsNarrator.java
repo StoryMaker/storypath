@@ -103,6 +103,12 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         public void onNarrationFinished(MediaFile narration);
     }
 
+    /**
+     * Create a new CLipCardsNarrator.
+     *
+     * @param container the container into which the player should be inflated
+     * @param clipCards the in-order list of cards to allow recording narration for
+     */
     public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         super(container, clipCards);
         mHandler = new ClipCardsNarratorHandler(this);
@@ -138,6 +144,20 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
      */
     private void _startRecordingNarration(@Nullable Pair<Integer, Integer> indexes) {
         _changeRecordNarrationState(RecordNarrationState.RECORDING);
+
+        // Mute the main media volume if we're recording narration and headphones
+        // are not plugged in. Note that because we're not altering the media routing
+        // of our MediaPlayers, if isWiredHeadsetOn returns true it should be a
+        // safe assumption that the media will indeed be routed there per system default.
+        if (!mAudioManager.isWiredHeadsetOn() && !mAudioManager.isBluetoothA2dpOn()) {
+            mContainerLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    setVolume(MUTE_VOLUME); // don't use _setVolume bc we need to update state of mute button
+
+                }
+            });
+        }
 
         mSelectedClipIndexes = indexes;
 
@@ -183,6 +203,10 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     public void _stopRecordingNarration(boolean stopPlayback) {
+        // Unmute volume in anticipation of the user immediately previewing the recording
+        // by touching the play button. If recording is initiated again, the volume will be muted
+        // appropriately on _startRecordingNarration
+        setVolume(FULL_VOLUME);
         _changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = finishRecordingNarration();
         if (mListener != null) mListener.onNarrationFinished(mf);
@@ -230,13 +254,6 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                 case Constants.VIDEO:
                     mThumbnailView.setVisibility(View.GONE);
                 case Constants.AUDIO:
-                    // Mute the main media volume if we're recording narration and headphones
-                    // are not plugged in. Note that because we're not altering the media routing
-                    // of our MediaPlayers, if isWiredHeadsetOn returns true it should be a
-                    // safe assumption that the media will indeed be routed there per system default.
-                    if (!mAudioManager.isWiredHeadsetOn() && !mAudioManager.isBluetoothA2dpOn()) {
-                        setVolume(MUTE_VOLUME);
-                    }
                     mMainPlayer.start();
                     break;
                 case Constants.PHOTO:
@@ -244,7 +261,6 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                     break;
             }
         } else {
-            mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
             if (mSelectedClipIndexes != null) {
                 _advanceToClip(mMainPlayer,
                         mClipCards.get(mSelectedClipIndexes.first),

@@ -518,6 +518,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 }
             }
             Log.i(TAG, "Starting narration player for uri " + mSecondaryAudioUri.toString());
+            mSecondaryPlayer.setVolume(mRequestedVolume, mRequestedVolume);
             mSecondaryPlayer.start();
         }
 
@@ -527,6 +528,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             case Constants.VIDEO:
                 mThumbnailView.setVisibility(View.GONE);
             case Constants.AUDIO:
+                mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
                 mMainPlayer.start();
                 break;
             case Constants.PHOTO:
