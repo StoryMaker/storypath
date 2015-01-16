@@ -19,6 +19,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -291,9 +292,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                                              muteBtnSize);
         alignTopRightParams.gravity = Gravity.TOP | Gravity.RIGHT;
 
-        int topPadPx = r.getDimensionPixelSize(R.dimen.padding_xlarge);
-        int rightPadPx = r.getDimensionPixelSize(R.dimen.padding_medium);
-        alignTopRightParams.setMargins(0, topPadPx, rightPadPx, 0);
+        int topMarginPx = r.getDimensionPixelSize(R.dimen.padding_xlarge);
+        int rightMarginPx = r.getDimensionPixelSize(R.dimen.padding_medium);
+        alignTopRightParams.setMargins(0, topMarginPx, rightMarginPx, 0);
 
         mMuteBtn = new ToggleButton(context);
         mMuteBtn.setBackgroundResource(R.drawable.btn_mute);
@@ -308,6 +309,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         root.addView(mTimeCode);
         root.addView(mPlayBtn);
         root.addView(mMuteBtn);
+
     }
 
     private void attachViewListeners() {

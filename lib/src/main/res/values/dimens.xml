@@ -37,6 +37,6 @@
     <dimen name="clip_body_height">100dp</dimen>
     <dimen name="clip_btn_height">50dp</dimen>
 
-    <dimen name="mute_btn_size">30dp</dimen>
+    <dimen name="mute_btn_size">40dp</dimen>
 
 </resources>
