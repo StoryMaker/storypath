@@ -29,7 +29,9 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.IconTextView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -55,7 +57,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -68,22 +69,147 @@ public class ClipCardView extends BaseRecordCardView {
 
     public ClipCard mCardModel;
 
-    private ArrayList<View> mDisplayedClips = new ArrayList<>(); // Views representing clips currently displayed
+    private List<View> mDisplayedClipViews = new ArrayList<>(); // Views representing clips currently displayed
     private int mCardFooterHeight; // The mClipsExpanded height of the card footer (e.g: Capture import buttons)
     private boolean mClipsExpanded = false; // Is the clip stack expanded
+    private boolean mHasClips;
 
     private final float PRIMARY_CLIP_ALPHA = 1.0f;
     private final float SECONDARY_CLIP_ALPHA = .7f;
 
-
-    TextView tvHeader;
-    TextView tvBody;
-    TextView tvImport;
-    TextView tvCapture;
-    TextView tvStop;
-    ImageView ivOverflow;
+    private ViewGroup mCollapsableContainer;
+    private ViewGroup mClipCandidatesContainer;
+    private List<ClipMetadata> mDisplayedClips;
+    private TextView tvHeader;
+    private TextView tvBody;
+    private TextView tvImport;
+    private TextView tvCapture;
+    private TextView tvStop;
+    private ImageView ivOverflow;
 
     private IconTextView itvClipTypeIcon;
+
+    /** Capture Media Button Click Listener */
+    View.OnClickListener mCaptureClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            Intent intent = null;
+            int requestId = -1;
+
+            String medium = mCardModel.getMedium();
+            String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
+            if (medium.equals(Constants.VIDEO)) {
+                intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                requestId = Constants.REQUEST_VIDEO_CAPTURE;
+
+            } else if (medium.equals(Constants.PHOTO)) {
+                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    Log.e(TAG, "Unable to make image file");
+                    v.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(v.getContext(), "Unable to make image file", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    return;
+                }
+                mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                requestId = Constants.REQUEST_IMAGE_CAPTURE;
+            }
+
+            if (medium.equals(Constants.AUDIO)) {
+//                    changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
+                startRecordingNarration();
+
+                // FIXME hide butons, replace with stop button (and eventually a pause button
+
+//                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+//                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
+            } else if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
+                mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
+                ((Activity) mContext).startActivityForResult(intent, requestId);
+            }
+        }
+    };
+
+    /**
+     *  Clip Stack Card Click Listener
+     *  Handles click on primary clip (show playback / edit dialog) as well as
+     *  secondary clips and footer (expand clip stack or collapse after new primary clip selection)
+     */
+    View.OnClickListener mClipCardClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!mHasClips) {
+                // This ClipCard is displaying a single item stack with either example or
+                // fallback drawables. A click should expand the card footer to reveal the Capture / Import feature
+                toggleFooterVisibility(mCollapsableContainer, tvBody);
+                return;
+            }
+
+            ViewGroup clipContainer = (ViewGroup) v.getParent();
+
+            if (clipContainer.getTag(R.id.view_tag_clip_primary) != null &&
+                (boolean) clipContainer.getTag(R.id.view_tag_clip_primary)) {
+                // Clicked clip is primary
+                Log.i(TAG + "-select", "primary");
+                if (mClipsExpanded) {
+                    // Collapse clip view, without change
+                    toggleClipExpansion(mDisplayedClips, mClipCandidatesContainer);
+                    toggleFooterVisibility(mCollapsableContainer, tvBody);
+                } else if (mCardModel.getMedium().equals(Constants.VIDEO) ||
+                        mCardModel.getMedium().equals(Constants.AUDIO)) { //TODO : Support audio trimming
+                    //show trim dialog
+                    showClipPlaybackAndTrimming();
+                }
+            } else {
+                // Clicked clip is not primary clip
+                if (mClipsExpanded && clipContainer.getTag(R.id.view_tag_clip_primary) != null) {
+                    // Clicked view is secondary clip and clips are expanded
+                    // This indicates a new secondary clip was selected
+                    Log.i(TAG + "-select", "new primary clip selected");
+                    // If clips expanded, this event means we've been selected as the
+                    // new primary clip!
+                    setNewSelectedClip(clipContainer);
+                }
+                toggleClipExpansion(mDisplayedClips, mClipCandidatesContainer);
+                toggleFooterVisibility(mCollapsableContainer, tvBody);
+            }
+        }
+    };
+
+    /**
+     * Clip Stack Clip delete listener
+     * Handles user removing a clip from the Clip stack.
+     */
+    View.OnClickListener mDeleteClipClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            ViewGroup clipContainerView = (ViewGroup) v.getParent();
+            ClipMetadata clipMetadata = (ClipMetadata) clipContainerView.getTag(R.id.view_tag_clip_metadata);
+
+            mDisplayedClips.remove(clipMetadata);
+
+            if (mDisplayedClips.size() > 0) {
+                mDisplayedClipViews = inflateClipStack(mCardModel,
+                                                       mClipCandidatesContainer,
+                                                       mDisplayedClips,
+                                                       mClipCardClickListener);
+            } else {
+                mHasClips = false;
+                mDisplayedClipViews = inflateEmptyClipStack(mClipCandidatesContainer,
+                                                            mClipCardClickListener);
+            }
+
+            mCardModel.getStoryPath().getStoryPathLibrary().save(true);
+        }
+    };
 
     public ClipCardView(Context context, Card cardModel) {
         super();
@@ -104,8 +230,8 @@ public class ClipCardView extends BaseRecordCardView {
         View view = LayoutInflater.from(context).inflate(R.layout.card_clip, null);
 
         // Views modified by animation callbacks, and must be final
-        final ViewGroup collapsableContainer    = (ViewGroup) view.findViewById(R.id.collapsable);
-        final ViewGroup clipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
+        mCollapsableContainer    = (ViewGroup) view.findViewById(R.id.collapsable);
+        mClipCandidatesContainer = (ViewGroup) view.findViewById(R.id.clipCandidates);
 
         // Views only modified during initial binding
         itvClipTypeIcon = (IconTextView) view.findViewById(R.id.itvClipTypeIcon);
@@ -117,49 +243,6 @@ public class ClipCardView extends BaseRecordCardView {
         ivOverflow      = (ImageView) view.findViewById(R.id.ivOverflowButton);
 
         mVUMeterLayout  = (LinearLayout) view.findViewById(R.id.vumeter_layout);
-
-        /** Capture Media Button Click Listener */
-        View.OnClickListener captureClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = null;
-                int requestId = -1;
-
-                String medium = mCardModel.getMedium();
-                String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
-                if (medium.equals(Constants.VIDEO)) {
-                    intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                    requestId = Constants.REQUEST_VIDEO_CAPTURE;
-
-                } else if (medium.equals(Constants.PHOTO)) {
-                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        Log.e(TAG, "Unable to make image file");
-                        Utility.toastOnUiThread((Activity) context, "Unable to make image file");
-                        return;
-                    }
-                    mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                    requestId = Constants.REQUEST_IMAGE_CAPTURE;
-                }
-
-                if (medium.equals(Constants.AUDIO)) {
-//                    changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
-                    startRecordingNarration();
-
-                    // FIXME hide butons, replace with stop button (and eventually a pause button
-
-//                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-//                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
-                } else if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
-                    mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
-                    ((Activity) mContext).startActivityForResult(intent, requestId);
-                }
-            }
-        };
 
         /** Stop Button Click Listener */
         View.OnClickListener stopClickListener = new View.OnClickListener() {
@@ -183,7 +266,7 @@ public class ClipCardView extends BaseRecordCardView {
         };
 
         // Set click listeners for actions
-        tvCapture.setOnClickListener(captureClickListener);
+        tvCapture.setOnClickListener(mCaptureClickListener);
 
         tvStop.setOnClickListener(stopClickListener);
 
@@ -236,92 +319,31 @@ public class ClipCardView extends BaseRecordCardView {
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
 
-        final ArrayList<ClipMetadata> clipsToDisplay = mCardModel.getClips();
-        final boolean hasClips = (clipsToDisplay != null && clipsToDisplay.size() > 0);
-        if (hasClips) clipCandidatesContainer.removeAllViews(); // Remove any prior clip views
-
-        /** Clip Stack Card Click Listener
-         *  Handles click on primary clip (show playback / edit dialog) as well as
-         *  secondary clips and footer (expand clip stack or collapse after new primary clip selection)
-        */
-        View.OnClickListener clipCardOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!hasClips) {
-                    // This ClipCard is displaying a single item stack with either example or
-                    // fallback drawables. A click should expand the card footer to reveal the Capture / Import feature
-                    toggleFooterVisibility(collapsableContainer, tvBody);
-                    return;
-                }
-
-                if (v.getTag(R.id.view_tag_clip_primary) != null && (boolean) v.getTag(R.id.view_tag_clip_primary)) {
-                    // Clicked clip is primary
-                    Log.i(TAG + "-select", "primary");
-                    if (mClipsExpanded) {
-                        // Collapse clip view, without change
-                        toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
-                        toggleFooterVisibility(collapsableContainer, tvBody);
-                    } else if (mCardModel.getMedium().equals(Constants.VIDEO) ||
-                               mCardModel.getMedium().equals(Constants.AUDIO)) { //TODO : Support audio trimming
-                        //show trim dialog
-                        showClipPlaybackAndTrimming();
-                    }
-                } else {
-                    // Clicked clip is not primary clip
-                    if (mClipsExpanded &&  v.getTag(R.id.view_tag_clip_primary) != null) {
-                        // Clicked view is secondary clip and clips are expanded
-                        // This indicates a new secondary clip was selected
-                        Log.i(TAG + "-select", "new primary clip selected");
-                        // If clips expanded, this event means we've been selected as the
-                        // new primary clip!
-                        setNewSelectedClip(v);
-                    }
-                    toggleClipExpansion(clipsToDisplay, clipCandidatesContainer);
-                    toggleFooterVisibility(collapsableContainer, tvBody);
-                }
-            }
-        };
+        mDisplayedClips = mCardModel.getClips();
+        mHasClips = (mDisplayedClips != null && mDisplayedClips.size() > 0);
 
         /** Populate clip stack */
-        if (hasClips) {
+        if (mHasClips) {
             // Begin in the collapsed state
-            ViewGroup.LayoutParams params = collapsableContainer.getLayoutParams();
+            ViewGroup.LayoutParams params = mCollapsableContainer.getLayoutParams();
             params.height = 0;
-            collapsableContainer.setLayoutParams(params);
+            mCollapsableContainer.setLayoutParams(params);
 
-            Log.i(TAG + "-clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
-            // Thumbnails are added to the clip stack from back to front. This greatly simplifies producing the desired z-order
-            Collections.reverse(clipsToDisplay);
-            for (int x = 0; x < clipsToDisplay.size(); x++) {
-                // Create view for new clip
-                MediaFile mediaFile = mCardModel.loadMediaFile(clipsToDisplay.get(x));
-                View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, mediaFile, x, clipsToDisplay.size() - 1);
-                clipThumb.setOnClickListener(clipCardOnClickListener);
-                if (x != clipsToDisplay.size() - 1) {
-                    // Clicking on any but the top clip triggers expansion
-                    clipThumb.setTag(R.id.view_tag_clip_primary, false);
-                } else {
-                    clipThumb.setTag(R.id.view_tag_clip_primary, true);
-                }
-                clipThumb.setTag(R.id.view_tag_clip_metadata, clipsToDisplay.get(x));
-                mDisplayedClips.add(clipThumb);
-            }
-            // Restore order of clipsToDisplay, since it's a reference to the StoryPath model
-            Collections.reverse(clipsToDisplay);
+            mDisplayedClipViews = inflateClipStack(mCardModel,
+                                                   mClipCandidatesContainer,
+                                                   mDisplayedClips,
+                                                   mClipCardClickListener);
         } else {
             // Begin in the expanded state
-            View clipThumb = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
-            clipThumb.setOnClickListener(clipCardOnClickListener);
-            clipThumb.setTag(R.id.view_tag_clip_primary, true);
-            clipThumb.setTag(R.id.view_tag_clip_metadata, null);
-            mDisplayedClips.add(clipThumb);
+            mDisplayedClipViews = inflateEmptyClipStack(mClipCandidatesContainer,
+                                                        mClipCardClickListener);
         }
 
         tvHeader.setText(mCardModel.getClipTypeLocalized().toUpperCase());
         tvHeader.setTextColor(getClipTypeColor(mCardModel.getClipType()));
 
         // Expand / Collapse footer on click
-        tvHeader.setOnClickListener(clipCardOnClickListener);
+        tvHeader.setOnClickListener(mClipCardClickListener);
 
         if (mCardModel.getFirstGoal() != null) {
             tvBody.setText(mCardModel.getFirstGoal());
@@ -333,32 +355,91 @@ public class ClipCardView extends BaseRecordCardView {
         return view;
     }
 
+    private List<View> inflateEmptyClipStack(@NonNull ViewGroup clipCandidatesContainer,
+                                             @NonNull View.OnClickListener clipThumbClickListener) {
+
+        clipCandidatesContainer.removeAllViews();
+
+        View clipThumbContainer = inflateAndAddThumbnailForClip(clipCandidatesContainer, null, 0, 0);
+        ImageView clipThumb = (ImageView) clipThumbContainer.findViewById(R.id.thumb);
+        clipThumb.setOnClickListener(clipThumbClickListener);
+        clipThumbContainer.setTag(R.id.view_tag_clip_primary, true);
+        clipThumbContainer.setTag(R.id.view_tag_clip_metadata, null);
+
+        ArrayList<View> displayedClipViews = new ArrayList<>(1);
+        displayedClipViews.add(clipThumbContainer);
+        return displayedClipViews;
+    }
+
+    private List<View> inflateClipStack(@NonNull ClipCard cardModel,
+                                        @NonNull ViewGroup clipCandidatesContainer,
+                                        @NonNull List<ClipMetadata> clipsToDisplay,
+                                        @NonNull View.OnClickListener clipThumbClickListener) {
+
+        clipCandidatesContainer.removeAllViews();
+
+        ArrayList<View> displayedClipViews = new ArrayList<>(clipsToDisplay.size());
+        Log.i(TAG + "-clip", String.format("adding %d clips for cardclip ", clipsToDisplay.size()));
+        // Thumbnails are added to the clip stack from back to front. This greatly simplifies producing the desired z-order
+        Collections.reverse(clipsToDisplay);
+        for (int x = 0; x < clipsToDisplay.size(); x++) {
+            // Create view for new clip
+            MediaFile mediaFile = cardModel.loadMediaFile(clipsToDisplay.get(x));
+            ViewGroup clipThumbContainer = inflateAndAddThumbnailForClip(clipCandidatesContainer, mediaFile, x, clipsToDisplay.size() - 1);
+            ImageView clipThumb = (ImageView) clipThumbContainer.findViewById(R.id.thumb);
+            clipThumb.setOnClickListener(clipThumbClickListener);
+            if (x != clipsToDisplay.size() - 1) {
+                // Clicking on any but the top clip triggers expansion
+                clipThumbContainer.setTag(R.id.view_tag_clip_primary, false);
+            } else {
+                clipThumbContainer.setTag(R.id.view_tag_clip_primary, true);
+            }
+            clipThumbContainer.setTag(R.id.view_tag_clip_metadata, clipsToDisplay.get(x));
+            displayedClipViews.add(clipThumbContainer);
+        }
+        // Restore order of clipsToDisplay, since it's a reference to the StoryPath model
+        Collections.reverse(clipsToDisplay);
+        return displayedClipViews;
+    }
+
     /**
-     * Inflate and add to clipCandidatesContainer an ImageView populated with a thumbnail appropriate for the given mediaFile.
+     * Inflate and add to clipsContainer an ImageView populated with a thumbnail appropriate for the given mediaFile.
      * Note: zOrder 0 is the bottom of the clip list.
-     * @return the view inflated and added to clipCandidatesContainer
+     * @return the view inflated and added to clipsContainer
      */
-    private View inflateAndAddThumbnailForClip(@NonNull ViewGroup clipCandidatesContainer, @Nullable MediaFile mediaFile, int zOrder, int zTop) {
-        Resources r = clipCandidatesContainer.getContext().getResources();
-        int topMarginPerZ = r.getDimensionPixelSize(R.dimen.clip_stack_margin_top);
+    private ViewGroup inflateAndAddThumbnailForClip(@NonNull ViewGroup clipsContainer,
+                                                    @Nullable MediaFile mediaFile,
+                                                    int zOrder,
+                                                    int zTop) {
 
-        LayoutInflater inflater = (LayoutInflater) clipCandidatesContainer.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ImageView thumbnail = (ImageView) inflater.inflate(R.layout.clip_thumbnail, clipCandidatesContainer, false);
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) thumbnail.getLayoutParams();
+        LayoutInflater inflater   = (LayoutInflater) clipsContainer.getContext()
+                                                                   .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        FrameLayout clipContainer = (FrameLayout) inflater.inflate(R.layout.clip_thumbnail,
+                                                                   clipsContainer,
+                                                                   false);
+
+        ImageButton deleteBtn     = (ImageButton) clipContainer.findViewById(R.id.btn_delete);
+        ImageView thumbnail       = (ImageView) clipContainer.findViewById(R.id.thumb);
+
+        int topMarginPerZ         = clipsContainer.getContext()
+                                                  .getResources()
+                                                  .getDimensionPixelSize(R.dimen.clip_stack_margin_top);
+
+        FrameLayout.MarginLayoutParams params = (FrameLayout.MarginLayoutParams) clipContainer.getLayoutParams();
         params.topMargin = topMarginPerZ * (zTop - zOrder);
-        //Log.i("inflate", String.format("Inflating thumbnail for z %d with top margin %d", zOrder, params.topMargin));
-        thumbnail.setLayoutParams(params);
+        clipContainer.setLayoutParams(params);
 
-        //set clip thumbnail image
         setThumbnailForClip(thumbnail, mediaFile);
+        thumbnail.setAlpha(zOrder == zTop ? PRIMARY_CLIP_ALPHA : SECONDARY_CLIP_ALPHA);
 
-        if (zOrder != zTop)
-            thumbnail.setAlpha(SECONDARY_CLIP_ALPHA);
-        else
-            thumbnail.setAlpha(PRIMARY_CLIP_ALPHA);
+        if (mediaFile != null) {
+            deleteBtn.setOnClickListener(mDeleteClipClickListener);
+            deleteBtn.setVisibility(View.VISIBLE);
+        }
 
-        clipCandidatesContainer.addView(thumbnail);
-        return thumbnail;
+        clipsContainer.addView(clipContainer);
+        return clipContainer;
     }
 
     private int getClipTypeColor(String clipType) {
@@ -645,7 +726,7 @@ public class ClipCardView extends BaseRecordCardView {
                 viewIdx = (clipCandidateCount - 1) - i;
             }
 
-            final View child = mDisplayedClips.get(viewIdx);
+            final View child = mDisplayedClipViews.get(viewIdx);
             final ViewGroup.LayoutParams params = child.getLayoutParams();
             int marginPerChild = topMargin + clipHeight;
 
@@ -775,25 +856,25 @@ public class ClipCardView extends BaseRecordCardView {
         });
     }
 
-    private void setNewSelectedClip(View newSelectedClip) {
+    private void setNewSelectedClip(View newSelectedClipContainer) {
         // Put the passed clipThumbnail at the top of the stack
-        // The top of the stack is the end of mDisplayedClips
-        Log.i(TAG + "-swap", String.format("Swapping card %d for %d", mDisplayedClips.indexOf(newSelectedClip), mDisplayedClips.size()-1));
-        View oldSelectedClip = mDisplayedClips.get(mDisplayedClips.size()-1);
-        mDisplayedClips.remove(mDisplayedClips.indexOf(newSelectedClip));
-        mDisplayedClips.add(newSelectedClip);
-        newSelectedClip.bringToFront();
+        // The top of the stack is the end of mDisplayedClipViews
+        Log.i(TAG + "-swap", String.format("Swapping card %d for %d", mDisplayedClipViews.indexOf(newSelectedClipContainer), mDisplayedClipViews.size()-1));
+        View oldSelectedClipContainer = mDisplayedClipViews.get(mDisplayedClipViews.size()-1);
+        mDisplayedClipViews.remove(mDisplayedClipViews.indexOf(newSelectedClipContainer));
+        mDisplayedClipViews.add(newSelectedClipContainer);
+        newSelectedClipContainer.bringToFront();
 
         // Swap alphas
-        oldSelectedClip.setAlpha(SECONDARY_CLIP_ALPHA);
-        newSelectedClip.setAlpha(PRIMARY_CLIP_ALPHA);
+        oldSelectedClipContainer.findViewById(R.id.thumb).setAlpha(SECONDARY_CLIP_ALPHA);
+        newSelectedClipContainer.findViewById(R.id.thumb).setAlpha(PRIMARY_CLIP_ALPHA);
 
         // Change view tags indicating primary / secondary status
-        oldSelectedClip.setTag(R.id.view_tag_clip_primary, false);
-        newSelectedClip.setTag(R.id.view_tag_clip_primary, true);
+        oldSelectedClipContainer.setTag(R.id.view_tag_clip_primary, false);
+        newSelectedClipContainer.setTag(R.id.view_tag_clip_primary, true);
 
         // Set new clip as selected
-        mCardModel.selectMediaFile((ClipMetadata) newSelectedClip.getTag(R.id.view_tag_clip_metadata));
+        mCardModel.selectMediaFile((ClipMetadata) newSelectedClipContainer.getTag(R.id.view_tag_clip_metadata));
 
         mCardModel.getStoryPath().getStoryPathLibrary().save(true);
     }
