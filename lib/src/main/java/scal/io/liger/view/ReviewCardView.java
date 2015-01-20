@@ -41,6 +41,8 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     public static final String TAG = "ReviewCardView";
 
     private ReviewCard mCardModel;
+    /** Collection of ClipCards with attached media within the current StoryPath. */
+    private ArrayList<ClipCard> mMediaCards;
     private ClipCardsPlayer mCardsPlayer;
 //    private Context mContext;
     private String mMedium;
@@ -160,9 +162,6 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     public void initClipCardsWithAttachedMedia() {
         mMediaCards = mCardModel.getStoryPath().getClipCardsWithAttachedMedia();
     }
-
-    /** Collection of ClipCards with attached media within the current StoryPath. */
-    ArrayList<ClipCard> mMediaCards;
 
     @Override
     public void onNarrationFinished(MediaFile narration) {
