@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.UUID;
 
 import scal.io.liger.Constants;
@@ -42,6 +43,25 @@ public class ReviewCard extends GenericCard {
             }
         }
         super.registerObservers();
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if (!(observable instanceof Card)) {
+            Log.e(TAG, "update notification received from non-card observable");
+            return;
+        }
+        if (storyPath == null) {
+            Log.e(TAG, "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            return;
+        }
+
+        if (checkVisibilityChanged() ||
+            observable instanceof ClipCard) {
+            // ReviewCard needs to update its view if any ClipCards are changed
+            // e.g: Clip added, deleted, or new primary clip selected
+            storyPath.notifyCardChanged(this);
+        }
     }
 
     public boolean checkReferencedValues() {
