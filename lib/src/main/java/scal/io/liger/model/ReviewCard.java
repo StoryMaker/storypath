@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import scal.io.liger.Constants;
@@ -20,6 +22,32 @@ public class ReviewCard extends GenericCard {
     public ReviewCard() {
         super();
         this.type = this.getClass().getName();
+    }
+
+    /**
+     * If no references have been specified by the json model,
+     * assume that this ReviewCard should monitor all ClipCards
+     * in its StoryPath.
+     */
+    @Override
+    public void registerObservers() {
+        if (references == null) references = new ArrayList<>();
+        if (references.size() == 0 && getStoryPath() != null) {
+            List<ClipCard> clipCards = getStoryPath().gatherCardsOfClass(ClipCard.class);
+            for (ClipCard card : clipCards) {
+                references.add(
+                        String.format("%s::%s::%s", getStoryPath().getId(),
+                                                    card.getId(), "clips"));
+                //Log.d(TAG, "Adding reference to clipcard: " + references.get(references.size()-1));
+            }
+        }
+        super.registerObservers();
+    }
+
+    public boolean checkReferencedValues() {
+        // This prescribes visibility, and ReviewCard should be visible
+        // even when no Clips are added to any ClipCards it references
+        return true;
     }
 
     @Override
