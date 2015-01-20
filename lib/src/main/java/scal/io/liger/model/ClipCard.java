@@ -96,6 +96,10 @@ public class ClipCard extends ExampleCard implements Cloneable {
 
     /**
      * Add a new Clip to this card and make it the currently "selected" clip.
+     *
+     * @param notify whether to notify observers of this card. This should generally be true
+     *               unless called during deserialization of this object or any state
+     *               where the containing StoryPath is not fully initialized.
      */
     public void addClip(ClipMetadata clip, boolean notify) {
         if (this.clips == null) {
@@ -108,6 +112,22 @@ public class ClipCard extends ExampleCard implements Cloneable {
         if (notify) {
             setChanged();
             notifyObservers();
+        }
+    }
+
+    public void removeClip(ClipMetadata clip) {
+        if (this.clips == null || this.clips.size() == 0) {
+            Log.w(TAG, "removeClip called, but no clips exist");
+            return;
+        }
+
+        boolean didRemove = this.clips.remove(clip);
+
+        if (didRemove) {
+            setChanged();
+            notifyObservers();
+        } else {
+            Log.w(TAG, "Requested clip could not be removed because it was not found");
         }
     }
 

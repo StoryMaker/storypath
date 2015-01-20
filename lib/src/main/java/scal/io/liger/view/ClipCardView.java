@@ -79,7 +79,6 @@ public class ClipCardView extends BaseRecordCardView {
 
     private ViewGroup mCollapsableContainer;
     private ViewGroup mClipCandidatesContainer;
-    private List<ClipMetadata> mDisplayedClips;
     private TextView tvHeader;
     private TextView tvBody;
     private TextView tvImport;
@@ -160,7 +159,7 @@ public class ClipCardView extends BaseRecordCardView {
                 Log.i(TAG + "-select", "primary");
                 if (mClipsExpanded) {
                     // Collapse clip view, without change
-                    toggleClipExpansion(mDisplayedClips, mClipCandidatesContainer);
+                    toggleClipExpansion(mCardModel.getClips(), mClipCandidatesContainer);
                     toggleFooterVisibility(mCollapsableContainer, tvBody);
                 } else if (mCardModel.getMedium().equals(Constants.VIDEO) ||
                         mCardModel.getMedium().equals(Constants.AUDIO)) { //TODO : Support audio trimming
@@ -177,7 +176,7 @@ public class ClipCardView extends BaseRecordCardView {
                     // new primary clip!
                     setNewSelectedClip(clipContainer);
                 }
-                toggleClipExpansion(mDisplayedClips, mClipCandidatesContainer);
+                toggleClipExpansion(mCardModel.getClips(), mClipCandidatesContainer);
                 toggleFooterVisibility(mCollapsableContainer, tvBody);
             }
         }
@@ -194,12 +193,12 @@ public class ClipCardView extends BaseRecordCardView {
             ViewGroup clipContainerView = (ViewGroup) v.getParent();
             ClipMetadata clipMetadata = (ClipMetadata) clipContainerView.getTag(R.id.view_tag_clip_metadata);
 
-            mDisplayedClips.remove(clipMetadata);
+            mCardModel.removeClip(clipMetadata);
 
-            if (mDisplayedClips.size() > 0) {
+            if (mCardModel.getClips().size() > 0) {
                 mDisplayedClipViews = inflateClipStack(mCardModel,
                                                        mClipCandidatesContainer,
-                                                       mDisplayedClips,
+                                                       mCardModel.getClips(),
                                                        mClipCardClickListener);
             } else {
                 mHasClips = false;
@@ -226,6 +225,7 @@ public class ClipCardView extends BaseRecordCardView {
         if (mCardModel == null) {
             return null;
         }
+        Log.i(TAG, "getCardView");
 
         View view = LayoutInflater.from(context).inflate(R.layout.card_clip, null);
 
@@ -319,8 +319,7 @@ public class ClipCardView extends BaseRecordCardView {
         // TODO: If the recycled view previously belonged to a different
         // card type, tear down and rebuild the view as in onCreateViewHolder.
 
-        mDisplayedClips = mCardModel.getClips();
-        mHasClips = (mDisplayedClips != null && mDisplayedClips.size() > 0);
+        mHasClips = (mCardModel.getClips() != null && mCardModel.getClips().size() > 0);
 
         /** Populate clip stack */
         if (mHasClips) {
@@ -331,7 +330,7 @@ public class ClipCardView extends BaseRecordCardView {
 
             mDisplayedClipViews = inflateClipStack(mCardModel,
                                                    mClipCandidatesContainer,
-                                                   mDisplayedClips,
+                                                   mCardModel.getClips(),
                                                    mClipCardClickListener);
         } else {
             // Begin in the expanded state
