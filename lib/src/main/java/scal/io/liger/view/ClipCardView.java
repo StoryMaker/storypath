@@ -673,11 +673,18 @@ public class ClipCardView extends BaseRecordCardView {
                 .setNegativeButton(mContext.getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        player.release();
-                        timer.cancel();
                     }
                 });
         Dialog dialog = builder.create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Log.d(TAG, "dialog dismissed");
+                if (player.isPlaying()) player.stop();
+                player.release();
+                timer.cancel();
+            }
+        });
         dialog.show();
     }
 
