@@ -14,7 +14,7 @@
         android:id="@+id/btn_delete"
         android:src="@drawable/delete"
         android:scaleType="fitCenter"
-        android:padding="@dimen/padding_medium"
+        android:padding="@dimen/padding_large"
         android:layout_gravity="top|right"
         android:layout_width="60dp"
         android:layout_height="60dp"
