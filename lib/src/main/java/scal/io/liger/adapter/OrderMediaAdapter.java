@@ -103,7 +103,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         //Log.i(TAG, "sending reorder drag to recyclerview for position " + v.getTag());
-                        mRecyclerView.startReorderDrag((View) v.getParent(), event, (Integer) v.getTag());
+                        mRecyclerView.startReorderDrag((View) v.getParent(), (Integer) v.getTag());
                 }
                 return false;
             }

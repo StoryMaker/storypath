@@ -71,16 +71,11 @@ public class ReorderableRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-    public void startReorderDrag(View view, MotionEvent event, int position) {
+    public void startReorderDrag(View view, int position) {
         mTotalOffset = 0;
-        // TODO Testing, shouldn't need event and position
         mMobileItemId = getAdapter().getItemId(position);
-        View selectedView = view;
-        //Log.i(TAG, String.format("Got view by adapter position %d with id %d", (Integer) selectedView.getTag(), mMobileItemId));
-//        View selectedViewByTouch = findChildViewUnder(event.getX(), event.getY());
-//        Log.i(TAG, "Got View by findChildViewUnder " + (selectedViewByTouch == null ? "null" : selectedViewByTouch.getTag()));
-        mHoverCell = getAndAddHoverView(selectedView);
-        selectedView.setVisibility(INVISIBLE);
+        mHoverCell = getAndAddHoverView(view);
+        view.setVisibility(INVISIBLE);
 
         mCellIsMobile = true;
 
@@ -119,7 +114,7 @@ public class ReorderableRecyclerView extends RecyclerView {
                 mLastEventY = (int) event.getY(pointerIndex);
                 int deltaY = mLastEventY - mDownY;
 
-                if (mCellIsMobile) {
+                if (mCellIsMobile && mHoverCell != null) {
                     mHoverCellCurrentBounds.offsetTo(mHoverCellOriginalBounds.left,
                             mHoverCellOriginalBounds.top + deltaY + mTotalOffset);
                     mHoverCell.setBounds(mHoverCellCurrentBounds);
@@ -131,6 +126,10 @@ public class ReorderableRecyclerView extends RecyclerView {
                     handleMobileCellScroll();
 
                     return false;
+                } else if (mHoverCell == null && mMobileItemId != INVALID_ID) {
+                    for(int x = 0; x < getChildCount(); x++) {
+                        getChildAt(x).setVisibility(VISIBLE);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -160,6 +159,7 @@ public class ReorderableRecyclerView extends RecyclerView {
 
     private void touchEventsEnded () {
         final View mobileView = getViewForID(mMobileItemId);
+        if (mobileView == null) return;
         if (mCellIsMobile|| mIsWaitingForScrollFinish) {
             mCellIsMobile = false;
             mIsWaitingForScrollFinish = false;
