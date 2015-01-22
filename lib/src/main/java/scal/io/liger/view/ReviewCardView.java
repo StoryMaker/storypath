@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.av.ClipCardsNarrator;
 import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.Card;
@@ -37,7 +38,8 @@ import scal.io.liger.popup.OrderMediaPopup;
  * attached to a ReviewCard's Story Path. This card will also support
  * adding narration, changing the order of clips, and jumbling the order.
  */
-public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator.NarrationListener {
+public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator.NarrationListener,
+                                                               OrderMediaAdapter.OnReorderListener {
     public static final String TAG = "ReviewCardView";
 
     private ReviewCard mCardModel;
@@ -110,7 +112,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             @Override
             public void onClick(View v) {
                 if (mMediaCards.size() > 0)
-                    OrderMediaPopup.show((Activity) mContext, mMedium, mMediaCards);
+                    OrderMediaPopup.show((Activity) mContext, mMedium, mMediaCards, ReviewCardView.this);
                 else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_reordering), Toast.LENGTH_SHORT).show();
             }
@@ -171,5 +173,10 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             mCardsPlayer.addAudioTrack(narration);
         }
         mCardModel.getStoryPath().getStoryPathLibrary().save(true);
+    }
+
+    @Override
+    public void onReorder(int firstIndex, int secondIndex) {
+        mCardModel.getStoryPath().notifyCardChanged(mCardModel);
     }
 }

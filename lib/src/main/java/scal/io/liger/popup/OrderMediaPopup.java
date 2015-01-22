@@ -3,7 +3,10 @@ package scal.io.liger.popup;
 import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Pair;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
@@ -17,6 +20,8 @@ import android.view.Window;
 import android.widget.PopupWindow;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
@@ -36,7 +41,14 @@ public class OrderMediaPopup {
      * on it, not the host Activity. Alternatively we might be able to set windowActionModeOverlay true:
      * http://stackoverflow.com/questions/26443403/toolbar-and-contextual-actionbar-with-appcompat-v7
      */
-    public static void show(final Activity activity, final String medium, final List<ClipCard> cards) {
+    public static void show(@NonNull final Activity activity,
+                            @NonNull final String medium,
+                            @NonNull final List<ClipCard> cards,
+                            @Nullable final OrderMediaAdapter.OnReorderListener listener) {
+
+        final AtomicInteger swapFrom = new AtomicInteger(0);
+        final AtomicInteger swapTo = new AtomicInteger(0);
+        final AtomicBoolean didReorder = new AtomicBoolean(false);
         final View decorView = activity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override
@@ -64,6 +76,13 @@ public class OrderMediaPopup {
                 final PopupWindow popUp = new PopupWindow(popUpView, ViewGroup.LayoutParams.MATCH_PARENT, height - actionBarHeight - statusBarHeight, true);
                 popUp.setFocusable(false);
                 popUp.showAtLocation(decorView, Gravity.BOTTOM, 0, 0);
+                popUp.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        if (didReorder.get() && listener != null)
+                            listener.onReorder(swapFrom.get(), swapTo.get());
+                    }
+                });
 
                 final StoryPath storyPath = cards.get(0).getStoryPath();
 
@@ -75,6 +94,11 @@ public class OrderMediaPopup {
                         int currentCardIndex = storyPath.getCardIndex(currentCard);
                         int newCardIndex = storyPath.getCardIndex(cards.get(secondIndex));
                         storyPath.swapCards(currentCardIndex, newCardIndex);
+                        didReorder.set(true);
+                        swapFrom.set(firstIndex);
+                        swapTo.set(secondIndex);
+                        // For performance reasons we notify the listener of re-order
+                        // after the popup is dismissed
                     }
                 };
                 adapter.setOnReorderListener(onReorderListener);

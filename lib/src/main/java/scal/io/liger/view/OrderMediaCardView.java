@@ -169,7 +169,7 @@ public class OrderMediaCardView implements DisplayableCard {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Unsafe Cast
-                OrderMediaPopup.show(((Activity) view.getContext()), mCardModel.getMedium(), mListCards);
+                OrderMediaPopup.show(((Activity) view.getContext()), mCardModel.getMedium(), mListCards, null);
             }
         });
     }
