@@ -113,7 +113,6 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         super(container, clipCards);
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
-        setTimecodeVisible(true);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
     }
 

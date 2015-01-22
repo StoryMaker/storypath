@@ -272,7 +272,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         mTimeCode = new TextView(context);
         mTimeCode.setLayoutParams(alignTopParams);
-        mTimeCode.setVisibility(View.INVISIBLE); // Invisible by default
+        mTimeCode.setVisibility(View.VISIBLE);
         mTimeCode.setShadowLayer(2, 2, 2, Color.WHITE);
 
         /* Play Button */
