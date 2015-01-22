@@ -40,7 +40,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     public static final String INTENT_KEY_WINDOW_TITLE = "window_title";
     public static final String INTENT_KEY_STORYPATH_LIBRARY_ID = "storypath_library_id";
     public static final String INTENT_KEY_STORYPATH_INSTANCE_PATH = "storypath_instance_path";
-    public static final int INTENT_CODE = 16328;
 
     RecyclerView mRecyclerView;
     StoryPathLibrary mStoryPathLibrary;
@@ -769,7 +768,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finishActivity(INTENT_CODE);
+                finish();
                 return true;
         }
         return true;
