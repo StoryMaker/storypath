@@ -111,6 +111,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
      */
     public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         super(container, clipCards);
+        container.setKeepScreenOn(true);
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
