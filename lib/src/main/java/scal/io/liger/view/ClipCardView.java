@@ -57,6 +57,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -579,6 +580,7 @@ public class ClipCardView extends BaseRecordCardView {
                 if (player.isPlaying()) {
                     player.pause();
                 } else {
+                    ClipCardsPlayer.adjustAspectRatio(videoView, player.getVideoWidth(), player.getVideoHeight());
                     player.seekTo(clipStartMs.get());
                     player.start();
                 }

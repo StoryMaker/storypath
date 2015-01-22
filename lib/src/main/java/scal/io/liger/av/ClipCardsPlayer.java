@@ -735,7 +735,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
      * Courtesy of Andrew McFadden's grafika project:
      * https://github.com/google/grafika/blob/master/src/com/android/grafika/PlayMovieActivity.java
      */
-    private void adjustAspectRatio(TextureView textureView, int width, int height) {
+    public static void adjustAspectRatio(TextureView textureView, int width, int height) {
         int viewWidth = textureView.getWidth();
         int viewHeight = textureView.getHeight();
         double aspectRatio = (double) height / width;
@@ -752,7 +752,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         }
         int xoff = (viewWidth - newWidth) / 2;
         int yoff = (viewHeight - newHeight) / 2;
-        Log.v(TAG, "video=" + width + "x" + height +
+        Log.v("Aspect", "video=" + width + "x" + height +
                 " view=" + viewWidth + "x" + viewHeight +
                 " newView=" + newWidth + "x" + newHeight +
                 " off=" + xoff + "," + yoff);
