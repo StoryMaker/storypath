@@ -2,6 +2,7 @@ package scal.io.liger.view;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -221,6 +222,7 @@ public class ClipCardView extends BaseRecordCardView {
                              r.getDimensionPixelSize(R.dimen.clip_btn_height) * 2;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public View getCardView(final Context context) {
         if (mCardModel == null) {
@@ -303,15 +305,22 @@ public class ClipCardView extends BaseRecordCardView {
         //set drawables for actions
         Drawable drwImport = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_import).colorRes(R.color.storymaker_highlight);
         drwImport.setBounds(0, 0, drawableSizePx, drawableSizePx);
-        tvImport.setCompoundDrawables(drwImport, null, null, null);
 
         Drawable drwCapture = new IconDrawable(mContext, Iconify.IconValue.fa_ic_card_capture_photo).colorRes(R.color.storymaker_highlight);
         drwCapture.setBounds(0, 0, drawableSizePx, drawableSizePx);
-        tvCapture.setCompoundDrawables( drwCapture, null, null, null);
 
         IconDrawable iconDrawable = new IconDrawable(mContext, Iconify.IconValue.fa_ic_more_vert_48px).colorRes(R.color.storymaker_highlight);
         iconDrawable.setBounds(0, 0, drawableSizePx, drawableSizePx);
         ivOverflow.setImageDrawable(iconDrawable);
+
+        if (Build.VERSION.SDK_INT >= 17 &&
+            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+            tvCapture.setCompoundDrawables(null, null, drwCapture, null);
+            tvImport.setCompoundDrawables(null, null, drwImport, null);
+        } else {
+            tvCapture.setCompoundDrawables(drwCapture, null, null, null);
+            tvImport.setCompoundDrawables(drwImport, null, null, null);
+        }
 
         //a-ic_card_capture_photo
 

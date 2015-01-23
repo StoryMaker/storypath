@@ -29,19 +29,11 @@
         style="@style/TextImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/padding_xsmall"
         android:id="@+id/itvClipTypeIcon"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/clipCandidates"/>
-
-    <Spinner
-        android:id="@+id/spOverflow"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:padding="@dimen/padding_small"
-        android:background="@color/storymaker_highlight"
-        android:layout_below="@id/clipCandidates"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
 
     <TextView
         style="@style/p"
@@ -50,6 +42,7 @@
         android:layout_height="wrap_content"
         android:textAllCaps="true"
         android:textColor="@color/storymaker_highlight"
+        android:padding="@dimen/padding_xsmall"
         android:layout_toRightOf="@id/itvClipTypeIcon"
         android:layout_toEndOf="@id/itvClipTypeIcon"
         android:layout_below="@id/clipCandidates"/>
@@ -58,10 +51,11 @@
         android:id="@+id/ivOverflowButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:paddingTop="@dimen/padding_tiny"
+        android:paddingBottom="@dimen/padding_tiny"
         android:layout_below="@id/clipCandidates"
-        android:layout_alignBottom="@id/spOverflow"
-        android:layout_toStartOf="@id/spOverflow"
-        android:layout_toLeftOf="@id/spOverflow"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
     <RelativeLayout
         android:id="@+id/collapsable"
@@ -74,7 +68,7 @@
             android:id="@+id/tvBody"
             android:layout_width="match_parent"
             android:layout_height="@dimen/clip_body_height"
-            android:gravity="center|left"
+            android:gravity="center_vertical"
             android:maxLines="3"
             android:ellipsize="end"
             android:paddingTop="@dimen/padding_medium"
