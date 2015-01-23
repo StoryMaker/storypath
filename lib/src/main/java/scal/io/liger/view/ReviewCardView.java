@@ -111,9 +111,10 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mMediaCards.size() > 0)
+                if (mMediaCards.size() > 0) {
+                    if (mCardsPlayer != null && mCardsPlayer.isPlaying()) mCardsPlayer.stopPlayback();
                     OrderMediaPopup.show((Activity) mContext, mMedium, mMediaCards, ReviewCardView.this);
-                else
+                } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_reordering), Toast.LENGTH_SHORT).show();
             }
         });
@@ -134,6 +135,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCardsPlayer != null && mCardsPlayer.isPlaying()) mCardsPlayer.stopPlayback();
                 MainActivity mainActivity = (MainActivity) mCardModel.getStoryPath().getContext(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
                 Util.startPublishActivity(mainActivity, mCardModel.getStoryPath());
             }
