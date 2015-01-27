@@ -45,7 +45,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
 
     // Audio amplitudes over this value will be clipped
     private static final float MAX_AMPLITUDE_TO_DRAW = 32767;
-    // Percentage of MAX_AMPLITUDE_TO_DRAW over which to cor samples as too loud. e.g red
+    // Percentage of MAX_AMPLITUDE_TO_DRAW over which to color samples as too loud. e.g red
     private static final float DANGER_AMPLITUDE_FACTOR = .945f;
 
     // The queue that will hold historical audio data.
