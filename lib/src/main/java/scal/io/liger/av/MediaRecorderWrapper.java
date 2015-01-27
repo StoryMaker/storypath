@@ -26,7 +26,7 @@ import scal.io.liger.model.MediaFile;
  * MediaRecorderWrapper recorder = new MediaRecorderWrapper(context, "/path/to/output/directory");
  * recorder.startRecording();
  * recorder.stopRecording();
- * recorder.reset("path/to/output/directory"); // optional
+ * recorder.reset(); // optional. may also use recorder.reset("path/to/output/directory") to specify new directory
  * // may repeat #startRecording(), #stopRecording() after #reset()
  * recorder.release();
  * }
@@ -92,8 +92,8 @@ public class MediaRecorderWrapper {
         init();
     }
 
-    public void reset(@NonNull File newOutputPath) {
-        mOutDirectory = newOutputPath;
+    public void reset(@NonNull File newOutputDirectory) {
+        mOutDirectory = newOutputDirectory;
 
         init();
     }

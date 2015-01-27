@@ -59,9 +59,6 @@ public class AudioRecorder {
         }
 
         return result;
-
-        // Start timer to poll getMaxAmplitude
-        // Feed to WaveformView
     }
 
     public MediaFile stopRecording() {
@@ -108,7 +105,7 @@ public class AudioRecorder {
         mTimeCode.setVisibility(View.VISIBLE);
         mTimeCode.setShadowLayer(2, 2, 2, Color.WHITE);
 
-        // TODO / Stop button?
+        // TODO Stop button?
 
         root.addView(mWaveformView);
         root.addView(mTimeCode);
