@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 import scal.io.liger.R;
@@ -75,7 +76,12 @@ public class NarrationPopup {
                 final Button recordButton = (Button) popUpView.findViewById(R.id.record_button);
                 mVuLayout = (ViewGroup) popUpView.findViewById(R.id.vumeter_layout);
                 FrameLayout mediaPlayerContainer = (FrameLayout) popUpView.findViewById(R.id.mixed_media_player);
-                mNarrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
+                try {
+                    mNarrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // TODO : report failed, close popup?
+                }
                 RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));

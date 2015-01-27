@@ -16,6 +16,7 @@
     <!--<color name="storymaker_highlight">#F17433</color> &lt;!&ndash;orange &ndash;&gt;-->
     <!--<color name="storymaker_highlight">#B4CA3E</color> &lt;!&ndash;old lime &ndash;&gt;-->
     <color name="storymaker_highlight">#41646D</color> <!--slate -->
+    <color name="stormaker_danger">#B06F67</color>
     <!--<color name="storymaker_highlight">#F17433</color> &lt;!&ndash;magenta &ndash;&gt;-->
 
     <color name="storymaker_blue">#4F97CF</color> <!--blue -->

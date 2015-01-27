@@ -58,7 +58,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
+import scal.io.liger.av.AudioRecorder;
 import scal.io.liger.av.ClipCardsPlayer;
+import scal.io.liger.av.MediaRecorderWrapper;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -66,11 +69,12 @@ import scal.io.liger.model.ExampleMediaFile;
 import scal.io.liger.model.MediaFile;
 
 
-public class ClipCardView extends BaseRecordCardView {
+public class ClipCardView extends ExampleCardView {
     public static final String TAG = "ClipCardView";
 
     public ClipCard mCardModel;
 
+    private AudioRecorder mRecorder;
     private List<View> mDisplayedClipViews = new ArrayList<>(); // Views representing clips currently displayed
     private int mCardFooterHeight; // The mClipsExpanded height of the card footer (e.g: Capture import buttons)
     private boolean mClipsExpanded = false; // Is the clip stack expanded
@@ -124,13 +128,7 @@ public class ClipCardView extends BaseRecordCardView {
             }
 
             if (medium.equals(Constants.AUDIO)) {
-//                    changeRecordNarrationStateChanged(RecordNarrationState.RECORDING);
-                startRecordingNarration();
-
-                // FIXME hide butons, replace with stop button (and eventually a pause button
-
-//                    intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-//                    requestId = Constants.REQUEST_AUDIO_CAPTURE;
+                startRecordingAudio();
             } else if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
                 mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
                 ((Activity) mContext).startActivityForResult(intent, requestId);
@@ -245,26 +243,14 @@ public class ClipCardView extends BaseRecordCardView {
         tvStop          = (TextView) view.findViewById(R.id.tvStop);
         ivOverflow      = (ImageView) view.findViewById(R.id.ivOverflowButton);
 
-        mVUMeterLayout  = (LinearLayout) view.findViewById(R.id.vumeter_layout);
+//        mVUMeterLayout  = (LinearLayout) view.findViewById(R.id.vumeter_layout);
 
         /** Stop Button Click Listener */
         View.OnClickListener stopClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                MediaFile mf = stopRecordingNarration();
-
-                mCardModel.saveMediaFile(mf);
-
-                // SEEMS LIKE A REASONABLE TIME TO SAVE
-                mCardModel.getStoryPath().getStoryPathLibrary().save(true);
-                ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel); // FIXME this isn't pretty
-//                ((MainActivity) mContext).scrollRecyclerViewToCard(mCardModel);
-
-//                mCardModel.setNarration(mf);
-                // FIXME save the audio file
-//                changeRecordNarrationStateChanged(RecordNarrationState.STOPPED);
+                stopRecordingAudio();
             }
         };
 
@@ -929,6 +915,50 @@ public class ClipCardView extends BaseRecordCardView {
         );
 
         return image;
+    }
+
+    private void startRecordingAudio() {
+        // Inflate FrameLayout into clipCandidates
+        // Add AudioRecorder into it
+        FrameLayout.LayoutParams mediaViewParams =
+                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+
+        FrameLayout frame = new FrameLayout(mContext);
+        frame.setLayoutParams(mediaViewParams);
+
+        try {
+            mRecorder = new AudioRecorder(frame);
+
+            for(int viewIdx = 0; viewIdx < mClipCandidatesContainer.getChildCount(); viewIdx++) {
+                mClipCandidatesContainer.getChildAt(viewIdx).setVisibility(View.GONE);
+            }
+
+            mClipCandidatesContainer.addView(frame);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        mRecorder.startRecording();
+
+        tvCapture.setVisibility(View.GONE);
+        tvStop.setVisibility(View.VISIBLE);
+    }
+
+    private void stopRecordingAudio() {
+        MediaFile mf = mRecorder.stopRecording();
+        mRecorder.release();
+        mRecorder = null;
+        if (mf != null) {
+            mCardModel.saveMediaFile(mf);
+            // SEEMS LIKE A REASONABLE TIME TO SAVE
+            mCardModel.getStoryPath().getStoryPathLibrary().save(true);
+        } else {
+            // TODO Do something better
+            Toast.makeText(mContext, "Failed to save recording", Toast.LENGTH_LONG).show();
+        }
+        // Instead of manually resetting UI, just call changeCard whether or not recording succeeded
+        ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel); // FIXME this isn't pretty
     }
 //    /**
 //     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
