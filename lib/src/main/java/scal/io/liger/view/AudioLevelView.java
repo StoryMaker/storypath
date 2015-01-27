@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.TextureView;
 
 import java.util.LinkedList;
@@ -43,9 +44,9 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
     private static final int FADE_SIZE = 5;
 
     // Audio amplitudes over this value will be clipped
-    private static final float MAX_AMPLITUDE_TO_DRAW = 35000;
-    // Percentage of MAX_AMPLITUDE_TO_DRAW over which to color samples as too loud. e.g red
-    private static final float DANGER_AMPLITUDE_FACTOR = .85f;
+    private static final float MAX_AMPLITUDE_TO_DRAW = 32767;
+    // Percentage of MAX_AMPLITUDE_TO_DRAW over which to cor samples as too loud. e.g red
+    private static final float DANGER_AMPLITUDE_FACTOR = .945f;
 
     // The queue that will hold historical audio data.
     private final LinkedList<Integer> mAudioData;
@@ -86,7 +87,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
      * @param maxAmplitude the most recent max amplitude of recent audio samples
      */
     public synchronized void updateAudioData(int maxAmplitude) {
-        //Log.d(TAG, "updateAudioData with amplitude " + (maxAmplitude / MAX_AMPLITUDE_TO_DRAW));
+        // Log.d(TAG, String.format("updateAudioData with amplitude %d normalized %f", maxAmplitude, (maxAmplitude / MAX_AMPLITUDE_TO_DRAW)));
 
         // We want to keep a small amount of history in the view to provide a nice fading effect.
         // We use a linked list that we treat as a queue for this.
