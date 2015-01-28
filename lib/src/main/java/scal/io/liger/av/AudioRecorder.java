@@ -70,6 +70,10 @@ public class AudioRecorder {
         return mRecorder.stopRecording();
     }
 
+    public boolean isRecording() {
+        return mRecorder.isRecording();
+    }
+
     public void release() {
         mRecorder.release();
     }

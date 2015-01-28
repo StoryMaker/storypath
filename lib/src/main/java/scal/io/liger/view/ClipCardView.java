@@ -927,6 +927,26 @@ public class ClipCardView extends ExampleCardView {
         FrameLayout frame = new FrameLayout(mContext);
         frame.setLayoutParams(mediaViewParams);
 
+        frame.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                // Do nothing
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                if (mRecorder != null && mRecorder.isRecording()) {
+                    Log.w(TAG, "ClipCardView detached while recording in progress. Recording will be lost.");
+                    mRecorder.stopRecording();
+                    mRecorder.release();
+                    // TODO : Can we attach this recording to the card model without :
+                    //  java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling
+                    // attaching media to ClipCardView will trigger observers in odd state. Could create separate ClipCard#saveMediaFile
+                    // that doesn't trigger observers, but that could have its own issues...
+                }
+            }
+        });
+
         try {
             mRecorder = new AudioRecorder(frame);
 
@@ -960,37 +980,4 @@ public class ClipCardView extends ExampleCardView {
         // Instead of manually resetting UI, just call changeCard whether or not recording succeeded
         ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel); // FIXME this isn't pretty
     }
-//    /**
-//     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
-//     */
-//    @Override
-//    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
-//        super.changeRecordNarrationStateChanged(newState);
-//        switch(mRecordNarrationState) {
-//            case READY:
-//                tvImport.setVisibility(View.VISIBLE);
-//                tvCapture.setVisibility(View.VISIBLE);
-//                tvStop.setVisibility(View.GONE);
-//                mVUMeterLayout.setVisibility(View.GONE);
-//                break;
-//            case RECORDING:
-//                tvImport.setVisibility(View.GONE);
-//                tvCapture.setVisibility(View.GONE);
-//                tvStop.setVisibility(View.VISIBLE);
-//                mVUMeterLayout.setVisibility(View.VISIBLE);
-//                break;
-//            case PAUSED:
-//                tvImport.setVisibility(View.GONE);
-//                tvCapture.setVisibility(View.GONE);
-//                tvStop.setVisibility(View.VISIBLE);
-//                mVUMeterLayout.setVisibility(View.VISIBLE);
-//                break;
-//            case STOPPED:
-//                tvImport.setVisibility(View.VISIBLE);
-//                tvCapture.setVisibility(View.VISIBLE);
-//                tvStop.setVisibility(View.GONE);
-//                mVUMeterLayout.setVisibility(View.GONE);
-//                break;
-//        }
-//    }
 }

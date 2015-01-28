@@ -116,18 +116,10 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
 
         mAudioData.addLast(maxAmplitude);
 
-        final Canvas canvas = lockCanvas(null);
+        final Canvas canvas = lockCanvas();
         Log.d(TAG, "Canvas accelerated? " + canvas.isHardwareAccelerated());
         drawWaveform(canvas);
         unlockCanvasAndPost(canvas);
-
-        // Update the display.
-
-//        Canvas canvas = lockCanvas();
-//        if (canvas != null) {
-//            drawWaveform(canvas);
-//            unlockCanvasAndPost(canvas);
-//        }
     }
 
     /**
@@ -216,7 +208,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
         public void handleMessage (Message msg) {
             AudioLevelView view = weakView.get();
             if (view == null) {
-                Log.w(TAG, "EncoderHandler.handleMessage: encoder is null");
+                Log.w(TAG, "RenderHandler.handleMessage: view is null");
                 return;
             }
 
