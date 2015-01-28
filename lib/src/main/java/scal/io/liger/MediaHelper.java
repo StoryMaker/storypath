@@ -12,15 +12,11 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import scal.io.liger.view.AudioLevelView;
 import scal.io.liger.view.AudioWaveform;
 
 /**

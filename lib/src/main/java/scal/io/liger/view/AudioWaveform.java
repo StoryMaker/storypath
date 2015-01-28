@@ -28,7 +28,7 @@ import scal.io.liger.R;
  */
 public class AudioWaveform {
     private static final String TAG = "AudioWaveform";
-    private static final boolean VERBOSE = true; // Enable logging
+    private static final boolean VERBOSE = false; // Enable logging
 
     /** Waveform drawing parameters */
     private static final int BITMAP_WIDTH = 720;
