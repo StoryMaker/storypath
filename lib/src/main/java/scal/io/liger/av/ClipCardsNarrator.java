@@ -3,7 +3,6 @@ package scal.io.liger.av;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import scal.io.liger.Constants;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 
@@ -39,8 +39,8 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     public final String TAG = getClass().getSimpleName();
 
     private AudioManager mAudioManager;
-    private MediaRecorder mMediaRecorder;
-    private File mNarrationOutput;
+    private MediaRecorderWrapper mRecorder;
+    private File mNarrationOutputDirectory;
     private RecordNarrationState mRecordNarrationState;
     private NarrationListener mListener;
     private Pair<Integer, Integer> mSelectedClipIndexes;
@@ -109,12 +109,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
      * @param container the container into which the player should be inflated
      * @param clipCards the in-order list of cards to allow recording narration for
      */
-    public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
+    public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) throws IOException {
         super(container, clipCards);
         container.setKeepScreenOn(true);
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        mRecorder = new MediaRecorderWrapper(mContext, Utility.getAudioStorageDirectory());
     }
 
     private void _changeRecordNarrationState(RecordNarrationState newState) {
@@ -161,24 +162,12 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
         mSelectedClipIndexes = indexes;
 
-        DateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String now = df.format(new Date());
-        mNarrationOutput = new File(Environment.getExternalStorageDirectory(), now + /*".aac"*/ ".mp4");
+        mNarrationOutputDirectory = Environment.getExternalStorageDirectory();
 
-        if (mMediaRecorder == null) mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioEncodingBitRate(96 * 1000); // FIXME we need to probe the hardware for these values
-        mMediaRecorder.setAudioSamplingRate(44100);
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // raw AAC ADTS container records properly but results in Unknown MediaPlayer errors when playback attempted. :/
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        mMediaRecorder.setOutputFile(mNarrationOutput.getAbsolutePath());
-
-        try {
-            mMediaRecorder.prepare();
-            mMediaRecorder.start();
+        if (mRecorder.startRecording()) {
             Toast.makeText(mContext, mContext.getString(R.string.recording_narration), Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Log.e(TAG, "prepare() failed");
+        } else {
+            Log.e(TAG, "startRecording failed");
             Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -208,13 +197,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         // appropriately on _startRecordingNarration
         setVolume(FULL_VOLUME);
         _changeRecordNarrationState(RecordNarrationState.STOPPED);
-        MediaFile mf = finishRecordingNarration();
-        if (mListener != null) mListener.onNarrationFinished(mf);
+        MediaFile mf = mRecorder.stopRecording();
+        if (mListener != null && mf != null) mListener.onNarrationFinished(mf);
         if (stopPlayback) _stopPlayback();
     }
 
     public int getMaxRecordingAmplitude() {
-        return mMediaRecorder == null ? 0 : mMediaRecorder.getMaxAmplitude();
+        return mRecorder == null ? 0 : mRecorder.getMaxAmplitude();
     }
 
     public RecordNarrationState getState() {
@@ -269,15 +258,4 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             super._startPlayback();
         }
     }
-
-    /**
-     * Stop recording narration and return the resulting {@link scal.io.liger.model.MediaFile}
-     */
-    private MediaFile finishRecordingNarration() {
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
-
-        return new MediaFile(mNarrationOutput.getAbsolutePath(), Constants.AUDIO);
-    }
-
 }
