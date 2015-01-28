@@ -645,28 +645,24 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         // e.g: A thumbnail for video
 
         MediaFile mediaFile = clipCard.getStoryPath().loadMediaFile(clipCard.getSelectedClip().getUuid());
-
         String medium = clipCard.getMedium();
-        if (medium.equals(Constants.VIDEO)) {
-            Bitmap thumbnailBitmap = mediaFile.getThumbnail(mContext);
-            if (thumbnailBitmap != null) {
-                thumbnail.setImageBitmap(thumbnailBitmap);
-            }
-            thumbnail.setVisibility(View.VISIBLE);
-        } else if (medium.equals(Constants.PHOTO)) {
-            Uri uri = Uri.parse(mediaFile.getPath());
-            thumbnail.setImageURI(uri);
-            thumbnail.setVisibility(View.VISIBLE);
-        } else if (medium.equals(Constants.AUDIO)) {
-            Uri myUri = Uri.parse(mediaFile.getPath());
-            final MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-            //set background image
-            thumbnail.setImageResource(R.drawable.audio_waveform);
-            //String clipType = clipCard.getClipType();
-            //setClipExampleDrawables(clipType, thumbnail);
-            thumbnail.setVisibility(View.VISIBLE);
+        switch(medium) {
+            case Constants.VIDEO:
+            case Constants.AUDIO:
+                Bitmap thumbnailBitmap = mediaFile.getThumbnail(mContext);
+                if (thumbnailBitmap != null) {
+                    thumbnail.setImageBitmap(thumbnailBitmap);
+                }
+                thumbnail.setVisibility(View.VISIBLE);
+                break;
+            case Constants.PHOTO:
+                Uri uri = Uri.parse(mediaFile.getPath());
+                thumbnail.setImageURI(uri);
+                thumbnail.setVisibility(View.VISIBLE);
+                break;
+            default:
+                Log.w(TAG, "Cannot fetch thumbnail. Unknown clipcard medium.");
+                break;
         }
     }
 
