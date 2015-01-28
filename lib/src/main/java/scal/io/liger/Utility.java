@@ -21,20 +21,6 @@ import java.io.IOException;
 public class Utility {
     private static final String TAG = "Utility";
 
-    /**
-     * Return a directory where audio recordings will be stored
-     *
-     * TODO Allow this to be configured by Liger client application
-     */
-    public static @Nullable File getAudioStorageDirectory() throws IOException {
-        File storageDirectory = new File(Environment.getExternalStorageDirectory(), "Liger");
-        if (!storageDirectory.exists() && !storageDirectory.mkdirs()) {
-            // Directory does not exist and could not be created
-            throw new IOException("Unable to create " + storageDirectory.getAbsolutePath());
-        }
-        return storageDirectory;
-    }
-
     public static Bitmap getFrameFromVideo(String videoPath) {
 //        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 //        Bitmap videoFrame = null;

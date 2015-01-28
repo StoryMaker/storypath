@@ -129,11 +129,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         if (mf == null) {
             Log.e(this.getClass().getName(), "no media file was found");
         } else {
-            Bitmap thumbnail = mf.getThumbnail(viewHolder.title.getContext());
-
-            if (thumbnail != null) {
-                viewHolder.thumbnail.setImageBitmap(thumbnail);
-            }
+            mf.loadThumbnail(viewHolder.title.getContext(), viewHolder.thumbnail);
         }
     }
 

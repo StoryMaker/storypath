@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import scal.io.liger.Constants;
+import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
 import scal.io.liger.model.ClipCard;
@@ -115,7 +116,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        mRecorder = new MediaRecorderWrapper(mContext, Utility.getAudioStorageDirectory());
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioStorageDirectory());
     }
 
     private void _changeRecordNarrationState(RecordNarrationState newState) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
@@ -144,7 +145,7 @@ public class StoryPathLibrary extends StoryPath {
         // update instance index with thumbnail in case thumbnail has changed
         if ((context instanceof MainActivity) && (((MainActivity)context).instanceIndex.containsKey(getSavedFileName())))  {
             // force thumbnail creation
-            file.getThumbnail(context);
+            file.loadThumbnail(context, null);
 
             InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
 
@@ -397,12 +398,11 @@ public class StoryPathLibrary extends StoryPath {
     }
 
     @Override
-    public Bitmap getCoverImageThumbnail() {
+    public boolean setCoverImageThumbnail(ImageView target) {
         if (getCurrentStoryPath() != null) {
-            return getCurrentStoryPath().getCoverImageThumbnail();
-        } else {
-            return null;
+            return getCurrentStoryPath().setCoverImageThumbnail(target);
         }
+        return false;
     }
 
     @Override

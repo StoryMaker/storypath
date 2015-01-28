@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -19,7 +18,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -649,15 +647,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         switch(medium) {
             case Constants.VIDEO:
             case Constants.AUDIO:
-                Bitmap thumbnailBitmap = mediaFile.getThumbnail(mContext);
-                if (thumbnailBitmap != null) {
-                    thumbnail.setImageBitmap(thumbnailBitmap);
-                }
-                thumbnail.setVisibility(View.VISIBLE);
-                break;
             case Constants.PHOTO:
-                Uri uri = Uri.parse(mediaFile.getPath());
-                thumbnail.setImageURI(uri);
+                mediaFile.loadThumbnail(mContext, thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
                 break;
             default:

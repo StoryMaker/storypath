@@ -39,4 +39,6 @@ dependencies {
     compile 'com.edmodo:rangebar:1.0.0'
     androidTestCompile files('libs/espresso-1.1-bundled.jar')
     compile project(':android-iconify')
+    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
 }

@@ -6,9 +6,12 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +20,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import scal.io.liger.Constants;
+import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
 import scal.io.liger.view.AudioWaveform;
@@ -25,6 +29,7 @@ import scal.io.liger.view.AudioWaveform;
  * Created by mnbogner on 9/29/14.
  */
 public class MediaFile implements Cloneable {
+    private static final String TAG = "MediaFile";
 
     @Expose protected String path;
     @Expose protected String medium; // mime type?
@@ -61,10 +66,10 @@ public class MediaFile implements Cloneable {
         return thumbnailFilePath;
     }
 
-    public Bitmap getThumbnail(Context context) { // TODO: disk cache, multiple sizes
-        Bitmap thumbnail = null;
+    public boolean loadThumbnail(Context context, @Nullable ImageView target) { // TODO: disk cache, multiple sizes
+        try {
 
-        if (thumbnailFilePath == null) {
+            if (thumbnailFilePath == null) {
             Uri uri = Uri.parse(getPath());
             String lastSegment = uri.getLastPathSegment();
             boolean isDocumentProviderUri = getPath().contains("content:/") && (lastSegment.contains(":"));
@@ -75,10 +80,12 @@ public class MediaFile implements Cloneable {
 
                     long id = 0;
                     id = Long.parseLong(lastSegment.split(":")[1]);
-                    return MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
+                    if (target != null) {
+                        target.setImageBitmap(MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null));
+                        return true;
+                    }
                 } else {
                     // Regular old File path
-                    try {
                         //Log.d(" *** TESTING *** ", "CREATING NEW THUMBNAIL FILE FOR " + path);
 
                         // FIXME should not be stored in the source location, but a cache dir in our app folder on the sd or internal cache if there is no SD
@@ -93,34 +100,42 @@ public class MediaFile implements Cloneable {
                         thumbnailFilePath = path.substring(0, path.lastIndexOf(File.separator) + 1) + tokens[0] + "_thumbnail.png";
                         File thumbnailFile = new File(thumbnailFilePath);
                         if (thumbnailFile.exists()) {
-                            thumbnail = BitmapFactory.decodeFile(thumbnailFilePath);
+                            if (target != null) {
+                                Picasso.with(context).load(thumbnailFile).into(target);
+                                return true;
+                            }
                         } else {
                             FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
 
-                            thumbnail = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
+                            Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MINI_KIND);
                             if (thumbnail != null) {
                                 thumbnail.compress(Bitmap.CompressFormat.PNG, 75, thumbnailStream); // FIXME make compression level configurable
                                 thumbnailStream.flush();
                                 thumbnailStream.close();
+                                if (target != null) {
+                                    Picasso.with(context).load(thumbnailFile).into(target);
+                                    return true;
+                                }
                             }
                         }
 
                         //Log.d(" *** TESTING *** ", "THUMBNAIL FILE SAVED AS " + thumbnailFilePath);
-                    } catch (IOException ioe) {
-                        //Log.d(" *** TESTING *** ", "EXCEPTION: " + ioe.getMessage());
-                        return null;
-                    }
-
                 }
             } else if (medium.equals(Constants.AUDIO)) {
-                thumbnail = AudioWaveform.createBitmap(context, getPath());
+                if (target != null) {
+                    Picasso.with(context).load(MediaHelper.getWaveformForAudioFile(context, new File(getPath()))).into(target);
+                    return true;
+                }
             } else if (medium.equals(Constants.PHOTO)) {
                 if (isDocumentProviderUri) {
                     // path of form : content://com.android.providers.media.documents/document/video:183
                     // An Android Document Provider URI. Thumbnail already generated
-                    // TODO Because we need Context we can't yet override this behavior at MediaFile#getThumbnail
+                    // TODO Because we need Context we can't yet override this behavior at MediaFile#loadThumbnail
                     long id = Long.parseLong(Uri.parse(getPath()).getLastPathSegment().split(":")[1]);
-                    thumbnail = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
+                    if (target != null) {
+                        target.setImageBitmap(MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null));
+                        return true;
+                    }
                 } else {
                     if (path.contains("content:/")) {
                         path = Utility.getRealPathFromURI(context, uri);
@@ -131,34 +146,46 @@ public class MediaFile implements Cloneable {
                     thumbnailFilePath = path.substring(0, path.lastIndexOf(File.separator) + 1) + tokens[0] + "_thumbnail.png";
                     File thumbnailFile = new File(thumbnailFilePath);
                     if (thumbnailFile.exists()) {
-                        thumbnail = BitmapFactory.decodeFile(thumbnailFilePath);
+                        Picasso.with(context).load(thumbnailFile).into(target);
+                        return true;
                     } else {
                         Bitmap bitMap = BitmapFactory.decodeFile(path);
+                        Picasso.with(context).load(thumbnailFile).into(target);
 
-                        try {
-                            FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
-                            thumbnail = ThumbnailUtils.extractThumbnail(bitMap, 400, 300); // FIXME figure out the real aspect ratio and size needed
-                            thumbnail.compress(Bitmap.CompressFormat.PNG, 75, thumbnailStream); // FIXME make compression level configurable
-                            thumbnailStream.flush();
-                            thumbnailStream.close();
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
+                        Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitMap, 400, 300); // FIXME figure out the real aspect ratio and size needed
+                        thumbnail.compress(Bitmap.CompressFormat.PNG, 75, thumbnailStream); // FIXME make compression level configurable
+                        thumbnailStream.flush();
+                        thumbnailStream.close();
+                        if (target != null) {
+                            Picasso.with(context).load(thumbnailFile).into(target);
+                            return true;
                         }
                     }
                 }
             } else {
                 Log.e(this.getClass().getName(), "can't create thumbnail file for " + path + ", unsupported medium: " + medium);
-                thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_thumbnail);
+                if (target != null) {
+                    Picasso.with(context).load(R.drawable.no_thumbnail).into(target);
+                    return true;
+                }
             }
         } else {
             //Log.d(" *** TESTING *** ", "LOADING THUMBNAIL FILE FOR " + path);
-            thumbnail = BitmapFactory.decodeFile(thumbnailFilePath);
-            //Log.d(" *** TESTING *** ", "LOADED THUMBNAIL FROM FILE " + thumbnailFilePath);
+            if (target != null) {
+                // If not protocol in String url, assume file.
+                if (!thumbnailFilePath.contains("://")) thumbnailFilePath = "file://" + thumbnailFilePath;
+                Picasso.with(context).load(thumbnailFilePath).into(target);
+                return true;
+            }
+                //Log.d(" *** TESTING *** ", "LOADED THUMBNAIL FROM FILE " + thumbnailFilePath);
         }
 
-        return thumbnail;
+        } catch (IOException ioe) {
+            Log.w(TAG, "Error retrieving thumnail");
+            //Log.d(" *** TESTING *** ", "EXCEPTION: " + ioe.getMessage());
+        }
+        return false;
     }
 
     @Override
