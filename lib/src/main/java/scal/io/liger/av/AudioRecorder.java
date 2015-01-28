@@ -127,7 +127,7 @@ public class AudioRecorder {
     }
 
     private void onTimerTick() {
-        mWaveformView.updateAudioData(mRecorder.getMaxAmplitude());
+        mWaveformView.notifyNewAmplitude(mRecorder.getMaxAmplitude());
         mTimeCode.setText(Util.makeTimeString(System.currentTimeMillis() - mStartTimeMs));
     }
 }

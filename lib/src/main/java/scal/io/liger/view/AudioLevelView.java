@@ -22,10 +22,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.TextureView;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 
 import scal.io.liger.R;
@@ -36,7 +41,7 @@ import scal.io.liger.R;
  * https://github.com/googleglass/gdk-waveform-sample/blob/master/src/com/google/android/glass/sample/waveform/WaveformView.java
  */
 public class AudioLevelView extends TextureView implements TextureView.SurfaceTextureListener{
-    private final String TAG = getClass().getSimpleName();
+    private static final String TAG = "AudioLevelView";
 
     // The number of buffer frames to keep around.
     private static final int HISTORY_SIZE = 30;
@@ -54,6 +59,9 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
     private final Paint mPaint;
     private int mRegularColor;
     private int mDangerColor;
+
+    private HandlerThread mThread;
+    private RenderHandler mHandler;
 
     public AudioLevelView(Context context) {
         this(context, null, 0);
@@ -84,10 +92,21 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
      * added to the front of the rendering queue, pushing the previous frames back, causing them to
      * be faded out visually.
      *
-     * @param maxAmplitude the most recent max amplitude of recent audio samples
+     * @param newAmplitude the most recent max amplitude of recent audio samples
      */
-    public synchronized void updateAudioData(int maxAmplitude) {
-        // Log.d(TAG, String.format("updateAudioData with amplitude %d normalized %f", maxAmplitude, (maxAmplitude / MAX_AMPLITUDE_TO_DRAW)));
+    public void notifyNewAmplitude(int newAmplitude) {
+        if (mHandler == null) {
+            Log.w(TAG, "amplitude added but handler is null. Did the containing view get recycled?");
+            return;
+        }
+        mHandler.sendMessage(mHandler.obtainMessage(RenderHandler.NOTIFY_NEW_AUDIO_LEVEL, newAmplitude));
+    }
+
+    /**
+     * For use by mHandler.
+     */
+    private void _notifyNewAmplitude(int maxAmplitude) {
+        // Log.d(TAG, String.format("_updateAudioData with amplitude %d normalized %f", maxAmplitude, (maxAmplitude / MAX_AMPLITUDE_TO_DRAW)));
 
         // We want to keep a small amount of history in the view to provide a nice fading effect.
         // We use a linked list that we treat as a queue for this.
@@ -97,13 +116,18 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
 
         mAudioData.addLast(maxAmplitude);
 
+        final Canvas canvas = lockCanvas(null);
+        Log.d(TAG, "Canvas accelerated? " + canvas.isHardwareAccelerated());
+        drawWaveform(canvas);
+        unlockCanvasAndPost(canvas);
+
         // Update the display.
 
-        Canvas canvas = lockCanvas();
-        if (canvas != null) {
-            drawWaveform(canvas);
-            unlockCanvasAndPost(canvas);
-        }
+//        Canvas canvas = lockCanvas();
+//        if (canvas != null) {
+//            drawWaveform(canvas);
+//            unlockCanvasAndPost(canvas);
+//        }
     }
 
     /**
@@ -112,6 +136,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
      * @param canvas the {@link Canvas} object on which to draw
      */
     private void drawWaveform(Canvas canvas) {
+        long startTime = System.currentTimeMillis();
         // Clear the screen each time because SurfaceView won't do this for us.
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
@@ -147,11 +172,14 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
             brightness += brightDelta;
             lastX += pixelsPerSample;
         }
+        Log.d(TAG, "Drew waveform in " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-
+        mThread = new HandlerThread("AudioLevelRenderer");
+        mThread.start();
+        mHandler = new RenderHandler(mThread.getLooper(), this);
     }
 
     @Override
@@ -161,12 +189,43 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        // TODO Destroy audioRecord resources here
-        return false;
+        if (mThread != null) {
+            mThread.quit();
+            mHandler = null;
+        }
+        return true;
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+    }
+
+    private static class RenderHandler extends Handler {
+
+        public static final int NOTIFY_NEW_AUDIO_LEVEL = 1;
+
+        private WeakReference<AudioLevelView> weakView;
+
+        public RenderHandler(Looper looper, AudioLevelView levelView) {
+            super(looper);
+            this.weakView = new WeakReference<>(levelView);
+        }
+
+        @Override
+        public void handleMessage (Message msg) {
+            AudioLevelView view = weakView.get();
+            if (view == null) {
+                Log.w(TAG, "EncoderHandler.handleMessage: encoder is null");
+                return;
+            }
+
+            switch (msg.what) {
+                case NOTIFY_NEW_AUDIO_LEVEL:
+                    view._notifyNewAmplitude((Integer) msg.obj);
+                    break;
+            }
+        }
 
     }
 }
