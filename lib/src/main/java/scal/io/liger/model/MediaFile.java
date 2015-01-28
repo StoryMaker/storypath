@@ -19,6 +19,7 @@ import java.util.UUID;
 import scal.io.liger.Constants;
 import scal.io.liger.R;
 import scal.io.liger.Utility;
+import scal.io.liger.view.AudioWaveform;
 
 /**
  * Created by mnbogner on 9/29/14.
@@ -112,7 +113,7 @@ public class MediaFile implements Cloneable {
 
                 }
             } else if (medium.equals(Constants.AUDIO)) {
-                thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.audio_waveform);
+                thumbnail = AudioWaveform.createBitmap(context, getPath());
             } else if (medium.equals(Constants.PHOTO)) {
                 if (isDocumentProviderUri) {
                     // path of form : content://com.android.providers.media.documents/document/video:183
