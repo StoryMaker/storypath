@@ -11,7 +11,6 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +34,6 @@ public class AudioWaveform {
     private static final int BITMAP_WIDTH = 720;
     private static final int BITMAP_HEIGHT = 480;
     private static final float MAX_AMPLITUDE_TO_DRAW = 32767f;
-    private static final int MAX_SAMPLES_TO_DRAW = 100;
 
     /**
      * Generate a waveform image for an audio file at the given path. This should be called
@@ -57,7 +55,7 @@ public class AudioWaveform {
                                                 Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
 
-            short[] audioOuput = decodeToMemory(path, MAX_SAMPLES_TO_DRAW);
+            short[] audioOuput = decodeToMemory(path, BITMAP_WIDTH);
             drawWaveform(canvas, paint, audioOuput);
             if (VERBOSE) Log.d(TAG, String.format("Decoded %d audio samples in %d ms", audioOuput.length, System.currentTimeMillis() - startTime));
             return bitmap;
@@ -74,14 +72,14 @@ public class AudioWaveform {
      * https://android.googlesource.com/platform/cts/+/jb-mr2-release/tests/tests/media/src/android/media/cts/DecoderTest.java
      *
      * @param path A path pointing to an audio file.
-     * @param maxSamples the maximum number of samples to decode. If this is less than the
-     *                   total number of samples in the referenced file, the decoded samples will be evenly distributed
-     *                   throughout the duration of the file.
-     * @return a short[] of at most maxSamples audio samples from the file at path
+     * @param targetSamples the target number of samples to decode. If this is less than the
+     *                      total number of samples in the referenced file, the decoded samples will be evenly distributed
+     *                      throughout the duration of the file.
+     * @return a short[] of at most targetSamples audio samples from the file at path
      * @throws IOException
      */
-    private static short[] decodeToMemory(String path, int maxSamples) throws IOException, IllegalArgumentException {
-        short [] decoded = new short[maxSamples];
+    private static short[] decodeToMemory(String path, int targetSamples) throws IOException, IllegalArgumentException {
+        short [] decoded = new short[targetSamples];
         int decodedIdx = 0;
         MediaExtractor extractor;
         MediaCodec codec;
@@ -96,8 +94,9 @@ public class AudioWaveform {
         long usDuration;                  // Encoded audio duration in us
         long fileSize;                    // Total size of target audio file in bytes
         int numSamplesToSeek;             // Num of samples to skip between reads. Used to calculate usSeekInterval
-        long usSeekInterval = -1;         // microsecond Interval to seek between samples to decode only maxSamples samples
+        long usSeekInterval = -1;         // microsecond Interval to seek between samples to decode only targetSamples samples
         int samplesQueuedForDecoding = 0; // For help calculating us seek
+        int shortsPerSample = 1;          // How many shorts to take from each sample to hit targetSamples
         if (format.containsKey(MediaFormat.KEY_SAMPLE_RATE)) {
             sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
             if (VERBOSE) Log.d(TAG, "prelim output has sample rate " + sampleRate);
@@ -144,10 +143,14 @@ public class AudioWaveform {
                         if (VERBOSE) Log.d(TAG, "Sample size is " + sampleSize);
                         if (usSeekInterval == -1) {
                             if (VERBOSE) Log.d(TAG, "Estimated bit rate : " + sampleSize * sampleRate);
-                            int numExpectedSamples = (int) (((float) fileSize) / sampleSize);
-                            numSamplesToSeek = (int) (((float) numExpectedSamples) / maxSamples);
+                            int numExpectedSamples = (int) ((.9f * fileSize) / sampleSize);
+                            numSamplesToSeek = (int) (((float) numExpectedSamples) / targetSamples);
                             usSeekInterval = (long) (usDuration * (((float)numSamplesToSeek) / numExpectedSamples));
-                            if (VERBOSE) Log.d(TAG, String.format("usSeekInterval %d us", usSeekInterval));
+
+                            if (numSamplesToSeek == 0) shortsPerSample = (int) Math.ceil((double) targetSamples / numExpectedSamples);
+
+                            if (VERBOSE) Log.d(TAG, String.format("expected samples %d. usSeekInterval %d us. shortsPerSample %d",
+                                                                  numExpectedSamples, usSeekInterval, shortsPerSample));
                         }
                         else if (usSeekInterval > 0) {
                             if (VERBOSE) Log.d(TAG, "Seeking to " + usSeekInterval * samplesQueuedForDecoding);
@@ -178,7 +181,11 @@ public class AudioWaveform {
                 // Note we must check decodedIdx against decoded.length because we
                 // *estimate* the total number of samples based on file size and the first sample size
                 // there's bound to be a few
-                if (decodedIdx < decoded.length) decoded[decodedIdx++] = buf.getShort(info.size / 2);
+                if (decodedIdx < decoded.length) {
+                    for (int i = 0; i < Math.min(info.size, shortsPerSample * 2); i += 2) {
+                        decoded[decodedIdx++] = buf.getShort(i);
+                    }
+                }
                 else Log.d(TAG, "ignoring sample");
                 codec.releaseOutputBuffer(outputBufIndex, false /* render */);
                 if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
@@ -207,9 +214,9 @@ public class AudioWaveform {
                                      Paint paint,
                                      short[] audioData) {
 
-        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.WHITE);
 
-        int numSamplesToDraw = Math.min(MAX_SAMPLES_TO_DRAW, audioData.length);
+        int numSamplesToDraw = Math.min(BITMAP_WIDTH, audioData.length);
 
         float width = canvas.getWidth();
         float height = canvas.getHeight();
