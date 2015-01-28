@@ -122,8 +122,9 @@ public class MediaFile implements Cloneable {
                         //Log.d(" *** TESTING *** ", "THUMBNAIL FILE SAVED AS " + thumbnailFilePath);
                 }
             } else if (medium.equals(Constants.AUDIO)) {
+                // For now don't allow pre-caching of thumbnails via calls to this method where target is null
                 if (target != null) {
-                    Picasso.with(context).load(MediaHelper.getWaveformForAudioFile(context, new File(getPath()))).into(target);
+                    MediaHelper.displayWaveform(new File(getPath()), target);
                     return true;
                 }
             } else if (medium.equals(Constants.PHOTO)) {

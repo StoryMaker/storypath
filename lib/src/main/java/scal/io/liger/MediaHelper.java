@@ -2,10 +2,14 @@ package scal.io.liger;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import scal.io.liger.view.AudioLevelView;
@@ -131,7 +136,6 @@ public class MediaHelper {
      * @throws IOException
      */
     public static @Nullable File getAudioThumbnailDirectory() throws IOException {
-        File audioDirectory = getAudioStorageDirectory();
         File thumbDirectory = new File(getAudioStorageDirectory(), "waveforms");
         recursiveCreateDirectory(thumbDirectory);
 
@@ -139,11 +143,48 @@ public class MediaHelper {
     }
 
     /**
+     * Asynchronously load a waveform onto an ImageView. Safe to call from UI thread.
+     */
+    public static void displayWaveform(@NonNull final File audio, @NonNull final ImageView target) {
+        if (!getWaveformFileForAudioFile(audio).exists()) {
+            // If we're going to have to generate the waveform
+            // set a loading indicator
+            target.setImageResource(R.drawable.waveform_loading);
+        }
+
+        new AsyncTask<Void, Void, File>() {
+
+            WeakReference<ImageView> weakView = new WeakReference<>(target);
+
+            @Override
+            protected File doInBackground(Void... params) {
+                ImageView target = weakView.get();
+                if (target != null) {
+                    try {
+                        return getWaveformForAudioFile(target.getContext(), audio);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(File result) {
+                ImageView target = weakView.get();
+                if (result != null && target != null) {
+                    Picasso.with(target.getContext()).load(result).into(target);
+                }
+            }
+        }.execute();
+    }
+
+    /**
      * Get or create a waveform bitmap for the given audio file. Should be called on a background thread
      * @throws IOException
      */
     public static File getWaveformForAudioFile(@NonNull Context context, @NonNull File audio) throws IOException {
-        File waveFormFile = new File(audio.getAbsolutePath() + ".waveform");
+        File waveFormFile = getWaveformFileForAudioFile(audio);
         if (!waveFormFile.exists()) {
             Bitmap waveform = AudioWaveform.createBitmap(context, audio.getAbsolutePath());
 
@@ -170,10 +211,14 @@ public class MediaHelper {
         return waveFormFile;
     }
 
-    private static void recursiveCreateDirectory(File directory) throws IOException {
+    private static void recursiveCreateDirectory(@NonNull File directory) throws IOException {
         if (!directory.exists() && !directory.mkdirs()) {
             // Directory does not exist and could not be created
             throw new IOException("Unable to create " + directory.getAbsolutePath());
         }
+    }
+
+    private static File getWaveformFileForAudioFile(@NonNull File audio) {
+        return new File(audio.getAbsolutePath() + ".waveform");
     }
 }
