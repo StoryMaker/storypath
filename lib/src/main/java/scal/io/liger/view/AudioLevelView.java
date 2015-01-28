@@ -117,7 +117,6 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
 
         float width = getWidth();
         float height = getHeight();
-        float centerY = height / 2;
         float pixelsPerSample = width / HISTORY_SIZE;
         float lastX = 0;
         // We draw the history from oldest to newest so that the older audio data is further back
