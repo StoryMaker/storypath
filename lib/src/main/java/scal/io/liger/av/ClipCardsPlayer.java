@@ -253,6 +253,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mediaViewParams.setMargins(0, 0, 0, bottomPadPx);
 
         mThumbnailView = new ImageView(context);
+        mThumbnailView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mThumbnailView.setLayoutParams(mediaViewParams);
 
         mTextureView = new TextureView(context);
