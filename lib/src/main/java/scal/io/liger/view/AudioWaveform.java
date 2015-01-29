@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -181,12 +180,13 @@ public class AudioWaveform {
                 // Note we must check decodedIdx against decoded.length because we
                 // *estimate* the total number of samples based on file size and the first sample size
                 // there's bound to be a few
-                if (decodedIdx < decoded.length) {
-                    for (int i = 0; i < Math.min(info.size, shortsPerSample * 2); i += 2) {
+
+                for (int i = 0; i < Math.min(info.size, shortsPerSample * 2); i += 2) {
+                    if (decodedIdx < decoded.length)
                         decoded[decodedIdx++] = buf.getShort(i);
-                    }
+                    else
+                        break;
                 }
-                else Log.d(TAG, "ignoring sample");
                 codec.releaseOutputBuffer(outputBufIndex, false /* render */);
                 if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                     if (VERBOSE) Log.d(TAG, "saw output EOS.");
