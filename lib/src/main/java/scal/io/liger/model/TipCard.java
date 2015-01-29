@@ -46,6 +46,8 @@ public class TipCard extends MarkdownCard {
         return tips;
     }
 
+    // FIXME This is an inefficient algorithm and causes dropped frames when called from
+    // main thread e.g: MarkdownCard#getCardView
     public String randomTip() {
         ArrayList<String> ts = getTips();
         if (ts != null && (ts.size() > 0)) {
