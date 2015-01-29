@@ -720,11 +720,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     }
                     totalDuration += clipDuration;
                     accumulatedDurationByMediaCard.add(totalDuration);
-                    Log.i(TAG, String.format("Got duration for media: %d", clipDuration));
-                    Log.i(TAG, "Total duration now " + totalDuration);
-                    return totalDuration;
+                    Log.i(TAG, String.format("Got duration for media: %d. total %d", clipDuration, totalDuration));
                 }
-                return -1;
+                Log.i(TAG, "Total duration " + totalDuration);
+                return totalDuration;
             }
 
             @Override
