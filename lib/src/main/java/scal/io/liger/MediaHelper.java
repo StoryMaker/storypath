@@ -167,101 +167,90 @@ public class MediaHelper {
      * So long as Content Provider Uris are translatable to File addresses
      * let's maintain only the file-based thumnbail generation logic.
      * When the time comes that we have to deal with Streams, convert
-     * {@link #displayFileThumbnail(String, java.io.File, android.widget.ImageView, scal.io.liger.MediaHelper.ThumbnailCallback)}
+     * {@link #getFileThumbnail(String, java.io.File, android.widget.ImageView)}
      * to take an InputStream, instead of File, argument.
      *
      * Safe to call from the UI thread.
      */
     public static void displayMediaThumbnail(@NonNull @MediaType final String mediaType,
-                                             @NonNull String path,
-                                             @NonNull ImageView target,
-                                             @Nullable ThumbnailCallback callback) {
+                                             @NonNull final String path,
+                                             @NonNull final ImageView target,
+                                             @Nullable final ThumbnailCallback callback) {
 
-        String filePath = null;
-
-        if (path.contains("://") && !path.contains("file://")) {
-            // path is a ContentProvider URI
-            Uri uri         = Uri.parse(path);
-            String mimeType = FileUtils.getMimeType(target.getContext(), uri);
-            filePath        = FileUtils.getPath(target.getContext(), uri);
-            if (VERBOSE) Log.d(TAG, String.format("media uri mime type %s path %s", mimeType, filePath));
-            // WARNING .mp4 audio files report mimetype video
-            if (!mimeType.contains("image") &&
-                !mimeType.contains("video") &&
-                !mimeType.contains("audio"))
-                    Log.w(TAG, "Cannot display thumbnail. Unknown content url type " + path);
-        } else {
-            // path is a file path
-            filePath = path.replace("file://", "");
-        }
-
-        if (filePath != null) {
-            File mediaFile = new File(filePath);
-            if (mediaFile.exists())
-                displayFileThumbnail(mediaType, mediaFile, target, callback);
-            else
-                Log.w(TAG, "path appears to be a file, but it cannot be found on disk " + filePath);
-        }
-    }
-
-    /**
-     * Asynchronously load a media file thumbnail into an ImageView, creating the thumbnail if necessary.
-     * Safe to call from UI thread.
-     */
-    public static void displayFileThumbnail(@NonNull @MediaType final String mediaType,
-                                            @NonNull final File media,
-                                            @NonNull final ImageView target,
-                                            @Nullable final ThumbnailCallback callback) {
-        try {
-            File thumbnailFile = getThumbnailFileForMediaFile(media);
-            if (!thumbnailFile.exists()) {
-                // If we're going to have to generate the thumbnail
-                // set a loading indicator
-                displayLoadingIndicator(mediaType, target);
-            } else {
-                // Thumbnail is already available. Show it
-                Picasso.with(target.getContext()).load(thumbnailFile).into(target);
-                return;
-            }
-        } catch (IOException e) {
-            displayLoadingIndicator(mediaType, target);
-            e.printStackTrace();
-        }
-
-        // Asynchronously generate thumbnail
         new AsyncTask<Void, Void, File>() {
 
-            WeakReference<ImageView> weakView = new WeakReference<>(target);
+            private WeakReference<ImageView> weakView = new WeakReference<>(target);
+            final Context context = target.getContext();
 
             @Override
             protected File doInBackground(Void... params) {
-                ImageView target = weakView.get();
-                if (target != null) {
-                    try {
-                        return generateThumbnail(target.getContext(), media, mediaType);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                String filePath = null;
+
+                if (path.contains("://") && !path.contains("file://")) {
+
+                    // path is a ContentProvider URI
+                    Uri uri         = Uri.parse(path);
+                    String mimeType = FileUtils.getMimeType(context, uri);
+                    filePath        = FileUtils.getPath(context, uri);
+                    if (VERBOSE) Log.d(TAG, String.format("media uri mime type %s path %s", mimeType, filePath));
+                    // WARNING .mp4 audio files report mimetype video
+                    if (!mimeType.contains("image") &&
+                            !mimeType.contains("video") &&
+                            !mimeType.contains("audio"))
+                        Log.w(TAG, "Cannot display thumbnail. Unknown content url type " + path);
+
+                } else {
+
+                    // path is a file path
+                    filePath = path.replace("file://", "");
+
                 }
+
+                if (filePath == null) {
+                    Log.e(TAG, "Unable to get file path for " + path);
+                    return null;
+                }
+
+                File mediaFile = new File(filePath);
+
+                if (mediaFile.exists())
+                    return getFileThumbnail(mediaType, mediaFile, target);
+                else
+                    Log.w(TAG, "path appears to be a file, but it cannot be found on disk " + filePath);
+
                 return null;
             }
 
             @Override
             protected void onPostExecute(File result) {
                 ImageView target = weakView.get();
-                if (result != null) {
-                    if (target != null)
-                        Picasso.with(target.getContext()).load(result).into(target);
-
-                    if (callback != null)
-                        callback.newThumbnailGenerated(result);
+                if (target != null && result != null) {
+                    Picasso.with(context).load(result).into(target);
                 }
             }
         }.execute();
     }
 
     /**
-     * Get or create a waveform bitmap for the given audio file. Should be called on a background thread
+     * Synchronously load a media file thumbnail into an ImageView, creating the thumbnail if necessary.
+     * Must be called from background thread.
+     */
+    private static @Nullable File getFileThumbnail(@NonNull @MediaType final String mediaType,
+                                                   @NonNull final File media,
+                                                   @NonNull final ImageView target) {
+        try {
+            File thumbnailFile = getThumbnailFileForMediaFile(media);
+            return thumbnailFile.exists() ? thumbnailFile :
+                                            generateThumbnail(target.getContext(), media, mediaType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Get or create a waveform bitmap for the given audio file.
+     * Must be called on a background thread
      * @throws IOException
      */
     private static File getWaveformForAudioFile(@NonNull Context context, @NonNull File audio) throws IOException {
@@ -312,17 +301,23 @@ public class MediaHelper {
     /**
      * Display an appropriate loading image for the given media type
      */
-    private static void displayLoadingIndicator(@NonNull @MediaType String mediaType,
+    public static void displayLoadingIndicator(@NonNull @MediaType String mediaType,
                                                 @NonNull ImageView target) {
+
+        int resId = -1;
         switch (mediaType) {
             case Constants.AUDIO:
-                target.setImageResource(R.drawable.waveform_loading);
+                resId = R.drawable.waveform_loading;
                 break;
             case Constants.VIDEO:
             case Constants.PHOTO:
-                target.setImageResource(R.drawable.media_loading);
+                resId = R.drawable.media_loading;
                 break;
         }
+
+        Picasso.with(target.getContext())
+               .load(resId)
+               .into(target);
     }
 
     /**

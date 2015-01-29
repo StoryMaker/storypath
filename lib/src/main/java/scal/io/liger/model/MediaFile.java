@@ -2,9 +2,11 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -57,15 +59,25 @@ public class MediaFile implements Cloneable {
      */
     public void loadThumbnail(@NonNull ImageView target) {
 
-        MediaHelper.displayMediaThumbnail(medium, getPath(), target,
+        if (TextUtils.isEmpty(thumbnailFilePath)) {
 
-                new MediaHelper.ThumbnailCallback() {
-                    @Override
-                    public void newThumbnailGenerated(File thumbnail) {
-                        thumbnailFilePath = thumbnail.getAbsolutePath();
+            MediaHelper.displayLoadingIndicator(medium, target);
+
+            MediaHelper.displayMediaThumbnail(medium, getPath(), target,
+
+                    new MediaHelper.ThumbnailCallback() {
+                        @Override
+                        public void newThumbnailGenerated(File thumbnail) {
+                            thumbnailFilePath = thumbnail.getAbsolutePath();
+                        }
                     }
-                }
-        );
+            );
+        } else {
+            Picasso.with(target.getContext())
+                   .load(new File(thumbnailFilePath))
+                   .into(target);
+        }
+
     }
 
     @Override
