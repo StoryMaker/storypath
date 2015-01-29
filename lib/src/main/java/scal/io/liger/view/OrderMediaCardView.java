@@ -115,7 +115,7 @@ public class OrderMediaCardView implements DisplayableCard {
                 if (medium.equals(Constants.VIDEO)) {
                     ivTemp = new ImageView(mContext);
                     //Bitmap videoFrame = Utility.getFrameFromVideo(mediaURI.getPath());
-                    mf.loadThumbnail(mContext, ivTemp);
+                    mf.loadThumbnail(ivTemp);
                     dgvOrderClips.addView(ivTemp);
                     continue;
                 }else if (medium.equals(Constants.PHOTO)) {

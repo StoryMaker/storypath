@@ -494,11 +494,8 @@ public class ClipCardView extends ExampleCardView {
             setClipExampleDrawables(clipType, ivThumbnail);
             ivThumbnail.setVisibility(View.VISIBLE);
         } else {
-            boolean setImage = mediaFile.loadThumbnail(mContext, ivThumbnail);
-
-            if (setImage) {
-                ivThumbnail.setVisibility(View.VISIBLE);
-            }
+            mediaFile.loadThumbnail(ivThumbnail);
+            ivThumbnail.setVisibility(View.VISIBLE);
         }
     }
 

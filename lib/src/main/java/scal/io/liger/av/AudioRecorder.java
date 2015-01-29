@@ -18,7 +18,6 @@ import java.util.TimerTask;
 
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.view.AudioLevelView;
 import scal.io.liger.view.Util;
@@ -80,7 +79,7 @@ public class AudioRecorder {
     }
 
     private void init() throws IOException {
-        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioStorageDirectory());
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory());
         inflateViews(mContainer);
     }
 

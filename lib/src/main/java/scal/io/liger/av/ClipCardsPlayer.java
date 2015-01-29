@@ -648,7 +648,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             case Constants.VIDEO:
             case Constants.AUDIO:
             case Constants.PHOTO:
-                mediaFile.loadThumbnail(mContext, thumbnail);
+                mediaFile.loadThumbnail(thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
                 break;
             default:

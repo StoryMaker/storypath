@@ -26,6 +26,7 @@ import java.util.Iterator;
 import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
+import scal.io.liger.R;
 import scal.io.liger.ReferenceHelper;
 
 /**
@@ -1197,15 +1198,17 @@ public class StoryPath {
         return mediaCards;
     }
 
-    public boolean setCoverImageThumbnail(ImageView target) {
+    public void setCoverImageThumbnail(ImageView target) {
         ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
         for (ClipCard card: cards) {
             MediaFile mediaFile = card.getSelectedMediaFile();
             if (mediaFile != null) {
-                return mediaFile.loadThumbnail(context, target);
+                mediaFile.loadThumbnail(target);
+                return;
             }
         }
-        return false;
+        target.setImageResource(R.drawable.no_thumbnail);
+
     }
 
     public String getCoverImageThumbnailPath() {

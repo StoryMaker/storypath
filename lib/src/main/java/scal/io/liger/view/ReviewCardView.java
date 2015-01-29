@@ -149,9 +149,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     private void showNoClipPlaceholder(ViewGroup container) {
         ImageView ivPlaceholder = new ImageView(mContext);
         ivPlaceholder.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        if (!mCardModel.getStoryPath().setCoverImageThumbnail(ivPlaceholder)) {
-            ivPlaceholder.setImageResource(R.drawable.no_thumbnail);
-        }
+        mCardModel.getStoryPath().setCoverImageThumbnail(ivPlaceholder);
         container.addView(ivPlaceholder);
     }
 

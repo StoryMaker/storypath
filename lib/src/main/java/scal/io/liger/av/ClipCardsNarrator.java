@@ -16,15 +16,11 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 
@@ -116,7 +112,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioStorageDirectory());
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory());
     }
 
     private void _changeRecordNarrationState(RecordNarrationState newState) {

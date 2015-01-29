@@ -130,7 +130,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         if (mf == null) {
             Log.e(this.getClass().getName(), "no media file was found");
         } else {
-            mf.loadThumbnail(viewHolder.title.getContext(), viewHolder.thumbnail);
+            mf.loadThumbnail(viewHolder.thumbnail);
         }
     }
 
