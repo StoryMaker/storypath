@@ -1,9 +1,14 @@
 package scal.io.liger.model;
 
+import android.text.TextUtils;
+
+import java.io.File;
+import java.util.Date;
+
 /**
  * Created by mnbogner on 12/8/14.
  */
-public class InstanceIndexItem {
+public class InstanceIndexItem implements Comparable {
 
     // only save libraries?
 
@@ -87,5 +92,21 @@ public class InstanceIndexItem {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public long getLastModifiedTime() {
+        if (TextUtils.isEmpty(instanceFilePath)) return 0;
+
+        return new File(instanceFilePath).lastModified();
+
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        if (another instanceof InstanceIndexItem) {
+            return new Date(getLastModifiedTime()).compareTo(
+                   new Date(((InstanceIndexItem) another).getLastModifiedTime()));
+        }
+        return -1; // Return "older" if no date available
     }
 }
