@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import scal.io.liger.R;
 import scal.io.liger.model.ClipCard;
+import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 
 /**
@@ -35,12 +37,14 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         public ImageView thumbnail;
         public TextView title;
         public CheckBox checkBox;
+        public ImageView narrationIndicator;
 
         public ViewHolder(View v) {
             super(v);
-            thumbnail = (ImageView) v.findViewById(R.id.thumbnail);
-            title = (TextView) v.findViewById(R.id.title);
-            checkBox = (CheckBox) v.findViewById(R.id.check_box);
+            thumbnail          = (ImageView) v.findViewById(R.id.thumbnail);
+            title              = (TextView) v.findViewById(R.id.title);
+            checkBox           = (CheckBox) v.findViewById(R.id.check_box);
+            narrationIndicator = (ImageView) v.findViewById(R.id.narrationIndicator);
         }
     }
 
@@ -131,6 +135,20 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         } else {
             mf.loadThumbnail(viewHolder.thumbnail);
         }
+
+        if (clipHasNarration(clipCard.getSelectedClip())) {
+            viewHolder.narrationIndicator.setVisibility(View.VISIBLE);
+            viewHolder.narrationIndicator.setTag(position);
+            viewHolder.narrationIndicator.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = (int) v.getTag();
+                    Toast.makeText(v.getContext(), "Narration removed from clip", Toast.LENGTH_LONG).show();
+                    removeNarrationForClip(mClipCards.get(position).getSelectedClip());
+                    v.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Override
@@ -144,6 +162,26 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
             return mCardToStableId.get(mClipCards.get(position));
         }
         return RecyclerView.NO_ID;
+    }
+
+    /**
+     * Placeholder until an API exists
+     * @param clip the clip whose associated narration tracks should be removed
+     */
+    private void removeNarrationForClip(ClipMetadata clip) {
+        // TODO Wire to API
+        // TODO When a narration overlaps multiple clips, what happens when I remove it from one?
+        // Is it also removed from the other?
+        return;
+    }
+
+    /**
+     * Placeholder until an API exists
+     * @return whether the given clip has an associated narration track
+     */
+    private boolean clipHasNarration(ClipMetadata clip) {
+        // TODO Wire to API
+        return true;
     }
 
 }
