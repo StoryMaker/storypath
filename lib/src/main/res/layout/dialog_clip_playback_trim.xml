@@ -18,12 +18,28 @@
         android:layout_alignParentTop="true"
         android:scaleType="fitCenter" />
 
+    <ImageView
+        android:id="@+id/volumeIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/speaker"
+        android:layout_below="@id/textureView"/>
+
+    <SeekBar
+        android:id="@+id/volumeSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textureView"
+        android:layout_toEndOf="@id/volumeIcon"
+        android:layout_toRightOf="@id/volumeIcon"/>
+
     <TextView
         android:id="@+id/clipLength"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_small"
-        android:layout_below="@id/textureView"
+        android:layout_below="@id/volumeSeekbar"
         android:textSize="@dimen/text_large"
         android:text="Total 1:25"
         android:fontFamily="sans-serif-light"/>

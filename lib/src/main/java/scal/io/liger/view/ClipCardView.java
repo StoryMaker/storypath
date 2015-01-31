@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
@@ -511,6 +510,7 @@ public class ClipCardView extends ExampleCardView {
         final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
         final RangeBar rangeBar = (RangeBar) v.findViewById(R.id.rangeSeekbar);
         final SeekBar playbackBar = (SeekBar) v.findViewById(R.id.playbackProgress);
+        final SeekBar volumeSeek = (SeekBar) v.findViewById(R.id.volumeSeekbar);
         final int tickCount = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
 
         /** Media player and media */
@@ -526,8 +526,24 @@ public class ClipCardView extends ExampleCardView {
         /** Setup initial values that don't require media loaded */
         clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
+        volumeSeek.setProgress((int) (mCardModel.getSelectedClip().getVolume() * volumeSeek.getMax()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
+
+        volumeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float newVolume = progress / (float) seekBar.getMax();
+                mCardModel.getSelectedClip().setVolume(newVolume);
+                player.setVolume(newVolume, newVolume);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { /* ignored */}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { /* ignored */}
+        });
 
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             int lastLeftIdx;
