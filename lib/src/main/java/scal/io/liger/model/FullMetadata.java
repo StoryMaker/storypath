@@ -20,7 +20,7 @@ public class FullMetadata implements Parcelable {
     private int startTime;
     private int stopTime;
     private int duration; // duration in millisecond
-    private int volume;
+    private float volume;
     private String effect;
     private String type;
     private String medium;
@@ -121,11 +121,11 @@ public class FullMetadata implements Parcelable {
         this.stopTime = stopTime;
     }
 
-    public int getVolume() {
+    public float getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(float volume) {
         this.volume = volume;
     }
 
