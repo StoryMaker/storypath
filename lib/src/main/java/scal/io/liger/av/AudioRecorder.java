@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.view.AudioLevelView;
 import scal.io.liger.view.Util;
@@ -70,12 +70,16 @@ public class AudioRecorder {
         return mRecorder.stopRecording();
     }
 
+    public boolean isRecording() {
+        return mRecorder.isRecording();
+    }
+
     public void release() {
         mRecorder.release();
     }
 
     private void init() throws IOException {
-        mRecorder = new MediaRecorderWrapper(mContext, Utility.getAudioStorageDirectory());
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory());
         inflateViews(mContainer);
     }
 
@@ -127,7 +131,7 @@ public class AudioRecorder {
     }
 
     private void onTimerTick() {
-        mWaveformView.updateAudioData(mRecorder.getMaxAmplitude());
+        mWaveformView.notifyNewAmplitude(mRecorder.getMaxAmplitude());
         mTimeCode.setText(Util.makeTimeString(System.currentTimeMillis() - mStartTimeMs));
     }
 }

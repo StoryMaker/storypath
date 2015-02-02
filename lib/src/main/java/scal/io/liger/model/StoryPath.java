@@ -1,7 +1,6 @@
 package scal.io.liger.model;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,10 +12,10 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.MalformedJsonException;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import java.util.Iterator;
 import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
+import scal.io.liger.R;
 import scal.io.liger.ReferenceHelper;
 
 /**
@@ -1198,15 +1198,17 @@ public class StoryPath {
         return mediaCards;
     }
 
-    public Bitmap getCoverImageThumbnail() {
+    public void setCoverImageThumbnail(ImageView target) {
         ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
         for (ClipCard card: cards) {
             MediaFile mediaFile = card.getSelectedMediaFile();
             if (mediaFile != null) {
-                return mediaFile.getThumbnail(context);
+                mediaFile.loadThumbnail(target);
+                return;
             }
         }
-        return null;
+        target.setImageResource(R.drawable.no_thumbnail);
+
     }
 
     public String getCoverImageThumbnailPath() {

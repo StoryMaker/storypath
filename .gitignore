@@ -40,5 +40,9 @@ liger-content/
 sample/assets/
 lib/src/main/res/values/google_play.xml
 
+#key values
+lib/src/main/res/values/flickr.xml
+lib/src/main/res/values/google.xml
+
 #Mac OS X
 .DS_Store

@@ -2,7 +2,6 @@ package scal.io.liger.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +20,6 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.view.ReorderableRecyclerView;
-import scal.io.liger.view.Util;
 
 /**
  * Created by davidbrodsky on 10/23/14.
@@ -132,11 +130,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         if (mf == null) {
             Log.e(this.getClass().getName(), "no media file was found");
         } else {
-            Bitmap thumbnail = mf.getThumbnail(viewHolder.title.getContext());
-
-            if (thumbnail != null) {
-                viewHolder.thumbnail.setImageBitmap(thumbnail);
-            }
+            mf.loadThumbnail(viewHolder.thumbnail);
         }
     }
 

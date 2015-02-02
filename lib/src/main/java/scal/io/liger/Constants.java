@@ -28,7 +28,7 @@ public class Constants {
     public static final String PHOTO = "photo";
     public static final String VIDEO = "video";
 
-    /** Valuesfor {@link scal.io.liger.model.ClipMetadata#type */
+    /** Values for {@link scal.io.liger.model.ClipMetadata#type */
     public static final String CHARACTER = "character";
     public static final String ACTION    = "action";
     public static final String RESULT    = "result";

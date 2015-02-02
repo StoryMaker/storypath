@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
@@ -34,7 +33,6 @@ import android.widget.FrameLayout;
 import android.widget.IconTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -58,10 +56,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
-import scal.io.liger.Utility;
 import scal.io.liger.av.AudioRecorder;
 import scal.io.liger.av.ClipCardsPlayer;
-import scal.io.liger.av.MediaRecorderWrapper;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
@@ -497,12 +493,8 @@ public class ClipCardView extends ExampleCardView {
             setClipExampleDrawables(clipType, ivThumbnail);
             ivThumbnail.setVisibility(View.VISIBLE);
         } else {
-            Bitmap thumbnail = mediaFile.getThumbnail(mContext);
-
-            if (thumbnail != null) {
-                ivThumbnail.setImageBitmap(thumbnail);
-                ivThumbnail.setVisibility(View.VISIBLE);
-            }
+            mediaFile.loadThumbnail(ivThumbnail);
+            ivThumbnail.setVisibility(View.VISIBLE);
         }
     }
 
@@ -518,6 +510,7 @@ public class ClipCardView extends ExampleCardView {
         final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
         final RangeBar rangeBar = (RangeBar) v.findViewById(R.id.rangeSeekbar);
         final SeekBar playbackBar = (SeekBar) v.findViewById(R.id.playbackProgress);
+        final SeekBar volumeSeek = (SeekBar) v.findViewById(R.id.volumeSeekbar);
         final int tickCount = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
 
         /** Media player and media */
@@ -533,8 +526,24 @@ public class ClipCardView extends ExampleCardView {
         /** Setup initial values that don't require media loaded */
         clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
+        volumeSeek.setProgress((int) (mCardModel.getSelectedClip().getVolume() * volumeSeek.getMax()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
+
+        volumeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float newVolume = progress / (float) seekBar.getMax();
+                mCardModel.getSelectedClip().setVolume(newVolume);
+                player.setVolume(newVolume, newVolume);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { /* ignored */}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { /* ignored */}
+        });
 
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             int lastLeftIdx;
@@ -927,6 +936,26 @@ public class ClipCardView extends ExampleCardView {
         FrameLayout frame = new FrameLayout(mContext);
         frame.setLayoutParams(mediaViewParams);
 
+        frame.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                // Do nothing
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                if (mRecorder != null && mRecorder.isRecording()) {
+                    Log.w(TAG, "ClipCardView detached while recording in progress. Recording will be lost.");
+                    mRecorder.stopRecording();
+                    mRecorder.release();
+                    // TODO : Can we attach this recording to the card model without :
+                    //  java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling
+                    // attaching media to ClipCardView will trigger observers in odd state. Could create separate ClipCard#saveMediaFile
+                    // that doesn't trigger observers, but that could have its own issues...
+                }
+            }
+        });
+
         try {
             mRecorder = new AudioRecorder(frame);
 
@@ -960,37 +989,4 @@ public class ClipCardView extends ExampleCardView {
         // Instead of manually resetting UI, just call changeCard whether or not recording succeeded
         ((MainActivity) mContext).mCardAdapter.changeCard(mCardModel); // FIXME this isn't pretty
     }
-//    /**
-//     * Update the UI in response to a new value assignment to {@link #mRecordNarrationState}
-//     */
-//    @Override
-//    void changeRecordNarrationStateChanged(RecordNarrationState newState) {
-//        super.changeRecordNarrationStateChanged(newState);
-//        switch(mRecordNarrationState) {
-//            case READY:
-//                tvImport.setVisibility(View.VISIBLE);
-//                tvCapture.setVisibility(View.VISIBLE);
-//                tvStop.setVisibility(View.GONE);
-//                mVUMeterLayout.setVisibility(View.GONE);
-//                break;
-//            case RECORDING:
-//                tvImport.setVisibility(View.GONE);
-//                tvCapture.setVisibility(View.GONE);
-//                tvStop.setVisibility(View.VISIBLE);
-//                mVUMeterLayout.setVisibility(View.VISIBLE);
-//                break;
-//            case PAUSED:
-//                tvImport.setVisibility(View.GONE);
-//                tvCapture.setVisibility(View.GONE);
-//                tvStop.setVisibility(View.VISIBLE);
-//                mVUMeterLayout.setVisibility(View.VISIBLE);
-//                break;
-//            case STOPPED:
-//                tvImport.setVisibility(View.VISIBLE);
-//                tvCapture.setVisibility(View.VISIBLE);
-//                tvStop.setVisibility(View.GONE);
-//                mVUMeterLayout.setVisibility(View.GONE);
-//                break;
-//        }
-//    }
 }

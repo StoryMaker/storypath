@@ -9,7 +9,7 @@ public class ClipMetadata {
 
     @Expose private int startTime;
     @Expose private int stopTime; // TODO Possible to initialize this to the clip duration? It's a pain to do checks for stopTime == 0 all over the place to check if the value is valid.
-    @Expose private int volume;
+    @Expose private float volume;
     @Expose private String effect;
     @Expose private String type; // e.g: "action", "person"
     @Expose private String uuid; // key to mediaFiles map in StoryModel
@@ -39,11 +39,11 @@ public class ClipMetadata {
         this.stopTime = stopTime;
     }
 
-    public int getVolume() {
+    public float getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(float volume) {
         this.volume = volume;
     }
 

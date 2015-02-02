@@ -12,6 +12,19 @@
         android:layout_alignParentLeft="true"
         android:scaleType="centerCrop"/>
 
+    <ImageView
+        android:id="@+id/narrationIndicator"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingEnd="40dp"
+        android:paddingRight="40dp"
+        android:paddingTop="30dp"
+        android:layout_alignBottom="@id/thumbnail"
+        android:visibility="visible"
+        android:src="@drawable/ic_microphone"/>
+
     <CheckBox
         android:id="@+id/check_box"
         android:layout_width="50dp"

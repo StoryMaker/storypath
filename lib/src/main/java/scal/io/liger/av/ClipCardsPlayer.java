@@ -2,14 +2,13 @@ package scal.io.liger.av;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -19,12 +18,12 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.joanzapata.android.iconify.IconDrawable;
@@ -78,6 +77,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private Timer mTimer;
     protected Handler mHandler;
 
+    private boolean mReady;
     private boolean mAdvancingClips;
     protected boolean mIsPlaying;
     private boolean mIsPaused;
@@ -91,8 +91,12 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         @Override
         public void onClick(View v) {
             Log.i(TAG, "PlaybackClickListener fired");
-            if ((mCurrentlyPlayingCard.getMedium().equals(Constants.VIDEO) ||
-                 mCurrentlyPlayingCard.getMedium().equals(Constants.AUDIO)) && mMainPlayer == null) return;
+            if (!mReady ||
+                ((mCurrentlyPlayingCard.getMedium().equals(Constants.VIDEO) ||
+                mCurrentlyPlayingCard.getMedium().equals(Constants.AUDIO)) && mMainPlayer == null)) {
+                Toast.makeText(mContext, "Preparing for playback. Try again in a few seconds.", Toast.LENGTH_LONG).show();
+                return;
+            }
 
             if (mIsPlaying) {
                 pausePlayback();
@@ -232,7 +236,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         attachViewListeners();
         mCurrentlyPlayingCard = mClipCards.get(0);
         setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-        mClipCollectionDurationMs = calculateTotalClipCollectionLengthMs(mClipCards);
+        calculateTotalClipCollectionLengthMsAsync(mClipCards);
         setupTimer();
     }
 
@@ -249,6 +253,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mediaViewParams.setMargins(0, 0, 0, bottomPadPx);
 
         mThumbnailView = new ImageView(context);
+        mThumbnailView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mThumbnailView.setLayoutParams(mediaViewParams);
 
         mTextureView = new TextureView(context);
@@ -649,15 +654,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         switch(medium) {
             case Constants.VIDEO:
             case Constants.AUDIO:
-                Bitmap thumbnailBitmap = mediaFile.getThumbnail(mContext);
-                if (thumbnailBitmap != null) {
-                    thumbnail.setImageBitmap(thumbnailBitmap);
-                }
-                thumbnail.setVisibility(View.VISIBLE);
-                break;
             case Constants.PHOTO:
-                Uri uri = Uri.parse(mediaFile.getPath());
-                thumbnail.setImageURI(uri);
+                mediaFile.loadThumbnail(thumbnail);
                 thumbnail.setVisibility(View.VISIBLE);
                 break;
             default:
@@ -696,32 +694,49 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         imageView.setImageDrawable(drawable);
     }
 
-    private int calculateTotalClipCollectionLengthMs(List<ClipCard> cards) {
-        int totalDuration = 0;
-        int clipDuration;
-        accumulatedDurationByMediaCard = new ArrayList<>(cards.size());
-        for (ClipCard card : cards) {
-            clipDuration = 0;
-            switch (card.getMedium()) {
-                case Constants.VIDEO:
-                case Constants.AUDIO:
-                    ClipMetadata clipMeta = card.getSelectedClip();
-                    MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(card.getSelectedMediaFile().getPath()));
-                    if (mp != null) {
-                        clipDuration = (clipMeta.getStopTime() == 0 ? mp.getDuration() : (clipMeta.getStopTime() - clipMeta.getStartTime()));
-                        mp.release();
+    private void calculateTotalClipCollectionLengthMsAsync(final List<ClipCard> cards) {
+
+        new AsyncTask<Void, Void, Integer>() {
+
+            @Override
+            protected Integer doInBackground(Void... params) {
+                int totalDuration = 0;
+                int clipDuration;
+                accumulatedDurationByMediaCard = new ArrayList<>(cards.size());
+                for (ClipCard card : cards) {
+                    clipDuration = 0;
+                    switch (card.getMedium()) {
+                        case Constants.VIDEO:
+                        case Constants.AUDIO:
+                            ClipMetadata clipMeta = card.getSelectedClip();
+                            MediaPlayer mp = MediaPlayer.create(mContext, Uri.parse(card.getSelectedMediaFile().getPath()));
+                            if (mp != null) {
+                                clipDuration = (clipMeta.getStopTime() == 0 ? mp.getDuration() : (clipMeta.getStopTime() - clipMeta.getStartTime()));
+                                mp.release();
+                            }
+                            break;
+                        case Constants.PHOTO:
+                            clipDuration += mPhotoSlideDurationMs;
+                            break;
                     }
-                    break;
-                case Constants.PHOTO:
-                    clipDuration += mPhotoSlideDurationMs;
-                    break;
+                    totalDuration += clipDuration;
+                    accumulatedDurationByMediaCard.add(totalDuration);
+                    Log.i(TAG, String.format("Got duration for media: %d. total %d", clipDuration, totalDuration));
+                }
+                Log.i(TAG, "Total duration " + totalDuration);
+                return totalDuration;
             }
-            totalDuration += clipDuration;
-            accumulatedDurationByMediaCard.add(totalDuration);
-            Log.i(TAG, String.format("Got duration for media: %d", clipDuration));
-            Log.i(TAG, "Total duration now " + totalDuration);
-        }
-        return totalDuration;
+
+            @Override
+            protected void onPostExecute(Integer result) {
+                if (result == -1) {
+                    Log.e(TAG, "Unable to calculate ClipCard list duration! ClipCardsPlayer will not properly function");
+                } else {
+                    mClipCollectionDurationMs = result;
+                    mReady = true;
+                }
+            }
+        }.execute();
     }
 
     /**
