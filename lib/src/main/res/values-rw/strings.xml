@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name">Ligre</string>
+  <string name="hello_world">Bite mwese</string>
+  <string name="action_settings">Ibikoze (paramètres)</string>
+  <string name="lbl_level">Urugezo:</string>
+  <string name="lbl_time">Umwanya:</string>
+  <string name="lbl_continue">Bandanya</string>
+  <string name="lbl_next">Igikurikira</string>
+  <string name="lbl_congrats_or">--- canke ---</string>
+  <string name="cliptype_character">Inyifato</string>
+  <string name="cliptype_action">Igikorwa</string>
+  <string name="cliptype_result"> Ingaruka (résultat)</string>
+  <string name="cliptype_place">Ikibanza</string>
+  <string name="cliptype_signature">Umukono</string>
+  <string name="choose_medium">Tora uburyo</string>
+  <string name="lbl_video">Amasanamu (video)</string>
+  <string name="lbl_audio">Amajwi</string>
+  <string name="lbl_photo">Ifoto</string>
+  <string name="lbl_record">Gufata (enregistrer) isanamu (clip video)</string>
+  <string name="lbl_order_media_desc">Ubu shira kurutonde amasanamu kugira werekane neza intango, hagati n\'impera</string>
+  <string name="lbl_card_tap">Korako kugira uhitemwo iyindi sanamu</string>
+  <string name="lbl_import">Kuzana (importer)</string>
+  <string name="lbl_capture">Gufata (capturer)</string>
+  <string name="menu_done">Vyakozwe</string>
+  <string name="clip_order">Urutonde rw\'isanamu</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">TANGURA GUFATA</string>
+  <string name="dialog_done">VYAKOZWE</string>
+  <string name="dialog_pause">TENYENYA (PAUSE)</string>
+  <string name="dialog_resume">BANDANYIRIZAKO</string>
+  <string name="dialog_stop">HAGARIKA GUFATA </string>
+  <string name="dialog_redo">GUSUBIRAMWO</string>
+  <string name="edit_card">Gukorera (éditer) kw\'ikarata (carte)</string>
+  <string name="change_goal">Guhindura intumbero (changement objectif)</string>
+  <string name="duplicate_card">Gukoresha kabiri (dupliquer) ikarata</string>
+  <string name="duplicate_clip">Gukoresha kabiri (dupliquer) isanamu</string>
+  <string name="remove_card">Kuramwo (enlever) ikarata</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Iyugururwa rizana ryarangiye</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Iyugururwa rizana ntiryangenze neza</string>
+  <string name="state_unknown">Iratanguye...\"</string>
+  <string name="state_idle">Turindiriyeko Iyugururwa rizana ritangura</string>
+  <string name="state_fetching_url">Ironderwa ry\'ibifasha kugira habe Iyugururwa rizana (ressources à télécharger)</string>
+  <string name="state_connecting">Connexion au serveur de téléchargement</string>
+  <string name="state_downloading">Iyugururwa rizana ry\'ibifasha (ressources)</string>
+  <string name="state_completed">Iyugururwa rizana ryaheze</string>
+  <string name="state_paused_network_unavailable">Iyugururwa rizana ribaye riratenyenya kubera atamuhora uriho</string>
+  <string name="state_paused_network_setup_failure">Iyugururwa rizana ribaye riratenyenya. Gerageza (Testez un site Web dans le navigateur)</string>
+  <string name="state_paused_by_request">Iyugururwa rizana ribaye riratenyenya</string>
+  <string name="state_paused_wifi_unavailable">Iyugururwa rizana ribaye riratenyenya kubera ata wifi iriho </string>
+  <string name="state_paused_wifi_disabled">Iyugururwa rizana ribaye riratenyenya kubera wifi yakuwemwo</string>
+  <string name="state_paused_roaming">Iyugururwa rizana ribaye riratenyenya kubera uriko ukoresha umuhora womukindi gihugu (roaming)</string>
+  <string name="state_paused_sdcard_unavailable">Iyugururwa rizana ribaye riratenyenya kubera ububiko bwigenga (stockage externe) ata buriho</string>
+  <string name="state_failed_unlicensed">Iyugururwa rizana ryanse kubera ushobora kuba atariwewe waguze iyi application (application)</string>
+  <string name="state_failed_fetching_url">Iyugururwa rizana ryanse kubera atabifasha (ressources) vyashoboye kuboneka</string>
+  <string name="state_failed_sdcard_full">Iyugururwa rizana ryanse kubera ububiko bwigenga (stockage externe) bwuzuye</string>
+  <string name="state_failed_cancelled">Iyugururwa rizana ryahagaritswe</string>
+  <string name="state_failed">Iyugururwa rizana ryanse</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Umwanya usigaye: %1$s</string>
+  <string name="time_remaining_notification">%1$s ibubampfu</string>
+  <string name="add_clips_before_narrating">Ongerako isanamu zike imbere yuko wongerako ijwi ridondagura (narration)</string>
+  <string name="add_clips_before_reordering">Ongerako amasanamu imbere yoguhindura urutonde rwazo</string>
+  <string name="add_clips_generic">Banza wongereko amasanamu</string>
+  <string name="title_section3">Igice ca 3</string>
+  <string name="title_section2">Igice ca 2</string>
+  <string name="title_section1">Igice ca 1</string>
+  <string name="title_activity_test_drag">Gerageza kunyereza (glisser)</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Gufata</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Gufata vyahagaze</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Ububiko (stockage) bwuzuye</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Umwanya bikwiriye gufata (durée) washitse</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Ikarata SD irakenewe</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">Ok</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Ivyo wafashe</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Amajwi yafashwe</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Ivyo nafashe</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Ntibikunda gushikira ububiko bwigenga (externe) canke butigenga (interne)</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Hari ikosha rivuye kugikoresho (Erreur d\'application interne)</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Ntibikunda kuzigama (sauvegarder) amajwi mwafashe</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Mpore, Ntakibanza (espace) kikiriho. Tubasavye gukurako ibingana na %.2f%nMB hanyuma mugerageze kandi</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">Fiche atazina ifise</string>
+  <string name="menu_view_record_list">Kuraba urutonde (liste) rw\'ivyakozwe (enregistrement)</string>
+  <string name="menu_setting">Ibikoze (paramètres)</string>
+  <string name="delete_dialog_title">Mwifuza gufuta ibi biriko birakorwa</string>
+  <string name="overwrite_dialog_title">%s iramaze kubaho. Mwifuza kuyisubiriza?</string>
+  <string name="preferences_title">Ibikoze (paramètres)</string>
+  <string name="pref_title_record_type">Ubwoko bwa fiche yogukorerako (Type de fichier d\'enregistrement)</string>
+  <string name="prefDialogTitle_recordType">Tubasavye guhitamwo ubwoko bwa fiche</string>
+  <string name="prefDefault_recordType">amajwi/3gpp</string>
+  <string name="pref_title_enable_high_quality">Shoboza itunganywa ryiza (activer la haute qualité)</string>
+  <string name="pref_summary_enable_high_quality">Amajwi afise intuganywa ryiza (haute qualité) ashobora kuba manini</string>
+  <string name="pref_title_enable_sound_effect">Shoboza ihindurwa ry\'ivyamajwi (Activer l\'effet sonore)</string>
+  <string name="pref_summary_enable_sound_effect">Kuvuza ukoresheje ihindurwa ry\'ivyamajwi (effet sonore) iyo ukungene (état) bikozwe kwahidutse</string>
+  <string name="notification_recording">Gufata</string>
+  <string name="notification_stopped">Gufata vyahagaritswe</string>
+  <string name="notification_warning">Ububiko burihasi (musi y\'iminota %d)... </string>
+  <string name="sd_card_not_available">Ikarata SD ntayiriho</string>
+  <string name="open_file_explorer">Ugurura Explorateur de fichier</string>
+  <string name="alert_message_delete_record">Mwifuza gufuta ivyo mwahisemwo vyakozwe</string>
+  <string name="recording_narration">Gufata ijwi ridondagura (narration)</string>
+  <string name="could_not_start_narration">Ntivyashobotse gutangura ijwi ridondagura (narration)!</string>
+  <string name="jumble">Ibintu bivangatiranye (fouillis)</string>
+  <string name="order">Urutonde</string>
+  <string name="narrate">Kudondagura</string>
+  <string name="publish">Kumenyekanisha</string>
+  <string name="total">Vyose hamwe (total)</string>
+  <string name="cancel">Hagarika</string>
+  <string name="trim_clip">Gabanya isanamu</string>
+  <string name="narration">Ijwi ridondagura</string>
+  <!--add for libra end-->
+</resources>
