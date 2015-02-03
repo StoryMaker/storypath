@@ -3,22 +3,18 @@ package scal.io.liger.av;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Environment;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Pair;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.model.ClipCard;
@@ -37,7 +33,6 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
     private AudioManager mAudioManager;
     private MediaRecorderWrapper mRecorder;
-    private File mNarrationOutputDirectory;
     private RecordNarrationState mRecordNarrationState;
     private NarrationListener mListener;
     private Pair<Integer, Integer> mSelectedClipIndexes;
@@ -143,23 +138,17 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     private void _startRecordingNarration(@Nullable Pair<Integer, Integer> indexes) {
         _changeRecordNarrationState(RecordNarrationState.RECORDING);
 
-        // Mute the main media volume if we're recording narration and headphones
+        // Mute all media volume if we're recording narration and headphones
         // are not plugged in. Note that because we're not altering the media routing
         // of our MediaPlayers, if isWiredHeadsetOn returns true it should be a
         // safe assumption that the media will indeed be routed there per system default.
+        //noinspection deprecation
         if (!mAudioManager.isWiredHeadsetOn() && !mAudioManager.isBluetoothA2dpOn()) {
-            mContainerLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    setVolume(MUTE_VOLUME); // don't use _setVolume bc we need to update state of mute button
-
-                }
-            });
+            setPlaySecondaryTracks(false);
+            setVolume(MUTE_VOLUME);
         }
 
         mSelectedClipIndexes = indexes;
-
-        mNarrationOutputDirectory = Environment.getExternalStorageDirectory();
 
         if (mRecorder.startRecording()) {
             Toast.makeText(mContext, mContext.getString(R.string.recording_narration), Toast.LENGTH_SHORT).show();
@@ -193,6 +182,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         // by touching the play button. If recording is initiated again, the volume will be muted
         // appropriately on _startRecordingNarration
         setVolume(FULL_VOLUME);
+        setPlaySecondaryTracks(true);
         _changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = mRecorder.stopRecording();
         if (mListener != null && mf != null) mListener.onNarrationFinished(mf);
@@ -223,36 +213,18 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
         super._advanceToNextClip(player);
 
-        if (!mIsPlaying && mRecordNarrationState == RecordNarrationState.RECORDING) {
+        if (!stateIs(PlayerState.PLAYING) && mRecordNarrationState == RecordNarrationState.RECORDING) {
             _stopRecordingNarration(false); // super._advanceToNextClip(player) stopped playback
         }
     }
 
     @Override
     protected void _startPlayback() {
-        if (mRecordNarrationState.equals(RecordNarrationState.RECORDING)) {
-            mIsPlaying = true;
-
-            mPlayBtn.setVisibility(View.GONE);
-            mThumbnailView.setVisibility(View.VISIBLE);
-
-            switch(mCurrentlyPlayingCard.getMedium()) {
-                case Constants.VIDEO:
-                    mThumbnailView.setVisibility(View.GONE);
-                case Constants.AUDIO:
-                    mMainPlayer.start();
-                    break;
-                case Constants.PHOTO:
-                    setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-                    break;
-            }
-        } else {
-            if (mSelectedClipIndexes != null) {
-                _advanceToClip(mMainPlayer,
-                        mClipCards.get(mSelectedClipIndexes.first),
-                        false);
-            }
-            super._startPlayback();
+        if (mSelectedClipIndexes != null) {
+            _advanceToClip(mMainPlayer,
+                    mClipCards.get(mSelectedClipIndexes.first),
+                    false);
         }
+        super._startPlayback();
     }
 }

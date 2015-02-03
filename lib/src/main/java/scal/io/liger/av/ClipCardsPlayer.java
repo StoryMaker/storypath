@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Surface;
@@ -77,35 +78,60 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private Timer mTimer;
     protected Handler mHandler;
 
-    private boolean mReady;
     private boolean mAdvancingClips;
-    protected boolean mIsPlaying;
-    private boolean mIsPaused;
     private int mCurrentPhotoElapsedTime;
     private int mPhotoSlideDurationMs = 5 * 1000;
     private int mClipCollectionDurationMs;
     protected float mRequestedVolume = FULL_VOLUME;
+    private PlayerState mState = PlayerState.PREPARING;
+    private boolean mPlaySecondaryTracks = true;
+
+    public static enum PlayerState {
+
+        /**
+         * Preparing for playback. This occurs briefly after construction while media is
+         * asynchronously analyzed.
+         * The only valid next state is READY
+         */
+        PREPARING,
+
+        /** Prepared to begin playback. Seeking via
+         * {@link #_advanceToClip(android.media.MediaPlayer, scal.io.liger.model.ClipCard, boolean)}
+         * or {@link #advanceToNextClip(android.media.MediaPlayer)}
+         * is valid in this state.
+         * The only valid next state is PLAYING
+         */
+        READY,
+
+        /** Playing. Seeking is valid in this state. Seeking via
+         * {@link #_advanceToClip(android.media.MediaPlayer, scal.io.liger.model.ClipCard, boolean)}
+         * or {@link #advanceToNextClip(android.media.MediaPlayer)}
+         * is valid in this state.
+         * The only valid next state is READY
+         */
+        PLAYING,
+
+    }
 
     private View.OnClickListener mPlaybackClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
             Log.i(TAG, "PlaybackClickListener fired");
-            if (!mReady ||
+            if (stateIs(PlayerState.PREPARING) ||
                 ((mCurrentlyPlayingCard.getMedium().equals(Constants.VIDEO) ||
                 mCurrentlyPlayingCard.getMedium().equals(Constants.AUDIO)) && mMainPlayer == null)) {
                 Toast.makeText(mContext, "Preparing for playback. Try again in a few seconds.", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            if (mIsPlaying) {
-                pausePlayback();
-            }
-            else if (mIsPaused) {
-                resumePlayback();
-            }
-            else {
-                startPlayback();
+            switch(mState) {
+                case PLAYING:
+                    pausePlayback();
+                    break;
+                case READY:
+                    resumePlayback();
+                    break;
             }
         }
     };
@@ -183,6 +209,14 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     // <editor-fold desc="Public API">
 
+    /**
+     * Create a new ClipCardsPlayer to play clipCards in order.
+     * Views will be provided to control playback, and their events will be handled internally.
+     * All resources will be automatically released when the containing views are destroyed.
+     * A client of this class should ordinarily have to take no action after construction.
+     *
+     * Must be called on the Main thread.
+     */
     public ClipCardsPlayer(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
         mContainerLayout = container;
         mClipCards = clipCards;
@@ -197,13 +231,28 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mSecondaryAudioUri = Uri.parse(mediaFile.getPath());
     }
 
+    /**
+     * Set whether secondary audio tracks (e.g: Narration, music) should be played.
+     * @param shouldPlay
+     */
+    public void setPlaySecondaryTracks(boolean shouldPlay) {
+        mPlaySecondaryTracks = shouldPlay;
+    }
+
+    /**
+     * Change the playback volume. This does not affect the stored volume data
+     * within any clips.
+     */
     public void setVolume(float volume) {
-        if (volume == MUTE_VOLUME) mMuteBtn.setChecked(true);
-        else mMuteBtn.setChecked(false);
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.VOLUME, volume));
     }
 
     protected void _setVolume(float volume) {
+        if (volume == MUTE_VOLUME)
+            mMuteBtn.setChecked(true);
+        else
+            mMuteBtn.setChecked(false);
+
         if (mMainPlayer != null) mMainPlayer.setVolume(volume, volume);
         if (mSecondaryPlayer != null) mSecondaryPlayer.setVolume(volume, volume);
         mRequestedVolume = volume;
@@ -230,12 +279,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     // </editor-fold desc="Public API">
 
     private void init() {
+        mPlaySecondaryTracks = true;
         mContext = mContainerLayout.getContext();
         mHandler = new ClipCardsPlayerHandler(this);
         inflateViews(mContainerLayout);
         attachViewListeners();
         mCurrentlyPlayingCard = mClipCards.get(0);
-        setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
+        displayThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
         calculateTotalClipCollectionLengthMsAsync(mClipCards);
         setupTimer();
     }
@@ -345,7 +395,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     private void _onTimerTick() {
         try {
-            if (mIsPlaying) {
+            if (stateIs(PlayerState.PLAYING)) {
                 //Log.i("Timer", "isPlaying");
                 int currentClipElapsedTime = 0;
                 switch (mCurrentlyPlayingCard.getMedium()) {
@@ -401,9 +451,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             case Constants.AUDIO:
                 try {
                     mMainPlayer = new MediaPlayer();
-                    mMainPlayer.setDataSource(mContext, Uri.parse(mCurrentlyPlayingCard.getSelectedMediaFile().getPath()));
+                    prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard);
                     mMainPlayer.setSurface(mSurface);
-                    prepareMainMediaPlayer(mMainPlayer);
                     mMainPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
                     mMainPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
@@ -432,7 +481,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        if (mTimer != null) mTimer.cancel();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
         release();
         return false;
     }
@@ -462,6 +514,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         _advanceToClip(player, mClipCards.get(nextClipIndex), !(nextClipIndex == 0));
     }
 
+    /**
+     * Advance player to the next clip.
+     * If autoPlay, player will be playing after this call completes, else prepared to play.
+     */
     protected void _advanceToClip(MediaPlayer player, ClipCard targetClip, boolean autoPlay) {
         if (mClipCards.indexOf(targetClip) == -1) {
             Log.e(TAG, "Invalid Card passed to _advanceToClip");
@@ -480,11 +536,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 try {
                     // Don't set isPlaying false. We're only 'stopping' to switch media sources
                     player.stop();
-                    player.reset();
                     Log.i(TAG, "Setting player data source " + media.toString());
-                    player.setDataSource(mContext, media);
+                    prepareMediaPlayer(player, mCurrentlyPlayingCard);
                     player.setSurface(mSurface);
-                    prepareMainMediaPlayer(player);
+                    mAdvancingClips = false;
                     if (autoPlay) _resumePlayback();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -492,54 +547,48 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 break;
 
             case Constants.PHOTO:
+                mCurrentPhotoElapsedTime = 0;
                 Log.i(TAG, "set currentelapsedtime to 0");
+                // FIXME if Photo, after this method concludes player is not prepared
+                // FIXME: Meaning we assume the rest of the ClipCards are also photos
                 if (firstClipCurrent()) {
-                    // Stop playback. With video / audio this would be handled onPreparedListener
                     _stopPlayback();
+                    if (mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
                 }
                 if (mThumbnailView != null) {
-                    setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
-                    if (!mIsPlaying && mPlaybackProgress != null) mPlaybackProgress.setProgress(0);
+                    displayThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
                 }
                 break;
         }
         mAdvancingClips = false;
     }
 
+    // TODO : Should Operate on a Collection of MediaPlayers for multi-track audio support
     protected void _startPlayback() {
-        mPlayBtn.setVisibility(View.GONE);
+        if (!isNewStateValid(PlayerState.PLAYING)) return; // Don't call #changeUiState as we yield to _resumePlayback
 
-        mIsPlaying = true;
-        // Connect narrationPlayer to narration mediaFile on each request to start playback
-        // to ensure we have the most current narration recording
-        if (mSecondaryAudioUri != null) {
-            if (mSecondaryPlayer == null) mSecondaryPlayer = MediaPlayer.create(mContext, mSecondaryAudioUri);
-            else {
-                // TODO Only necessary if narration media file changed
-                try {
-                    mSecondaryPlayer.reset();
-                    mSecondaryPlayer.setDataSource(mContext, mSecondaryAudioUri);
-                    mSecondaryPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        try {
+            // TODO: Adapt for multi-track audio. e.g : For audio track in ClipCard etc....
+            prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard);
+
+            if (mSecondaryAudioUri != null && mPlaySecondaryTracks) {
+                // TODO : All secondary audio tracks should have associated MediaFile and ClipMetadata
+                prepareMediaPlayer(mSecondaryPlayer,
+                                   new MediaFile(mSecondaryAudioUri.getPath(), Constants.AUDIO),
+                                   null);
             }
-            Log.i(TAG, "Starting narration player for uri " + mSecondaryAudioUri.toString());
-            mSecondaryPlayer.setVolume(mRequestedVolume, mRequestedVolume);
-            mSecondaryPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        mThumbnailView.setVisibility(View.VISIBLE);
 
         switch(mCurrentlyPlayingCard.getMedium()) {
             case Constants.VIDEO:
-                mThumbnailView.setVisibility(View.GONE);
             case Constants.AUDIO:
                 mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
                 mMainPlayer.start();
                 break;
             case Constants.PHOTO:
-                setThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
+                // do nothing
                 break;
         }
     }
@@ -553,7 +602,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void _pausePlayback() {
-        mPlayBtn.setVisibility(View.VISIBLE);
+        if (!changeUiState(PlayerState.READY)) return;
 
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.pause();
@@ -562,9 +611,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
             mSecondaryPlayer.pause();
         }
-
-        mIsPaused = true;
-        mIsPlaying = false;
     }
 
     /**
@@ -576,7 +622,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void _resumePlayback() {
-        mPlayBtn.setVisibility(View.GONE);
+        if (!changeUiState(PlayerState.PLAYING)) return;
 
         if (mMainPlayer != null && !mMainPlayer.isPlaying()) {
             mMainPlayer.start();
@@ -585,56 +631,86 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         if (mSecondaryPlayer != null && !mSecondaryPlayer.isPlaying()) {
             mSecondaryPlayer.start();
         }
-
-        mIsPaused = false;
-        mIsPlaying = true;
     }
 
     protected void _stopPlayback() {
-        mPlayBtn.setVisibility(View.VISIBLE);
-
-        mIsPaused = false;
-        mIsPlaying = false;
+        if (!changeUiState(PlayerState.READY)) return;
 
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.stop();
             mMainPlayer.reset();
+            _advanceToClip(mMainPlayer, mClipCards.get(0), false);
         }
 
         if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
             mSecondaryPlayer.stop();
             mSecondaryPlayer.reset();
         }
-
-        mCurrentlyPlayingCard = mClipCards.get(0);
-        mCurrentPhotoElapsedTime = 0;
     }
 
     /**
-     * Release all MediaPlayers when playback will no longer be required
+     * Release all MediaPlayers when playback will no longer be required.
+     * No ClipCardsPlayer behavior is defined after this call.
      */
     private void release() {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RELEASE));
     }
 
     private void _release() {
-        if (mMainPlayer != null) mMainPlayer.release();
-        if (mSecondaryPlayer != null) mSecondaryPlayer.release();
+        // This is the last method call and so we don't need to update UI state
+        if (mMainPlayer != null) {
+            mMainPlayer.release();
+            mMainPlayer = null;
+        }
+        if (mSecondaryPlayer != null) {
+            mSecondaryPlayer.release();
+            mSecondaryPlayer = null;
+        }
     }
 
     public boolean isPlaying() {
-        return mIsPlaying;
+        return stateIs(PlayerState.PLAYING);
     }
 
-    protected void prepareMainMediaPlayer(MediaPlayer mainPlayer) {
+    /**
+     * Set the data source, start time and volume indicated by clipCard. After this call
+     * it is safe to call player.start()
+     */
+    protected void prepareMediaPlayer(@Nullable MediaPlayer player,
+                                      @NonNull ClipCard clipCard)
+                                      throws IOException {
+
+        prepareMediaPlayer(player, clipCard.getSelectedMediaFile(), clipCard.getSelectedClip());
+    }
+
+    protected void prepareMediaPlayer(@Nullable MediaPlayer player,
+                                      @NonNull MediaFile mediaFile,
+                                      @Nullable ClipMetadata metaData)
+                                      throws IOException {
         try {
-            mainPlayer.prepare();
-            adjustAspectRatio(mTextureView, mainPlayer.getVideoWidth(), mainPlayer.getVideoHeight());
-            mAdvancingClips = false;
-            mainPlayer.seekTo(mCurrentlyPlayingCard.getSelectedClip().getStartTime());
+            Uri media = Uri.parse(mediaFile.getPath());
+
+            if (player == null)
+                player = MediaPlayer.create(mContext, media);
+            else {
+                player.reset();
+                player.setDataSource(mContext, media);
+            }
+
+            player.prepare();
+            adjustAspectRatio(mTextureView, player.getVideoWidth(), player.getVideoHeight());
+
+            if (metaData != null) {
+                player.seekTo(metaData.getStartTime());
+                // Specified clip volume is set unless player is muted
+                if (mRequestedVolume != MUTE_VOLUME) mRequestedVolume = metaData.getVolume();
+            }
+
+            player.setVolume(mRequestedVolume, mRequestedVolume);
         } catch (IOException e) {
-            Log.e(TAG, "Error preparing mediaplayer");
+            Log.e(TAG, "Error preparing mediaplayer for media " + mediaFile.getPath());
             e.printStackTrace();
+            throw e;
         }
     }
 
@@ -645,7 +721,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     /**
      * Set a thumbnail on the given ImageView for the given ClipCard
      */
-    protected void setThumbnailForClip(@NonNull ImageView thumbnail, @NonNull ClipCard clipCard) {
+    protected void displayThumbnailForClip(@NonNull ImageView thumbnail, @NonNull ClipCard clipCard) {
         // Clip has attached media. Show an appropriate preview
         // e.g: A thumbnail for video
 
@@ -733,7 +809,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     Log.e(TAG, "Unable to calculate ClipCard list duration! ClipCardsPlayer will not properly function");
                 } else {
                     mClipCollectionDurationMs = result;
-                    mReady = true;
+                    changeUiState(PlayerState.READY);
                 }
             }
         }.execute();
@@ -774,5 +850,72 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         //txform.postRotate(10);          // just for fun
         txform.postTranslate(xoff, yoff);
         textureView.setTransform(txform);
+    }
+
+    /**
+     * Change the UI state of the class if newState is a valid transition from the current state.
+     * This will NOT affect the state of the MediaPlayers or their progress Seekbars.
+     * This is intentional as the "pause" and "stop" states are identical in terms of the UI actions to perform
+     * Must be called from the main thread.
+     * @return whether the state change was successful.
+     */
+    protected boolean changeUiState(PlayerState newState) {
+        if (!isNewStateValid(newState)) {
+            Log.e(TAG, String.format("Cannot advance to state %s from %s", newState, mState));
+            return false;
+        }
+
+        mState = newState;
+
+        updateUI();
+        return true;
+    }
+
+    private void updateUI() {
+        switch(mState) {
+            case PREPARING:
+                // We are contructed into the PREPARING state and should never transition into it.
+                break;
+            case PLAYING:
+                mPlayBtn.setVisibility(View.GONE);
+                switch(mCurrentlyPlayingCard.getMedium()) {
+                    case Constants.VIDEO:
+                        mThumbnailView.setVisibility(View.GONE);
+                        break;
+                    case Constants.AUDIO:
+                    case Constants.PHOTO:
+                        displayThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
+                        break;
+                }
+                break;
+            case READY:
+                mPlayBtn.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    /**
+     * Return whether newState is a valid transition from current state
+     */
+    private boolean isNewStateValid(PlayerState newState) {
+        // Allow 'changing' to same state. This allows us to avoid an ADVANCING state which is
+        // currently managed as a sub-state within PLAYING via the mAdvancingClips variable.
+        // Advancing happens very quickly and synchronously so I view this oddity as the less
+        // complex and more maintainable solution
+        if (mState == newState) return true;
+
+        switch(mState) {
+            case PREPARING:
+                return newState == PlayerState.READY;
+            case PLAYING:
+                return newState == PlayerState.READY;
+            case READY:
+                return newState == PlayerState.PLAYING;
+        }
+        return false;
+    }
+
+    protected boolean stateIs(PlayerState targetState) {
+        return targetState == mState;
     }
 }
