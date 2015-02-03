@@ -113,8 +113,17 @@ public class ZipHelper {
 
             ArrayList<String> paths = new ArrayList<String>();
             paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+
             if (Constants.PATCH_VERSION > 0) {
-                paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+
+                // if the main file is newer than the patch file, do not apply a patch file
+                if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
+                    Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                } else {
+                    Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                    paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+                }
+
             }
 
             // add 3rd party stuff
@@ -151,7 +160,15 @@ public class ZipHelper {
             ArrayList<String> paths = new ArrayList<String>();
             paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
             if (Constants.PATCH_VERSION > 0) {
-                paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+
+                // if the main file is newer than the patch file, do not apply a patch file
+                if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
+                    Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                } else {
+                    Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                    paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+                }
+
             }
 
             // add 3rd party stuff

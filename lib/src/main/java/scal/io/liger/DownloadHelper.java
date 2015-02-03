@@ -4,6 +4,11 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import scal.io.liger.model.ExpansionIndexItem;
@@ -56,18 +61,44 @@ public class DownloadHelper {
         }
 
         if (Constants.PATCH_VERSION > 0) {
-            if (checkExpansionFiles(context, Constants.PATCH, Constants.PATCH_VERSION)) {
-                Log.d("DOWNLOAD", "PATCH EXPANSION FILE FOUND (NO DOWNLOAD)");
+
+            // if the main file is newer than the patch file, remove the patch file rather than downloading
+            if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
+                File obbDirectory = new File(ZipHelper.getObbFolderName(context));
+                File fileDirectory = new File(ZipHelper.getFileFolderName(context));
+
+                String nameFilter = Constants.PATCH + ".*." + context.getPackageName() + ".obb";
+
+                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + obbDirectory.getPath());
+
+                WildcardFileFilter obbFileFilter = new WildcardFileFilter(nameFilter);
+                for (File obbFile : FileUtils.listFiles(obbDirectory, obbFileFilter, null)) {
+                    Log.d("DOWNLOAD", "CLEANUP: FOUND " + obbFile.getPath() + ", DELETING");
+                    FileUtils.deleteQuietly(obbFile);
+                }
+
+                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + fileDirectory.getPath());
+
+                WildcardFileFilter fileFileFilter = new WildcardFileFilter(nameFilter);
+                for (File fileFile : FileUtils.listFiles(fileDirectory, fileFileFilter, null)) {
+                    Log.d("DOWNLOAD", "CLEANUP: FOUND " + fileFile.getPath() + ", DELETING");
+                    FileUtils.deleteQuietly(fileFile);
+                }
             } else {
-                Log.d("DOWNLOAD", "PATCH EXPANSION FILE NOT FOUND (DOWNLOADING)");
+                if (checkExpansionFiles(context, Constants.PATCH, Constants.PATCH_VERSION)) {
+                    Log.d("DOWNLOAD", "PATCH EXPANSION FILE FOUND (NO DOWNLOAD)");
+                } else {
+                    Log.d("DOWNLOAD", "PATCH EXPANSION FILE NOT FOUND (DOWNLOADING)");
 
-                final LigerDownloadManager patchDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
-                Thread patchDownloadThread = new Thread(patchDownload);
+                    final LigerDownloadManager patchDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
+                    Thread patchDownloadThread = new Thread(patchDownload);
 
-                Toast.makeText(context, "Starting download of patch for content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+                    Toast.makeText(context, "Starting download of patch for content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
-                patchDownloadThread.start();
+                    patchDownloadThread.start();
+                }
             }
+
         }
 
         HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledFileIndex(context);
