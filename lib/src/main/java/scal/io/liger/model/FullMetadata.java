@@ -57,7 +57,7 @@ public class FullMetadata implements Parcelable {
 
         this.startTime = Integer.parseInt(data[0]);
         this.stopTime = Integer.parseInt(data[1]);
-        this.volume = Integer.parseInt(data[2]);
+        this.volume = Float.parseFloat(data[2]);
         this.effect = data[3];
         this.type = data[4];
         this.medium = data[5];
