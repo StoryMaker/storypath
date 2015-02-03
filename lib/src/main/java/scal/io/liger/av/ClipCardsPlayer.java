@@ -656,7 +656,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mHandler.sendMessage(mHandler.obtainMessage(ClipCardsPlayerHandler.RELEASE));
     }
 
-    private void _release() {
+    protected void _release() {
         // This is the last method call and so we don't need to update UI state
         if (mMainPlayer != null) {
             mMainPlayer.release();

@@ -185,6 +185,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         setPlaySecondaryTracks(true);
         _changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = mRecorder.stopRecording();
+        mRecorder.reset();
         if (mListener != null && mf != null) mListener.onNarrationFinished(mf);
         if (stopPlayback) _stopPlayback();
     }
@@ -226,5 +227,13 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
                     false);
         }
         super._startPlayback();
+    }
+
+    @Override
+    protected void _release() {
+        super._release();
+        if (mRecorder != null) {
+            mRecorder.release();
+        }
     }
 }
