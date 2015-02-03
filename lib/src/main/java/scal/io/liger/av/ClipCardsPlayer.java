@@ -85,6 +85,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected float mRequestedVolume = FULL_VOLUME;
     private PlayerState mState = PlayerState.PREPARING;
     private boolean mPlaySecondaryTracks = true;
+    private boolean mAudioTracksDirty = true;
 
     public static enum PlayerState {
 
@@ -130,7 +131,12 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     pausePlayback();
                     break;
                 case READY:
-                    resumePlayback();
+                        try {
+                            if (mAudioTracksDirty) prepareSecondaryPlayers();
+                            resumePlayback();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     break;
             }
         }
@@ -229,6 +235,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     public void addAudioTrack(MediaFile mediaFile) {
         mSecondaryAudioUri = Uri.parse(mediaFile.getPath());
+        mAudioTracksDirty = true;
+        Log.d(TAG, "Audio track added " + mediaFile.getPath());
     }
 
     /**
@@ -446,14 +454,18 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
         mSurface = new Surface(surfaceTexture);
 
+        boolean isVideo = false;
         switch (mCurrentlyPlayingCard.getMedium()) {
             case Constants.VIDEO:
+                isVideo = true;
             case Constants.AUDIO:
                 try {
                     mMainPlayer = new MediaPlayer();
-                    prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard);
-                    mMainPlayer.setSurface(mSurface);
-                    mMainPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard, isVideo);
+                    //mMainPlayer.setSurface(mSurface);
+                    //mMainPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+                    // onCompletionListener is not cleared until #release() is called, so we can safely
+                    // attach it once here.
                     mMainPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -528,8 +540,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mCurrentlyPlayingCard = targetClip;
 
         Uri media;
+        boolean isVideo = false;
         switch (mCurrentlyPlayingCard.getMedium()) {
             case Constants.VIDEO:
+                isVideo = true;
             case Constants.AUDIO:
                 mTextureView.setVisibility(View.VISIBLE); // In case previous card wasn't video medium
                 media = Uri.parse(mCurrentlyPlayingCard.getSelectedMediaFile().getPath());
@@ -537,8 +551,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     // Don't set isPlaying false. We're only 'stopping' to switch media sources
                     player.stop();
                     Log.i(TAG, "Setting player data source " + media.toString());
-                    prepareMediaPlayer(player, mCurrentlyPlayingCard);
-                    player.setSurface(mSurface);
+                    prepareMediaPlayer(player, mCurrentlyPlayingCard, isVideo);
+                    //player.setSurface(mSurface);
                     mAdvancingClips = false;
                     if (autoPlay) _resumePlayback();
                 } catch (IOException e) {
@@ -569,28 +583,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         try {
             // TODO: Adapt for multi-track audio. e.g : For audio track in ClipCard etc....
-            prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard);
-
-            if (mSecondaryAudioUri != null && mPlaySecondaryTracks) {
-                // TODO : All secondary audio tracks should have associated MediaFile and ClipMetadata
-                prepareMediaPlayer(mSecondaryPlayer,
-                                   new MediaFile(mSecondaryAudioUri.getPath(), Constants.AUDIO),
-                                   null);
-            }
+            prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard, true);
+            prepareSecondaryPlayers();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        switch(mCurrentlyPlayingCard.getMedium()) {
-            case Constants.VIDEO:
-            case Constants.AUDIO:
-                mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
-                mMainPlayer.start();
-                break;
-            case Constants.PHOTO:
-                // do nothing
-                break;
-        }
+        _resumePlayback();
     }
 
     /**
@@ -625,10 +624,12 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         if (!changeUiState(PlayerState.PLAYING)) return;
 
         if (mMainPlayer != null && !mMainPlayer.isPlaying()) {
+            mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
             mMainPlayer.start();
         }
 
         if (mSecondaryPlayer != null && !mSecondaryPlayer.isPlaying()) {
+            mSecondaryPlayer.setVolume(mRequestedVolume, mRequestedVolume);
             mSecondaryPlayer.start();
         }
     }
@@ -676,29 +677,30 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
      * Set the data source, start time and volume indicated by clipCard. After this call
      * it is safe to call player.start()
      */
-    protected void prepareMediaPlayer(@Nullable MediaPlayer player,
-                                      @NonNull ClipCard clipCard)
+    protected void prepareMediaPlayer(@NonNull MediaPlayer player,
+                                      @NonNull ClipCard clipCard,
+                                      boolean isVideo)
                                       throws IOException {
 
-        prepareMediaPlayer(player, clipCard.getSelectedMediaFile(), clipCard.getSelectedClip());
+        prepareMediaPlayer(player, clipCard.getSelectedMediaFile(), clipCard.getSelectedClip(), isVideo);
     }
 
-    protected void prepareMediaPlayer(@Nullable MediaPlayer player,
+    protected void prepareMediaPlayer(@NonNull MediaPlayer player,
                                       @NonNull MediaFile mediaFile,
-                                      @Nullable ClipMetadata metaData)
+                                      @Nullable ClipMetadata metaData,
+                                      boolean isVideo)
                                       throws IOException {
         try {
+            Log.d(TAG, "Preparing " + (isVideo ? "video" : "audio") + " media player for file " + mediaFile.getPath());
             Uri media = Uri.parse(mediaFile.getPath());
-
-            if (player == null)
-                player = MediaPlayer.create(mContext, media);
-            else {
-                player.reset();
-                player.setDataSource(mContext, media);
-            }
-
+            player.reset();
+            player.setDataSource(mContext, media);
             player.prepare();
-            adjustAspectRatio(mTextureView, player.getVideoWidth(), player.getVideoHeight());
+
+            if (isVideo) {
+                player.setSurface(mSurface);
+                adjustAspectRatio(mTextureView, player.getVideoWidth(), player.getVideoHeight());
+            }
 
             if (metaData != null) {
                 player.seekTo(metaData.getStartTime());
@@ -917,5 +919,17 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     protected boolean stateIs(PlayerState targetState) {
         return targetState == mState;
+    }
+
+    private void prepareSecondaryPlayers() throws IOException {
+        if (mSecondaryAudioUri != null && mPlaySecondaryTracks) {
+            // TODO : All secondary audio tracks should have associated MediaFile and ClipMetadata
+            if (mSecondaryPlayer == null) mSecondaryPlayer = new MediaPlayer();
+            prepareMediaPlayer(mSecondaryPlayer,
+                    new MediaFile(mSecondaryAudioUri.getPath(), Constants.AUDIO),
+                    null,
+                    false);
+            mAudioTracksDirty = false;
+        }
     }
 }
