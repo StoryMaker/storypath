@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +47,16 @@ public class Util {
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
         ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
-        Intent i = new Intent();
-        i.setAction(Constants.ACTION_PUBLISH);
-        i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
-        i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
-        host.startActivity(i);
-        host.finish(); // Do we definitely want to finish the host Activity?
+        if (exportMetadata.size() > 0) {
+            Intent i = new Intent();
+            i.setAction(Constants.ACTION_PUBLISH);
+            i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
+            i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
+            host.startActivity(i);
+            host.finish(); // Do we definitely want to finish the host Activity?
+        } else {
+            Toast.makeText(host, host.getString(R.string.this_story_has_no_clips_to_publish), Toast.LENGTH_LONG).show();
+        }
     }
 
     public static int safeLongToInt(long l) {

@@ -163,6 +163,7 @@
     <string name="cancel">Cancel</string>
     <string name="trim_clip">Trim Clip</string>
     <string name="narration">Narration</string>
+    <string name="this_story_has_no_clips_to_publish">This story has no clips to publish!</string>
 
     <!-- add for libra end -->
 </resources>
