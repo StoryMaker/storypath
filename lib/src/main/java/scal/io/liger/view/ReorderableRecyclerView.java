@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -69,6 +70,13 @@ public class ReorderableRecyclerView extends RecyclerView {
 
     public ReorderableRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    public void setLayoutManager(LayoutManager layout) {
+        if (!(layout instanceof LinearLayoutManager)) {
+            throw new IllegalArgumentException("LayoutManager must be a LinearLayoutManager");
+        }
+        super.setLayoutManager(layout);
     }
 
     public void startReorderDrag(View view, int position) {
@@ -359,7 +367,7 @@ public class ReorderableRecyclerView extends RecyclerView {
 
     /** Retrieves the view in the list corresponding to itemID */
     public View getViewForID (long itemID) {
-        int firstVisiblePosition = 0; // TODO: How to get first visible position    ?
+        int firstVisiblePosition = ((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition();
         for(int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
             int position = firstVisiblePosition + i;
