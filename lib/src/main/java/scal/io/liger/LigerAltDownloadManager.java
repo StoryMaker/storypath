@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 
 import scal.io.liger.model.ExpansionIndexItem;
 
@@ -173,15 +174,67 @@ public class LigerAltDownloadManager implements Runnable {
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
         initDownloadManager();
 
-        Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+        // need to check if a download has already been queued for this file
+        HashMap<Long, String> queueMap = QueueManager.loadQueue(context);
+        boolean foundInQueue = false;
+        for (Long queueId : queueMap.keySet()) {
+            if (uriFile.toString().equals(queueMap.get(queueId))) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(queueId.longValue());
+                Cursor c = manager.query(query);
+                if (c.moveToFirst()) {
 
-        lastDownload = manager.enqueue(new DownloadManager.Request(uri)
-                              .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                              .setAllowedOverRoaming(false)
-                              .setTitle(title)
-                              .setDescription(desc)
-                              .setVisibleInDownloadsUi(false)
-                              .setDestinationUri(uriFile));
+                    int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                    if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
+
+                        Log.d("QUEUE", "DOWNLOAD STATUS FAILED, RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+                    } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
+
+                        Log.d("QUEUE", "DOWNLOAD STATUS PAUSED, NOT QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        foundInQueue = true;
+
+                    } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
+
+                        Log.d("QUEUE", "DOWNLOAD STATUS PENDING, NOT QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        foundInQueue = true;
+
+                    } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
+
+                        Log.d("QUEUE", "DOWNLOAD STATUS RUNNING, NOT QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        foundInQueue = true;
+
+                    } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+
+                        Log.d("QUEUE", "DOWNLOAD STATUS SUCCESS, COMPLETE SO RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+                    } else {
+
+                        Log.d("QUEUE", "DOWNLOAD STATUS UNKNOWN, RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+                    }
+                }
+            }
+        }
+
+        if (!foundInQueue) {
+
+            Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+
+            lastDownload = manager.enqueue(new DownloadManager.Request(uri)
+                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(false)
+                .setTitle(title)
+                .setDescription(desc)
+                .setVisibleInDownloadsUi(false)
+                .setDestinationUri(uriFile));
+
+            QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriFile.toString());
+
+        }
     }
 
     private synchronized void initDownloadManager() {
@@ -219,6 +272,9 @@ public class LigerAltDownloadManager implements Runnable {
                 if (c.moveToFirst()) {
                     int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
                     if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+
+                        Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
+                        QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
 
                         String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                         File savedFile = new File(Uri.parse(uriString).getPath());
