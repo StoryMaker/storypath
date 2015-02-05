@@ -169,6 +169,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             mCardsPlayer.addAudioTrack(narration);
         }
         mCardModel.getStoryPath().getStoryPathLibrary().save(true);
+        mCardModel.getStoryPath().notifyCardChanged(mCardModel);
     }
 
     @Override
