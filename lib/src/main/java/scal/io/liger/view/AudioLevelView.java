@@ -42,6 +42,7 @@ import scal.io.liger.R;
  */
 public class AudioLevelView extends TextureView implements TextureView.SurfaceTextureListener{
     private static final String TAG = "AudioLevelView";
+    private static final boolean VERBOSE = false;
 
     // The number of buffer frames to keep around.
     private static final int HISTORY_SIZE = 30;
@@ -117,7 +118,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
         mAudioData.addLast(maxAmplitude);
 
         final Canvas canvas = lockCanvas();
-        Log.d(TAG, "Canvas accelerated? " + canvas.isHardwareAccelerated());
+        //Log.d(TAG, "Canvas accelerated? " + canvas.isHardwareAccelerated());
         drawWaveform(canvas);
         unlockCanvasAndPost(canvas);
     }
@@ -164,7 +165,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
             brightness += brightDelta;
             lastX += pixelsPerSample;
         }
-        Log.d(TAG, "Drew waveform in " + (System.currentTimeMillis() - startTime) + " ms");
+        if (VERBOSE) Log.d(TAG, "Drew waveform in " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override
