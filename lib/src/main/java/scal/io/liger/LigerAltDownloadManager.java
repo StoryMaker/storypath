@@ -17,9 +17,6 @@ import com.google.android.vending.licensing.LicenseCheckerCallback;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,6 +25,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import info.guardianproject.onionkit.trust.StrongHttpsClient;
+import info.guardianproject.onionkit.ui.OrbotHelper;
 import scal.io.liger.model.ExpansionIndexItem;
 
 /**
@@ -42,9 +45,13 @@ public class LigerAltDownloadManager implements Runnable {
     private String fileName;
     private Context context;
 
-    boolean useManager = true;
     private DownloadManager manager;
     private long lastDownload = -1L;
+
+    StrongHttpsClient mClient = null;
+
+    boolean useManager = true;
+    boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
 
     public LigerAltDownloadManager(String fileName, Context context, boolean useManager) {
         this.fileName = fileName;
@@ -129,8 +136,16 @@ public class LigerAltDownloadManager implements Runnable {
                     }
 
                     File targetFile = new File(targetFolder, ligerObb + ".tmp");
-                    downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
+
+                    if (checkTor(useTor, context)) {
+                        downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, targetFile);
+                    } else {
+                        downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
+                    }
                 } else {
+
+                    // useManager IS HARDCODED SO THIS CODE SHOULD PROBABLY BE REMOVED
+
                     expansionFileUri = new URI(ligerUrl + ligerObb);
 
                     DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -169,6 +184,132 @@ public class LigerAltDownloadManager implements Runnable {
             Log.e("DOWNLOAD", "DOWNLOAD ERROR: " + ligerUrl + ligerObb + " -> " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void downloadWithTor(Uri uri, String title, String desc, File targetFile) {
+        Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
+
+        StrongHttpsClient httpClient = getHttpClientInstance();
+        httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
+
+        Log.d("DOWNLOAD/TOR", "CHECKING URI: " + uri.toString());
+
+        try {
+            HttpGet request = new HttpGet(uri.toString());
+            HttpResponse response = httpClient.execute(request);
+            HttpEntity entity = response.getEntity();
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            if (statusCode == 200) {
+                Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, STATUS CODE: " + statusCode);
+
+                targetFile.getParentFile().mkdirs();
+
+                BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
+
+                try {
+                    FileOutputStream targetOutput = new FileOutputStream(targetFile);
+                    byte[] buf = new byte[1024];
+                    int i;
+                    while ((i = responseInput.read(buf)) > 0) {
+                        targetOutput.write(buf, 0, i);
+                    }
+                    targetOutput.close();
+                    responseInput.close();
+                    Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
+
+                    if (!handleFile(targetFile)) {
+                        Log.d("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING");
+                        return;
+                    }
+                } catch (IOException ioe) {
+                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + targetFile + " -> " + ioe.getMessage());
+                    ioe.printStackTrace();
+                }
+            } else {
+                Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED, STATUS CODE: " + statusCode);
+            }
+        } catch (IOException ioe) {
+            Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED, EXCEPTION: " + ioe.getMessage());
+        }
+    }
+
+    private synchronized StrongHttpsClient getHttpClientInstance() {
+        if (mClient == null) {
+            mClient = new StrongHttpsClient(context);
+        }
+
+        return mClient;
+    }
+
+    public static boolean checkTor(boolean useTor, Context mContext) {
+        OrbotHelper orbotHelper = new OrbotHelper(mContext);
+
+        if(useTor && orbotHelper.isOrbotRunning()) {
+            Log.d("DOWNLOAD/TOR", "ORBOT RUNNING, USE TOR");
+            return true;
+        } else {
+            Log.d("DOWNLOAD/TOR", "ORBOT NOT RUNNING, DON'T USE TOR");
+            return false;
+        }
+    }
+
+    private boolean handleFile (File targetFile) {
+
+        // additional error checking
+        if (targetFile.exists()) {
+            if (targetFile.length() == 0) {
+                Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + targetFile.getPath() + " BUT IT IS A ZERO BYTE FILE");
+                return false;
+            } else {
+                Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + targetFile.getPath() + " AND FILE LOOKS OK");
+            }
+        } else {
+            Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + targetFile.getPath() + " BUT IT DOES NOT EXIST");
+            return false;
+        }
+
+        // move .tmp file to actual file
+        File newFile = new File(targetFile.getPath().substring(0, targetFile.getPath().lastIndexOf(".")));
+        Log.d("DOWNLOAD", "ACTUAL FILE: " + newFile.getAbsolutePath());
+
+        try {
+            // clean up old obbs before renaming new file
+            File directory = new File(newFile.getParent());
+
+            ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(newFile.getName());
+
+            if (expansionIndexItem == null) {
+                Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + newFile.getName());
+                return false;
+            }
+
+            String nameFilter = "";
+            if (newFile.getName().contains(expansionIndexItem.getExpansionFileVersion())) {
+                nameFilter = newFile.getName().replace(expansionIndexItem.getExpansionFileVersion(), "*");
+            } else {
+                nameFilter = newFile.getName();
+            }
+
+            Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
+
+            WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
+            for (File oldFile : FileUtils.listFiles(directory, oldFileFilter, null)) {
+                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                FileUtils.deleteQuietly(oldFile);
+            }
+
+            FileUtils.moveFile(targetFile, newFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
+            if (targetFile.exists()) {
+                FileUtils.deleteQuietly(targetFile); // for some reason I was getting an 0kb .tmp file lingereing
+            }
+        } catch (IOException ioe) {
+            Log.e("DOWNLOAD", "ERROR DURING CLEANUP/MOVING TEMP FILE: " + ioe.getMessage());
+            return false;
+        }
+
+        Log.d("DOWNLOAD", "MOVED TEMP FILE " + targetFile.getPath() + " TO " + newFile.getPath());
+        return true;
     }
 
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
@@ -225,12 +366,12 @@ public class LigerAltDownloadManager implements Runnable {
             Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
             lastDownload = manager.enqueue(new DownloadManager.Request(uri)
-                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                .setAllowedOverRoaming(false)
-                .setTitle(title)
-                .setDescription(desc)
-                .setVisibleInDownloadsUi(false)
-                .setDestinationUri(uriFile));
+                    .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setTitle(title)
+                    .setDescription(desc)
+                    .setVisibleInDownloadsUi(false)
+                    .setDestinationUri(uriFile));
 
             QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriFile.toString());
 
@@ -280,69 +421,23 @@ public class LigerAltDownloadManager implements Runnable {
                         File savedFile = new File(Uri.parse(uriString).getPath());
                         Log.d("DOWNLOAD", "MANAGER SAVED DOWNLOAD TO " + savedFile.getPath());
 
-                        // additional error checking
-                        if (savedFile.exists()) {
-                            if (savedFile.length() == 0) {
-                                Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + savedFile.getPath() + " BUT IT IS A ZERO BYTE FILE");
-                                return;
-                            } else {
-                                Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + savedFile.getPath() + " AND FILE LOOKS OK");
-                            }
-                        } else {
-                            Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + savedFile.getPath() + " BUT IT DOES NOT EXIST");
-                            return;
-                        }
-
-                        // move .tmp file to actual file
-                        File newFile = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
-                        Log.d(TAG, "newFile: " + newFile.getAbsolutePath());
+                        File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
                         if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + newFile.getName() + " BUT THAT FILE WAS ALREADY PROCESSED");
+                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THAT FILE WAS ALREADY PROCESSED");
                             return;
-                        } else if (!newFile.getName().equals(fileFilter)) {
-                            Log.d("DOWNLOAD", "GOT FILE " + newFile.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                        } else if (!fileCheck.getName().equals(fileFilter)) {
+                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
                             return;
                         } else {
-                            Log.d("DOWNLOAD", "GOT FILE " + newFile.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
                             fileReceived = true;
                         }
 
-                        try {
-                            // clean up old obbs before renaming new file
-                            File directory = new File(newFile.getParent());
-
-                            ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(newFile.getName());
-
-                            if (expansionIndexItem == null) {
-                                Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + newFile.getName());
-                                return;
-                            }
-
-                            String nameFilter = "";
-                            if (newFile.getName().contains(expansionIndexItem.getExpansionFileVersion())) {
-                                nameFilter = newFile.getName().replace(expansionIndexItem.getExpansionFileVersion(), "*");
-                            } else {
-                                nameFilter = newFile.getName();
-                            }
-
-                            Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
-
-                            WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
-                            for (File oldFile : FileUtils.listFiles(directory, oldFileFilter, null)) {
-                                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
-                                FileUtils.deleteQuietly(oldFile);
-                            }
-
-                            FileUtils.moveFile(savedFile, newFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
-                            if (savedFile.exists()) {
-                                FileUtils.deleteQuietly(savedFile); // for some reason I was getting an 0kb .tmp file lingereing
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (!handleFile(savedFile)) {
+                            Log.d("DOWNLOAD", "ERROR DURING FILE PROCESSING");
+                            return;
                         }
-                        Log.d("DOWNLOAD", "MOVED TEMP FILE " + savedFile.getPath() + " TO " + newFile.getPath());
-
                     } else {
                         Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK");
                     }

@@ -68,6 +68,9 @@ public class Constants {
     public static final int MAIN_VERSION = 1024;
     public static final int PATCH_VERSION = 1020;
 
+    public final static String TOR_PROXY_HOST = "localhost";
+    public final static int TOR_PROXY_PORT = 8118;
+
     public static final String EXTRA_STORY_TITLE = "story_title";
     public static final String EXTRA_EXPORT_CLIPS = "export_clips";
 
