@@ -116,6 +116,8 @@ public class JsonHelper {
                 jsonString = new String(buffer);
             } catch (IOException e) {
                 Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED: " + e.getMessage());
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED (STREAM WAS NULL): " + npe.getMessage());
             }
         } else {
             System.err.println("SD CARD NOT FOUND");
@@ -177,6 +179,8 @@ public class JsonHelper {
                 jsonString = new String(buffer);
             } catch (IOException e) {
                 Log.e(TAG, "READING JSON FILE FRON SD CARD FAILED: " + e.getMessage());
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED (STREAM WAS NULL): " + npe.getMessage());
             }
         } else {
             Log.e(TAG, "SD CARD NOT FOUND");
@@ -226,8 +230,10 @@ public class JsonHelper {
                     Log.d("LANGUAGE", "loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
                 }
 
-                if (jsonStream == null)
+                if (jsonStream == null) {
+                    Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
                     return null;
+                }
 
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
@@ -597,6 +603,11 @@ public class JsonHelper {
             try {
                 InputStream jsonStream = new FileInputStream(f);
 
+                if (jsonStream == null) {
+                    Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed (stream was null)");
+                    return null;
+                }
+
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
                 jsonStream.read(buffer);
@@ -646,6 +657,11 @@ public class JsonHelper {
                     Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
                 } else {
                     Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+                }
+
+                if (jsonStream == null) {
+                    Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed (stream was null)");
+                    return null;
                 }
 
                 int size = jsonStream.available();
@@ -890,6 +906,11 @@ public class JsonHelper {
             try {
                 InputStream jsonStream = new FileInputStream(f);
 
+                if (jsonStream == null) {
+                    Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed (stream was null)");
+                    return null;
+                }
+
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
                 jsonStream.read(buffer);
@@ -940,6 +961,11 @@ public class JsonHelper {
                     Log.d("LANGUAGE", "loadStoryPathFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
                 }
 
+                if (jsonStream == null) {
+                    Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed (stream was null)");
+                    return null;
+                }
+
                 int size = jsonStream.available();
                 byte[] buffer = new byte[size];
                 jsonStream.read(buffer);
@@ -947,9 +973,6 @@ public class JsonHelper {
                 storyPathJson = new String(buffer);
             } catch (IOException ioe) {
                 Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + ioe.getMessage());
-                return null;
-            } catch (NullPointerException npe) {
-                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + npe.getMessage());
                 return null;
             }
 
