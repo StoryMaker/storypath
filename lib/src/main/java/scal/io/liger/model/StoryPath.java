@@ -1215,7 +1215,7 @@ public class StoryPath {
         ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
         for (ClipCard card: cards) {
             MediaFile mediaFile = card.getSelectedMediaFile();
-            if (mediaFile != null) {
+            if ((mediaFile != null) && (mediaFile.getThumbnailFilePath() != null)) {
                 return mediaFile.getThumbnailFilePath();
             }
         }

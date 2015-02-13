@@ -3,12 +3,14 @@ package scal.io.liger.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 import scal.io.liger.MediaHelper;
 
@@ -53,6 +55,10 @@ public class MediaFile implements Cloneable {
         return thumbnailFilePath;
     }
 
+    public void setThumbnailFilePath(String thumbnailFilePath) {
+        this.thumbnailFilePath = thumbnailFilePath;
+    }
+
     /**
      * Load a thumbnail representation of this MediaFile into the target ImageView.
      * TODO : Disk cache, multiple sizes
@@ -77,7 +83,6 @@ public class MediaFile implements Cloneable {
                    .load(new File(thumbnailFilePath))
                    .into(target);
         }
-
     }
 
     @Override

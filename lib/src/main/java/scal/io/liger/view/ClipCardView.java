@@ -48,6 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,6 +56,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
+import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.av.AudioRecorder;
 import scal.io.liger.av.ClipCardsPlayer;
@@ -493,8 +495,44 @@ public class ClipCardView extends ExampleCardView {
             setClipExampleDrawables(clipType, ivThumbnail);
             ivThumbnail.setVisibility(View.VISIBLE);
         } else {
+            boolean needThumbnail = (mediaFile.getThumbnailFilePath() == null);
+
             mediaFile.loadThumbnail(ivThumbnail);
             ivThumbnail.setVisibility(View.VISIBLE);
+
+            if (needThumbnail) {
+                Log.d(TAG, "NEED THUMBNAIL");
+                // need to update media file in model now that thumbnail is set
+                // being overly cautious to avoid null pointers
+                if ((mCardModel.getStoryPath() != null) &&
+                        (mCardModel.getStoryPath().getStoryPathLibrary() != null) &&
+                        (mCardModel.getStoryPath().getStoryPathLibrary().getMediaFiles() != null)) {
+                    HashMap<String, MediaFile> mediaFiles = mCardModel.getStoryPath().getStoryPathLibrary().getMediaFiles();
+                    for (String key : mediaFiles.keySet()) {
+                        MediaFile updatedFile = mediaFiles.get(key);
+                        if (updatedFile.getPath().equals(mediaFile.getPath())) {
+                            File actualFile = new File(updatedFile.getPath());
+                            try {
+                                File thumbnailFile = MediaHelper.getThumbnailFileForMediaFile(actualFile);
+                                Log.d(TAG, "CREATED THUMBNAIL FOR " + actualFile.getPath() + ", SETTING PATH: " + thumbnailFile.getPath());
+                                updatedFile.setThumbnailFilePath(thumbnailFile.getPath());
+                                mCardModel.getStoryPath().getStoryPathLibrary().saveMediaFile(key, updatedFile);
+
+                                // set metadata too
+                                if (mCardModel.getStoryPath().getStoryPathLibrary().getMetaThumbnail() == null) {
+                                    mCardModel.getStoryPath().getStoryPathLibrary().setMetaThumbnail(thumbnailFile.getPath());
+                                }
+
+                                // force save to store mediafile/metadata updates
+                                // shouldn't need to save story path at this point
+                                mCardModel.getStoryPath().getStoryPathLibrary().save(false);
+                            } catch (IOException ioe) {
+                                Log.e(TAG, "COULD NOT CREATE THUMBNAIL FOR " + mediaFile.getPath() + ", AN EXCEPTION WAS THROWN: " + ioe.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
