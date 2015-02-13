@@ -496,7 +496,7 @@ public class StoryPath {
         }
 
         // determine location of app folder
-        String basePath = JsonHelper.getSdLigerFilePath();
+        String basePath = JsonHelper.getSdLigerFilePath(context);
 
         // flatten path
         String flatPath = originalPath.replace(File.separatorChar, '_');

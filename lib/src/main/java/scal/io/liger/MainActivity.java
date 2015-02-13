@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             String jsonFilePath = null;
             String json = null;
             if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_ID)) {
-                jsonFilePath = JsonHelper.getJsonPathByKey(i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
+                jsonFilePath = JsonHelper.getJsonPathByKey(this, i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
                 json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
             } else if (i.hasExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH)) {
                 jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH);
@@ -212,7 +212,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         SharedPreferences sp = getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String[] jsonFiles = JsonHelper.getJSONFileList();
+        String[] jsonFiles = JsonHelper.getJSONFileList(this);
 
         //should never happen
         if(jsonFiles.length == 0) {

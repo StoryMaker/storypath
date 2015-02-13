@@ -300,7 +300,7 @@ public class IndexManager {
 
     public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList, String language) {
 
-        ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles();
+        ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles(context);
 
         boolean forceSave = false; // need to resolve issue of unset language in existing record preventing update to index
 
