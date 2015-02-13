@@ -302,6 +302,8 @@ public class IndexManager {
 
         ArrayList<File> instanceFiles = JsonHelper.getLibraryInstanceFiles();
 
+        boolean forceSave = false; // need to resolve issue of unset language in existing record preventing update to index
+
         int initialSize = indexList.size();
 
         for (final File f : instanceFiles) {
@@ -309,6 +311,8 @@ public class IndexManager {
                 Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
             } else {
                 Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+
+                forceSave = true;
 
                 String[] parts = FilenameUtils.removeExtension(f.getName()).split("-");
                 String datePart = parts[parts.length - 1]; // FIXME make more robust
@@ -355,7 +359,7 @@ public class IndexManager {
                             newItem.setStoryType(currentStoryPath.getMedium());
                         }
                         if (newItem.getStoryThumbnailPath() == null) {
-                            newItem.setStoryThumbnailPath(currentStoryPath.getCoverImageThumbnailPath());
+                            newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
                         }
                     }
                 } else {
@@ -367,7 +371,7 @@ public class IndexManager {
         }
 
         // persist updated index (if necessary)
-        if (indexList.size() == initialSize) {
+        if ((indexList.size() == initialSize) && !forceSave) {
             Log.d("INDEX", "NOTHING ADDED TO INSTANCE INDEX, NO SAVE");
         } else {
             Log.d("INDEX", (indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, SAVING");
