@@ -505,21 +505,29 @@ public class ClipCardView extends ExampleCardView {
                         if ((mCardModel.getStoryPath() != null) &&
                             (mCardModel.getStoryPath().getStoryPathLibrary() != null)) {
 
-                            HashMap<String, MediaFile> mediaFiles = mCardModel.getStoryPath().getStoryPathLibrary().getMediaFiles();
+                            HashMap<String, MediaFile> mediaFiles = mCardModel.getStoryPath()
+                                                                              .getStoryPathLibrary()
+                                                                              .getMediaFiles();
+                            MediaFile targetMediaFile = null;
                             for (String key : mediaFiles.keySet()) {
-                                MediaFile updatedFile = mediaFiles.get(key);
-                                if (updatedFile.getPath().equals(mediaFile.getPath())) {
-                                    mCardModel.getStoryPath().getStoryPathLibrary().saveMediaFile(mediaFile.getPath(), mediaFile);
-
-                                    // set metadata too
-                                    if (mCardModel.getStoryPath().getStoryPathLibrary().getMetaThumbnail() == null) {
-                                        mCardModel.getStoryPath().getStoryPathLibrary().setMetaThumbnail(thumbnail.getPath());
-                                    }
-
-                                    // force save to store mediafile/metadata updates
-                                    // shouldn't need to save story path at this point
-                                    mCardModel.getStoryPath().getStoryPathLibrary().save(false);
+                                MediaFile candidateMediaFile = mediaFiles.get(key);
+                                if (candidateMediaFile.getPath().equals(mediaFile.getPath())) {
+                                    targetMediaFile = candidateMediaFile;
                                 }
+                            }
+                            if (targetMediaFile != null) {
+                                mCardModel.getStoryPath().getStoryPathLibrary().saveMediaFile(mediaFile.getPath(), mediaFile);
+
+                                // set metadata too
+                                if (mCardModel.getStoryPath().getStoryPathLibrary().getMetaThumbnail() == null) {
+                                    mCardModel.getStoryPath().getStoryPathLibrary().setMetaThumbnail(thumbnail.getPath());
+                                }
+
+                                // force save to store mediafile/metadata updates
+                                // shouldn't need to save story path at this point
+                                mCardModel.getStoryPath().getStoryPathLibrary().save(false);
+                            } else {
+                                Log.w(TAG, "Could not find MediaFile corresponding to new thumbnail");
                             }
                         }
                 }
