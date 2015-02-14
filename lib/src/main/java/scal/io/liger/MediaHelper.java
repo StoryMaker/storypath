@@ -244,8 +244,15 @@ public class MediaHelper {
             if (thumbnailFile.exists()) {
                 return thumbnailFile;
             } else {
-                File newThumbnail = generateThumbnail(target.getContext(), media, mediaType);
-                if (callback != null) callback.newThumbnailGenerated(newThumbnail);
+                final File newThumbnail = generateThumbnail(target.getContext(), media, mediaType);
+                if (callback != null) {
+                    target.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.newThumbnailGenerated(newThumbnail);
+                        }
+                    });
+                }
                 return newThumbnail;
             }
         } catch (IOException e) {
