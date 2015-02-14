@@ -12,11 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import scal.io.liger.R;
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
@@ -25,11 +28,12 @@ import scal.io.liger.model.MediaFile;
  * Created by davidbrodsky on 10/23/14.
  */
 public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAdapter.ViewHolder> {
-    public static final String TAG = "OrderMediaAdapter";
+    public static final String TAG = "NarrationMediaAdapter";
 
     private RecyclerView mRecyclerView;
     private HashMap<ClipCard, Long> mCardToStableId = new HashMap<>();
     private List<ClipCard> mClipCards;
+    private ArrayList<AudioClip> mAudioClips;
     private Boolean[] mSelectedItems;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -48,9 +52,10 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         }
     }
 
-    public NarrationMediaAdapter(RecyclerView recyclerView, List<ClipCard> cards) {
+    public NarrationMediaAdapter(RecyclerView recyclerView, List<ClipCard> cards, ArrayList<AudioClip> audioClips) {
         mRecyclerView = recyclerView;
         mClipCards = cards;
+        mAudioClips = audioClips;
         long id = 0;
         for (ClipCard card : mClipCards) {
             mCardToStableId.put(card, id++);

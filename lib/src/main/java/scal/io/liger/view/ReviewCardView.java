@@ -25,6 +25,7 @@ import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.av.ClipCardsNarrator;
 import scal.io.liger.av.ClipCardsPlayer;
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
@@ -44,6 +45,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     private ReviewCard mCardModel;
     /** Collection of ClipCards with attached media within the current StoryPath. */
     private ArrayList<ClipCard> mMediaCards;
+    private ArrayList<AudioClip> mAudioClips;
     private ClipCardsPlayer mCardsPlayer;
 //    private Context mContext;
     private String mMedium;
@@ -124,7 +126,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
                 if (mMediaCards.size() > 0) {
                     NarrationPopup narrationPopup = new NarrationPopup((MainActivity) mCardModel.getStoryPath().getContext());
-                    narrationPopup.show(mMediaCards, ReviewCardView.this);
+                    narrationPopup.show(mMediaCards, mAudioClips, ReviewCardView.this);
                     if (mCardsPlayer != null && mCardsPlayer.isPlaying()) mCardsPlayer.stopPlayback();
                 } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_narrating), Toast.LENGTH_SHORT).show();
