@@ -583,7 +583,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         try {
             // TODO: Adapt for multi-track audio. e.g : For audio track in ClipCard etc....
-            prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard, true);
+            if (!mCurrentlyPlayingCard.getMedium().equals(Constants.PHOTO))
+                prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard, true);
             prepareSecondaryPlayers();
         } catch (IOException e) {
             e.printStackTrace();
@@ -623,7 +624,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _resumePlayback() {
         if (!changeUiState(PlayerState.PLAYING)) return;
 
-        if (mMainPlayer != null && !mMainPlayer.isPlaying()) {
+        if (!mCurrentlyPlayingCard.getMedium().equals(Constants.PHOTO) &&
+            mMainPlayer != null &&
+            !mMainPlayer.isPlaying()) {
+
             mMainPlayer.setVolume(mRequestedVolume, mRequestedVolume);
             mMainPlayer.start();
         }
