@@ -63,7 +63,16 @@ public class MediaFile implements Cloneable {
     /**
      * Load a thumbnail representation of this MediaFile into the target ImageView,
      * creating the thumbnail if necessary.
-     * TODO : Disk cache, multiple sizes
+     * TODO : multiple sizes?
+     */
+    public void loadThumbnail(@NonNull ImageView target) {
+        loadThumbnail(target, null);
+    }
+
+    /**
+     * Load a thumbnail representation of this MediaFile into the target ImageView,
+     * creating the thumbnail if necessary.
+     * TODO : multiple sizes?
      */
     public void loadThumbnail(@NonNull ImageView target,
                               @Nullable final MediaHelper.ThumbnailCallback callback) {
