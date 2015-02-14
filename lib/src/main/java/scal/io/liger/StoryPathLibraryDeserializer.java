@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.Dependency;
 import scal.io.liger.model.MediaFile;
@@ -146,6 +147,14 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
             tempObj = tempElement.getAsJsonObject();
             mediaFiles = gson.fromJson(tempObj, new TypeToken<HashMap<String, MediaFile>>(){}.getType());
             spl.setMediaFiles(mediaFiles);
+        }
+
+        ArrayList<AudioClip> audioClips = new ArrayList<AudioClip>();
+        tempElement = jObj.get("audioClips");
+        if (tempElement != null) {
+            tempObj = tempElement.getAsJsonObject();
+            audioClips = gson.fromJson(tempObj, new TypeToken<ArrayList<AudioClip>>(){}.getType());
+            spl.setAudioClips(audioClips);
         }
 
         // additional metadata for publishing

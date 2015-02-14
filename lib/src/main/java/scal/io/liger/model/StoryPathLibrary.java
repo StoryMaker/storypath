@@ -33,6 +33,7 @@ public class StoryPathLibrary extends StoryPath {
     @Expose private String currentStoryPathFile;
     private StoryPath currentStoryPath; // not serialized
     @Expose private HashMap<String, MediaFile> mediaFiles;
+    @Expose private ArrayList<AudioClip> audioClips;
 
     // additional metadata for publishing
     @Expose private String metaTitle;
@@ -134,6 +135,10 @@ public class StoryPathLibrary extends StoryPath {
 
     public void setMediaFiles(HashMap<String, MediaFile> mediaFiles) {
         this.mediaFiles = mediaFiles;
+    }
+
+    public void setAudioClips(ArrayList<AudioClip> audioClips) {
+        this.audioClips = audioClips;
     }
 
     @Override

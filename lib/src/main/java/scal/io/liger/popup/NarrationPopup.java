@@ -26,11 +26,13 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import scal.io.liger.R;
 import scal.io.liger.adapter.NarrationMediaAdapter;
 import scal.io.liger.av.ClipCardsNarrator;
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
@@ -66,7 +68,7 @@ public class NarrationPopup {
      * @param cards A list of ClipCards to allow recording narration over.
      * @param listener A listener notified whenever a narration is recorded.
      */
-    public void show(final List<ClipCard> cards, final ClipCardsNarrator.NarrationListener listener) {
+    public void show(final List<ClipCard> cards, final ArrayList<AudioClip> audioClips, final ClipCardsNarrator.NarrationListener listener) {
         final View decorView = mActivity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override
@@ -86,7 +88,7 @@ public class NarrationPopup {
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
-                final NarrationMediaAdapter adapter = new NarrationMediaAdapter(recyclerView, cards);
+                final NarrationMediaAdapter adapter = new NarrationMediaAdapter(recyclerView, cards, audioClips);
                 recyclerView.setAdapter(adapter);
 
                 ClipCardsNarrator.NarrationListener narrationListener = new ClipCardsNarrator.NarrationListener() {
