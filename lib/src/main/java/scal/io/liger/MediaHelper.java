@@ -237,11 +237,17 @@ public class MediaHelper {
      */
     private static @Nullable File getFileThumbnail(@NonNull @MediaType final String mediaType,
                                                    @NonNull final File media,
-                                                   @NonNull final ImageView target) {
+                                                   @NonNull final ImageView target,
+                                                   @Nullable final ThumbnailCallback callback) {
         try {
             File thumbnailFile = getThumbnailFileForMediaFile(media);
-            return thumbnailFile.exists() ? thumbnailFile :
-                                            generateThumbnail(target.getContext(), media, mediaType);
+            if (thumbnailFile.exists()) {
+                return thumbnailFile;
+            } else {
+                File newThumbnail = generateThumbnail(target.getContext(), media, mediaType);
+                if (callback != null) callback.newThumbnailGenerated(newThumbnail);
+                return newThumbnail;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
