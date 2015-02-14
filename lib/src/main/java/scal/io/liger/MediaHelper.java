@@ -167,7 +167,7 @@ public class MediaHelper {
      * So long as Content Provider Uris are translatable to File addresses
      * let's maintain only the file-based thumnbail generation logic.
      * When the time comes that we have to deal with Streams, convert
-     * {@link #getFileThumbnail(String, java.io.File, android.widget.ImageView)}
+     * {@link #getFileThumbnail(String, java.io.File, android.widget.ImageView, scal.io.liger.MediaHelper.ThumbnailCallback)} )}
      * to take an InputStream, instead of File, argument.
      *
      * Safe to call from the UI thread.
@@ -214,7 +214,7 @@ public class MediaHelper {
                 File mediaFile = new File(filePath);
 
                 if (mediaFile.exists())
-                    return getFileThumbnail(mediaType, mediaFile, target);
+                    return getFileThumbnail(mediaType, mediaFile, target, callback);
                 else
                     Log.w(TAG, "path appears to be a file, but it cannot be found on disk " + filePath);
 
@@ -237,11 +237,17 @@ public class MediaHelper {
      */
     private static @Nullable File getFileThumbnail(@NonNull @MediaType final String mediaType,
                                                    @NonNull final File media,
-                                                   @NonNull final ImageView target) {
+                                                   @NonNull final ImageView target,
+                                                   @Nullable final ThumbnailCallback callback) {
         try {
             File thumbnailFile = getThumbnailFileForMediaFile(media);
-            return thumbnailFile.exists() ? thumbnailFile :
-                                            generateThumbnail(target.getContext(), media, mediaType);
+            if (thumbnailFile.exists()) {
+                return thumbnailFile;
+            } else {
+                File newThumbnail = generateThumbnail(target.getContext(), media, mediaType);
+                if (callback != null) callback.newThumbnailGenerated(newThumbnail);
+                return newThumbnail;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

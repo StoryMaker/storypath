@@ -2,6 +2,7 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -60,10 +61,12 @@ public class MediaFile implements Cloneable {
     }
 
     /**
-     * Load a thumbnail representation of this MediaFile into the target ImageView.
+     * Load a thumbnail representation of this MediaFile into the target ImageView,
+     * creating the thumbnail if necessary.
      * TODO : Disk cache, multiple sizes
      */
-    public void loadThumbnail(@NonNull ImageView target) {
+    public void loadThumbnail(@NonNull ImageView target,
+                              @Nullable final MediaHelper.ThumbnailCallback callback) {
 
         if (TextUtils.isEmpty(thumbnailFilePath)) {
 
@@ -75,6 +78,7 @@ public class MediaFile implements Cloneable {
                         @Override
                         public void newThumbnailGenerated(File thumbnail) {
                             thumbnailFilePath = thumbnail.getAbsolutePath();
+                            if (callback != null) callback.newThumbnailGenerated(thumbnail);
                         }
                     }
             );
