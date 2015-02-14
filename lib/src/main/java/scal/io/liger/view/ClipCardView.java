@@ -499,7 +499,7 @@ public class ClipCardView extends ExampleCardView {
             mediaFile.loadThumbnail(ivThumbnail, new MediaHelper.ThumbnailCallback() {
                 @Override
                 public void newThumbnailGenerated(File thumbnail) {
-                        Log.d(TAG, "NEED THUMBNAIL");
+                        Log.d(TAG, "Notifying StoryPath of newly generated thumbnail");
                         // need to update media file in model now that thumbnail is set
                         // being overly cautious to avoid null pointers
                         if ((mCardModel.getStoryPath() != null) &&
