@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 public class AudioClip {
     @Expose private String position_clip_id; // can be null.  card id we are linked to either this or the next must have a value, but only one
     @Expose private int position_index; // can null
+    @Expose private float volume; // 1.0 is full volume
     @Expose private boolean clip_span;  // how many clips it should try to span
     @Expose private boolean truncate; // should this play out past the clips its spans, or trim its end to match
     @Expose private boolean overlap; // if overlap the next clip or push it out, can we
