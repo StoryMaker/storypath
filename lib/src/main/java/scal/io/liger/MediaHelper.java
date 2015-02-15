@@ -240,8 +240,18 @@ public class MediaHelper {
                                                    @NonNull final ImageView target,
                                                    @Nullable final ThumbnailCallback callback) {
         try {
-            File thumbnailFile = getThumbnailFileForMediaFile(media);
+            final File thumbnailFile = getThumbnailFileForMediaFile(media);
             if (thumbnailFile.exists()) {
+                // we should only hit this code if a MediaFile object has no thumbnail path,
+                // so we want to initiate the callback and update the object either way.
+                if (callback != null) {
+                    target.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.newThumbnailGenerated(thumbnailFile);
+                        }
+                    });
+                }
                 return thumbnailFile;
             } else {
                 final File newThumbnail = generateThumbnail(target.getContext(), media, mediaType);
