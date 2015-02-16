@@ -17,6 +17,8 @@ public class AudioClip implements Parcelable {
     @Expose private boolean overlap; // if overlap the next clip or push it out, can we
     @Expose private boolean fill_repeat;  // repeat to fill if this audioclip is shorter than the clips it spans
 
+    // TODO this is a cleaner form of parcelable: http://www.parcelabler.com/
+
     @Override
     public int describeContents() {
         return 0;
@@ -35,6 +37,8 @@ public class AudioClip implements Parcelable {
                 (this.fill_repeat ? "1" : "0")
         });
     }
+
+
 
     public AudioClip(Parcel in) {
         String[] data = new String[7];
