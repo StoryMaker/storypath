@@ -1,6 +1,7 @@
 package scal.io.liger.adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
@@ -201,7 +202,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         mClipCards.get(position).getSelectedMediaFile().loadThumbnail(((ImageView) root.findViewById(R.id.thumbnail)));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mRecyclerView.getContext());
-        builder.setView(root)
+        Dialog dialog = builder.setView(root)
                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
@@ -226,8 +227,15 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
                    }
                })
                .setNegativeButton("Cancel", null)
-               .show();
+               .create();
 
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                adapter.release();
+            }
+        });
+        dialog.show();
 //        audioRecyclerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 

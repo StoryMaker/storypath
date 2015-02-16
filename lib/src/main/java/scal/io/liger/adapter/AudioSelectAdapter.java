@@ -2,11 +2,13 @@ package scal.io.liger.adapter;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -22,7 +24,9 @@ import scal.io.liger.model.StoryPathLibrary;
 
 /**
  * An adapter for selecting a audio tracks from a collection.
- * Call {@link #getSelectedClips()} to retrieve the currently selected AudioClip
+ * Call {@link #getSelectedClips()} to retrieve the currently selected AudioClip.
+ *
+ * NOTE : Call {@link #release()} when this adapter is no longer needed to free MediaPlayer resource.
  *
  * Created by davidbrodsky on 10/23/14.
  */
@@ -47,11 +51,23 @@ public class AudioSelectAdapter extends RecyclerView.Adapter<AudioSelectAdapter.
         }
     }
 
-    public AudioSelectAdapter(StoryPathLibrary storyPathLibrary,
-                              ArrayList<AudioClip> audioClips) {
+    public AudioSelectAdapter(@NonNull StoryPathLibrary storyPathLibrary,
+                              @NonNull ArrayList<AudioClip> audioClips) {
+
         mStoryPathLibrary = storyPathLibrary;
         mAudioClips = audioClips;
         mSelectedPosition = new boolean[audioClips.size()];
+    }
+
+    /**
+     * Call to release MediaPlayer resources
+     */
+    public void release() {
+        if (mPlayer != null) {
+            if (mPlayer.isPlaying()) mPlayer.stop();
+            mPlayer.release();
+            mPlayer = null;
+        }
     }
 
     @Override
