@@ -1,6 +1,8 @@
 package scal.io.liger.adapter;
 
-import android.graphics.Bitmap;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.annotations.Expose;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.List;
 import scal.io.liger.R;
 import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.ClipCard;
-import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 
 /**
@@ -141,19 +140,19 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
             mf.loadThumbnail(viewHolder.thumbnail);
         }
 
-        if (clipHasNarration(clipCard.getSelectedClip())) {
+        if (clipHasNarration(position)) {
             viewHolder.narrationIndicator.setVisibility(View.VISIBLE);
             viewHolder.narrationIndicator.setTag(position);
             viewHolder.narrationIndicator.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();
-                    Toast.makeText(v.getContext(), "Narration removed from clip", Toast.LENGTH_LONG).show();
-                    removeNarrationForClip(mClipCards.get(position).getSelectedClip());
+                    removeNarrationForClip(position);
                     v.setVisibility(View.GONE);
                 }
             });
-        }
+        } else
+            viewHolder.narrationIndicator.setVisibility(View.GONE);
     }
 
     @Override
@@ -171,22 +170,67 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
 
     /**
      * Placeholder until an API exists
-     * @param clip the clip whose associated narration tracks should be removed
      */
-    private void removeNarrationForClip(ClipMetadata clip) {
-        // TODO Wire to API
+    private void removeNarrationForClip(final int position) {
         // TODO When a narration overlaps multiple clips, what happens when I remove it from one?
         // Is it also removed from the other?
-        return;
+        List<AudioClip> audio = getAudioAtPosition(position);
+        if (audio.size() == 0) return; // Caller should have ensured an AudioClip was present here
+
+        final AudioSingleSelectAdapter adapter = new AudioSingleSelectAdapter(mClipCards.get(position)
+                                                                                  .getStoryPath()
+                                                                                  .getStoryPathLibrary(),
+                                                                        getAudioAtPosition(position));
+        RecyclerView audioRecyclerView = new RecyclerView(mRecyclerView.getContext());
+        audioRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
+        audioRecyclerView.setAdapter(adapter);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mRecyclerView.getContext());
+        builder.setView(audioRecyclerView)
+               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       mClipCards.get(0)
+                                 .getStoryPath()
+                                 .getStoryPathLibrary()
+                                 .removeAudioClipFromClipCard(mClipCards,
+                                                              adapter.getSelectedClip(),
+                                                              mClipCards.get(position));
+
+                       mClipCards.get(0)
+                               .getStoryPath()
+                               .getStoryPathLibrary()
+                               .save(false);
+                   }
+               })
+               .setNegativeButton("Cancel", null)
+               .show();
     }
 
     /**
      * Placeholder until an API exists
      * @return whether the given clip has an associated narration track
      */
-    private boolean clipHasNarration(ClipMetadata clip) {
-        // TODO Wire to API
-        return true;
+    private boolean clipHasNarration(int position) {
+        return getAudioAtPosition(position).size() > 0;
+    }
+
+    private ArrayList<AudioClip> getAudioAtPosition(int position) {
+        ArrayList<AudioClip> result = new ArrayList<>();
+
+        if (mAudioClips == null) return result;
+
+        for (AudioClip audio : mAudioClips) {
+            if (audio.getPositionClipId() != null) {
+                if (audio.getPositionClipId().equals(
+                        mClipCards.get(position).getId())) {
+                    result.add(audio);
+                }
+            } else if (audio.getPositionIndex() == position) {
+                result.add(audio);
+            }
+        }
+        return result;
     }
 
 }

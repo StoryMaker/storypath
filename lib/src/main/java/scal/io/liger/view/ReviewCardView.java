@@ -164,13 +164,18 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     }
 
     @Override
-    public void onNarrationFinished(MediaFile narration) {
+    public void onNarrationFinished(AudioClip audioClip, MediaFile narration) {
         mCardModel.setNarration(narration);
 
         if (mCardsPlayer != null) {
             mCardsPlayer.addAudioTrack(narration);
         }
-        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
+
+        mCardModel.getStoryPath()
+                  .getStoryPathLibrary()
+                  .saveNarrationAudioClip(audioClip, narration);
+
+        mCardModel.getStoryPath().getStoryPathLibrary().save(false);
         mCardModel.getStoryPath().notifyCardChanged(mCardModel);
     }
 

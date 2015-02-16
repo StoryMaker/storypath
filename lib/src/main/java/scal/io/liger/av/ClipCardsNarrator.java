@@ -14,10 +14,14 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.UUID;
 
+import scal.io.liger.Constants;
 import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.ClipCard;
+import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
 
 /**
@@ -92,7 +96,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
     }
 
     public interface NarrationListener {
-        public void onNarrationFinished(MediaFile narration);
+        public void onNarrationFinished(AudioClip audioClip, MediaFile narration);
     }
 
     /**
@@ -186,7 +190,21 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         _changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = mRecorder.stopRecording();
         mRecorder.reset();
-        if (mListener != null && mf != null) mListener.onNarrationFinished(mf);
+
+        if (mListener != null && mf != null) {
+            AudioClip audioClip = new AudioClip(null,                           // position_clip_id
+                                                mSelectedClipIndexes.first,     // position_index
+                                                1f,                             // volume
+                                                mSelectedClipIndexes.second - mSelectedClipIndexes.first,   // Clip span
+                                                true,                           // truncate
+                                                false,                          // overlap
+                                                false,                          // fill_repeat
+                                                UUID.randomUUID().toString());  // uuid
+
+            mListener.onNarrationFinished(audioClip, mf);
+        } else {
+            Log.w(TAG, "Narration recorded without a NarrationListener set. Narration data will be lost");
+        }
         if (stopPlayback) _stopPlayback();
     }
 

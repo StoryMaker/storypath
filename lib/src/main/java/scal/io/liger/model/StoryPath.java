@@ -151,6 +151,7 @@ public class StoryPath {
         ((MainActivity) context).inactivateCard(card); // FIXME unsafe cast
     }
 
+    // TODO : This should be named getCardByFullPath
     public Card getCardById(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
@@ -171,6 +172,7 @@ public class StoryPath {
         return null;
     }
 
+    // TOOD : This should be named getCardById
     public Card getCardByIdOnly(String idOnly) {
         for (Card card : cards) {
             if (card.getId().equals(idOnly)) {

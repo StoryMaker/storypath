@@ -2,7 +2,10 @@ package scal.io.liger.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -16,7 +19,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
+import scal.io.liger.Constants;
 import scal.io.liger.IndexManager;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
@@ -134,6 +140,10 @@ public class StoryPathLibrary extends StoryPath {
         return mediaFiles;
     }
 
+    public MediaFile getMediaFile(String uuid) {
+        return mediaFiles.get(uuid);
+    }
+
     public void setMediaFiles(HashMap<String, MediaFile> mediaFiles) {
         this.mediaFiles = mediaFiles;
     }
@@ -142,10 +152,127 @@ public class StoryPathLibrary extends StoryPath {
         this.audioClips = audioClips;
     }
 
+    public ArrayList<AudioClip> getAudioClips() {
+        return audioClips;
+    }
+
+    /**
+     * Remove this AudioClip from the passed ClipCard, if this
+     * AudioClip's span includes it.
+     *
+     * @param audioClip the audio whose span currently includes clipCard
+     * @param clipCard the target ClipCard to remove audioClip from
+     */
+    public void removeAudioClipFromClipCard(List<ClipCard> clipCards,
+                                            AudioClip audioClip,
+                                            ClipCard clipCard) {
+
+        // Find span of ClipCards
+        ClipCard firstCard = getFirstClipCardForAudioClip(audioClip, clipCards);
+
+        if (firstCard == null) {
+            Log.e(TAG, "Unable to remove AudioClip from ClipCard. Could not find audioClip's first ClipCard");
+            return;
+        }
+
+        int firstIdx = clipCards.indexOf(firstCard);
+        if (audioClip.getClipSpan() == 1) {
+            deleteAudioClip(audioClip.getUuid());
+            return; // So we don't risk invoking save() twice
+        }
+
+        for (int idx = firstIdx; idx < audioClip.getClipSpan(); idx++) {
+            if (clipCards.get(idx).getId().equals(clipCard.getId())) {
+                // We found the ClipCard to remove from this AudioClip
+                if (idx == firstIdx) {
+                    // The ClipCard leads the AudioClip. Advance head to
+                    // next card.
+                    audioClip.setPositionIndex(idx + 1);
+                    audioClip.setClipSpan(audioClip.getClipSpan()-1);
+                } else {
+                    audioClip.setClipSpan(audioClip.getClipSpan() - (idx - firstIdx));
+                }
+                break;
+            }
+        }
+    }
+
+    /** AudioClip convenience functions */
+
+    /**
+     * Convenience function to find the first ClipCard within a collection
+     * during which an AudioTrack is present.
+     *
+     * clipCards serves merely as an optional optimization
+     * around calling {@link #getClipCardsWithAttachedMedia()} on every call
+     */
+    public ClipCard getFirstClipCardForAudioClip(@NonNull AudioClip audioClip,
+                                                 @Nullable List<ClipCard> clipCards) {
+
+        if (clipCards == null) clipCards = getClipCardsWithAttachedMedia();
+
+        ClipCard firstCard = null;
+        if (!TextUtils.isEmpty(audioClip.getPositionClipId())) {
+            firstCard = (ClipCard) getCardByIdOnly(audioClip.getPositionClipId());
+        } else {
+            firstCard = clipCards.get(audioClip.getPositionIndex());
+        }
+
+        if (firstCard == null) {
+            Log.e(TAG, "Could not find audioClip's first ClipCard");
+        }
+        return firstCard;
+    }
+
+    /**
+     * Convenience function to find the last ClipCard within a collection
+     * during which an AudioTrack is present.
+     *
+     * clipCards serves merely as an optional optimization
+     * around calling {@link #getClipCardsWithAttachedMedia()} on every call
+     */
+    public ClipCard getLastClipCardForAudioClip(@NonNull AudioClip audioClip,
+                                                @Nullable List<ClipCard> clipCards) {
+
+        if (clipCards == null) clipCards = getClipCardsWithAttachedMedia();
+
+        int lastIdx = clipCards.indexOf(getFirstClipCardForAudioClip(audioClip, clipCards)) + audioClip.getClipSpan();
+        return clipCards.get(lastIdx);
+    }
+
+    /**
+     * Convenience function to determine whether clipCard is within the set of ClipCards
+     * within clipCards during which AudioClip
+     */
+    public boolean isClipCardWithinAudioClipRange(@NonNull ClipCard clipCard,
+                                                  @NonNull AudioClip audioClip,
+                                                  @Nullable List<ClipCard> clipCards) {
+
+        if (clipCards == null) clipCards = getClipCardsWithAttachedMedia();
+
+        int startIdx = clipCards.indexOf(getFirstClipCardForAudioClip(audioClip, clipCards));
+        int endIdx = clipCards.indexOf(getLastClipCardForAudioClip(audioClip, clipCards));
+
+        int targetClipIndex = clipCards.indexOf(clipCard);
+
+        return startIdx <= targetClipIndex && targetClipIndex <= endIdx;
+    }
+
+    /** End AudioClip convenience functions */
+
+    public void saveNarrationAudioClip(AudioClip audioClip, MediaFile mediaFile) {
+        if (audioClips == null) {
+            audioClips = new ArrayList<>();
+        }
+
+        audioClips.add(audioClip);
+        saveMediaFile(audioClip.getUuid(), mediaFile);
+    }
+
     @Override
     public void saveMediaFile(String uuid, MediaFile file) {
-        if (this.mediaFiles == null) {
-            this.mediaFiles = new HashMap<String, MediaFile>();
+        if (mediaFiles == null) {
+            mediaFiles = new HashMap<>();
         }
 
         // update instance index with thumbnail in case thumbnail has changed
@@ -193,6 +320,29 @@ public class StoryPathLibrary extends StoryPath {
         mediaFiles.remove(uuid);
 
         // delete actual file?
+        save(false);
+    }
+
+    /**
+     * Delete an AudioClip with the corresponding uuid. Will also
+     * delete the associated MediaFile
+     */
+    public void deleteAudioClip(String uuid) {
+        if (audioClips == null) {
+            Log.e(TAG, "No AudioClips to delete");
+            return;
+        }
+
+        AudioClip toDelete = null;
+        for (AudioClip clip : audioClips) {
+            if (clip.getUuid().equals(uuid)) {
+                toDelete = clip;
+            }
+        }
+
+        if (toDelete != null) audioClips.remove(toDelete);
+
+        deleteMediaFile(uuid);
     }
 
     // additional metadata for publishing

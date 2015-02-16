@@ -82,7 +82,7 @@ public class NarrationPopup {
                     mNarrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    // TODO : report failed, close popup?
+                    // TODO : report failure, close popup?
                 }
                 RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recycler_view);
                 recyclerView.setHasFixedSize(true);
@@ -92,11 +92,12 @@ public class NarrationPopup {
                 recyclerView.setAdapter(adapter);
 
                 ClipCardsNarrator.NarrationListener narrationListener = new ClipCardsNarrator.NarrationListener() {
+
                     @Override
-                    public void onNarrationFinished(MediaFile narration) {
+                    public void onNarrationFinished(AudioClip audioClip, MediaFile narration) {
                         mNarrator.addAudioTrack(narration);
                         recordButton.setText(mActivity.getString(R.string.dialog_record));
-                        if (listener != null) listener.onNarrationFinished(narration);
+                        if (listener != null) listener.onNarrationFinished(audioClip, narration);
                         mVuLayout.setVisibility(View.INVISIBLE);
                     }
                 };

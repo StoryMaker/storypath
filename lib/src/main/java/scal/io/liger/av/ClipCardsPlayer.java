@@ -33,15 +33,18 @@ import com.joanzapata.android.iconify.Iconify;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import scal.io.liger.Constants;
 import scal.io.liger.R;
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
+import scal.io.liger.model.StoryPathLibrary;
 import scal.io.liger.view.Util;
 
 /**
@@ -63,11 +66,14 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     protected Context mContext;
     protected FrameLayout mContainerLayout;
     protected List<ClipCard> mClipCards;
+    protected List<AudioClip> mAudioClips = new ArrayList<>();
+    protected StoryPathLibrary mStoryPathLibrary;
     private ArrayList<Integer> accumulatedDurationByMediaCard;
     protected ClipCard mCurrentlyPlayingCard;
     protected MediaPlayer mMainPlayer;
-    protected MediaPlayer mSecondaryPlayer;
-    private Uri mSecondaryAudioUri;
+    protected List<MediaPlayer> mAudioClipPlayers = new ArrayList<>();
+    protected HashMap<AudioClip, MediaPlayer> mAudioClipToMediaPlayer = new HashMap<>();
+    protected HashMap<MediaPlayer, AudioClip> mMediaPlayerToAudioClip = new HashMap<>();
     private Surface mSurface;
     protected ToggleButton mMuteBtn;
     private TextView mTimeCode;
@@ -234,7 +240,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     public void addAudioTrack(MediaFile mediaFile) {
-        mSecondaryAudioUri = Uri.parse(mediaFile.getPath());
         mAudioTracksDirty = true;
         Log.d(TAG, "Audio track added " + mediaFile.getPath());
     }
@@ -262,7 +267,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             mMuteBtn.setChecked(false);
 
         if (mMainPlayer != null) mMainPlayer.setVolume(volume, volume);
-        if (mSecondaryPlayer != null) mSecondaryPlayer.setVolume(volume, volume);
+        if (mAudioClipPlayers != null) {
+            for (MediaPlayer audioPlayer : mAudioClipPlayers)
+                audioPlayer.setVolume(volume, volume);
+        }
         mRequestedVolume = volume;
     }
 
@@ -296,6 +304,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         displayThumbnailForClip(mThumbnailView, mCurrentlyPlayingCard);
         calculateTotalClipCollectionLengthMsAsync(mClipCards);
         setupTimer();
+        mStoryPathLibrary = mCurrentlyPlayingCard.getStoryPath().getStoryPathLibrary();
     }
 
     private void inflateViews(@NonNull FrameLayout root) {
@@ -608,8 +617,10 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             mMainPlayer.pause();
         }
 
-        if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
-            mSecondaryPlayer.pause();
+        if (mAudioClipPlayers != null) {
+            for (MediaPlayer audioPlayer : mAudioClipPlayers) {
+                if (audioPlayer.isPlaying()) audioPlayer.pause();
+            }
         }
     }
 
@@ -632,9 +643,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             mMainPlayer.start();
         }
 
-        if (mSecondaryPlayer != null && !mSecondaryPlayer.isPlaying()) {
-            mSecondaryPlayer.setVolume(mRequestedVolume, mRequestedVolume);
-            mSecondaryPlayer.start();
+        if (mAudioClipPlayers != null) {
+            for (MediaPlayer audioPlayer : mAudioClipPlayers) {
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.setVolume(mRequestedVolume, mRequestedVolume);
+                    audioPlayer.start();
+                }
+            }
         }
     }
 
@@ -647,9 +662,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             _advanceToClip(mMainPlayer, mClipCards.get(0), false);
         }
 
-        if (mSecondaryPlayer != null && mSecondaryPlayer.isPlaying()) {
-            mSecondaryPlayer.stop();
-            mSecondaryPlayer.reset();
+        if (mAudioClipPlayers != null) {
+            for (MediaPlayer audioPlayer : mAudioClipPlayers) {
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.stop();
+                    audioPlayer.reset();
+                }
+            }
         }
     }
 
@@ -667,9 +686,11 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             mMainPlayer.release();
             mMainPlayer = null;
         }
-        if (mSecondaryPlayer != null) {
-            mSecondaryPlayer.release();
-            mSecondaryPlayer = null;
+        if (mAudioClipPlayers != null) {
+            for (MediaPlayer audioPlayer : mAudioClipPlayers) {
+                audioPlayer.release();
+            }
+            mAudioClipPlayers.clear();
         }
     }
 
@@ -926,14 +947,72 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private void prepareSecondaryPlayers() throws IOException {
-        if (mSecondaryAudioUri != null && mPlaySecondaryTracks) {
+        if (mAudioClips.size() > 0 && mPlaySecondaryTracks) {
+            StoryPathLibrary spl = mClipCards.get(0).getStoryPath().getStoryPathLibrary();
             // TODO : All secondary audio tracks should have associated MediaFile and ClipMetadata
-            if (mSecondaryPlayer == null) mSecondaryPlayer = new MediaPlayer();
-            prepareMediaPlayer(mSecondaryPlayer,
-                    new MediaFile(mSecondaryAudioUri.getPath(), Constants.AUDIO),
-                    null,
-                    false);
+            stopFinishedAudioMediaPlayers();
+            for (int x = 0; x < mAudioClips.size(); x++) {
+
+                AudioClip audioClip = mAudioClips.get(x);
+
+                if (spl.getFirstClipCardForAudioClip(audioClip, mClipCards).equals(mCurrentlyPlayingCard)) {
+                    Log.d(TAG, "Found AudioTrack matching ClipCard at pos " + mClipCards.indexOf(mCurrentlyPlayingCard));
+                    MediaPlayer audioPlayer = fetchAudioMediaPlayer();
+                    mAudioClipToMediaPlayer.put(audioClip, audioPlayer);
+                    mMediaPlayerToAudioClip.put(audioPlayer, audioClip);
+                    MediaFile audioMediaFile = mStoryPathLibrary.getMediaFile(audioClip.getUuid());
+                    prepareMediaPlayer(audioPlayer,
+                                       audioMediaFile,
+                                       null,
+                                       false);
+                }
+            }
             mAudioTracksDirty = false;
+        }
+    }
+
+    /**
+     * @return a MediaPlayer for audio playback. This will be a recycled instance if possible.
+     * Handles registering newly created MediaPlayers with {@link #mAudioClipPlayers} and removing
+     * recycled players from {@link #mAudioClipToMediaPlayer} and {@link #mMediaPlayerToAudioClip}.
+     *
+     * It is the caller's responsibility to register returned instances with {@link #mAudioClipToMediaPlayer}
+     * and {@link #mMediaPlayerToAudioClip}
+     */
+    private MediaPlayer fetchAudioMediaPlayer() {
+        for (MediaPlayer player : mAudioClipPlayers) {
+            if (player != null && !player.isPlaying()) {
+
+                AudioClip audioToRemove = mMediaPlayerToAudioClip.remove(player);
+                mAudioClipToMediaPlayer.remove(audioToRemove);
+
+                Log.d(TAG, "Recycling audio MediaPlayer at index " + mAudioClipPlayers.indexOf(player));
+                return player;
+            }
+
+        }
+
+        Log.d(TAG, "Initializing new audio MediaPlayer");
+        MediaPlayer newPlayer = new MediaPlayer();
+        mAudioClipPlayers.add(newPlayer);
+        return newPlayer;
+    }
+
+    /**
+     * Stop any audio MediaPlayers whose AudioClips indicate they should not be playing
+     * on {@link #mCurrentlyPlayingCard}
+     */
+    private void stopFinishedAudioMediaPlayers() {
+        StoryPathLibrary library = mClipCards.get(0).getStoryPath().getStoryPathLibrary();
+
+        for (MediaPlayer player : mAudioClipPlayers) {
+            AudioClip audioClip = mMediaPlayerToAudioClip.get(player);
+
+            if (!library.isClipCardWithinAudioClipRange(mCurrentlyPlayingCard,
+                                                       audioClip,
+                                                       mClipCards)) {
+                player.stop();
+            }
         }
     }
 }
