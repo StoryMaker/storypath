@@ -1,5 +1,7 @@
 package scal.io.liger.adapter;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,8 @@ public class AudioSelectAdapter extends RecyclerView.Adapter<AudioSelectAdapter.
     private StoryPathLibrary mStoryPathLibrary;
     private ArrayList<AudioClip> mAudioClips;
     private boolean[] mSelectedPosition;
+    private MediaPlayer mPlayer;
+    private int mCurrentlyPlayingPosition = -1;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -78,6 +83,39 @@ public class AudioSelectAdapter extends RecyclerView.Adapter<AudioSelectAdapter.
         } else {
             mf.loadThumbnail(viewHolder.thumbnail);
         }
+
+        viewHolder.thumbnail.setTag(position);
+        viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = (int) v.getTag();
+
+                // If we click the currently playing cell, stop playback and take no further action
+                if (mCurrentlyPlayingPosition == position && mPlayer != null && mPlayer.isPlaying()) {
+                    mPlayer.stop();
+                    mCurrentlyPlayingPosition = -1;
+                    return;
+                }
+
+                MediaFile mediaFile = mStoryPathLibrary.getMediaFile(mAudioClips.get(position).getUuid());
+                if (mPlayer == null) {
+                    mPlayer = MediaPlayer.create(v.getContext(), Uri.parse(mediaFile.getPath()));
+                    mPlayer.start();
+                }
+                else {
+                    if (mPlayer.isPlaying()) mPlayer.stop();
+                    mPlayer.reset();
+                    try {
+                        mPlayer.setDataSource(mediaFile.getPath());
+                        mPlayer.prepare();
+                        mPlayer.start();
+                        mCurrentlyPlayingPosition = position;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override

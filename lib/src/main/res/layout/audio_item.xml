@@ -14,7 +14,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_alignBottom="@id/thumbnail"
-        android:paddingRight="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_small"
         android:scaleType="fitCenter"/>
 
     <ImageView

@@ -1,6 +1,7 @@
 package scal.io.liger.adapter;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -184,15 +186,22 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         if (audio.size() == 0) return; // Caller should have ensured an AudioClip was present here
 
         final AudioSelectAdapter adapter = new AudioSelectAdapter(mClipCards.get(position)
-                                                                                  .getStoryPath()
-                                                                                  .getStoryPathLibrary(),
-                                                                              getAudioAtPosition(position));
-        RecyclerView audioRecyclerView = new RecyclerView(mRecyclerView.getContext());
+                                                                            .getStoryPath()
+                                                                            .getStoryPathLibrary(),
+                                                                  getAudioAtPosition(position));
+
+        View root = ((LayoutInflater) mRecyclerView.getContext()
+                                                   .getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                                                   .inflate(R.layout.dialog_narration_tracks, null);
+
+        RecyclerView audioRecyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
         audioRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         audioRecyclerView.setAdapter(adapter);
 
+        mClipCards.get(position).getSelectedMediaFile().loadThumbnail(((ImageView) root.findViewById(R.id.thumbnail)));
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mRecyclerView.getContext());
-        builder.setView(audioRecyclerView)
+        builder.setView(root)
                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
@@ -218,6 +227,8 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
                })
                .setNegativeButton("Cancel", null)
                .show();
+
+//        audioRecyclerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     /**
