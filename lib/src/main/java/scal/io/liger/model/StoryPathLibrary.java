@@ -138,6 +138,10 @@ public class StoryPathLibrary extends StoryPath {
         this.mediaFiles = mediaFiles;
     }
 
+    public ArrayList<AudioClip> getAudioClips() {
+        return audioClips;
+    }
+
     public void setAudioClips(ArrayList<AudioClip> audioClips) {
         this.audioClips = audioClips;
     }
