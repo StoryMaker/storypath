@@ -152,8 +152,11 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         ArrayList<AudioClip> audioClips = new ArrayList<AudioClip>();
         tempElement = jObj.get("audioClips");
         if (tempElement != null) {
-            tempObj = tempElement.getAsJsonObject();
-            audioClips = gson.fromJson(tempObj, new TypeToken<ArrayList<AudioClip>>(){}.getType());
+            JsonArray jArr = tempElement.getAsJsonArray();
+            for (int i = 0; i < jArr.size(); i++) {
+                AudioClip clip = gson.fromJson(jArr.get(i), new TypeToken<AudioClip>(){}.getType());
+                audioClips.add(clip);
+            }
             spl.setAudioClips(audioClips);
         }
 
