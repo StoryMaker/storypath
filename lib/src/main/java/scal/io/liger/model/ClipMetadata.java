@@ -16,11 +16,13 @@ public class ClipMetadata {
 
     public ClipMetadata() {
         // required for JSON/GSON
+        this.volume = 1f; // Sensible default
     }
 
     public ClipMetadata(String type, String uuid) {
         this.type = type;
         this.uuid = uuid;
+        this.volume = 1f;
     }
 
     public int getStartTime() {

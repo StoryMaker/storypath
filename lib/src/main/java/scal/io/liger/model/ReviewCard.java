@@ -79,6 +79,11 @@ public class ReviewCard extends GenericCard {
 
     public void setMediaPath(String mediaPath) { this.mediaPath = mediaPath; }
 
+    /**
+     * Use {@link StoryPathLibrary#saveNarrationAudioClip(AudioClip, MediaFile)}
+     * to register a new Narration AudioClip with the StoryPathLibrary
+     */
+    @Deprecated
     public void setNarration(MediaFile narrationMediaFile) {
         ClipMetadata cmd = new ClipMetadata(Constants.NARRATION, UUID.randomUUID().toString());
 
@@ -86,10 +91,20 @@ public class ReviewCard extends GenericCard {
         setNarration(cmd);
     }
 
+    /**
+     * Use {@link StoryPathLibrary#saveNarrationAudioClip(AudioClip, MediaFile)}
+     * to register a new Narration AudioClip with the StoryPathLibrary
+     */
+    @Deprecated
     public void setNarration(ClipMetadata narrationClip) {
         setNarration(narrationClip, true);
     }
 
+    /**
+     * Use {@link StoryPathLibrary#saveNarrationAudioClip(AudioClip, MediaFile)}
+     * to register a new Narration AudioClip with the StoryPathLibrary
+     */
+    @Deprecated
     public void setNarration(ClipMetadata clip, boolean notify) {
         this.narration = clip;
 
@@ -100,6 +115,11 @@ public class ReviewCard extends GenericCard {
         }
     }
 
+    /**
+     * Use {@link scal.io.liger.model.StoryPathLibrary#getAudioClips()}
+     * to get Narration AudioClip with the StoryPathLibrary
+     */
+    @Deprecated
     public MediaFile getSelectedNarrationFile(){
         if (narration == null) {
             Log.e(this.getClass().getName(), "no narration metadata was found, cannot get file");
@@ -108,6 +128,11 @@ public class ReviewCard extends GenericCard {
         return loadMediaFile(narration);
     }
 
+    /**
+     * Use {@link scal.io.liger.model.StoryPathLibrary#getAudioClips()}
+     * to get Narration AudioClip with the StoryPathLibrary
+     */
+    @Deprecated
     public ClipMetadata getSelectedNarrationClip() {
         if (narration == null) {
             Log.e(this.getClass().getName(), "no narration metadata was found, cannot get file");

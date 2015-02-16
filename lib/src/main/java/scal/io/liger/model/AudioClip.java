@@ -1,11 +1,6 @@
 package scal.io.liger.model;
 
-import android.text.TextUtils;
-
 import com.google.gson.annotations.Expose;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by josh on 2/13/15.
@@ -13,6 +8,12 @@ import java.util.UUID;
 public class AudioClip {
     @Expose private String position_clip_id; // can be null if unused.  card id we are linked to either this or the next must have a value, but only one
     @Expose private int position_index; // can be -1 if unused.
+    @Expose private float volume; // 1.0 is full volume
+    @Expose private int clip_span;  // how many clips it should try to span
+    @Expose private boolean truncate; // should this play out past the clips its spans, or trim its end to match
+    @Expose private boolean overlap; // if overlap the next clip or push it out, can we
+    @Expose private boolean fill_repeat;  // repeat to fill if this audioclip is shorter than the clips it spans
+    @Expose private String uuid; // key to mediaFiles map in StoryModel
 
     public AudioClip(String position_clip_id, int position_index, float volume, int clip_span, boolean truncate, boolean overlap, boolean fill_repeat, String uuid) {
         this.position_clip_id = position_clip_id;
@@ -24,13 +25,6 @@ public class AudioClip {
         this.fill_repeat = fill_repeat;
         this.uuid = uuid;
     }
-
-    @Expose private float volume; // 1.0 is full volume
-    @Expose private int clip_span;  // how many clips it should try to span
-    @Expose private boolean truncate; // should this play out past the clips its spans, or trim its end to match
-    @Expose private boolean overlap; // if overlap the next clip or push it out, can we
-    @Expose private boolean fill_repeat;  // repeat to fill if this audioclip is shorter than the clips it spans
-    @Expose private String uuid; // key to mediaFiles map in StoryModel
 
     /**
      * @return the uuid used to retrieve the corresponding audio MediaFile

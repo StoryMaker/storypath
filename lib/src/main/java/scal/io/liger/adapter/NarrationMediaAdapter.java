@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
+import scal.io.liger.model.StoryPathLibrary;
 
 /**
  * Created by davidbrodsky on 10/23/14.
@@ -32,6 +32,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
     private RecyclerView mRecyclerView;
     private HashMap<ClipCard, Long> mCardToStableId = new HashMap<>();
     private List<ClipCard> mClipCards;
+    private StoryPathLibrary mStoryPathLibrary;
     private ArrayList<AudioClip> mAudioClips;
     private Boolean[] mSelectedItems;
 
@@ -51,7 +52,10 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         }
     }
 
-    public NarrationMediaAdapter(RecyclerView recyclerView, List<ClipCard> cards, ArrayList<AudioClip> audioClips) {
+    public NarrationMediaAdapter(RecyclerView recyclerView,
+                                 List<ClipCard> cards,
+                                 ArrayList<AudioClip> audioClips) {
+
         mRecyclerView = recyclerView;
         mClipCards = cards;
         mAudioClips = audioClips;
@@ -63,6 +67,8 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         for(int x = 0; x < mSelectedItems.length; x++) {
             mSelectedItems[x] = false;
         }
+
+        mStoryPathLibrary = mClipCards.get(0).getStoryPath().getStoryPathLibrary();
     }
 
     @Override
@@ -147,8 +153,8 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();
+                    Log.d(TAG, "Narration dialog selected for position " + position);
                     removeNarrationForClip(position);
-                    v.setVisibility(View.GONE);
                 }
             });
         } else
@@ -177,30 +183,37 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         List<AudioClip> audio = getAudioAtPosition(position);
         if (audio.size() == 0) return; // Caller should have ensured an AudioClip was present here
 
-        final AudioSingleSelectAdapter adapter = new AudioSingleSelectAdapter(mClipCards.get(position)
+        final AudioSelectAdapter adapter = new AudioSelectAdapter(mClipCards.get(position)
                                                                                   .getStoryPath()
                                                                                   .getStoryPathLibrary(),
-                                                                        getAudioAtPosition(position));
+                                                                              getAudioAtPosition(position));
         RecyclerView audioRecyclerView = new RecyclerView(mRecyclerView.getContext());
         audioRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         audioRecyclerView.setAdapter(adapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mRecyclerView.getContext());
         builder.setView(audioRecyclerView)
-               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+               .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
-                       mClipCards.get(0)
-                                 .getStoryPath()
-                                 .getStoryPathLibrary()
-                                 .removeAudioClipFromClipCard(mClipCards,
-                                                              adapter.getSelectedClip(),
-                                                              mClipCards.get(position));
+                       List<AudioClip> audioClipsToRemove = adapter.getSelectedClips();
+
+                       for (AudioClip audioClip : audioClipsToRemove) {
+                           mClipCards.get(0)
+                                   .getStoryPath()
+                                   .getStoryPathLibrary()
+                                   .removeAudioClipFromClipCard(mClipCards,
+                                           audioClip,
+                                           mClipCards.get(position));
+                       }
+
 
                        mClipCards.get(0)
                                .getStoryPath()
                                .getStoryPathLibrary()
                                .save(false);
+
+                       notifyItemChanged(position);
                    }
                })
                .setNegativeButton("Cancel", null)
@@ -215,21 +228,39 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         return getAudioAtPosition(position).size() > 0;
     }
 
+    /**
+     * Return a List of all the AudioClips that span the ClipCard
+     * at the given position
+     */
     private ArrayList<AudioClip> getAudioAtPosition(int position) {
         ArrayList<AudioClip> result = new ArrayList<>();
 
-        if (mAudioClips == null) return result;
+        if (mAudioClips == null) {
+            Log.d(TAG, "No AudioClips for position " + position);
+            return result;
+        }
 
         for (AudioClip audio : mAudioClips) {
-            if (audio.getPositionClipId() != null) {
-                if (audio.getPositionClipId().equals(
-                        mClipCards.get(position).getId())) {
-                    result.add(audio);
-                }
-            } else if (audio.getPositionIndex() == position) {
+            int firstIdx = mClipCards.indexOf(mStoryPathLibrary.getFirstClipCardForAudioClip(audio, mClipCards));
+            int lastIdx = mClipCards.indexOf(mStoryPathLibrary.getLastClipCardForAudioClip(audio, mClipCards));
+
+            Log.d(TAG, String.format("Audio %s spans pos %d - %d. Clip is pos %d", audio.getUuid().substring(0,3), firstIdx, lastIdx, position));
+            if (firstIdx <= position && position <= lastIdx) {
                 result.add(audio);
+                Log.d(TAG, "Audio spans Clip at pos " + position);
             }
+
+//            if (audio.getPositionClipId() != null) {
+//                if (audio.getPositionClipId().equals(
+//                    mClipCards.get(position).getId())) {
+//
+//                    result.add(audio);
+//                }
+//            } else if (audio.getPositionIndex() == position) {
+//                result.add(audio);
+//            }
         }
+        Log.d(TAG, String.format("Found %d clips for position %d", result.size(), position));
         return result;
     }
 

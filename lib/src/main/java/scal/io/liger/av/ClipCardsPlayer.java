@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -229,9 +230,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
      *
      * Must be called on the Main thread.
      */
-    public ClipCardsPlayer(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) {
+    public ClipCardsPlayer(@NonNull FrameLayout container,
+                           @NonNull List<ClipCard> clipCards,
+                           @NonNull List<AudioClip> audioClips) {
+
         mContainerLayout = container;
         mClipCards = clipCards;
+        mAudioClips = audioClips;
         init();
     }
 
@@ -239,9 +244,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         mPhotoSlideDurationMs = durationMs;
     }
 
-    public void addAudioTrack(MediaFile mediaFile) {
+    public void notifyAudioClipsChanged() {
         mAudioTracksDirty = true;
-        Log.d(TAG, "Audio track added " + mediaFile.getPath());
+        Log.d(TAG, "Audio track changed");
     }
 
     /**
@@ -645,12 +650,14 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         if (mAudioClipPlayers != null) {
             for (MediaPlayer audioPlayer : mAudioClipPlayers) {
-                if (audioPlayer.isPlaying()) {
+                if (!audioPlayer.isPlaying()) {
                     audioPlayer.setVolume(mRequestedVolume, mRequestedVolume);
                     audioPlayer.start();
-                }
+                    Log.d(TAG, String.format("Starting audio player for media %s with volume %f",
+                            mMediaPlayerToAudioClip.get(audioPlayer).getUuid().substring(0,3), mRequestedVolume));
+                } else Log.d(TAG, "audioPlayer is already playing on resumePlayback!");
             }
-        }
+        } else Log.d(TAG, "mAudioClipPlayers is null on resumePlayback!");
     }
 
     protected void _stopPlayback() {
@@ -1011,6 +1018,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             if (!library.isClipCardWithinAudioClipRange(mCurrentlyPlayingCard,
                                                        audioClip,
                                                        mClipCards)) {
+                Log.d(TAG, "Stopping finished AudioClip " + audioClip.getUuid());
                 player.stop();
             }
         }

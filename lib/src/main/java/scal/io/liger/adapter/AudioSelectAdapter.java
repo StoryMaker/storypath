@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import scal.io.liger.R;
 import scal.io.liger.model.AudioClip;
@@ -17,17 +18,17 @@ import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPathLibrary;
 
 /**
- * An adapter for selecting a single audio track from a collection.
- * Call {@link #getSelectedClip()} to retrieve the currently selected AudioClip
+ * An adapter for selecting a audio tracks from a collection.
+ * Call {@link #getSelectedClips()} to retrieve the currently selected AudioClip
  *
  * Created by davidbrodsky on 10/23/14.
  */
-public class AudioSingleSelectAdapter extends RecyclerView.Adapter<AudioSingleSelectAdapter.ViewHolder> {
+public class AudioSelectAdapter extends RecyclerView.Adapter<AudioSelectAdapter.ViewHolder> {
     public static final String TAG = "AudioAdapter";
 
     private StoryPathLibrary mStoryPathLibrary;
     private ArrayList<AudioClip> mAudioClips;
-    private int mSelectedPosition = -1;
+    private boolean[] mSelectedPosition;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,40 +42,35 @@ public class AudioSingleSelectAdapter extends RecyclerView.Adapter<AudioSingleSe
         }
     }
 
-    public AudioSingleSelectAdapter(StoryPathLibrary storyPathLibrary,
-                                    ArrayList<AudioClip> audioClips) {
+    public AudioSelectAdapter(StoryPathLibrary storyPathLibrary,
+                              ArrayList<AudioClip> audioClips) {
         mStoryPathLibrary = storyPathLibrary;
         mAudioClips = audioClips;
+        mSelectedPosition = new boolean[audioClips.size()];
     }
 
     @Override
-    public AudioSingleSelectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    public AudioSelectAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.narration_clip_item, parent, false);
+                .inflate(R.layout.audio_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ((CheckBox) v.findViewById(R.id.check_box)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // Uncheck previously checked view
-                if (isChecked) {
-                    int lastSelectedPosition = mSelectedPosition;
-                    mSelectedPosition = (int) buttonView.getTag();
-                    if (lastSelectedPosition != -1) {
-                        notifyItemChanged(lastSelectedPosition);
-                    }
-                }
+                int position = (int) buttonView.getTag();
+                mSelectedPosition[position] = isChecked;
             }
         });
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(AudioSingleSelectAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(AudioSelectAdapter.ViewHolder viewHolder, int position) {
 
         AudioClip audio = mAudioClips.get(position);
 
         viewHolder.checkBox.setTag(position);
-        viewHolder.checkBox.setChecked(mSelectedPosition == position);
+        viewHolder.checkBox.setChecked(mSelectedPosition[position]);
 
         MediaFile mf = mStoryPathLibrary.getMediaFile(audio.getUuid());
         if (mf == null) {
@@ -89,8 +85,12 @@ public class AudioSingleSelectAdapter extends RecyclerView.Adapter<AudioSingleSe
         return mAudioClips.size();
     }
 
-    public AudioClip getSelectedClip() {
-        return mAudioClips.get(mSelectedPosition);
+    public List<AudioClip> getSelectedClips() {
+        List<AudioClip> selectedClips = new ArrayList<>();
+        for (int idx = 0; idx < mAudioClips.size(); idx++) {
+            if (mSelectedPosition[idx]) selectedClips.add(mAudioClips.get(idx));
+        }
+        return selectedClips;
     }
 
 }

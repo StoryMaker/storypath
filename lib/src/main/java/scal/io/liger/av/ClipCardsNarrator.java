@@ -105,8 +105,11 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
      * @param container the container into which the player should be inflated
      * @param clipCards the in-order list of cards to allow recording narration for
      */
-    public ClipCardsNarrator(@NonNull FrameLayout container, @NonNull List<ClipCard> clipCards) throws IOException {
-        super(container, clipCards);
+    public ClipCardsNarrator(@NonNull FrameLayout container,
+                             @NonNull List<ClipCard> clipCards,
+                             @NonNull List<AudioClip> audioClips) throws IOException {
+
+        super(container, clipCards, audioClips);
         container.setKeepScreenOn(true);
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
@@ -195,7 +198,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
             AudioClip audioClip = new AudioClip(null,                           // position_clip_id
                                                 mSelectedClipIndexes.first,     // position_index
                                                 1f,                             // volume
-                                                mSelectedClipIndexes.second - mSelectedClipIndexes.first,   // Clip span
+                                                mSelectedClipIndexes.second - mSelectedClipIndexes.first + 1,   // Clip span
                                                 true,                           // truncate
                                                 false,                          // overlap
                                                 false,                          // fill_repeat

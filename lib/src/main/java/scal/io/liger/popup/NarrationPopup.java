@@ -1,7 +1,6 @@
 package scal.io.liger.popup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -68,7 +67,10 @@ public class NarrationPopup {
      * @param cards A list of ClipCards to allow recording narration over.
      * @param listener A listener notified whenever a narration is recorded.
      */
-    public void show(final List<ClipCard> cards, final ArrayList<AudioClip> audioClips, final ClipCardsNarrator.NarrationListener listener) {
+    public void show(final List<ClipCard> cards,
+                     final ArrayList<AudioClip> audioClips,
+                     final ClipCardsNarrator.NarrationListener listener) {
+
         final View decorView = mActivity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override
@@ -79,7 +81,7 @@ public class NarrationPopup {
                 mVuLayout = (ViewGroup) popUpView.findViewById(R.id.vumeter_layout);
                 FrameLayout mediaPlayerContainer = (FrameLayout) popUpView.findViewById(R.id.mixed_media_player);
                 try {
-                    mNarrator = new ClipCardsNarrator(mediaPlayerContainer, cards);
+                    mNarrator = new ClipCardsNarrator(mediaPlayerContainer, cards, audioClips);
                 } catch (IOException e) {
                     e.printStackTrace();
                     // TODO : report failure, close popup?
@@ -95,7 +97,7 @@ public class NarrationPopup {
 
                     @Override
                     public void onNarrationFinished(AudioClip audioClip, MediaFile narration) {
-                        mNarrator.addAudioTrack(narration);
+                        mNarrator.notifyAudioClipsChanged();
                         recordButton.setText(mActivity.getString(R.string.dialog_record));
                         if (listener != null) listener.onNarrationFinished(audioClip, narration);
                         mVuLayout.setVisibility(View.INVISIBLE);

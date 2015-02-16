@@ -183,6 +183,7 @@ public class StoryPathLibrary extends StoryPath {
 
         for (int idx = firstIdx; idx < audioClip.getClipSpan(); idx++) {
             if (clipCards.get(idx).getId().equals(clipCard.getId())) {
+                Log.d(TAG, "Found ClipCard to remove from AudioClip with uuid " + audioClip.getUuid());
                 // We found the ClipCard to remove from this AudioClip
                 if (idx == firstIdx) {
                     // The ClipCard leads the AudioClip. Advance head to
@@ -236,7 +237,7 @@ public class StoryPathLibrary extends StoryPath {
 
         if (clipCards == null) clipCards = getClipCardsWithAttachedMedia();
 
-        int lastIdx = clipCards.indexOf(getFirstClipCardForAudioClip(audioClip, clipCards)) + audioClip.getClipSpan();
+        int lastIdx = clipCards.indexOf(getFirstClipCardForAudioClip(audioClip, clipCards)) + audioClip.getClipSpan() - 1;
         return clipCards.get(lastIdx);
     }
 
@@ -265,6 +266,7 @@ public class StoryPathLibrary extends StoryPath {
             audioClips = new ArrayList<>();
         }
 
+        Log.d(TAG, String.format("Added %s to audioClips. Total audio clips %d", audioClip.getUuid().substring(0,3), audioClips.size()));
         audioClips.add(audioClip);
         saveMediaFile(audioClip.getUuid(), mediaFile);
     }
@@ -301,6 +303,7 @@ public class StoryPathLibrary extends StoryPath {
             Log.e(TAG, "can't update index item with thumbnail path (no index item found for " + getSavedFileName() + ")");
         }
 
+        Log.d(TAG, String.format("Added %s to mediaFiles", uuid.substring(0,3)));
         this.mediaFiles.put(uuid, file);
     }
 
@@ -340,7 +343,10 @@ public class StoryPathLibrary extends StoryPath {
             }
         }
 
-        if (toDelete != null) audioClips.remove(toDelete);
+        if (toDelete != null) {
+            audioClips.remove(toDelete);
+        } else
+            Log.d(TAG, "Could not Delete AudioClip with uuid " + uuid);
 
         deleteMediaFile(uuid);
     }

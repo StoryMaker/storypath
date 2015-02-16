@@ -3,7 +3,6 @@ package scal.io.liger.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.TypedValue;
@@ -54,6 +53,8 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         Log.d(TAG, "constructor");
         mContext = context;
         mCardModel = (ReviewCard) cardModel;
+        mAudioClips = mCardModel.getStoryPath().getStoryPathLibrary().getAudioClips();
+        if (mAudioClips == null) mAudioClips = new ArrayList<>();
     }
 
     @Override
@@ -68,9 +69,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
         initClipCardsWithAttachedMedia();
         if (mMediaCards.size() > 0) {
-            mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards);
-            MediaFile narrationFile = mCardModel.getSelectedNarrationFile();
-            if (narrationFile != null) mCardsPlayer.addAudioTrack(narrationFile);
+            mCardsPlayer = new ClipCardsPlayer(flPlayer, mMediaCards, mAudioClips);
         } else
             showNoClipPlaceholder(flPlayer);
 
@@ -165,11 +164,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
     @Override
     public void onNarrationFinished(AudioClip audioClip, MediaFile narration) {
-        mCardModel.setNarration(narration);
-
-        if (mCardsPlayer != null) {
-            mCardsPlayer.addAudioTrack(narration);
-        }
+//        mCardModel.setNarration(narration);
 
         mCardModel.getStoryPath()
                   .getStoryPathLibrary()
