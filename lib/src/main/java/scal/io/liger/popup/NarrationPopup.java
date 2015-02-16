@@ -101,6 +101,7 @@ public class NarrationPopup {
                         recordButton.setText(mActivity.getString(R.string.dialog_record));
                         if (listener != null) listener.onNarrationFinished(audioClip, narration);
                         mVuLayout.setVisibility(View.INVISIBLE);
+                        adapter.notifyDataSetChanged();
                     }
                 };
                 mNarrator.setNarrationListener(narrationListener);
