@@ -497,6 +497,12 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 // do nothing
                 break;
         }
+
+        try {
+            prepareSecondaryPlayers();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -588,15 +594,18 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 }
                 break;
         }
+        try {
+            prepareSecondaryPlayers();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mAdvancingClips = false;
     }
 
-    // TODO : Should Operate on a Collection of MediaPlayers for multi-track audio support
     protected void _startPlayback() {
         if (!isNewStateValid(PlayerState.PLAYING)) return; // Don't call #changeUiState as we yield to _resumePlayback
 
         try {
-            // TODO: Adapt for multi-track audio. e.g : For audio track in ClipCard etc....
             if (!mCurrentlyPlayingCard.getMedium().equals(Constants.PHOTO))
                 prepareMediaPlayer(mMainPlayer, mCurrentlyPlayingCard, true);
             prepareSecondaryPlayers();
