@@ -9,23 +9,23 @@ import com.google.gson.annotations.Expose;
  * Created by josh on 2/13/15.
  */
 public class AudioClip implements Parcelable {
-    @Expose private String position_clip_id; // can be null if unused.  card id we are linked to either this or the next must have a value, but only one
-    @Expose private String uuid; // key to mediaFiles map in StoryModel // FIXME rename to clipcard uuid
-    @Expose private int position_index; // can be -1 if unused.
+    @Expose private String positionClipId; // can be null if unused.  card id we are linked to either this or the next must have a value, but only one
+    @Expose private String uuid; // key to mediaFiles map in StoryModel
+    @Expose private int positionIndex; // can be -1 if unused.
     @Expose private float volume; // 1.0 is full volume
-    @Expose private int clip_span;  // how many clips it should try to span
+    @Expose private int clipSpan;  // how many clips it should try to span
     @Expose private boolean truncate; // should this play out past the clips its spans, or trim its end to match
     @Expose private boolean overlap; // if overlap the next clip or push it out, can we
-    @Expose private boolean fill_repeat;  // repeat to fill if this audioclip is shorter than the clips it spans
+    @Expose private boolean fillRepeat;  // repeat to fill if this audioclip is shorter than the clips it spans
 
-    public AudioClip(String position_clip_id, int position_index, float volume, int clip_span, boolean truncate, boolean overlap, boolean fill_repeat, String uuid) {
-        this.position_clip_id = position_clip_id;
-        this.position_index = position_index;
+    public AudioClip(String positionClipId, int positionIndex, float volume, int clipSpan, boolean truncate, boolean overlap, boolean fillRepeat, String uuid) {
+        this.positionClipId = positionClipId;
+        this.positionIndex = positionIndex;
         this.volume = volume;
-        this.clip_span = clip_span;
+        this.clipSpan = clipSpan;
         this.truncate = truncate;
         this.overlap = overlap;
-        this.fill_repeat = fill_repeat;
+        this.fillRepeat = fillRepeat;
         this.uuid = uuid;
     }
 
@@ -42,7 +42,7 @@ public class AudioClip implements Parcelable {
      * as defined by {@link #getClipSpan()} and {@link #getPositionClipId()} or {@link #getPositionIndex()}
      */
     public boolean doFillRepeat() {
-        return fill_repeat;
+        return fillRepeat;
     }
 
     /**
@@ -68,11 +68,11 @@ public class AudioClip implements Parcelable {
      * it's length allows
      */
     public int getClipSpan() {
-        return clip_span;
+        return clipSpan;
     }
 
     public void setClipSpan(int newSpan) {
-        clip_span = newSpan;
+        clipSpan = newSpan;
     }
 
     public float getVolume() {
@@ -85,7 +85,7 @@ public class AudioClip implements Parcelable {
      * {@link scal.io.liger.model.StoryPathLibrary#getFirstClipCardForAudioClip(AudioClip, java.util.List)}
      */
     public int getPositionIndex() {
-        return position_index;
+        return positionIndex;
     }
 
     /**
@@ -93,8 +93,8 @@ public class AudioClip implements Parcelable {
      * unset any value passed to {@link #setPositionClipId(String)}
      */
     public void setPositionIndex(int newIndex) {
-        position_index = newIndex;
-        position_clip_id = null;
+        positionIndex = newIndex;
+        positionClipId = null;
     }
 
     /**
@@ -103,7 +103,7 @@ public class AudioClip implements Parcelable {
      * {@link scal.io.liger.model.StoryPathLibrary#getFirstClipCardForAudioClip(AudioClip, java.util.List)}
      */
     public String getPositionClipId() {
-        return position_clip_id;
+        return positionClipId;
     }
 
     /**
@@ -111,8 +111,8 @@ public class AudioClip implements Parcelable {
      * unset any value passed to {@link #setPositionIndex(int)}
      */
     public void setPositionClipId(String newClipId) {
-        position_clip_id = newClipId;
-        position_index= -1;
+        positionClipId = newClipId;
+        positionIndex= -1;
     }
 
     // TODO this is a cleaner form of parcelable: http://www.parcelabler.com/
@@ -126,13 +126,13 @@ public class AudioClip implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         String[] data = new String[7];
         out.writeStringArray(new String[]{
-                this.position_clip_id,
-                "" + this.position_index,
+                this.positionClipId,
+                "" + this.positionIndex,
                 "" + this.volume,
-                (this.clip_span ? "1" : "0"),
+                "" + this.clipSpan,
                 (this.truncate ? "1" : "0"),
                 (this.overlap ? "1" : "0"),
-                (this.fill_repeat ? "1" : "0")
+                (this.fillRepeat ? "1" : "0")
         });
     }
 
@@ -143,13 +143,13 @@ public class AudioClip implements Parcelable {
 
         in.readStringArray(data);
 
-        this.position_clip_id = data[0];
-        this.position_index = Integer.parseInt(data[1]);
+        this.positionClipId = data[0];
+        this.positionIndex = Integer.parseInt(data[1]);
         this.volume = Float.parseFloat(data[2]);
-        this.clip_span = data[3].equals("1");
+        this.clipSpan = Integer.parseInt(data[3]);
         this.truncate = data[4].equals("1");
         this.overlap = data[5].equals("1");
-        this.fill_repeat = data[6].equals("1");
+        this.fillRepeat = data[6].equals("1");
     }
 
 
