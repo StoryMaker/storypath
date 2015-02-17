@@ -156,10 +156,6 @@ public class StoryPathLibrary extends StoryPath {
         this.audioClips = audioClips;
     }
 
-    public ArrayList<AudioClip> getAudioClips() {
-        return audioClips;
-    }
-
     /**
      * Remove this AudioClip from the passed ClipCard, if this
      * AudioClip's span includes it.
