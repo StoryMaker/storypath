@@ -866,6 +866,7 @@ public class StoryPath {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    // FIXME doesn't this belong in SPL?
     public ArrayList<FullMetadata> exportAllMetadata() {
         ArrayList<ClipMetadata> metadata = exportMetadata();
         ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
@@ -886,6 +887,9 @@ public class StoryPath {
         return allMetadata;
     }
 
+    public ArrayList<AudioClip> exportAudioClips() {
+        return getStoryPathLibrary().getAudioClips();
+    }
 
 
     public ArrayList<MediaFile> getExternalMediaFile(String reference) {

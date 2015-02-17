@@ -15,6 +15,8 @@ import scal.io.liger.view.Util;
 public class FullMetadata implements Parcelable {
     private static final String TAG = "FullMetadata";
 
+    // TODO this is a cleaner form of parcelable: http://www.parcelabler.com/
+
     // class used for export, not serialized
 
     private int startTime;

@@ -25,6 +25,7 @@ import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
+import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.StoryPath;
@@ -47,11 +48,13 @@ public class Util {
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
         ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
+        ArrayList<AudioClip> exportAudioClipsMetadata = storyPath.exportAudioClips();
         if (exportMetadata.size() > 0) {
             Intent i = new Intent();
             i.setAction(Constants.ACTION_PUBLISH);
             i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
             i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
+            i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_AUDIOCLIPS, exportAudioClipsMetadata);
             host.startActivity(i);
             host.finish(); // Do we definitely want to finish the host Activity?
         } else {
