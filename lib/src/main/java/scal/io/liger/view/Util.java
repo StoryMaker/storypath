@@ -26,6 +26,7 @@ import scal.io.liger.MainActivity;
 import scal.io.liger.R;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.AudioClip;
+import scal.io.liger.model.AudioClipFull;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.FullMetadata;
 import scal.io.liger.model.StoryPath;
@@ -48,7 +49,7 @@ public class Util {
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
         ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
-        ArrayList<AudioClip> exportAudioClipsMetadata = storyPath.exportAudioClips();
+        ArrayList<AudioClipFull> exportAudioClipsMetadata = storyPath.exportAudioClips();
         if (exportMetadata.size() > 0) {
             Intent i = new Intent();
             i.setAction(Constants.ACTION_PUBLISH);

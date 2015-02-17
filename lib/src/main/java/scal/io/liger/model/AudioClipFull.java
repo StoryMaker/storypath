@@ -7,10 +7,12 @@ import com.google.gson.annotations.Expose;
 
 /**
  * Created by josh on 2/13/15.
+ *
+ * this is a copy of AudioClip.java that flattens the MediaFile object down to a simple path so we can pass it out to through the intent to the parent app which knows nothing of MediaFiles... yeah, not so pretty but it works
  */
-public class AudioClip {
+public class AudioClipFull implements Parcelable {
+    @Expose private String path; // path media file
     @Expose private String positionClipId; // can be null if unused.  card id we are linked to either this or the next must have a value, but only one
-    @Expose private String uuid; // key to mediaFiles map in StoryModel
     @Expose private int positionIndex; // can be -1 if unused.
     @Expose private float volume; // 1.0 is full volume
     @Expose private int clipSpan;  // how many clips it should try to span
@@ -18,7 +20,8 @@ public class AudioClip {
     @Expose private boolean overlap; // if overlap the next clip or push it out, can we
     @Expose private boolean fillRepeat;  // repeat to fill if this audioclip is shorter than the clips it spans
 
-    public AudioClip(String positionClipId, int positionIndex, float volume, int clipSpan, boolean truncate, boolean overlap, boolean fillRepeat, String uuid) {
+    public AudioClipFull(String path, String positionClipId, int positionIndex, float volume, int clipSpan, boolean truncate, boolean overlap, boolean fillRepeat) {
+        this.path = path;
         this.positionClipId = positionClipId;
         this.positionIndex = positionIndex;
         this.volume = volume;
@@ -26,15 +29,18 @@ public class AudioClip {
         this.truncate = truncate;
         this.overlap = overlap;
         this.fillRepeat = fillRepeat;
-        this.uuid = uuid;
     }
 
-    /**
-     * @return the uuid used to retrieve the corresponding audio MediaFile
-     * from {@link scal.io.liger.model.StoryPathLibrary#mediaFiles}
-     */
-    public String getUuid() {
-        return uuid;
+    public AudioClipFull(StoryPathLibrary spl, AudioClip ac) {
+        this(spl.getMediaFile(ac.getUuid()).getPath(), ac.getPositionClipId(), ac.getPositionIndex(), ac.getVolume(), ac.getClipSpan(), ac.doTruncate(), ac.doOverlap(), ac.doFillRepeat());
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     /**
@@ -98,7 +104,7 @@ public class AudioClip {
     /**
      * @return the index of the starting ClipCard within the StoryPath's ClipCards.
      * For a convenience method to quickly find the first ClipCard see
-     * {@link scal.io.liger.model.StoryPathLibrary#getFirstClipCardForAudioClip(AudioClip, java.util.List)}
+     * {@link StoryPathLibrary#getFirstClipCardForAudioClip(scal.io.liger.model.AudioClipFull, java.util.List)}
      */
     public int getPositionIndex() {
         return positionIndex;
@@ -116,7 +122,7 @@ public class AudioClip {
     /**
      * @return The id identifying the starting ClipCard in a StoryPathLibrary
      * For a convenience method to quickly find the first ClipCard see
-     * {@link scal.io.liger.model.StoryPathLibrary#getFirstClipCardForAudioClip(AudioClip, java.util.List)}
+     * {@link StoryPathLibrary#getFirstClipCardForAudioClip(scal.io.liger.model.AudioClipFull, java.util.List)}
      */
     public String getPositionClipId() {
         return positionClipId;
@@ -130,4 +136,53 @@ public class AudioClip {
         positionClipId = newClipId;
         positionIndex= -1;
     }
+
+    // TODO this is a cleaner form of parcelable: http://www.parcelabler.com/
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        String[] data = new String[8];
+        out.writeStringArray(new String[]{
+                this.path,
+                this.positionClipId,
+                "" + this.positionIndex,
+                "" + this.volume,
+                "" + this.clipSpan,
+                (this.truncate ? "1" : "0"),
+                (this.overlap ? "1" : "0"),
+                (this.fillRepeat ? "1" : "0")
+        });
+    }
+
+    public AudioClipFull(Parcel in) {
+        String[] data = new String[8];
+
+        in.readStringArray(data);
+        this.path = data[0];
+        this.positionClipId = data[1];
+        this.positionIndex = Integer.parseInt(data[2]);
+        this.volume = Float.parseFloat(data[3]);
+        this.clipSpan = Integer.parseInt(data[4]);
+        this.truncate = data[5].equals("1");
+        this.overlap = data[6].equals("1");
+        this.fillRepeat = data[7].equals("1");
+    }
+
+
+    public static final Creator<AudioClipFull> CREATOR = new Creator<AudioClipFull>() {
+        public AudioClipFull createFromParcel(Parcel in) {
+            return new AudioClipFull(in);
+        }
+
+        public AudioClipFull[] newArray(int size) {
+            return new AudioClipFull[size];
+        }
+    };
+
+//    public AudioClip() {}
 }
