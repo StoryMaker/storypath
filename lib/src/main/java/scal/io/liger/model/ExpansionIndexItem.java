@@ -9,12 +9,14 @@ import java.util.HashMap;
 public class ExpansionIndexItem {
 
     // required
+    String packageName;
     String expansionId;
     String patchOrder;
     String expansionFileName;
     String expansionFileVersion;
     String expansionFilePath; // relative to Environment.getExternalStorageDirectory()
     String expansionFileUrl;
+    String expansionThumbnail;
 
     // optional
     String author;
@@ -30,13 +32,23 @@ public class ExpansionIndexItem {
 
     }
 
-    public ExpansionIndexItem(String patchOrder, String expansionId, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl) {
+    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
+        this.packageName = packageName;
         this.expansionId = expansionId;
         this.patchOrder = patchOrder;
         this.expansionFileName = expansionFileName;
         this.expansionFileVersion = expansionFileVersion;
         this.expansionFilePath = expansionFilePath;
         this.expansionFileUrl = expansionFileUrl;
+        this.expansionThumbnail = expansionThumbnail;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public String getExpansionId() {
@@ -85,6 +97,14 @@ public class ExpansionIndexItem {
 
     public void setExpansionFileUrl(String expansionFileUrl) {
         this.expansionFileUrl = expansionFileUrl;
+    }
+
+    public String getExpansionThumbnail() {
+        return expansionThumbnail;
+    }
+
+    public void setExpansionThumbnail(String expansionThumbnail) {
+        this.expansionThumbnail = expansionThumbnail;
     }
 
     public String getAuthor() {

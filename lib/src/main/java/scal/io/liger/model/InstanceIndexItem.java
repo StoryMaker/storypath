@@ -3,6 +3,7 @@ package scal.io.liger.model;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -20,6 +21,11 @@ public class InstanceIndexItem implements Comparable {
     long storyCreationDate;    // static
     long storySaveDate;        // watch/update/persist? (this field would force an update to the index for every update to a path/library)
     String language;           // set to app language, used to force updates if language changes
+
+    // additional fields for supporting sequences of lessons
+    String storyPathId;
+    private ArrayList<String> storyPathPrerequisites;
+    long storyCompletionDate;
 
     public InstanceIndexItem() {
 
@@ -99,6 +105,30 @@ public class InstanceIndexItem implements Comparable {
 
         return new File(instanceFilePath).lastModified();
 
+    }
+
+    public String getStoryPathId() {
+        return storyPathId;
+    }
+
+    public void setStoryPathId(String storyPathId) {
+        this.storyPathId = storyPathId;
+    }
+
+    public ArrayList<String> getStoryPathPrerequisites() {
+        return storyPathPrerequisites;
+    }
+
+    public void setStoryPathPrerequisites(ArrayList<String> storyPathPrerequisites) {
+        this.storyPathPrerequisites = storyPathPrerequisites;
+    }
+
+    public long getStoryCompletionDate() {
+        return storyCompletionDate;
+    }
+
+    public void setStoryCompletionDate(long storyCompletionDate) {
+        this.storyCompletionDate = storyCompletionDate;
     }
 
     @Override

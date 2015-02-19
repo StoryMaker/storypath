@@ -37,6 +37,7 @@ public class IndexManager {
     private static String availableIndexName = "available_index.json";
     private static String installedIndexName = "installed_index.json";
     private static String instanceIndexName = "instance_index.json";
+    private static String contentIndexName = "content_index.json";
 
     public static void copyAvailableIndex(Context context) {
 
@@ -52,15 +53,7 @@ public class IndexManager {
         return;
     }
 
-    // shouldn't need this, instance index shouldn't be part of assets
-    /*
-    public static void copyInstanceIndex(Context context) {
-
-        copyIndex(context, instanceIndexName);
-
-        return;
-    }
-    */
+    // instance and content index shouldn't be part of assets
 
     private static void copyIndex(Context context, String jsonFileName) {
 
@@ -283,6 +276,51 @@ public class IndexManager {
         }
 
         return indexMap;
+    }
+
+    // only one key option for content index, file is loaded from a zipped content pack
+    // content index is read only, no register/update/save methods
+    public static HashMap<String, InstanceIndexItem> loadContentIndex(Context context, String packageName, String expansionId) {
+
+        String contentJson = null;
+        ArrayList<InstanceIndexItem> contentList = new ArrayList<InstanceIndexItem>();
+        HashMap<String, InstanceIndexItem> contentMap = new HashMap<String, InstanceIndexItem>();
+
+        String contentPath = packageName + File.separator + expansionId + File.separator + contentIndexName;
+
+        Log.d("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE");
+
+        try {
+            InputStream jsonStream = ZipHelper.getFileInputStream(contentPath, context);
+
+            if (jsonStream == null) {
+                Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
+                return contentMap;
+            }
+
+            int size = jsonStream.available();
+            byte[] buffer = new byte[size];
+            jsonStream.read(buffer);
+            jsonStream.close();
+            contentJson = new String(buffer);
+
+            if ((contentJson != null) && (contentJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                contentList = gson.fromJson(contentJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                }.getType());
+            }
+
+            for (InstanceIndexItem item : contentList) {
+                contentMap.put(item.getInstanceFilePath(), item);
+            }
+        } catch (IOException ioe) {
+            Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
+            return contentMap;
+        }
+
+        return contentMap;
     }
 
     public static HashMap<String, String> loadTempateIndex (Context context) {
