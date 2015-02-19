@@ -37,7 +37,7 @@ public class FullMetadata implements Parcelable {
         this.medium = mf.getMedium();
         this.filePath = mf.getPath();
 
-        if (this.medium == Constants.VIDEO || this.medium == Constants.AUDIO) {
+        if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             Log.d(TAG, "retriever.setDataSource(" + this.filePath + ");");
             retriever.setDataSource(this.filePath);
@@ -65,7 +65,7 @@ public class FullMetadata implements Parcelable {
         this.medium = data[5];
         this.filePath = data[6];
 
-        if (this.medium == Constants.VIDEO || this.medium == Constants.AUDIO) {
+        if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(this.filePath);
             String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
