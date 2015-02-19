@@ -889,11 +889,15 @@ public class StoryPath {
 
     public ArrayList<AudioClipFull> exportAudioClips() {
         ArrayList<AudioClip> acs = getStoryPathLibrary().getAudioClips();
-        ArrayList<AudioClipFull> acfs = new ArrayList<AudioClipFull>();
-        for (AudioClip ac: acs) {
-            acfs.add(new AudioClipFull(getStoryPathLibrary(), ac));
+        if (acs != null) {
+            ArrayList<AudioClipFull> acfs = new ArrayList<AudioClipFull>();
+            for (AudioClip ac : acs) {
+                acfs.add(new AudioClipFull(getStoryPathLibrary(), ac));
+            }
+            return acfs;
+        } else {
+            return null;
         }
-        return acfs;
     }
 
 

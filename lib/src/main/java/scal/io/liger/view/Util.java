@@ -55,7 +55,9 @@ public class Util {
             i.setAction(Constants.ACTION_PUBLISH);
             i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
             i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
-            i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_AUDIOCLIPS, exportAudioClipsMetadata);
+            if (exportAudioClipsMetadata != null) {
+                i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_AUDIOCLIPS, exportAudioClipsMetadata);
+            }
             host.startActivity(i);
             host.finish(); // Do we definitely want to finish the host Activity?
         } else {
