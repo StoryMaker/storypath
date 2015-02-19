@@ -154,58 +154,71 @@ public class ZipHelper {
     }
 
     public static InputStream getFileInputStream(String path, Context context) {
+
+        // resource file contains main file and patch file
+
+        ArrayList<String> paths = new ArrayList<String>();
+        paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+        if (Constants.PATCH_VERSION > 0) {
+
+            // if the main file is newer than the patch file, do not apply a patch file
+            if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
+                Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+            } else {
+                Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+            }
+
+        }
+
+        // add 3rd party stuff
+        HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
+
+        for (int i = 1; i <= expansionIndex.size(); i++) {
+            ExpansionIndexItem item = expansionIndex.get("" + i);
+            if (item == null) {
+                Log.d("ZIP", "EXPANSION FILE ENTRY MISSING FOR INDEX " + i);
+            } else {
+                String fileName = item.getExpansionFileName();
+                if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                    // Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
+                    paths.add(getExpansionFileFolder(context, fileName) + fileName);
+                } else {
+                    Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
+                }
+            }
+        }
+
+        return getFileInputStreamFromFiles(paths, path, context);
+    }
+
+    public static InputStream getFileInputStreamFromFile(String zipPath, String filePath, Context context) {
+
+        ArrayList<String> zipPaths = new ArrayList<String>();
+        zipPaths.add(zipPath);
+
+        return getFileInputStreamFromFiles(zipPaths, filePath, context);
+    }
+
+    public static InputStream getFileInputStreamFromFiles(ArrayList<String> zipPaths, String filePath, Context context) {
         try {
-            // resource file contains main file and patch file
-
-            ArrayList<String> paths = new ArrayList<String>();
-            paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
-            if (Constants.PATCH_VERSION > 0) {
-
-                // if the main file is newer than the patch file, do not apply a patch file
-                if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
-                    Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-                } else {
-                    Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-                    paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
-                }
-
-            }
-
-            // add 3rd party stuff
-            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
-
-            for (int i = 1; i <= expansionIndex.size(); i++) {
-                ExpansionIndexItem item = expansionIndex.get("" + i);
-                if (item == null) {
-                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING FOR INDEX " + i);
-                } else {
-                    String fileName = item.getExpansionFileName();
-                    if (DownloadHelper.checkExpansionFiles(context, fileName)) {
-                        // Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
-                        paths.add(getExpansionFileFolder(context, fileName) + fileName);
-                    } else {
-                        Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
-                    }
-                }
-            }
-
-            ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths.toArray(new String[paths.size()]));
+            ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(zipPaths.toArray(new String[zipPaths.size()]));
 
             if (resourceFile == null) {
                 return null;
             }
 
             // file path must be relative to the root of the resource file
-            InputStream resourceStream = resourceFile.getInputStream(path);
+            InputStream resourceStream = resourceFile.getInputStream(filePath);
 
             if (resourceStream == null) {
-                Log.d(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+                Log.d(" *** TESTING *** ", "Could not find file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             } else {
-                Log.d(" *** TESTING *** ", "Found file " + path + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+                Log.d(" *** TESTING *** ", "Found file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             }
             return resourceStream;
         } catch (IOException ioe) {
-            Log.e(" *** TESTING *** ", "Could not find file " + path + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+            Log.e(" *** TESTING *** ", "Could not find file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             return null;
         }
     }

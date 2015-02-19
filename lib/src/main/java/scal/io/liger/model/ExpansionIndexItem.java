@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class ExpansionIndexItem {
 
     // required
+    String packageName;
     String expansionId;
     String patchOrder;
     String expansionFileName;
@@ -30,13 +31,22 @@ public class ExpansionIndexItem {
 
     }
 
-    public ExpansionIndexItem(String patchOrder, String expansionId, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl) {
+    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl) {
+        this.packageName = packageName;
         this.expansionId = expansionId;
         this.patchOrder = patchOrder;
         this.expansionFileName = expansionFileName;
         this.expansionFileVersion = expansionFileVersion;
         this.expansionFilePath = expansionFilePath;
         this.expansionFileUrl = expansionFileUrl;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public String getExpansionId() {
