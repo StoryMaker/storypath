@@ -16,6 +16,7 @@ public class ExpansionIndexItem {
     String expansionFileVersion;
     String expansionFilePath; // relative to Environment.getExternalStorageDirectory()
     String expansionFileUrl;
+    String expansionThumbnail;
 
     // optional
     String author;
@@ -31,7 +32,7 @@ public class ExpansionIndexItem {
 
     }
 
-    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl) {
+    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
         this.packageName = packageName;
         this.expansionId = expansionId;
         this.patchOrder = patchOrder;
@@ -39,6 +40,7 @@ public class ExpansionIndexItem {
         this.expansionFileVersion = expansionFileVersion;
         this.expansionFilePath = expansionFilePath;
         this.expansionFileUrl = expansionFileUrl;
+        this.expansionThumbnail = expansionThumbnail;
     }
 
     public String getPackageName() {
@@ -95,6 +97,14 @@ public class ExpansionIndexItem {
 
     public void setExpansionFileUrl(String expansionFileUrl) {
         this.expansionFileUrl = expansionFileUrl;
+    }
+
+    public String getExpansionThumbnail() {
+        return expansionThumbnail;
+    }
+
+    public void setExpansionThumbnail(String expansionThumbnail) {
+        this.expansionThumbnail = expansionThumbnail;
     }
 
     public String getAuthor() {
