@@ -412,16 +412,16 @@ public class IndexManager {
                 newItem.setLanguage(language);
 
                 // first check local metadata fields
-                newItem.setStoryTitle(spl.getMetaTitle());
+                newItem.setTitle(spl.getMetaTitle());
                 newItem.setStoryType(spl.getMetaDescription()); // this seems more useful than medium
-                newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
+                newItem.setThumbnailPath(spl.getMetaThumbnail());
 
                 // unsure where to put additional fields
 
                 // if anything is missing, open story path
-                if ((newItem.getStoryTitle() == null) ||
+                if ((newItem.getTitle() == null) ||
                     (newItem.getStoryType() == null) ||
-                    (newItem.getStoryThumbnailPath() == null)) {
+                    (newItem.getThumbnailPath() == null)) {
                     Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
 
                     if (spl.getCurrentStoryPathFile() != null) {
@@ -432,14 +432,14 @@ public class IndexManager {
 
                     if (currentStoryPath != null) {
                         // null values will be handled by the index card builder
-                        if (newItem.getStoryTitle() == null) {
-                            newItem.setStoryTitle(currentStoryPath.getTitle());
+                        if (newItem.getTitle() == null) {
+                            newItem.setTitle(currentStoryPath.getTitle());
                         }
                         if (newItem.getStoryType() == null) {
                             newItem.setStoryType(currentStoryPath.getMedium());
                         }
-                        if (newItem.getStoryThumbnailPath() == null) {
-                            newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
+                        if (newItem.getThumbnailPath() == null) {
+                            newItem.setThumbnailPath(spl.getMetaThumbnail());
                         }
                     }
                 } else {

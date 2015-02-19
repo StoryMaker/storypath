@@ -285,12 +285,12 @@ public class StoryPathLibrary extends StoryPath {
             // item.setStoryThumbnailPath(file.getThumbnailFilePath()); <- use existing method instead
 
             // check current thumbnail to minimize file access
-            if ((item.getStoryThumbnailPath() != null) && (item.getStoryThumbnailPath().equals(this.getCoverImageThumbnailPath()))) {
+            if ((item.getThumbnailPath() != null) && (item.getThumbnailPath().equals(this.getCoverImageThumbnailPath()))) {
                 Log.d(TAG, "can't update index item with thumbnail path (index item found for " + getSavedFileName() + " already has the same path)");
             } else {
                 // thumbnail path method only checks story path, will return null if media is somehow
                 // captured by a library card, index items with null thumbnail paths shouldn't be an issue
-                item.setStoryThumbnailPath(this.getCoverImageThumbnailPath());
+                item.setThumbnailPath(this.getCoverImageThumbnailPath());
                 item.setStoryType(this.getMedium());
 
                 IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
@@ -535,10 +535,10 @@ public class StoryPathLibrary extends StoryPath {
                 InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
 
                 // check current title to minimize file access
-                if ((item.getStoryTitle() != null) && (item.getStoryTitle().equals(story.getTitle()))) {
+                if ((item.getTitle() != null) && (item.getTitle().equals(story.getTitle()))) {
                     Log.d(TAG, "can't update index item with title (index item found for " + getSavedFileName() + " already has the same title)");
                 } else {
-                    item.setStoryTitle(story.getTitle());
+                    item.setTitle(story.getTitle());
 
                     IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
                     Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
