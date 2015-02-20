@@ -109,7 +109,7 @@ public class IndexManager {
     }
 
     // need to move this elsewhere
-    private static File copyThumbnail(Context context, String thumbnailFileName) {
+    public static File copyThumbnail(Context context, String thumbnailFileName) {
 
         AssetManager assetManager = context.getAssets();
 
