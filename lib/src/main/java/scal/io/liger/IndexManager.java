@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
+import scal.io.liger.model.ContentPackMetadata;
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.StoryPath;
@@ -38,6 +39,7 @@ public class IndexManager {
     private static String installedIndexName = "installed_index.json";
     private static String instanceIndexName = "instance_index.json";
     private static String contentIndexName = "content_index.json";
+    private static String contentMetadataName = "content_metadata.json";
 
     public static void copyAvailableIndex(Context context) {
 
@@ -323,6 +325,46 @@ public class IndexManager {
         return contentMap;
     }
 
+    // not strictly an index, but including here because code is similar
+    public static ContentPackMetadata loadContentMetadata(Context context, String packageName, String expansionId) {
+
+        String metadataJson = null;
+        ContentPackMetadata metadata = null;
+
+        String metadataPath = packageName + File.separator + expansionId + File.separator + contentMetadataName;
+
+        Log.d("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE");
+
+        try {
+            InputStream jsonStream = ZipHelper.getFileInputStream(metadataPath, context);
+
+            if (jsonStream == null) {
+                Log.e("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
+                return null;
+            }
+
+            int size = jsonStream.available();
+            byte[] buffer = new byte[size];
+            jsonStream.read(buffer);
+            jsonStream.close();
+            metadataJson = new String(buffer);
+
+            if ((metadataJson != null) && (metadataJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                metadata = gson.fromJson(metadataJson, new TypeToken<ContentPackMetadata>() {
+                }.getType());
+            }
+        } catch (IOException ioe) {
+            Log.e("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
+            return null;
+        }
+
+        return metadata;
+    }
+
+
     public static HashMap<String, String> loadTempateIndex (Context context) {
         HashMap<String, String> templateMap = new HashMap<String, String>();
 
@@ -370,16 +412,16 @@ public class IndexManager {
                 newItem.setLanguage(language);
 
                 // first check local metadata fields
-                newItem.setStoryTitle(spl.getMetaTitle());
+                newItem.setTitle(spl.getMetaTitle());
                 newItem.setStoryType(spl.getMetaDescription()); // this seems more useful than medium
-                newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
+                newItem.setThumbnailPath(spl.getMetaThumbnail());
 
                 // unsure where to put additional fields
 
                 // if anything is missing, open story path
-                if ((newItem.getStoryTitle() == null) ||
+                if ((newItem.getTitle() == null) ||
                     (newItem.getStoryType() == null) ||
-                    (newItem.getStoryThumbnailPath() == null)) {
+                    (newItem.getThumbnailPath() == null)) {
                     Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
 
                     if (spl.getCurrentStoryPathFile() != null) {
@@ -390,14 +432,14 @@ public class IndexManager {
 
                     if (currentStoryPath != null) {
                         // null values will be handled by the index card builder
-                        if (newItem.getStoryTitle() == null) {
-                            newItem.setStoryTitle(currentStoryPath.getTitle());
+                        if (newItem.getTitle() == null) {
+                            newItem.setTitle(currentStoryPath.getTitle());
                         }
                         if (newItem.getStoryType() == null) {
                             newItem.setStoryType(currentStoryPath.getMedium());
                         }
-                        if (newItem.getStoryThumbnailPath() == null) {
-                            newItem.setStoryThumbnailPath(spl.getMetaThumbnail());
+                        if (newItem.getThumbnailPath() == null) {
+                            newItem.setThumbnailPath(spl.getMetaThumbnail());
                         }
                     }
                 } else {
