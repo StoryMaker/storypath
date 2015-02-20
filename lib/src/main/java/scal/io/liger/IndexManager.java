@@ -524,16 +524,24 @@ public class IndexManager {
 
     public static void registerAvailableIndexItem(Context context, ExpansionIndexItem indexItem) {
 
-        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
-        indexList.add(indexItem);
+        HashMap<String, ExpansionIndexItem> indexMap = loadAvailableIdIndex(context);
+        indexMap.put(indexItem.getExpansionId(), indexItem);
+        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        for (ExpansionIndexItem eii : indexMap.values()) {
+            indexList.add(indexItem);
+        }
         saveIndex(context, indexList, availableIndexName);
         return;
     }
 
     public static void registerInstalledIndexItem(Context context, ExpansionIndexItem indexItem) {
 
-        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName);
-        indexList.add(indexItem);
+        HashMap<String, ExpansionIndexItem> indexMap = loadInstalledIdIndex(context);
+        indexMap.put(indexItem.getExpansionId(), indexItem);
+        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        for (ExpansionIndexItem eii : indexMap.values()) {
+            indexList.add(indexItem);
+        }
         saveIndex(context, indexList, installedIndexName);
         return;
     }
