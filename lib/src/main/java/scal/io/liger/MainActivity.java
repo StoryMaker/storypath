@@ -66,9 +66,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // copy index files
-        IndexManager.copyAvailableIndex(MainActivity.this);
-        IndexManager.copyInstalledIndex(MainActivity.this);
+        // copy index files - now handled in StoryMaker HomeActivity
+        // IndexManager.copyAvailableIndex(MainActivity.this);
+        // IndexManager.copyInstalledIndex(MainActivity.this);
 
         // check expansion files, initiate downloads if necessary
         DownloadHelper.checkAndDownload(MainActivity.this);
