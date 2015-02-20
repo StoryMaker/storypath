@@ -124,7 +124,10 @@ public class IndexManager {
             thumbnailFile.delete();
         }
 
-        thumbnailFile.mkdirs();
+        File thumbnailDirectory = new File(thumbnailFile.getParent());
+        if (!thumbnailDirectory.exists()) {
+            thumbnailDirectory.mkdirs();
+        }
 
         InputStream assetIn = null;
         OutputStream assetOut = null;
