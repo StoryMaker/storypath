@@ -124,6 +124,8 @@ public class IndexManager {
             thumbnailFile.delete();
         }
 
+        thumbnailFile.mkdirs();
+
         InputStream assetIn = null;
         OutputStream assetOut = null;
 
