@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by mnbogner on 12/8/14.
  */
-public class InstanceIndexItem extends BaseIndexItem implements Comparable {
+public class InstanceIndexItem extends BaseIndexItem {
 
     // only save libraries?
 
@@ -76,6 +76,7 @@ public class InstanceIndexItem extends BaseIndexItem implements Comparable {
         this.language = language;
     }
 
+    @Override
     public long getLastModifiedTime() {
         if (TextUtils.isEmpty(instanceFilePath)) return 0;
 
