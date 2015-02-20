@@ -148,7 +148,7 @@ public class IndexManager {
             assetOut.close();
             assetOut = null;
         } catch (IOException ioe) {
-            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED");
+            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED: " + ioe.getLocalizedMessage());
             return null;
         }
 
