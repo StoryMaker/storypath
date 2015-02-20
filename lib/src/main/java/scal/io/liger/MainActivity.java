@@ -39,6 +39,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     public static final String INTENT_KEY_WINDOW_TITLE = "window_title";
     public static final String INTENT_KEY_STORYPATH_LIBRARY_ID = "storypath_library_id";
+    public static final String INTENT_KEY_STORYPATH_LIBRARY_PATH = "storypath_library_path";
     public static final String INTENT_KEY_STORYPATH_INSTANCE_PATH = "storypath_instance_path";
 
     RecyclerView mRecyclerView;
