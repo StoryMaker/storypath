@@ -76,12 +76,12 @@ public class InstanceIndexItem extends BaseIndexItem {
         this.language = language;
     }
 
-    @Override
     public long getLastModifiedTime() {
-        if (TextUtils.isEmpty(instanceFilePath)) return 0;
-
-        return new File(instanceFilePath).lastModified();
-
+        if (TextUtils.isEmpty(instanceFilePath)) {
+            return 0;
+        } else {
+            return new File(instanceFilePath).lastModified();
+        }
     }
 
     public String getStoryPathId() {
@@ -110,10 +110,12 @@ public class InstanceIndexItem extends BaseIndexItem {
 
     @Override
     public int compareTo(Object another) {
-        if (another instanceof InstanceIndexItem) {
-            return new Date(getLastModifiedTime()).compareTo(
-                   new Date(((InstanceIndexItem) another).getLastModifiedTime()));
+        if (another instanceof  ExpansionIndexItem) {
+            return 1; // should always appear above expansion index items
+        } else if (another instanceof InstanceIndexItem) {
+            return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
+        } else {
+            return 0; // otherwise don't care
         }
-        return -1; // Return "older" if no date available
     }
 }
