@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by mnbogner on 2/19/15.
  */
-public class BaseIndexItem implements Comparable {
+public class BaseIndexItem  implements Comparable {
 
     String title;
     String description;
@@ -38,12 +38,8 @@ public class BaseIndexItem implements Comparable {
         this.thumbnailPath = thumbnailPath;
     }
 
-    public long getLastModifiedTime() {
-        return 0;
-    }
-
     @Override
     public int compareTo(Object another) {
-        return -1; // Return "older" if no date available
+        return 0; // no basis for comparison
     }
 }

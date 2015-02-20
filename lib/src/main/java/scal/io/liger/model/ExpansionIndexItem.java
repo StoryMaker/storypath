@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * Created by mnbogner on 11/24/14.
  */
-public class ExpansionIndexItem extends BaseIndexItem  {
+public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     // required
     String packageName;
@@ -169,5 +169,14 @@ public class ExpansionIndexItem extends BaseIndexItem  {
         }
 
         this.extras.put(key, value);
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        if (another instanceof InstanceIndexItem) {
+            return -1; // should always appear below instance index items
+        } else {
+            return 0; // otherwise don't care
+        }
     }
 }
