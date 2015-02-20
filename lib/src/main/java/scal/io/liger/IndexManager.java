@@ -108,6 +108,55 @@ public class IndexManager {
         return;
     }
 
+    // need to move this elsewhere
+    private static File copyThumbnail(Context context, String thumbnailFileName) {
+
+        AssetManager assetManager = context.getAssets();
+
+        String thumbnailFilePath = ZipHelper.getFileFolderName(context);
+
+        Log.d("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath);
+
+        File thumbnailFile = new File(thumbnailFilePath + thumbnailFileName);
+
+        if (thumbnailFile.exists()) {
+            Log.d("INDEX", "THUMBNAIL FILE " + thumbnailFileName + " ALREADY EXISTS IN " + thumbnailFilePath + ", DELETING");
+            thumbnailFile.delete();
+        }
+
+        InputStream assetIn = null;
+        OutputStream assetOut = null;
+
+        try {
+            assetIn = assetManager.open(thumbnailFileName);
+
+            assetOut = new FileOutputStream(thumbnailFile);
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = assetIn.read(buffer)) != -1) {
+                assetOut.write(buffer, 0, read);
+            }
+            assetIn.close();
+            assetIn = null;
+            assetOut.flush();
+            assetOut.close();
+            assetOut = null;
+        } catch (IOException ioe) {
+            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED");
+            return null;
+        }
+
+        // check for zero-byte files
+        if (thumbnailFile.exists() && (thumbnailFile.length() == 0)) {
+            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            thumbnailFile.delete();
+            return null;
+        }
+
+        return thumbnailFile;
+    }
+
     public static HashMap<String, ExpansionIndexItem> loadAvailableFileIndex(Context context) {
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
