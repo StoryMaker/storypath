@@ -136,6 +136,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_ID)) {
                 jsonFilePath = JsonHelper.getJsonPathByKey(this, i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_ID));
                 json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
+            } else if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_PATH)) {
+                jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_PATH);
+                Log.d(TAG, "ONCREATE(NEW) - LOADING " + jsonFilePath + " FROM ZIP FILE");
+                json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
             } else if (i.hasExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH)) {
                 jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH);
                 json = JsonHelper.loadJSON(new File(jsonFilePath), language);
