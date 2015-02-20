@@ -65,7 +65,7 @@ public class Constants {
     public static final String LIGER_URL = "http://storymaker.cc/appdata/";
     public static final String MAIN = "main";
     public static final String PATCH = "patch";
-    public static final int MAIN_VERSION = 1024;
+    public static final int MAIN_VERSION = 1031;
     public static final int PATCH_VERSION = 1020;
 
     public final static String TOR_PROXY_HOST = "localhost";
