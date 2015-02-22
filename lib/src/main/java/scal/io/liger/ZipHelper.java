@@ -13,7 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 import scal.io.liger.model.ExpansionIndexItem;
 
@@ -129,10 +131,14 @@ public class ZipHelper {
             // add 3rd party stuff
             HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
 
-            for (int i = 1; i <= expansionIndex.size(); i++) {
-                ExpansionIndexItem item = expansionIndex.get("" + i);
+            // need to sort patch order keys, numbers may not be consecutive
+            ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
+            Collections.sort(orderNumbers);
+
+            for (String orderNumber : orderNumbers) {
+                ExpansionIndexItem item = expansionIndex.get(orderNumber);
                 if (item == null) {
-                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING FOR INDEX " + i);
+                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
                     String fileName = item.getExpansionFileName();
                     if (DownloadHelper.checkExpansionFiles(context, fileName)) {
@@ -174,10 +180,14 @@ public class ZipHelper {
         // add 3rd party stuff
         HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
 
-        for (int i = 1; i <= expansionIndex.size(); i++) {
-            ExpansionIndexItem item = expansionIndex.get("" + i);
+        // need to sort patch order keys, numbers may not be consecutive
+        ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
+        Collections.sort(orderNumbers);
+
+        for (String orderNumber : orderNumbers) {
+            ExpansionIndexItem item = expansionIndex.get(orderNumber);
             if (item == null) {
-                Log.d("ZIP", "EXPANSION FILE ENTRY MISSING FOR INDEX " + i);
+                Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
             } else {
                 String fileName = item.getExpansionFileName();
                 if (DownloadHelper.checkExpansionFiles(context, fileName)) {

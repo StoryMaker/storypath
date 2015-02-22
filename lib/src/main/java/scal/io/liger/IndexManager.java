@@ -528,7 +528,7 @@ public class IndexManager {
         indexMap.put(indexItem.getExpansionId(), indexItem);
         ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
         for (ExpansionIndexItem eii : indexMap.values()) {
-            indexList.add(indexItem);
+            indexList.add(eii);
         }
         saveIndex(context, indexList, availableIndexName);
         return;
@@ -540,7 +540,31 @@ public class IndexManager {
         indexMap.put(indexItem.getExpansionId(), indexItem);
         ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
         for (ExpansionIndexItem eii : indexMap.values()) {
-            indexList.add(indexItem);
+            indexList.add(eii);
+        }
+        saveIndex(context, indexList, installedIndexName);
+        return;
+    }
+
+    public static void unregisterAvailableIndexItem(Context context, ExpansionIndexItem indexItem) {
+
+        HashMap<String, ExpansionIndexItem> indexMap = loadAvailableIdIndex(context);
+        indexMap.remove(indexItem.getExpansionId());
+        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        for (ExpansionIndexItem eii : indexMap.values()) {
+            indexList.add(eii);
+        }
+        saveIndex(context, indexList, availableIndexName);
+        return;
+    }
+
+    public static void unregisterInstalledIndexItem(Context context, ExpansionIndexItem indexItem) {
+
+        HashMap<String, ExpansionIndexItem> indexMap = loadInstalledIdIndex(context);
+        indexMap.remove(indexItem.getExpansionId());
+        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        for (ExpansionIndexItem eii : indexMap.values()) {
+            indexList.add(eii);
         }
         saveIndex(context, indexList, installedIndexName);
         return;
