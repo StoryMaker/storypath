@@ -8,6 +8,11 @@
   <string name="lbl_continue">Continuer</string>
   <string name="lbl_next">Suivant</string>
   <string name="lbl_congrats_or">--- ou bien ---</string>
+  <string name="cliptype_character">Personnage</string>
+  <string name="cliptype_action">Action</string>
+  <string name="cliptype_result">Résultat</string>
+  <string name="cliptype_place">Lieu</string>
+  <string name="cliptype_signature">Détail</string>
   <string name="choose_medium">Choisir Moyenne</string>
   <string name="lbl_video">Vidéo</string>
   <string name="lbl_audio">Audio</string>
@@ -129,5 +134,7 @@
   <string name="order">Mettre en ordre</string>
   <string name="publish">Publier</string>
   <string name="cancel">Annuler</string>
+  <string name="trim_clip">Couper le Clip</string>
+  <string name="narration">Narration</string>
   <!--add for libra end-->
 </resources>
