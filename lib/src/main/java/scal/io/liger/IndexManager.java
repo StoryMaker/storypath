@@ -41,6 +41,9 @@ public class IndexManager {
     private static String contentIndexName = "content_index.json";
     private static String contentMetadataName = "content_metadata.json";
 
+    public static String pendingDownloadKey = "DOWNLOAD";
+    public static String pendingDownloadValue = "PENDING";
+
     public static void copyAvailableIndex(Context context) {
 
         copyIndex(context, availableIndexName);
@@ -342,7 +345,7 @@ public class IndexManager {
 
     // only one key option for content index, file is loaded from a zipped content pack
     // content index is read only, no register/update/save methods
-    public static HashMap<String, InstanceIndexItem> loadContentIndex(Context context, String packageName, String expansionId) {
+    public static HashMap<String, InstanceIndexItem> loadContentIndex(Context context, String packageName, String expansionId, String language) {
 
         String contentJson = null;
         ArrayList<InstanceIndexItem> contentList = new ArrayList<InstanceIndexItem>();
@@ -353,7 +356,7 @@ public class IndexManager {
         Log.d("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE");
 
         try {
-            InputStream jsonStream = ZipHelper.getFileInputStream(contentPath, context);
+            InputStream jsonStream = ZipHelper.getFileInputStream(contentPath, context, language);
 
             if (jsonStream == null) {
                 Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
@@ -386,7 +389,7 @@ public class IndexManager {
     }
 
     // not strictly an index, but including here because code is similar
-    public static ContentPackMetadata loadContentMetadata(Context context, String packageName, String expansionId) {
+    public static ContentPackMetadata loadContentMetadata(Context context, String packageName, String expansionId, String language) {
 
         String metadataJson = null;
         ContentPackMetadata metadata = null;
@@ -396,7 +399,7 @@ public class IndexManager {
         Log.d("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE");
 
         try {
-            InputStream jsonStream = ZipHelper.getFileInputStream(metadataPath, context);
+            InputStream jsonStream = ZipHelper.getFileInputStream(metadataPath, context, language);
 
             if (jsonStream == null) {
                 Log.e("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
@@ -562,6 +565,30 @@ public class IndexManager {
 
         HashMap<String, ExpansionIndexItem> indexMap = loadInstalledIdIndex(context);
         indexMap.remove(indexItem.getExpansionId());
+        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        for (ExpansionIndexItem eii : indexMap.values()) {
+            indexList.add(eii);
+        }
+        saveIndex(context, indexList, installedIndexName);
+        return;
+    }
+
+    public static void unregisterAvailableIndexItem(Context context, String fileName) {
+
+        HashMap<String, ExpansionIndexItem> indexMap = loadAvailableFileIndex(context);
+        indexMap.remove(fileName);
+        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        for (ExpansionIndexItem eii : indexMap.values()) {
+            indexList.add(eii);
+        }
+        saveIndex(context, indexList, availableIndexName);
+        return;
+    }
+
+    public static void unregisterInstalledIndexItem(Context context, String fileName) {
+
+        HashMap<String, ExpansionIndexItem> indexMap = loadInstalledFileIndex(context);
+        indexMap.remove(fileName);
         ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
         for (ExpansionIndexItem eii : indexMap.values()) {
             indexList.add(eii);

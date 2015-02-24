@@ -159,6 +159,43 @@ public class ZipHelper {
         }
     }
 
+    public static InputStream getFileInputStream(String path, Context context, String language) {
+
+        String localizedFilePath = path;
+
+        // check language setting and insert country code if necessary
+
+        if (language != null) {
+            // just in case, check whether country code has already been inserted
+            if (path.lastIndexOf("-" + language + path.substring(path.lastIndexOf("."))) < 0) {
+                localizedFilePath = path.substring(0, path.lastIndexOf(".")) + "-" + language + path.substring(path.lastIndexOf("."));
+            }
+            Log.d("LANGUAGE", "getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
+        }
+
+        InputStream fileStream = getFileInputStream(localizedFilePath, context);
+
+        // if there is no result with the localized path, retry with default path
+        if (fileStream == null) {
+            if (localizedFilePath.contains("-")) {
+                localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
+                Log.d("LANGUAGE", "getFileInputStream() - NO RESULT WITH LOCALIZED PATH, TRYING DEFAULT PATH: " + localizedFilePath);
+                fileStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+            }
+        } else {
+            return fileStream;
+        }
+
+        if (fileStream == null) {
+            Log.d("LANGUAGE", "getFileInputStream() - NO RESULT WITH DEFAULT PATH: " + localizedFilePath);
+        } else {
+            return fileStream;
+        }
+
+        return null;
+    }
+
+
     public static InputStream getFileInputStream(String path, Context context) {
 
         // resource file contains main file and patch file

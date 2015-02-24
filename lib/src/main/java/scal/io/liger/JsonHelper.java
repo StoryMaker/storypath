@@ -210,27 +210,27 @@ public class JsonHelper {
 
         String jsonString = "";
 
-        String localizedFilePath = jsonFilePath;
+//        String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
-        if (language != null) {
+//        if (language != null) {
             // just in case, check whether country code has already been inserted
-            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
-                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
-            }
-            Log.d("LANGUAGE", "loadJSONFromZip() - LOCALIZED PATH: " + localizedFilePath);
-        }
+//            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
+//                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+//            }
+//            Log.d("LANGUAGE", "loadJSONFromZip() - LOCALIZED PATH: " + localizedFilePath);
+//        }
 
         // removed sd card check as expansion file should not be located on sd card
             try {
-                InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+                InputStream jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context, language);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && (!jsonFilePath.equals(localizedFilePath))) {
-                    jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
-                } else {
-                    Log.d("LANGUAGE", "loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
-                }
+//                if ((jsonStream == null) && (!jsonFilePath.equals(localizedFilePath))) {
+//                    jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
+//                } else {
+//                    Log.d("LANGUAGE", "loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+//                }
 
                 if (jsonStream == null) {
                     Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
@@ -650,33 +650,33 @@ public class JsonHelper {
 
         String storyPathLibraryJson = "";
 
-        String localizedFilePath = jsonFilePath;
+//        String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
 
-        if (language != null) {
+//        if (language != null) {
             // just in case, check whether country code has already been inserted
-            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
-                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
-            }
-            Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
-        }
+//            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
+//                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+//            }
+//            Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
+//        }
 
         // removed sd card check as expansion file should not be located on sd card
             try {
-                InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+                InputStream jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context, language);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && localizedFilePath.contains("-")) {
-                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
-                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
-                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
-                } else {
-                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
-                }
+//                if ((jsonStream == null) && localizedFilePath.contains("-")) {
+//                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
+//                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+//                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
+//                } else {
+//                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+//                }
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed (stream was null)");
+                    Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
                     return null;
                 }
 
@@ -686,9 +686,21 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathLibraryJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
                 return null;
             }
+
+        String localizedFilePath = jsonFilePath;
+
+        // need to localize path for deserialization (this can probably be handled better)
+
+        if (language != null) {
+            // just in case, check whether country code has already been inserted
+            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
+                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+            }
+            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+        }
 
         return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
     }
@@ -952,33 +964,33 @@ public class JsonHelper {
 
         String storyPathJson = "";
 
-        String localizedFilePath = jsonFilePath;
+//        String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
 
-        if (language != null) {
+//        if (language != null) {
             // just in case, check whether country code has already been inserted
-            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
-                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
-            }
-            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
-        }
+//            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
+//                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+//            }
+//            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+//        }
 
         // removed sd card check as expansion file should not be located on sd card
             try {
-                InputStream jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+                InputStream jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context, language);
 
                 // if there is no result with the localized path, retry with default path
-                if ((jsonStream == null) && localizedFilePath.contains("-")) {
-                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
-                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
-                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING DEFAULT FILE: " + localizedFilePath);
-                } else {
-                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
-                }
+//                if ((jsonStream == null) && localizedFilePath.contains("-")) {
+//                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
+//                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
+//                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING DEFAULT FILE: " + localizedFilePath);
+//                } else {
+//                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+//                }
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed (stream was null)");
+                    Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
                     return null;
                 }
 
@@ -988,9 +1000,21 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + localizedFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
                 return null;
             }
+
+        String localizedFilePath = jsonFilePath;
+
+        // need to localize path for deserialization (this can probably be handled better)
+
+        if (language != null) {
+        // just in case, check whether country code has already been inserted
+            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
+                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+            }
+            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+        }
 
         return deserializeStoryPath(storyPathJson, localizedFilePath, storyPathLibrary, referencedFiles, context, language);
     }
