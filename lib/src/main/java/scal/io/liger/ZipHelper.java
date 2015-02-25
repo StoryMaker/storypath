@@ -45,6 +45,11 @@ public class ZipHelper {
 
     public static String getFileFolderName(Context context, String fileName) {
 
+        // need to account for patch files
+        if (fileName.contains(Constants.PATCH)) {
+            fileName.replace(Constants.PATCH, Constants.MAIN);
+        }
+
         ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(fileName);
 
         if (expansionIndexItem == null) {
@@ -140,10 +145,27 @@ public class ZipHelper {
                 if (item == null) {
                     Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
-                    String fileName = item.getExpansionFileName();
+                    // construct name
+                    String fileName = IndexManager.buildFileName(item, Constants.MAIN);
+
                     if (DownloadHelper.checkExpansionFiles(context, fileName)) {
-                        // Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
+                        Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
                         paths.add(getExpansionFileFolder(context, fileName) + fileName);
+
+                        if ((item.getPatchFileVersion() != null) &&
+                            (item.getExpansionFileVersion() != null) &&
+                            (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
+                            (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
+                            // construct name
+                            String patchName = IndexManager.buildFileName(item, Constants.PATCH);
+
+                            if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                                Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
+                                paths.add(getExpansionFileFolder(context, patchName) + patchName);
+                            } else {
+                                Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
+                            }
+                        }
                     } else {
                         Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
                     }
@@ -226,10 +248,28 @@ public class ZipHelper {
             if (item == null) {
                 Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
             } else {
-                String fileName = item.getExpansionFileName();
+
+                // construct name
+                String fileName = IndexManager.buildFileName(item, Constants.MAIN);
+
                 if (DownloadHelper.checkExpansionFiles(context, fileName)) {
-                    // Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
+                    Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
                     paths.add(getExpansionFileFolder(context, fileName) + fileName);
+
+                    if ((item.getPatchFileVersion() != null) &&
+                        (item.getExpansionFileVersion() != null) &&
+                        (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
+                        (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
+                        // construct name
+                        String patchName = IndexManager.buildFileName(item, Constants.PATCH);
+
+                        if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                            Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
+                            paths.add(getExpansionFileFolder(context, patchName) + patchName);
+                        } else {
+                            Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
+                        }
+                    }
                 } else {
                     Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
                 }

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 
 import ch.boye.httpclientandroidlib.HttpEntity;
@@ -33,6 +34,7 @@ import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 
 import info.guardianproject.onionkit.trust.StrongHttpsClient;
 import info.guardianproject.onionkit.ui.OrbotHelper;
+import scal.io.liger.model.QueueItem;
 
 /**
  * Created by mnbogner on 11/7/14.
@@ -360,10 +362,10 @@ public class LigerDownloadManager implements Runnable {
         initDownloadManager();
 
         // need to check if a download has already been queued for this file
-        HashMap<Long, String> queueMap = QueueManager.loadQueue(context);
+        HashMap<Long, QueueItem> queueMap = QueueManager.loadQueue(context);
         boolean foundInQueue = false;
         for (Long queueId : queueMap.keySet()) {
-            if (uriFile.toString().equals(queueMap.get(queueId))) {
+            if (uriFile.toString().equals(queueMap.get(queueId).getQueueFile())) {
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(queueId.longValue());
                 Cursor c = manager.query(query);
@@ -393,13 +395,35 @@ public class LigerDownloadManager implements Runnable {
                     } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
                         Log.d("QUEUE", "DOWNLOAD STATUS SUCCESS, COMPLETE SO RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
-                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                        // probably should let the broadcast receiver handle this case
+                        // QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                     } else {
 
                         Log.d("QUEUE", "DOWNLOAD STATUS UNKNOWN, RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
                         QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
+                    }
+                }
+
+                // cleanup
+                c.close();
+            }
+
+            if (foundInQueue) {
+                Date currentTime = new Date();
+                long queuedTime = queueMap.get(queueId).getQueueTime();
+                if ((currentTime.getTime() - queueMap.get(queueId).getQueueTime()) > QueueManager.queueTimeout) {
+
+                    Log.d("QUEUE", "TIMEOUT EXCEEDED, REMOVING " + queueId.toString() + " FROM DOWNLOAD MANAGER.");
+                    int numberRemoved = manager.remove(queueId);
+
+                    if (numberRemoved == 1) {
+                        Log.d("QUEUE", "REMOVED FROM DOWNLOAD MANAGER, RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                        foundInQueue = false;
+                    } else {
+                        Log.d("QUEUE", "FAILED TO REMOVE FROM DOWNLOAD MANAGER, NOT QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
                     }
                 }
             }

@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.InstanceIndexItem;
+import scal.io.liger.model.QueueItem;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 
@@ -35,10 +36,12 @@ public class QueueManager {
 
     private static String downloadQueueName = "download_queue.json";
 
-    public static HashMap<Long, String> loadQueue(Context context) {
+    public static long queueTimeout = Long.MAX_VALUE; // user-configurable?  setting to max value, will revisit later
+
+    public static HashMap<Long, QueueItem> loadQueue(Context context) {
 
         String queueJson = null;
-        HashMap<Long, String> queueList = new HashMap<Long, String>();
+        HashMap<Long, QueueItem> queueList = new HashMap<Long, QueueItem>();
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
@@ -75,31 +78,89 @@ public class QueueManager {
             GsonBuilder gBuild = new GsonBuilder();
             Gson gson = gBuild.create();
 
-            queueList = gson.fromJson(queueJson, new TypeToken<HashMap<Long, String>>() {}.getType());
+            // trying to account for issues with old queue files
+            try {
+                queueList = gson.fromJson(queueJson, new TypeToken<HashMap<Long, QueueItem>>(){}.getType());
+            } catch (Exception ise) {
+                // this will hopefully catch existing Long/String queue files
+
+                Log.d("QUEUE", "JSON QUEUE FILE APPEARS CORRUPT, PURGING FILE, RETURNING EMPTY QUEUE");
+
+                if (jsonFile.exists()) {
+                    jsonFile.delete();
+                }
+
+                queueList = new HashMap<Long, QueueItem>();
+            }
         }
 
         return queueList;
     }
 
-    public static void addToQueue(Context context, Long queueId, String queueItem) {
+    public static long checkQueue(String fileName, HashMap<Long, QueueItem> queueMap) {
 
-        HashMap<Long, String> queueList = loadQueue(context);
+        for (Long queueNumber : queueMap.keySet()) {
+            if (queueMap.get(queueNumber).getQueueFile().contains(fileName)) {
+                return queueNumber.longValue();
+            }
+        }
+
+        return -1;
+    }
+
+    public static void addToQueue(Context context, Long queueId, String queueFile) {
+
+        HashMap<Long, QueueItem> queueList = loadQueue(context);
+
+        QueueItem queueItem = new QueueItem(queueFile, new Date());
+
         queueList.put(queueId, queueItem);
         saveQueue(context, queueList, downloadQueueName);
 
         return;
     }
 
-    public static void removeFromQueue(Context context, Long queueId) {
+    public static boolean removeFromQueue(Context context, Long queueId) {
 
-        HashMap<Long, String> queueList = loadQueue(context);
-        queueList.remove(queueId);
-        saveQueue(context, queueList, downloadQueueName);
+        HashMap<Long, QueueItem> queueList = loadQueue(context);
 
-        return;
+        if (queueList.keySet().contains(queueId)) {
+            queueList.remove(queueId);
+            saveQueue(context, queueList, downloadQueueName);
+            return true;
+        } else{
+            return false;
+        }
     }
 
-    private static void saveQueue(Context context, HashMap<Long, String> indexList, String jsonFileName) {
+    public static boolean purgeFromQueue(Context context, Long queueId) {
+
+        HashMap<Long, QueueItem> queueMap = loadQueue(context);
+
+        if (queueMap.keySet().contains(queueId)) {
+
+            String fileToPurge = queueMap.get(queueId).getQueueFile();
+            fileToPurge = fileToPurge.substring(fileToPurge.lastIndexOf(File.separator) + 1, fileToPurge.lastIndexOf("."));
+
+            Log.d("QUEUE", "REMOVING " + queueId + " AND PURGING ALL OTHER QUEUE ITEMS FOR " + fileToPurge);
+
+            queueMap.remove(queueId);
+
+            for (Long queueNumber : queueMap.keySet()) {
+                if (queueMap.get(queueNumber).getQueueFile().contains(fileToPurge)) {
+                    queueMap.remove(queueNumber);
+                }
+            }
+
+            saveQueue(context, queueMap, downloadQueueName);
+
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    private static void saveQueue(Context context, HashMap<Long, QueueItem> queueMap, String jsonFileName) {
 
         String queueJson = "";
 
@@ -123,7 +184,7 @@ public class QueueManager {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
-                queueJson = gson.toJson(indexList);
+                queueJson = gson.toJson(queueMap);
 
                 byte[] buffer = queueJson.getBytes();
                 jsonStream.write(buffer);

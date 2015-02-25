@@ -12,11 +12,17 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     String packageName;
     String expansionId;
     String patchOrder;
-    String expansionFileName;
+    // derive from id -> String expansionFileName;
     String expansionFileVersion;
-    String expansionFilePath; // relative to Environment.getExternalStorageDirectory()
+    String expansionFilePath; // relative to Environment.getExternalStorageDirectory() <- need to shift to user-specified directory
     String expansionFileUrl;
     // String expansionThumbnail;
+
+    // patch stuff, optional
+    // derive from id -> String patchFileName;
+    String patchFileVersion;
+    // same as expansionFilePath-> String patchFilePath;
+    // same as expansionFileUrl -> String patchFileUrl;
 
     // optional
     String author;
@@ -32,11 +38,11 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     }
 
-    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileName, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
+    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
         this.packageName = packageName;
         this.expansionId = expansionId;
         this.patchOrder = patchOrder;
-        this.expansionFileName = expansionFileName;
+        // this.expansionFileName = expansionFileName;
         this.expansionFileVersion = expansionFileVersion;
         this.expansionFilePath = expansionFilePath;
         this.expansionFileUrl = expansionFileUrl;
@@ -67,6 +73,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         this.patchOrder = patchOrder;
     }
 
+    /*
     public String getExpansionFileName() {
         return expansionFileName;
     }
@@ -74,6 +81,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     public void setExpansionFileName(String expansionFileName) {
         this.expansionFileName = expansionFileName;
     }
+    */
 
     public String getExpansionFileVersion() {
         return expansionFileVersion;
@@ -97,6 +105,14 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     public void setExpansionFileUrl(String expansionFileUrl) {
         this.expansionFileUrl = expansionFileUrl;
+    }
+
+    public String getPatchFileVersion() {
+        return patchFileVersion;
+    }
+
+    public void setPatchFileVersion(String patchFileVersion) {
+        this.patchFileVersion = patchFileVersion;
     }
 
     public String getAuthor() {
@@ -171,6 +187,12 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         this.extras.put(key, value);
     }
 
+    public void removeExtra(String key)
+    {
+        if (this.extras != null) {
+            this.extras.remove(key);
+        }
+    }
     @Override
     public int compareTo(Object another) {
         if (another instanceof InstanceIndexItem) {

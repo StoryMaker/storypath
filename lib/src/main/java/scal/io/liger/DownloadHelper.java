@@ -101,13 +101,49 @@ public class DownloadHelper {
 
         }
 
-        HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledFileIndex(context);
+        HashMap<String, ExpansionIndexItem> installedIndex = IndexManager.loadInstalledIdIndex(context);
+        HashMap<String, ExpansionIndexItem> availableIndex = IndexManager.loadAvailableIdIndex(context);
 
-        for (String fileName : expansionIndex.keySet()) {
+        for (String id : installedIndex.keySet()) {
+
+            ExpansionIndexItem installedItem = installedIndex.get(id);
+            ExpansionIndexItem availableItem = availableIndex.get(id);
+
+            // need to compare main and patch versions
+            // update installed index for consistency and to minimize code impact
+            if ((installedItem.getExpansionFileVersion() != null) &&
+                (availableItem.getExpansionFileVersion() != null) &&
+                (Integer.parseInt(availableItem.getExpansionFileVersion()) > Integer.parseInt(installedItem.getExpansionFileVersion()))) {
+                Log.d("DOWNLOAD", "FOUND NEWER VERSION OF MAIN EXPANSION ITEM " + id + " (" + availableItem.getExpansionFileVersion() + " vs. " + installedItem.getExpansionFileVersion() + ") UPDATING");
+                installedItem.setExpansionFileVersion(availableItem.getExpansionFileVersion());
+                IndexManager.registerInstalledIndexItem(context, installedItem);
+            }
+
+            // need to account for case where installed item has no defined patch version
+            if (availableItem.getPatchFileVersion() != null) {
+                if (installedItem.getPatchFileVersion() != null) {
+                    if (Integer.parseInt(availableItem.getPatchFileVersion()) > Integer.parseInt(installedItem.getPatchFileVersion())) {
+                        Log.d("DOWNLOAD", "FOUND NEWER VERSION OF PATCH EXPANSION ITEM " + id + " (" + availableItem.getPatchFileVersion() + " vs. " + installedItem.getPatchFileVersion() + ") UPDATING");
+                        installedItem.setPatchFileVersion(availableItem.getPatchFileVersion());
+                        IndexManager.registerInstalledIndexItem(context, installedItem);
+                    }
+                } else {
+                    Log.d("DOWNLOAD", "FOUND NEWER VERSION OF PATCH EXPANSION ITEM " + id + " (" + availableItem.getPatchFileVersion() + " vs. " + installedItem.getPatchFileVersion() + ") UPDATING");
+                    installedItem.setPatchFileVersion(availableItem.getPatchFileVersion());
+                    IndexManager.registerInstalledIndexItem(context, installedItem);
+                }
+            }
+
+            String fileName = IndexManager.buildFileName(installedItem, Constants.MAIN);
+
             if (checkExpansionFiles(context, fileName)) {
-                Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " FOUND (NO DOWNLOAD)");
+                Log.d("DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " FOUND (NO DOWNLOAD)");
             } else {
-                Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " NOT FOUND (DOWNLOADING)");
+                Log.d("DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " NOT FOUND (DOWNLOADING)");
+
+                // flag item with pending download
+                installedItem.addExtra(IndexManager.pendingDownloadKey, IndexManager.pendingDownloadValue);
+                IndexManager.registerInstalledIndexItem(context, installedItem);
 
                 final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(fileName, context, true);
                 Thread expansionDownloadThread = new Thread(expansionDownload);
@@ -115,6 +151,54 @@ public class DownloadHelper {
                 Toast.makeText(context, "Starting download of expansion file.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                 expansionDownloadThread.start();
+            }
+
+            // if the main file is newer than the patch file, remove the patch file rather than downloading
+            if (installedItem.getPatchFileVersion() != null) {
+                if ((installedItem.getExpansionFileVersion() != null) &&
+                    (Integer.parseInt(installedItem.getPatchFileVersion()) < Integer.parseInt(installedItem.getExpansionFileVersion()))) {
+
+                    File obbDirectory = new File(ZipHelper.getObbFolderName(context));
+                    File fileDirectory = new File(ZipHelper.getFileFolderName(context));
+
+                    String nameFilter = installedItem.getExpansionId() + "." + Constants.PATCH + "*" + ".obb";
+
+                    Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + obbDirectory.getPath());
+
+                    WildcardFileFilter obbFileFilter = new WildcardFileFilter(nameFilter);
+                    for (File obbFile : FileUtils.listFiles(obbDirectory, obbFileFilter, null)) {
+                        Log.d("DOWNLOAD", "CLEANUP: FOUND " + obbFile.getPath() + ", DELETING");
+                        FileUtils.deleteQuietly(obbFile);
+                    }
+
+                    Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + fileDirectory.getPath());
+
+                    WildcardFileFilter fileFileFilter = new WildcardFileFilter(nameFilter);
+                    for (File fileFile : FileUtils.listFiles(fileDirectory, fileFileFilter, null)) {
+                        Log.d("DOWNLOAD", "CLEANUP: FOUND " + fileFile.getPath() + ", DELETING");
+                        FileUtils.deleteQuietly(fileFile);
+                    }
+                } else {
+
+                    String patchName = IndexManager.buildFileName(installedItem, Constants.PATCH);
+
+                    if (checkExpansionFiles(context, patchName)) {
+                        Log.d("DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " FOUND (NO DOWNLOAD)");
+                    } else {
+                        Log.d("DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " NOT FOUND (DOWNLOADING)");
+
+                        // in case only a patch is downloading, flag item with pending download
+                        installedItem.addExtra(IndexManager.pendingDownloadKey, IndexManager.pendingDownloadValue);
+                        IndexManager.registerInstalledIndexItem(context, installedItem);
+
+                        final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(patchName, context, true);
+                        Thread expansionDownloadThread = new Thread(expansionDownload);
+
+                        Toast.makeText(context, "Starting download of expansion file patch.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+
+                        expansionDownloadThread.start();
+                    }
+                }
             }
         }
     }

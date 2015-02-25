@@ -44,6 +44,22 @@ public class IndexManager {
     public static String pendingDownloadKey = "DOWNLOAD";
     public static String pendingDownloadValue = "PENDING";
 
+    public static String buildFileName(ExpansionIndexItem item, String mainOrPatch) {
+        if (Constants.MAIN.equals(mainOrPatch)) {
+            return item.getExpansionId() + "." + mainOrPatch + "." + item.getExpansionFileVersion() + ".obb";
+        } else if (Constants.PATCH.equals(mainOrPatch)) {
+            if (item.getPatchFileVersion() == null) {
+                Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
+                return "FOO";
+            } else {
+                return item.getExpansionId() + "." + mainOrPatch + "." + item.getPatchFileVersion() + ".obb";
+            }
+        } else {
+            Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", DON'T UNDERSTAND " + mainOrPatch);
+            return "FOO";
+        }
+    }
+
     public static void copyAvailableIndex(Context context) {
 
         copyIndex(context, availableIndexName);
@@ -172,7 +188,9 @@ public class IndexManager {
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
         for (ExpansionIndexItem item : indexList) {
-            indexMap.put(item.getExpansionFileName(), item);
+            // construct name (index by main file names)
+            String fileName = buildFileName(item, Constants.MAIN);
+            indexMap.put(fileName, item);
         }
 
         return indexMap;
@@ -185,7 +203,9 @@ public class IndexManager {
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
         for (ExpansionIndexItem item : indexList) {
-            indexMap.put(item.getExpansionFileName(), item);
+            // construct name (index by main file names)
+            String fileName = buildFileName(item, Constants.MAIN);
+            indexMap.put(fileName, item);
         }
 
         return indexMap;
