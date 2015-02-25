@@ -209,6 +209,8 @@ public class LigerAltDownloadManager implements Runnable {
         StrongHttpsClient httpClient = getHttpClientInstance();
         httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
 
+        String actualFileName = targetFile.getName().substring(0, targetFile.getName().lastIndexOf("."));
+
         Log.d("DOWNLOAD/TOR", "CHECKING URI: " + uri.toString());
 
         try {
@@ -235,19 +237,46 @@ public class LigerAltDownloadManager implements Runnable {
                     responseInput.close();
                     Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
 
+                    // update item from installed index to indicate completed download
+                    Log.e("DOWNLOAD/TOR", "DOWNLOAD COMPLETED FOR " + actualFileName + ", UPDATING INSTALLED INDEX");
+                    ExpansionIndexItem eii = IndexManager.loadInstalledFileIndex(context).get(actualFileName);
+                    if (eii != null) {
+                        eii.removeExtra(IndexManager.pendingDownloadKey);
+                        IndexManager.registerInstalledIndexItem(context, eii);
+                        try {
+                            synchronized (this) {
+                                wait(1000);
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     if (!handleFile(targetFile)) {
-                        Log.d("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING");
+                        // remove item from installed index if file processing fails
+                        Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + actualFileName + ", REMOVING FROM INSTALLED INDEX");
+                        IndexManager.unregisterInstalledIndexItem(context, actualFileName);
                         return;
                     }
                 } catch (IOException ioe) {
-                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + targetFile + " -> " + ioe.getMessage());
+                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + ", REMOVING FROM INSTALLED INDEX");
                     ioe.printStackTrace();
+
+                    // remove item from installed index if download fails
+                    IndexManager.unregisterInstalledIndexItem(context, actualFileName);
                 }
             } else {
-                Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED, STATUS CODE: " + statusCode);
+                Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", STATUS CODE: " + statusCode + ", REMOVING FROM INSTALLED INDEX");
+
+                // remove item from installed index if download fails
+                IndexManager.unregisterInstalledIndexItem(context, actualFileName);
             }
         } catch (IOException ioe) {
-            Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED, EXCEPTION: " + ioe.getMessage());
+            Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN, REMOVING FROM INSTALLED INDEX");
+            ioe.printStackTrace();
+
+            // remove item from installed index if download fails
+            IndexManager.unregisterInstalledIndexItem(context, actualFileName);
         }
     }
 
@@ -556,15 +585,20 @@ public class LigerAltDownloadManager implements Runnable {
                         String fileName = uriString.substring(uriString.lastIndexOf(File.separator) + 1);
 
                         // remove item from installed index if the download fails
+                        // some of the above are not strictly failure states, may need to revise this
                         Log.e("DOWNLOAD", "DOWNLOAD FAILED FOR " + fileName + ", REMOVING FROM INSTALLED INDEX");
                         IndexManager.unregisterInstalledIndexItem(context, fileName);
 
                     }
                 } else {
                     Log.e("DOWNLOAD", "MANAGER FAILED AT CURSOR MOVE");
+
+                    // should we remove the item from installed index in this case?
                 }
             } else {
                 Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");
+
+                // should we remove the item from installed index in this case?
             }
         }
     }
