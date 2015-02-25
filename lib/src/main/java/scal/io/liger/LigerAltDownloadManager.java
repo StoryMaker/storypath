@@ -139,6 +139,19 @@ public class LigerAltDownloadManager implements Runnable {
                         FileUtils.deleteQuietly(oldFile);
                     }
 
+                    // additional cleanup of pre-name-change files
+                    if (fileName.contains(Constants.MAIN)) {
+                        nameFilter = fileName.replace(Constants.MAIN + ".", "").replace(expansionIndexItem.getExpansionFileVersion(), "*");
+
+                        Log.d("DOWNLOAD", "CLEANUP: DELETING OLD FILES " + nameFilter + " FROM " + targetFolder.getPath());
+
+                        oldFileFilter = new WildcardFileFilter(nameFilter);
+                        for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
+                            Log.d("DOWNLOAD", "CLEANUP: FOUND OLD FILE " + oldFile.getPath() + ", DELETING");
+                            FileUtils.deleteQuietly(oldFile);
+                        }
+                    }
+
                     File targetFile = new File(targetFolder, ligerObb + ".tmp");
 
                     if (checkTor(useTor, context)) {
