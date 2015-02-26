@@ -6,7 +6,6 @@
         "packageName": "org.storymaker.app",
         "description": "Learn the Basic Elements of a Story",
         "thumbnailPath": "images/content_packs/learningguide_cover.jpg",
-        "expansionFileName": "learning_guide.1.obb",
         "expansionFileVersion": "1",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "http://storymaker.cc/appdata/obb/"
@@ -18,7 +17,6 @@
         "packageName": "org.storymaker.app",
         "description": "Lesson Pack for Burundi",
         "thumbnailPath": "images/content_packs/burundipack_cover.jpg",
-        "expansionFileName": "burundi.1.obb",
         "expansionFileVersion": "1",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "http://storymaker.cc/appdata/obb/"
