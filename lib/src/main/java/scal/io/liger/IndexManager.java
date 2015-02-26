@@ -44,20 +44,37 @@ public class IndexManager {
     public static String pendingDownloadKey = "DOWNLOAD";
     public static String pendingDownloadValue = "PENDING";
     public static String pendingPatchDownloadValue = "PENDINGPATCH";
+    public static String noPatchFile = "NOPATCH";
 
     public static String buildFileName(ExpansionIndexItem item, String mainOrPatch) {
         if (Constants.MAIN.equals(mainOrPatch)) {
             return item.getExpansionId() + "." + mainOrPatch + "." + item.getExpansionFileVersion() + ".obb";
         } else if (Constants.PATCH.equals(mainOrPatch)) {
             if (item.getPatchFileVersion() == null) {
-                Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
-                return "FOO";
+                // not really an error, removing message
+                // Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
+                return noPatchFile;
             } else {
                 return item.getExpansionId() + "." + mainOrPatch + "." + item.getPatchFileVersion() + ".obb";
             }
         } else {
             Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", DON'T UNDERSTAND " + mainOrPatch);
+            // this is not the same as having no patch
+            // return noPatchFile;
             return "FOO";
+        }
+    }
+
+    public static String buildFilePath(ExpansionIndexItem item) {
+
+        String checkPath = Environment.getExternalStorageDirectory().toString() + File.separator + item.getExpansionFilePath();
+
+        File checkDir = new File(checkPath);
+        if (checkDir.isDirectory() || checkDir.mkdirs()) {
+            return checkPath;
+        } else {
+            Log.d("INDEX", "CAN'T CONSTRUCT PATH FOR " + item.getExpansionId() + ", PATH " + item.getExpansionFilePath() + " DOES NOT EXIST AND COULD NOT BE CREATED");
+            return null;
         }
     }
 
@@ -264,6 +281,7 @@ public class IndexManager {
         return indexMap;
     }
 
+    // supressing messages for less text during polling
     private static ArrayList<ExpansionIndexItem> loadIndex(Context context, String jsonFileName) {
 
         String indexJson = null;
@@ -271,7 +289,7 @@ public class IndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD");
+        // Log.d("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD");
 
         File jsonFile = new File(jsonFilePath + jsonFileName);
         if (!jsonFile.exists()) {

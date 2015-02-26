@@ -436,6 +436,7 @@ public class LigerAltDownloadManager implements Runnable {
             NetworkInfo ni = cm.getActiveNetworkInfo();
 
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
+
                 Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
                 initReceivers();
@@ -449,6 +450,7 @@ public class LigerAltDownloadManager implements Runnable {
                         .setDestinationUri(uriFile));
 
                 QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriFile.toString());
+
             } else {
                 Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
@@ -510,18 +512,17 @@ public class LigerAltDownloadManager implements Runnable {
                 Cursor c = manager.query(query);
                 if (c.moveToFirst()) {
                     int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
-
                     if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
                         String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
                         File savedFile = new File(Uri.parse(uriString).getPath());
-                        Log.d("DOWNLOAD", "MANAGER PROCESSED DOWNLOAD OF FILE " + savedFile.getPath());
+                        Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
                         File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
                         if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THAT FILE WAS ALREADY PROCESSED");
+                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
                             return;
                         } else if (!fileCheck.getName().equals(fileFilter)) {
                             Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);

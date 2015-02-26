@@ -72,6 +72,7 @@ public class ZipHelper {
         return root.toString() + File.separator + item.getExpansionFilePath();
     }
 
+    // supressing messages for less text during polling
     public static String getExpansionFileFolder(Context ctx, String mainOrPatch, int version) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create obb folder
@@ -80,7 +81,7 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + getExpansionZipFilename(ctx, mainOrPatch, version));
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND OBB IN OBB DIRECTORY: " + checkFile.getPath());
+                    // Log.d("DIRECTORIES", "FOUND OBB IN OBB DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
@@ -91,13 +92,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + getExpansionZipFilename(ctx, mainOrPatch, version));
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND OBB IN FILES DIRECTORY: " + checkFile.getPath());
+                    // Log.d("DIRECTORIES", "FOUND OBB IN FILES DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        Log.e("DIRECTORIES", "FILE NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
+        // Log.e("DIRECTORIES", "FILE NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
         return null;
     }
 
@@ -180,9 +181,14 @@ public class ZipHelper {
                     Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
                     // construct name
+                    String pathName = IndexManager.buildFilePath(item);
                     String fileName = IndexManager.buildFileName(item, Constants.MAIN);
 
-                    if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                    File checkFile = new File(pathName + fileName);
+
+                    // should be able to do this locally
+                    // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                    if (checkFile.exists()) {
                         Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
                         paths.add(getExpansionFileFolder(context, fileName) + fileName);
 
@@ -193,7 +199,11 @@ public class ZipHelper {
                             // construct name
                             String patchName = IndexManager.buildFileName(item, Constants.PATCH);
 
-                            if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                            checkFile = new File(pathName + patchName);
+
+                            // should be able to do this locally
+                            // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                            if (checkFile.exists()) {
                                 Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
                                 paths.add(getExpansionFileFolder(context, patchName) + patchName);
                             } else {
@@ -284,9 +294,14 @@ public class ZipHelper {
             } else {
 
                 // construct name
+                String pathName = IndexManager.buildFilePath(item);
                 String fileName = IndexManager.buildFileName(item, Constants.MAIN);
 
-                if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                File checkFile = new File(pathName + fileName);
+
+                // should be able to do this locally
+                // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                if (checkFile.exists()) {
                     Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
                     paths.add(getExpansionFileFolder(context, fileName) + fileName);
 
@@ -297,7 +312,11 @@ public class ZipHelper {
                         // construct name
                         String patchName = IndexManager.buildFileName(item, Constants.PATCH);
 
-                        if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                        checkFile = new File(pathName + patchName);
+
+                        // should be able to do this locally
+                        // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                        if (checkFile.exists()) {
                             Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
                             paths.add(getExpansionFileFolder(context, patchName) + patchName);
                         } else {

@@ -38,7 +38,9 @@ public class QueueManager {
 
     public static long queueTimeout = Long.MAX_VALUE; // user-configurable?  setting to max value, will revisit later
 
-    public static HashMap<Long, QueueItem> loadQueue(Context context) {
+    // need to ensure multiple threads don't grab the file at the same time
+
+    public static synchronized HashMap<Long, QueueItem> loadQueue(Context context) {
 
         String queueJson = null;
         HashMap<Long, QueueItem> queueList = new HashMap<Long, QueueItem>();
@@ -108,24 +110,30 @@ public class QueueManager {
         return -1;
     }
 
-    public static void addToQueue(Context context, Long queueId, String queueFile) {
+    public static synchronized void addToQueue(Context context, Long queueId, String queueFile) {
 
         HashMap<Long, QueueItem> queueList = loadQueue(context);
 
         QueueItem queueItem = new QueueItem(queueFile, new Date());
 
         queueList.put(queueId, queueItem);
+
+        Log.d("QUEUE", "PUT " + queueId + " IN QUEUE, NEW QUEUE " + queueList.keySet().toString());
+
         saveQueue(context, queueList, downloadQueueName);
 
         return;
     }
 
-    public static boolean removeFromQueue(Context context, Long queueId) {
+    public static synchronized boolean removeFromQueue(Context context, Long queueId) {
 
         HashMap<Long, QueueItem> queueList = loadQueue(context);
 
         if (queueList.keySet().contains(queueId)) {
             queueList.remove(queueId);
+
+            Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + queueList.keySet().toString());
+
             saveQueue(context, queueList, downloadQueueName);
             return true;
         } else{
@@ -160,7 +168,7 @@ public class QueueManager {
         }
     }
 
-    private static void saveQueue(Context context, HashMap<Long, QueueItem> queueMap, String jsonFileName) {
+    private static synchronized void saveQueue(Context context, HashMap<Long, QueueItem> queueMap, String jsonFileName) {
 
         String queueJson = "";
 

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -34,6 +36,7 @@ import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 
 import info.guardianproject.onionkit.trust.StrongHttpsClient;
 import info.guardianproject.onionkit.ui.OrbotHelper;
+import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.QueueItem;
 
 /**
@@ -431,18 +434,33 @@ public class LigerDownloadManager implements Runnable {
 
         if (!foundInQueue) {
 
-            Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+            // if there is no connectivity, do not queue item (no longer seems to pause if connection is unavailable)
+            ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo ni = cm.getActiveNetworkInfo();
 
-            lastDownload = manager.enqueue(new DownloadManager.Request(uri)
-                    .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setAllowedOverRoaming(false)
-                    .setTitle(title)
-                    .setDescription(desc)
-                    .setVisibleInDownloadsUi(false)
-                    .setDestinationUri(uriFile));
+            if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
-            QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriFile.toString());
+                Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
+                lastDownload = manager.enqueue(new DownloadManager.Request(uri)
+                        .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                        .setAllowedOverRoaming(false)
+                        .setTitle(title)
+                        .setDescription(desc)
+                        .setVisibleInDownloadsUi(false)
+                        .setDestinationUri(uriFile));
+
+                QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriFile.toString());
+
+            } else {
+                Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+
+                // remove item from installed index if the download is not queued
+                String fileName = uriFile.toString();
+                fileName = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("."));
+                Log.e("DOWNLOAD", "CANNOT DOWNLOAD " + fileName + ", REMOVING FROM INSTALLED INDEX");
+                IndexManager.unregisterInstalledIndexItem(context, fileName);
+            }
         }
     }
 
@@ -482,17 +500,15 @@ public class LigerDownloadManager implements Runnable {
                     int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
                     if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                        Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
-                        QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
-
                         String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+
                         File savedFile = new File(Uri.parse(uriString).getPath());
-                        Log.d("DOWNLOAD", "MANAGER SAVED DOWNLOAD TO " + savedFile.getPath());
+                        Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
                         File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
                         if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THAT FILE WAS ALREADY PROCESSED");
+                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
                             return;
                         } else if (!fileCheck.getName().equals(fileFilter)) {
                             Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
@@ -502,9 +518,18 @@ public class LigerDownloadManager implements Runnable {
                             fileReceived = true;
                         }
 
-                        if (!handleFile(savedFile)) {
-                            Log.d("DOWNLOAD", "ERROR DURING FILE PROCESSING");
-                            return;
+                        if (QueueManager.removeFromQueue(context, Long.valueOf(downloadId))) {
+                            Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
+
+                            if (!handleFile(savedFile)) {
+                                Log.d("DOWNLOAD", "ERROR DURING FILE PROCESSING");
+                                return;
+                            }
+                        } else {
+                            Log.d("QUEUE", "DOWNLOAD COMPLETE, BUT ITEM WAS NOT FOUND IN QUEUE: " + downloadId);
+
+                            // if the file has already been removed from queue, it implies the file has already been handled
+
                         }
                     } else {
                         Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK");
