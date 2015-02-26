@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import scal.io.liger.R;
 import scal.io.liger.Utility;
+import scal.io.liger.ZipHelper;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.MarkdownCard;
 
@@ -69,7 +70,7 @@ public class MarkdownCardView implements DisplayableCard {
             @Override
             public Drawable getDrawable(final String source) {
                 String absPath = mCardModel.getStoryPath().buildZipPath(source);
-                Bitmap myBitmap = BitmapFactory.decodeFile(absPath);
+                Bitmap myBitmap = BitmapFactory.decodeStream(ZipHelper.getFileInputStream(absPath, mContext));
                 Drawable d = new BitmapDrawable(mContext.getResources(), myBitmap);
                 d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
                 return d;
