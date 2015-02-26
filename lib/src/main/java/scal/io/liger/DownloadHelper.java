@@ -45,6 +45,18 @@ public class DownloadHelper {
         }
     }
 
+    public static boolean checkExpansionFiles(Context context, String fileName, ExpansionIndexItem item) {
+        String expansionFilePath = ZipHelper.getExpansionFileFolder(context, fileName, item);
+
+        if (expansionFilePath != null) {
+            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " FOUND IN " + expansionFilePath);
+            return true;
+        } else {
+            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " NOT FOUND");
+            return false;
+        }
+    }
+
     public static void checkAndDownload(Context context) {
 
         if (checkExpansionFiles(context, Constants.MAIN, Constants.MAIN_VERSION)) {
@@ -136,8 +148,11 @@ public class DownloadHelper {
 
             String fileName = IndexManager.buildFileName(installedItem, Constants.MAIN);
 
-            if (checkExpansionFiles(context, fileName)) {
+            if (checkExpansionFiles(context, fileName, installedItem)) {
                 Log.d("DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " FOUND (NO DOWNLOAD)");
+            } else if ((installedItem.getExtras() != null) &&
+                       (installedItem.getExtras().get(IndexManager.pendingDownloadKey) != null)) {
+                Log.d("DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " IS ALREADY DOWNLOADING (" + installedItem.getExtras().get(IndexManager.pendingDownloadKey) + ") (NO DOWNLOAD)");
             } else {
                 Log.d("DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " NOT FOUND (DOWNLOADING)");
 
@@ -182,13 +197,17 @@ public class DownloadHelper {
 
                     String patchName = IndexManager.buildFileName(installedItem, Constants.PATCH);
 
-                    if (checkExpansionFiles(context, patchName)) {
+                    if (checkExpansionFiles(context, patchName, installedItem)) {
                         Log.d("DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " FOUND (NO DOWNLOAD)");
+                    } else if ((installedItem.getExtras() != null) &&
+                               (installedItem.getExtras().get(IndexManager.pendingDownloadKey) != null) &&
+                               (installedItem.getExtras().get(IndexManager.pendingDownloadKey).equals(IndexManager.pendingPatchDownloadValue))) {
+                        Log.d("DOWNLOAD", "EXPANSION FILE PATCH" + fileName + " IS ALREADY DOWNLOADING (" + installedItem.getExtras().get(IndexManager.pendingDownloadKey) + ") (NO DOWNLOAD)");
                     } else {
                         Log.d("DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " NOT FOUND (DOWNLOADING)");
 
-                        // in case only a patch is downloading, flag item with pending download
-                        installedItem.addExtra(IndexManager.pendingDownloadKey, IndexManager.pendingDownloadValue);
+                        // re-flag item to reflect pending patch download
+                        installedItem.addExtra(IndexManager.pendingDownloadKey, IndexManager.pendingPatchDownloadValue);
                         IndexManager.registerInstalledIndexItem(context, installedItem);
 
                         final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(patchName, context, true);

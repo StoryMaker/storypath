@@ -61,6 +61,17 @@ public class ZipHelper {
         return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
     }
 
+    public static String getFileFolderName(Context context, String fileName, ExpansionIndexItem item) {
+
+        // need to account for patch files
+        if (fileName.contains(Constants.PATCH)) {
+            fileName.replace(Constants.PATCH, Constants.MAIN);
+        }
+
+        File root = Environment.getExternalStorageDirectory();
+        return root.toString() + File.separator + item.getExpansionFilePath();
+    }
+
     public static String getExpansionFileFolder(Context ctx, String mainOrPatch, int version) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create obb folder
@@ -95,6 +106,29 @@ public class ZipHelper {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create files folder
             String checkPath = getFileFolderName(ctx, fileName);
+
+            if (checkPath == null) {
+                return null;
+            }
+
+            File checkDir = new File(checkPath);
+            if (checkDir.isDirectory() || checkDir.mkdirs()) {
+                File checkFile = new File(checkPath + fileName);
+                if (checkFile.exists()) {
+                    Log.d("DIRECTORIES", "FOUND OBB IN DIRECTORY: " + checkFile.getPath());
+                    return checkPath;
+                }
+            }
+        }
+
+        Log.e("DIRECTORIES", "FILE NOT FOUND");
+        return null;
+    }
+
+    public static String getExpansionFileFolder(Context ctx, String fileName, ExpansionIndexItem item) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            // check and/or attempt to create files folder
+            String checkPath = getFileFolderName(ctx, fileName, item);
 
             if (checkPath == null) {
                 return null;

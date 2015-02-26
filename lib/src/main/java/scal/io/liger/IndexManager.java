@@ -43,6 +43,7 @@ public class IndexManager {
 
     public static String pendingDownloadKey = "DOWNLOAD";
     public static String pendingDownloadValue = "PENDING";
+    public static String pendingPatchDownloadValue = "PENDINGPATCH";
 
     public static String buildFileName(ExpansionIndexItem item, String mainOrPatch) {
         if (Constants.MAIN.equals(mainOrPatch)) {
