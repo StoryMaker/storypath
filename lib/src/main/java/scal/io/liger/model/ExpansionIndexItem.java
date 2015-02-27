@@ -12,22 +12,21 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     String packageName;
     String expansionId;
     String patchOrder;
-    // derive from id -> String expansionFileName;
     String expansionFileVersion;
     String expansionFilePath; // relative to Environment.getExternalStorageDirectory() <- need to shift to user-specified directory
     String expansionFileUrl;
-    // String expansionThumbnail;
+
+    // not optional, but need to handle nulls
+    long expansionFileSize;
+    String expansionFileChecksum;
 
     // patch stuff, optional
-    // derive from id -> String patchFileName;
     String patchFileVersion;
-    // same as expansionFilePath-> String patchFilePath;
-    // same as expansionFileUrl -> String patchFileUrl;
+    long patchFileSize;
+    String patchFileChecksum;
 
     // optional
     String author;
-    // String title;
-    // String description;
     String website;
     String date;
     ArrayList<String> languages;
@@ -73,16 +72,6 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         this.patchOrder = patchOrder;
     }
 
-    /*
-    public String getExpansionFileName() {
-        return expansionFileName;
-    }
-
-    public void setExpansionFileName(String expansionFileName) {
-        this.expansionFileName = expansionFileName;
-    }
-    */
-
     public String getExpansionFileVersion() {
         return expansionFileVersion;
     }
@@ -107,12 +96,44 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         this.expansionFileUrl = expansionFileUrl;
     }
 
+    public long getExpansionFileSize() {
+        return expansionFileSize;
+    }
+
+    public void setExpansionFileSize(long expansionFileSize) {
+        this.expansionFileSize = expansionFileSize;
+    }
+
+    public String getExpansionFileChecksum() {
+        return expansionFileChecksum;
+    }
+
+    public void setExpansionFileChecksum(String expansionFileChecksum) {
+        this.expansionFileChecksum = expansionFileChecksum;
+    }
+
     public String getPatchFileVersion() {
         return patchFileVersion;
     }
 
     public void setPatchFileVersion(String patchFileVersion) {
         this.patchFileVersion = patchFileVersion;
+    }
+
+    public long getPatchFileSize() {
+        return patchFileSize;
+    }
+
+    public void setPatchFileSize(long patchFileSize) {
+        this.patchFileSize = patchFileSize;
+    }
+
+    public String getPatchFileChecksum() {
+        return patchFileChecksum;
+    }
+
+    public void setPatchFileChecksum(String patchFileChecksum) {
+        this.patchFileChecksum = patchFileChecksum;
     }
 
     public String getAuthor() {
@@ -200,5 +221,13 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         } else {
             return 0; // otherwise don't care
         }
+    }
+
+    public float getMainPercentComplete(long currentSize) {
+        return 0;
+    }
+
+    public float getPatchPercentComplete(long currentSize) {
+        return 0;
     }
 }

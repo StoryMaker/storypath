@@ -63,6 +63,75 @@ public class DownloadHelper {
         }
     }
 
+    public static float getDownloadProgress(Context context) {
+
+        long totalExpectedSize = 0;
+        long totalCurrentSize = 0;
+        boolean sizeUndefined = false;
+
+        // omitting main and patch files for now
+
+        HashMap<String, ExpansionIndexItem> contentPacksMap = IndexManager.loadInstalledFileIndex(context);
+
+        for (ExpansionIndexItem contentPack : contentPacksMap.values()) {
+            File contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.MAIN));
+
+            if (contentPack.getExpansionFileSize() == 0) {
+                // no size defined, can't evaluate
+                sizeUndefined = true;
+            } else {
+                totalExpectedSize = totalExpectedSize + contentPack.getExpansionFileSize();
+
+                if (!contentPackFile.exists()) {
+                    // actual file doesn't exist, check for temp file
+                    contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.MAIN) + ".tmp");
+
+                    if (!contentPackFile.exists()) {
+                        // still no file, add nothing to current size
+                    } else {
+                        totalCurrentSize = totalCurrentSize + contentPackFile.length();
+                    }
+                } else {
+                    totalCurrentSize = totalCurrentSize + contentPackFile.length();
+                }
+
+                if (!IndexManager.buildFileName(contentPack, Constants.PATCH).equals(IndexManager.noPatchFile)) {
+                    contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.PATCH));
+
+                    if (contentPack.getPatchFileSize() == 0) {
+                        // no size defined, can't evaluate
+                        sizeUndefined = true;
+                    } else {
+                        totalExpectedSize = totalExpectedSize + contentPack.getPatchFileSize();
+
+                        if (!contentPackFile.exists()) {
+                            // actual file doesn't exist, check for temp file
+                            contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.PATCH) + ".tmp");
+
+                            if (!contentPackFile.exists()) {
+                                // still no file, add nothing to current size
+                            } else {
+                                totalCurrentSize = totalCurrentSize + contentPackFile.length();
+                            }
+                        } else {
+                            totalCurrentSize = totalCurrentSize + contentPackFile.length();
+                        }
+                    }
+                }
+            }
+        }
+
+        if (sizeUndefined) {
+            return -1;
+        } else if (totalExpectedSize == 0) {
+            Log.e("CHECKING FILES", "TOTAL EXPECTED SIZE IS 0 BYTES (NO CURRENT DOWNLOADS?)");
+            return -1;
+        } else {
+            Log.e("CHECKING FILES", "CURRENT DOWNLOAD PROGRESS: " + totalCurrentSize + " BYTES OUT OF " + totalExpectedSize + " BYTES");
+            return (float)totalCurrentSize / (float)totalExpectedSize;
+        }
+    }
+
     // TODO use HTTPS
     // TODO pickup Tor settings
     public static boolean checkExpansionFiles(Context context, String mainOrPatch, int version) {

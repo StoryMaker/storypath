@@ -67,6 +67,10 @@ public class Constants {
     public static final String PATCH = "patch";
     public static final int MAIN_VERSION = 1031;
     public static final int PATCH_VERSION = 1020;
+    public static final int MAIN_SIZE = 356561;
+    public static final int PATCH_SIZE = -1;
+    public static final String MAIN_CHECKSUM = "foo";
+    public static final String PATCH_CHECKSUM = "foo";
 
     public final static String TOR_PROXY_HOST = "localhost";
     public final static int TOR_PROXY_PORT = 8118;
