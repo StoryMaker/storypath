@@ -41,9 +41,6 @@ public class IndexManager {
     private static String contentIndexName = "content_index.json";
     private static String contentMetadataName = "content_metadata.json";
 
-    public static String pendingDownloadKey = "DOWNLOAD";
-    public static String pendingDownloadValue = "PENDING";
-    public static String pendingPatchDownloadValue = "PENDINGPATCH";
     public static String noPatchFile = "NOPATCH";
 
     public static String buildFileName(ExpansionIndexItem item, String mainOrPatch) {

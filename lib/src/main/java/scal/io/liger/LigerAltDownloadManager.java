@@ -237,21 +237,6 @@ public class LigerAltDownloadManager implements Runnable {
                     responseInput.close();
                     Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
 
-                    // update item from installed index to indicate completed download
-                    Log.e("DOWNLOAD/TOR", "DOWNLOAD COMPLETED FOR " + actualFileName + ", UPDATING INSTALLED INDEX");
-                    ExpansionIndexItem eii = IndexManager.loadInstalledFileIndex(context).get(actualFileName);
-                    if (eii != null) {
-                        eii.removeExtra(IndexManager.pendingDownloadKey);
-                        IndexManager.registerInstalledIndexItem(context, eii);
-                        try {
-                            synchronized (this) {
-                                wait(1000);
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
                     if (!handleFile(targetFile)) {
                         // remove item from installed index if file processing fails
                         Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + actualFileName + ", REMOVING FROM INSTALLED INDEX");
@@ -534,21 +519,6 @@ public class LigerAltDownloadManager implements Runnable {
 
                         if (QueueManager.removeFromQueue(context, Long.valueOf(downloadId))) {
                             Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
-
-                            // update item from installed index to indicate completed download
-                            Log.e("DOWNLOAD", "DOWNLOAD COMPLETED FOR " + fileCheck.getName() + ", UPDATING INSTALLED INDEX");
-                            ExpansionIndexItem eii = IndexManager.loadInstalledFileIndex(context).get(fileCheck.getName());
-                            if (eii != null) {
-                                eii.removeExtra(IndexManager.pendingDownloadKey);
-                                IndexManager.registerInstalledIndexItem(context, eii);
-                                try {
-                                    synchronized (this) {
-                                        wait(1000);
-                                    }
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
 
                             if (!handleFile(savedFile)) {
                                 // remove item from installed index if file processing fails
