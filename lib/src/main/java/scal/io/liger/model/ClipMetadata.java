@@ -25,18 +25,30 @@ public class ClipMetadata {
         this.volume = 1f;
     }
 
+    /**
+     * @return the Clip start time in milliseconds
+     */
     public int getStartTime() {
         return startTime;
     }
 
+    /**
+     * Set the Clip start time in milliseconds
+     */
     public void setStartTime(int startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * @return the Clip stop time in milliseconds
+     */
     public int getStopTime() {
         return stopTime;
     }
 
+    /**
+     * Set the Clip stop time in milliseconds
+     */
     public void setStopTime(int stopTime) {
         this.stopTime = stopTime;
     }

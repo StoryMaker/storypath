@@ -556,6 +556,7 @@ public class ClipCardView extends ExampleCardView {
         final MediaPlayer player = new MediaPlayer();
         final ClipMetadata selectedClip = mCardModel.getSelectedClip();
         final AtomicInteger clipDurationMs = new AtomicInteger();
+        final AtomicInteger clipMediaDurationMs = new AtomicInteger();
 
         /** Values modified by RangeBar listener. Used by Dialog trim listener to
          *  set final trim selections on ClipMetadata */
@@ -565,6 +566,8 @@ public class ClipCardView extends ExampleCardView {
         /** Setup initial values that don't require media loaded */
         clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
+        clipStartMs.set(selectedClip.getStartTime());
+        clipStopMs.set(selectedClip.getStopTime());
         volumeSeek.setProgress((int) (mCardModel.getSelectedClip().getVolume() * volumeSeek.getMax()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
@@ -594,7 +597,7 @@ public class ClipCardView extends ExampleCardView {
 
                 if (lastLeftIdx != leftIdx) {
                     // Left seek was adjusted, seek to it
-                    clipStartMs.set(getMsFromRangeBarIndex(leftIdx, tickCount, clipDurationMs.get()));
+                    clipStartMs.set(getMsFromRangeBarIndex(leftIdx, tickCount, clipMediaDurationMs.get()));
                     player.seekTo(clipStartMs.get());
                     clipStart.setText(Util.makeTimeString(clipStartMs.get()));
                     //Log.i(TAG, String.format("Left seek to %d ms", clipStartMs.get()));
@@ -603,7 +606,7 @@ public class ClipCardView extends ExampleCardView {
 
                 } else if (lastRightIdx != rightIdx) {
                     // Right seek was adjusted, seek to it
-                    clipStopMs.set(getMsFromRangeBarIndex(rightIdx, tickCount, clipDurationMs.get()));
+                    clipStopMs.set(getMsFromRangeBarIndex(rightIdx, tickCount, clipMediaDurationMs.get()));
                     player.seekTo(clipStopMs.get());
                     clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
 
@@ -612,6 +615,8 @@ public class ClipCardView extends ExampleCardView {
                 }
                 lastLeftIdx = leftIdx;
                 lastRightIdx = rightIdx;
+                clipDurationMs.set(clipStopMs.get() - clipStartMs.get());
+                clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
             }
         });
 
@@ -652,14 +657,16 @@ public class ClipCardView extends ExampleCardView {
                         }
                     });
 
-                    clipDurationMs.set(player.getDuration());
-                    if (clipStopMs.get() == 0) clipStopMs.set(clipDurationMs.get()); // If no stop point set, play whole clip
+
+                    clipMediaDurationMs.set(player.getDuration());
+                    if (clipStopMs.get() == 0) clipStopMs.set(clipMediaDurationMs.get()); // If no stop point set, play whole clip
+                    clipDurationMs.set(clipStopMs.get() - clipStartMs.get());
 
                     // Setup initial views requiring knowledge of clip media
                     if (selectedClip.getStopTime() == 0) selectedClip.setStopTime(clipDurationMs.get());
                     player.seekTo(selectedClip.getStartTime());
-                    rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipDurationMs.get()),
-                                              getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipDurationMs.get()));
+                    rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipMediaDurationMs.get()),
+                                             getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipMediaDurationMs.get()));
                     clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
                     clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
