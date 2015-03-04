@@ -381,6 +381,7 @@ public class IndexManager {
 
     // only one key option for content index, file is loaded from a zipped content pack
     // content index is read only, no register/update/save methods
+    // TODO this should leverage the loadContentIndexAsList to avoid dupliction
     public static HashMap<String, InstanceIndexItem> loadContentIndex(Context context, String packageName, String expansionId, String language) {
 
         String contentJson = null;
@@ -422,6 +423,46 @@ public class IndexManager {
         }
 
         return contentMap;
+    }
+
+
+    // only one key option for content index, file is loaded from a zipped content pack
+    // content index is read only, no register/update/save methods
+    public static ArrayList<InstanceIndexItem> loadContentIndexAsList(Context context, String packageName, String expansionId, String language) {
+
+        String contentJson = null;
+        ArrayList<InstanceIndexItem> contentList = new ArrayList<InstanceIndexItem>();
+
+        String contentPath = packageName + File.separator + expansionId + File.separator + contentIndexName;
+
+        Log.d("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE");
+
+        try {
+            InputStream jsonStream = ZipHelper.getFileInputStream(contentPath, context, language);
+
+            if (jsonStream == null) {
+                Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
+                return contentList;
+            }
+
+            int size = jsonStream.available();
+            byte[] buffer = new byte[size];
+            jsonStream.read(buffer);
+            jsonStream.close();
+            contentJson = new String(buffer);
+
+            if ((contentJson != null) && (contentJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                contentList = gson.fromJson(contentJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                }.getType());
+            }
+        } catch (IOException ioe) {
+            Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
+        }
+
+        return contentList;
     }
 
     // not strictly an index, but including here because code is similar
