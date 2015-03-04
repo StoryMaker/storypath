@@ -8,7 +8,9 @@
         "thumbnailPath": "images/content_packs/learningguide_cover.jpg",
         "expansionFileVersion": "1",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
-        "expansionFileUrl": "http://storymaker.cc/appdata/obb/"
+        "expansionFileUrl": "http://storymaker.cc/appdata/obb/",
+        "expansionFileSize": "71601969",
+        "expansionFileChecksum": ""
     },
     {
         "expansionId": "burundi",
@@ -19,6 +21,8 @@
         "thumbnailPath": "images/content_packs/burundipack_cover.jpg",
         "expansionFileVersion": "1",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
-        "expansionFileUrl": "http://storymaker.cc/appdata/obb/"
+        "expansionFileUrl": "http://storymaker.cc/appdata/obb/",
+        "expansionFileSize": "264120023",
+        "expansionFileChecksum": ""
     }
 ]
