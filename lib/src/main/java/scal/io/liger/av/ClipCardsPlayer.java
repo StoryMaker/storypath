@@ -139,9 +139,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     break;
                 case READY:
                         try {
-                            if (mAudioTracksDirty) {
-                                prepareSecondaryPlayers();
-                            }
+                            if (mAudioTracksDirty) prepareSecondaryPlayers();
                             resumePlayback();
                         } catch (IOException e) {
                             e.printStackTrace();
