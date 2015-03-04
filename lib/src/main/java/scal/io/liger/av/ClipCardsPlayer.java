@@ -139,7 +139,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     break;
                 case READY:
                         try {
-                            if (mAudioTracksDirty) prepareSecondaryPlayers();
+                            if (mAudioTracksDirty) {
+                                prepareSecondaryPlayers();
+                            }
                             resumePlayback();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -539,8 +541,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             nextClipIndex = 0;
             _stopPlayback();
         } else {
-            Log.i(TAG, "Advancing to next clip " + nextClipIndex);
             nextClipIndex++;
+            Log.i(TAG, "Advancing to next clip " + nextClipIndex);
         }
 
         _advanceToClip(player, mClipCards.get(nextClipIndex), !(nextClipIndex == 0));
@@ -574,7 +576,6 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                     prepareMediaPlayer(player, mCurrentlyPlayingCard, isVideo);
                     //player.setSurface(mSurface);
                     mAdvancingClips = false;
-                    if (autoPlay) _resumePlayback();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -600,6 +601,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             e.printStackTrace();
         }
         mAdvancingClips = false;
+        if (autoPlay) _resumePlayback();
     }
 
     protected void _startPlayback() {
