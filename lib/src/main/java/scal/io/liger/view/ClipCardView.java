@@ -628,7 +628,6 @@ public class ClipCardView extends ExampleCardView {
                 if (player.isPlaying()) {
                     player.pause();
                 } else {
-                    ClipCardsPlayer.adjustAspectRatio(videoView, player.getVideoWidth(), player.getVideoHeight());
                     player.seekTo(clipStartMs.get());
                     player.start();
                 }
@@ -657,6 +656,7 @@ public class ClipCardView extends ExampleCardView {
                         }
                     });
 
+                    ClipCardsPlayer.adjustAspectRatio(videoView, player.getVideoWidth(), player.getVideoHeight());
 
                     clipMediaDurationMs.set(player.getDuration());
                     if (clipStopMs.get() == 0) clipStopMs.set(clipMediaDurationMs.get()); // If no stop point set, play whole clip
