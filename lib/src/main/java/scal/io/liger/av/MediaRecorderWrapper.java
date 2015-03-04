@@ -36,6 +36,7 @@ import scal.io.liger.model.MediaFile;
  */
 public class MediaRecorderWrapper {
     private final String TAG = getClass().getSimpleName();
+    private static final boolean VERBOSE = false;
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yy.mm.dd-HH.mm.ss");
 
@@ -109,7 +110,7 @@ public class MediaRecorderWrapper {
 
     public int getMaxAmplitude() {
         if (mRecorder == null || !mRecording) {
-            Log.w(TAG, "getMaxAmplitude called in invalid state");
+            if (VERBOSE) Log.w(TAG, "getMaxAmplitude called in invalid state");
             return 0;
         }
         return mRecorder.getMaxAmplitude();
