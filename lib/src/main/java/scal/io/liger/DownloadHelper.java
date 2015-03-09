@@ -8,11 +8,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import scal.io.liger.model.ContentPackMetadata;
 import scal.io.liger.model.ExpansionIndexItem;
 
 /**
@@ -55,14 +53,14 @@ public class DownloadHelper {
                 updateFlag = true;
             }
 
-            File contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.MAIN));
+            File contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN));
 
             if (!contentPackFile.exists()) {
                 missingFiles.add(IndexManager.buildFileName(contentPack, Constants.MAIN));
             }
 
             if (!IndexManager.buildFileName(contentPack, Constants.PATCH).equals(IndexManager.noPatchFile)) {
-                contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.PATCH));
+                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH));
 
                 if (!contentPackFile.exists()) {
                     missingFiles.add(IndexManager.buildFileName(contentPack, Constants.PATCH));
@@ -105,7 +103,7 @@ public class DownloadHelper {
         HashMap<String, ExpansionIndexItem> contentPacksMap = IndexManager.loadInstalledIdIndex(context);
 
         for (ExpansionIndexItem contentPack : contentPacksMap.values()) {
-            File contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.MAIN));
+            File contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN));
 
             if (contentPack.getExpansionFileSize() == 0) {
                 // no size defined, can't evaluate
@@ -115,7 +113,7 @@ public class DownloadHelper {
 
                 if (!contentPackFile.exists()) {
                     // actual file doesn't exist, check for temp file
-                    contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.MAIN) + ".tmp");
+                    contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN) + ".tmp");
 
                     if (!contentPackFile.exists()) {
                         // still no file, add nothing to current size
@@ -127,7 +125,7 @@ public class DownloadHelper {
                 }
 
                 if (!IndexManager.buildFileName(contentPack, Constants.PATCH).equals(IndexManager.noPatchFile)) {
-                    contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.PATCH));
+                    contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH));
 
                     if (contentPack.getPatchFileSize() == 0) {
                         // no size defined, can't evaluate
@@ -137,7 +135,7 @@ public class DownloadHelper {
 
                         if (!contentPackFile.exists()) {
                             // actual file doesn't exist, check for temp file
-                            contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.PATCH) + ".tmp");
+                            contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH) + ".tmp");
 
                             if (!contentPackFile.exists()) {
                                 // still no file, add nothing to current size

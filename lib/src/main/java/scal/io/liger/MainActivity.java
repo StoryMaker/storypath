@@ -106,7 +106,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             Log.d(TAG, "onCreate called with no savedInstanceState");
 
             JsonHelper.setupFileStructure(this);
-            MediaHelper.setupFileStructure(this);
 
             // NEW: load instance index
             //      only fill on startup to minimize disk access

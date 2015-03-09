@@ -3,6 +3,8 @@ package scal.io.liger;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
@@ -24,6 +26,7 @@ import scal.io.liger.model.ExpansionIndexItem;
  * @author Josh Steiner
  */
 public class ZipHelper {
+    public static final String TAG = "ZipHelper";
 
     public static String getExpansionZipFilename(Context ctx, String mainOrPatch, int version) {
         String packageName = ctx.getPackageName();
@@ -38,6 +41,7 @@ public class ZipHelper {
     }
 
     public static String getFileFolderName(Context ctx) {
+        // TODO Why doesn't this use ctx.getExternalFilesDir(null) (like JsonHelper)?
         String packageName = ctx.getPackageName();
         File root = Environment.getExternalStorageDirectory();
         return root.toString() + "/Android/data/" + packageName + "/files/";
@@ -153,68 +157,7 @@ public class ZipHelper {
         try {
             // resource file contains main file and patch file
 
-            ArrayList<String> paths = new ArrayList<String>();
-            paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
-
-            if (Constants.PATCH_VERSION > 0) {
-
-                // if the main file is newer than the patch file, do not apply a patch file
-                if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
-                    Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-                } else {
-                    Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-                    paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
-                }
-
-            }
-
-            // add 3rd party stuff
-            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
-
-            // need to sort patch order keys, numbers may not be consecutive
-            ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
-            Collections.sort(orderNumbers);
-
-            for (String orderNumber : orderNumbers) {
-                ExpansionIndexItem item = expansionIndex.get(orderNumber);
-                if (item == null) {
-                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
-                } else {
-                    // construct name
-                    String pathName = IndexManager.buildFilePath(item);
-                    String fileName = IndexManager.buildFileName(item, Constants.MAIN);
-
-                    File checkFile = new File(pathName + fileName);
-
-                    // should be able to do this locally
-                    // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
-                    if (checkFile.exists()) {
-                        Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
-                        paths.add(getExpansionFileFolder(context, fileName) + fileName);
-
-                        if ((item.getPatchFileVersion() != null) &&
-                            (item.getExpansionFileVersion() != null) &&
-                            (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
-                            (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
-                            // construct name
-                            String patchName = IndexManager.buildFileName(item, Constants.PATCH);
-
-                            checkFile = new File(pathName + patchName);
-
-                            // should be able to do this locally
-                            // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
-                            if (checkFile.exists()) {
-                                Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
-                                paths.add(getExpansionFileFolder(context, patchName) + patchName);
-                            } else {
-                                Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
-                            }
-                        }
-                    } else {
-                        Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
-                    }
-                }
-            }
+            ArrayList<String> paths = getExpansionPaths(context);
 
             ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(paths.toArray(new String[paths.size()]));
 
@@ -261,75 +204,171 @@ public class ZipHelper {
         return null;
     }
 
+    public static @Nullable InputStream getFileInputStreamForExpansionAndPath(@NonNull ExpansionIndexItem expansion,
+                                                                              @NonNull String path,
+                                                                              @NonNull Context context) {
 
-    public static InputStream getFileInputStream(String path, Context context) {
+        return getFileInputStreamFromFile(IndexManager.buildFileAbsolutePath(expansion, Constants.MAIN), path, context);
+    }
 
-        // resource file contains main file and patch file
+    public static InputStream getThumbnailInputStreamForItem(ExpansionIndexItem item, Context context) {
+        ZipResourceFile resourceFile = null;
+        try {
+            resourceFile = APKExpansionSupport.getResourceZipFile(new String[]{IndexManager.buildFileAbsolutePath(item, Constants.MAIN)});
+            return resourceFile.getInputStream(item.getThumbnailPath());
 
-        ArrayList<String> paths = new ArrayList<String>();
-        paths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
-        if (Constants.PATCH_VERSION > 0) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-            // if the main file is newer than the patch file, do not apply a patch file
-            if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
-                Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-            } else {
-                Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-                paths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+    private static ArrayList<String> expansionPaths;
+
+    /**
+     * @return an absolute path to an expansion file with the given expansionId, or null if no
+     * match could be made.
+     */
+    public static @Nullable String getExpansionPathForExpansionId(Context context, String expansionId) {
+        String targetExpansionPath = null;
+        ArrayList<String> expansionPaths = getExpansionPaths(context);
+        for (String expansionPath : expansionPaths) {
+            if (expansionPath.contains(expansionId)) {
+                targetExpansionPath = expansionPath;
+                break;
+            }
+        }
+        return targetExpansionPath;
+    }
+
+    /**
+     * @return a list of absolute paths to all available expansion files.
+     */
+    private static  ArrayList<String> getExpansionPaths(Context context) {
+        if (expansionPaths == null) {
+            expansionPaths = new ArrayList<>();
+            expansionPaths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+            if (Constants.PATCH_VERSION > 0) {
+
+                // if the main file is newer than the patch file, do not apply a patch file
+                if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
+                    Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                } else {
+                    Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                    expansionPaths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+                }
+
             }
 
-        }
+            // add 3rd party stuff
+            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
 
-        // add 3rd party stuff
-        HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
+            // need to sort patch order keys, numbers may not be consecutive
+            ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
+            Collections.sort(orderNumbers);
 
-        // need to sort patch order keys, numbers may not be consecutive
-        ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
-        Collections.sort(orderNumbers);
-
-        for (String orderNumber : orderNumbers) {
-            ExpansionIndexItem item = expansionIndex.get(orderNumber);
-            if (item == null) {
-                Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
-            } else {
-
-                // construct name
-                String pathName = IndexManager.buildFilePath(item);
-                String fileName = IndexManager.buildFileName(item, Constants.MAIN);
-
-                File checkFile = new File(pathName + fileName);
-
-                // should be able to do this locally
-                // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
-                if (checkFile.exists()) {
-                    Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
-                    paths.add(getExpansionFileFolder(context, fileName) + fileName);
-
-                    if ((item.getPatchFileVersion() != null) &&
-                        (item.getExpansionFileVersion() != null) &&
-                        (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
-                        (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
-                        // construct name
-                        String patchName = IndexManager.buildFileName(item, Constants.PATCH);
-
-                        checkFile = new File(pathName + patchName);
-
-                        // should be able to do this locally
-                        // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
-                        if (checkFile.exists()) {
-                            Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
-                            paths.add(getExpansionFileFolder(context, patchName) + patchName);
-                        } else {
-                            Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
-                        }
-                    }
+            for (String orderNumber : orderNumbers) {
+                ExpansionIndexItem item = expansionIndex.get(orderNumber);
+                if (item == null) {
+                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
-                    Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
+
+                    // construct name
+                    String pathName = IndexManager.buildFilePath(item);
+                    String fileName = IndexManager.buildFileName(item, Constants.MAIN);
+
+                    File checkFile = new File(pathName + fileName);
+
+                    // should be able to do this locally
+                    // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
+                    if (checkFile.exists()) {
+                        Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
+                        expansionPaths.add(getExpansionFileFolder(context, fileName) + fileName);
+
+                        if ((item.getPatchFileVersion() != null) &&
+                                (item.getExpansionFileVersion() != null) &&
+                                (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
+                                (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
+                            // construct name
+                            String patchName = IndexManager.buildFileName(item, Constants.PATCH);
+
+                            checkFile = new File(pathName + patchName);
+
+                            // should be able to do this locally
+                            // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
+                            if (checkFile.exists()) {
+                                Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
+                                expansionPaths.add(getExpansionFileFolder(context, patchName) + patchName);
+                            } else {
+                                Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
+                            }
+                        }
+                    } else {
+                        Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
+                    }
                 }
             }
         }
+        return expansionPaths;
+    }
 
-        return getFileInputStreamFromFiles(paths, path, context);
+    /**
+     * @return the {@link scal.io.liger.model.ExpansionIndexItem} which is likely to contain the
+     * given path.
+     *
+     * This method is useful as an optimization step until StoryPathLibrarys hold reference
+     * to the ExpansionIndexItem from which they were created, if applicable. The inspection
+     * is performed by searching for installed ExpansionIndexItem expansionId values
+     * within the given path parameter, and does not involve inspection of the files belonging to
+     * each ExpansionIndexItem.
+     *
+     */
+    public static @Nullable ExpansionIndexItem guessExpansionIndexItemForPath(String path, Context context) {
+        HashMap<String, ExpansionIndexItem> expansions = IndexManager.loadInstalledIdIndex(context);
+
+        Set<String> expansionIds = expansions.keySet();
+        for(String expansionId : expansionIds) {
+            if (path.contains(expansionId)) {
+                return expansions.get(expansionId);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return an {@link java.io.InputStream} corresponding to the given path which must reside within
+     * one of the installed index items. On disk this corresponds to a zip archive packaged as an .obb file.
+     *
+     */
+    @Deprecated
+    public static InputStream getFileInputStream(String path, Context context) {
+
+        // resource file contains main file and patch file
+        ArrayList<String> allExpansionPaths = getExpansionPaths(context);
+        ArrayList<String> targetExpansionPaths = new ArrayList<>();
+
+        HashMap<String, ExpansionIndexItem> expansions = IndexManager.loadInstalledIdIndex(context);
+
+        Set<String> expansionIds = expansions.keySet();
+        for(String expansionId : expansionIds) {
+            if (path.contains(expansionId)) {
+                targetExpansionPaths.add(IndexManager.buildFileAbsolutePath(expansions.get(expansionId), Constants.MAIN));
+            }
+        }
+
+        Log.w(TAG, String.format("Found %d expansionId matches for path %s", targetExpansionPaths.size(), path));
+
+        if (targetExpansionPaths.size() == 0) targetExpansionPaths = allExpansionPaths;
+
+        StringBuilder paths = new StringBuilder();
+        for (String expansionPath : targetExpansionPaths) {
+            paths.append(expansionPath);
+            paths.append(", ");
+        }
+        paths.delete(paths.length()-2, paths.length());
+        Log.d(TAG, String.format("Searching for %s in %s", path, paths));
+
+        return getFileInputStreamFromFiles(targetExpansionPaths, path, context);
     }
 
     public static InputStream getFileInputStreamFromFile(String zipPath, String filePath, Context context) {
@@ -363,6 +402,11 @@ public class ZipHelper {
         }
     }
 
+    /**
+     * Copy the expansion asset at path to a temporary file within tempPath. If
+     * a temp file exists for the given arguments it will be deleted and remade.
+     */
+    @Deprecated
     public static File getTempFile(String path, String tempPath, Context context) {
 
         String extension = path.substring(path.lastIndexOf("."));
