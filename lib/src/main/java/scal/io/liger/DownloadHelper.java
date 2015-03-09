@@ -169,34 +169,6 @@ public class DownloadHelper {
         }
     }
 
-    // for additional expansion files, check files folder for specified file
-    // unused
-    /*
-    public static boolean checkExpansionFiles(Context context, String fileName) {
-        String expansionFilePath = ZipHelper.getExpansionFileFolder(context, fileName);
-
-        if (expansionFilePath != null) {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " FOUND IN " + expansionFilePath);
-            return true;
-        } else {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " NOT FOUND");
-            return false;
-        }
-    }
-
-    public static boolean checkExpansionFiles(Context context, String fileName, ExpansionIndexItem item) {
-        String expansionFilePath = ZipHelper.getExpansionFileFolder(context, fileName, item);
-
-        if (expansionFilePath != null) {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " FOUND IN " + expansionFilePath);
-            return true;
-        } else {
-            Log.d("DOWNLOAD", "EXPANSION FILE " + fileName + " NOT FOUND");
-            return false;
-        }
-    }
-    */
-
     public static void checkAndDownload(Context context) {
 
         // needs to be revised to deal with queue file (?)
@@ -290,7 +262,7 @@ public class DownloadHelper {
 
             tempIndexItem = checkAndDownload(context, installedItem, availableItem);
 
-            // BUILD LIST AND UPDATE INDEX
+            // build list and update index once
             if (tempIndexItem == null) {
                 updatedIndex.put(installedItem.getExpansionId(), installedItem);
             } else {
@@ -330,15 +302,12 @@ public class DownloadHelper {
     }
 
     // need to be able to check/download a single file (currently only supports content packs)
-
     public static ExpansionIndexItem checkAndDownload(Context context, ExpansionIndexItem installedItem, ExpansionIndexItem availableItem) {
 
         boolean itemUpdated = false;
 
         // need to compare main and patch versions
-        // update installed index for consistency and to minimize code impact
-
-        // UPDATE INSTALLED ITEM METADATA HERE, REMOVE FROM CHECK ALL FILES?
+        // update installed index for consistency
 
         if ((installedItem.getExpansionFileVersion() != null) &&
             (availableItem.getExpansionFileVersion() != null) &&
@@ -346,8 +315,6 @@ public class DownloadHelper {
             Log.d("DOWNLOAD", "FOUND NEWER VERSION OF MAIN EXPANSION ITEM " + installedItem.getExpansionId() + " (" + availableItem.getExpansionFileVersion() + " vs. " + installedItem.getExpansionFileVersion() + ") UPDATING");
             installedItem.setExpansionFileVersion(availableItem.getExpansionFileVersion());
             itemUpdated = true;
-
-            //IndexManager.registerInstalledIndexItem(context, installedItem);
         }
 
         // need to account for case where installed item has no defined patch version
@@ -357,15 +324,11 @@ public class DownloadHelper {
                     Log.d("DOWNLOAD", "FOUND NEWER VERSION OF PATCH EXPANSION ITEM " + installedItem.getExpansionId() + " (" + availableItem.getPatchFileVersion() + " vs. " + installedItem.getPatchFileVersion() + ") UPDATING");
                     installedItem.setPatchFileVersion(availableItem.getPatchFileVersion());
                     itemUpdated = true;
-
-                    //IndexManager.registerInstalledIndexItem(context, installedItem);
                 }
             } else {
                 Log.d("DOWNLOAD", "FOUND NEWER VERSION OF PATCH EXPANSION ITEM " + installedItem.getExpansionId() + " (" + availableItem.getPatchFileVersion() + " vs. " + installedItem.getPatchFileVersion() + ") UPDATING");
                 installedItem.setPatchFileVersion(availableItem.getPatchFileVersion());
                 itemUpdated = true;
-
-                //IndexManager.registerInstalledIndexItem(context, installedItem);
             }
         }
 
@@ -397,8 +360,6 @@ public class DownloadHelper {
 
         File expansionFile = new File(filePath + fileName);
 
-        // should be able to check this locally
-        // if (checkExpansionFiles(context, fileName, installedItem)) {
         if (expansionFile.exists()) {
             // file exists, check size/hash (TODO: hash check)
 
@@ -434,20 +395,6 @@ public class DownloadHelper {
 
             expansionDownloadThread.start();
 
-            // need a better solution
-            // THIS SHOULD NO LONGER UPDATE INDEX
-            // REMOVING WAIT
-            /*
-            try {
-                synchronized (waitObj) {
-                    Log.d("WAITING", fileName);
-                    waitObj.wait(5000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            */
-
             fileStateOk = false;
         }
 
@@ -482,8 +429,6 @@ public class DownloadHelper {
 
                 expansionFile = new File(filePath + patchName);
 
-                // should be able to check this locally
-                // if (checkExpansionFiles(context, patchName, installedItem)) {
                 if (expansionFile.exists()) {
                     // file exists, check size/hash (TODO: hash check)
 
@@ -520,20 +465,6 @@ public class DownloadHelper {
                     Toast.makeText(context, "Starting download of expansion file patch.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                     expansionDownloadThread.start();
-
-                    // need a better solution
-                    // THIS SHOULD NO LONGER UPDATE INDEX
-                    // REMOVING WAIT
-                    /*
-                    try {
-                        synchronized (waitObj) {
-                            Log.d("WAITING", patchName);
-                            waitObj.wait(5000);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    */
 
                     fileStateOk = false;
                 }

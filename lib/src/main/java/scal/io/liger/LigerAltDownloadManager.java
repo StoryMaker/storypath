@@ -48,17 +48,16 @@ public class LigerAltDownloadManager implements Runnable {
     // TODO use HTTPS
     // TODO pickup Tor settings
 
+    // store in manager to skip index lookups
+    private ExpansionIndexItem indexItem = null;
+
     private String fileName;
     private Context context;
 
     private DownloadManager manager;
-    //private File partialFile;
     private long lastDownload = -1L;
 
     StrongHttpsClient mClient = null;
-
-    // store in manager to skip index lookups
-    private ExpansionIndexItem indexItem = null;
 
     boolean useManager = true;
     boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
@@ -103,20 +102,6 @@ public class LigerAltDownloadManager implements Runnable {
         //       it may require a second click  or restart to get to this point.  if we end up here, with a
         //       finished download and no visible file progress, we'll manage the file and return without
         //       starting another download.
-
-        // check queue
-
-        // if download manager id found, check manager status
-
-        // if status failed/stopped/etc, unqueue, handle files
-
-        // if no download manager id, check file progress
-
-        // if no progress, handle files
-
-        // if files complete, return
-
-        // else, start download process
 
         if (checkQueue()) {
             Log.d("DOWNLOAD", "ANOTHER PROCESS IS ALREADY DOWNLOADING " + fileName + ", WILL NOT START DOWNLOAD");
@@ -223,7 +208,7 @@ public class LigerAltDownloadManager implements Runnable {
             if (checkFile.getName().equals(queueMap.get(queueId).getQueueFile())) {
 
                 if (queueId < 0) {
-                    // use negative number to flag non-manager downloads
+                    // use negative numbers to flag non-manager downloads
 
                     if (checkFileProgress()) {
 
@@ -238,7 +223,7 @@ public class LigerAltDownloadManager implements Runnable {
                     }
 
                 } else {
-                    // use manager id to flag manager downloads
+                    // use download manager ids to flag manager downloads
 
                     // need to init download manager to check queue
                     initDownloadManager();
@@ -404,16 +389,6 @@ public class LigerAltDownloadManager implements Runnable {
     }
 
     private void downloadFromLigerServer() {
-        Log.e("DOWNLOAD", "DOWNLOADING EXTENSION");
-
-        /*
-        ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(fileName);
-
-        if (expansionIndexItem == null) {
-            Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + fileName);
-            return;
-        }
-        */
 
         String ligerUrl = indexItem.getExpansionFileUrl();
         String ligerPath = IndexManager.buildFilePath(indexItem);
@@ -422,120 +397,50 @@ public class LigerAltDownloadManager implements Runnable {
         Log.d("DOWNLOAD", "DOWNLOADING " + ligerObb + " FROM " + ligerUrl + " TO " + ligerPath);
 
         try {
-            // we're managing the download, download only to the files folder
-            // File targetFolder = new File(ZipHelper.getFileFolderName(context, fileName));
-
-            //Log.d("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
 
             URI expansionFileUri = null;
             HttpGet request = null;
             HttpResponse response = null;
 
-           // try {
-                Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl + ligerObb);
+            File targetFolder = new File(ligerPath);
 
-                //if (useManager) {
+            String nameFilter = "";
 
-                    // clean up old tmps before downloading
+            if (ligerObb.contains(indexItem.getExpansionFileVersion())) {
+                nameFilter = fileName.replace(indexItem.getExpansionFileVersion(), "*") + "*.tmp";
+            } else {
+                nameFilter = fileName + "*.tmp";
+            }
 
-                    /*
-                    File targetFile = new File(targetFolder, ligerObb + ".tmp");
-                    File partFile = new File(targetFolder, ligerObb + ".part");
+            Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
 
-                    if (targetFile.exists() && !partFile.exists()) {
-                        Log.d("DOWNLOAD", "PARTIAL FILE: MOVED " + targetFile.getPath() + " TO " + partFile.getPath());
-                        FileUtils.moveFile(targetFile, partFile);
-                    }
-                    */
+            WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
+            for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
+                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                FileUtils.deleteQuietly(oldFile);
+            }
 
-                    File targetFolder = new File(ligerPath);
+            // additional cleanup of pre-name-change files
+            if (fileName.contains(Constants.MAIN)) {
+                nameFilter = fileName.replace(Constants.MAIN + ".", "").replace(indexItem.getExpansionFileVersion(), "*");
 
-                    String nameFilter = "";
+                Log.d("DOWNLOAD", "CLEANUP: DELETING OLD FILES " + nameFilter + " FROM " + targetFolder.getPath());
 
-                    if (ligerObb.contains(indexItem.getExpansionFileVersion())) {
-                        nameFilter = fileName.replace(indexItem.getExpansionFileVersion(), "*") + "*.tmp";
-                    } else {
-                        nameFilter = fileName + "*.tmp";
-                    }
-
-                    Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
-
-                    WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
-                    for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
-                        Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
-                        FileUtils.deleteQuietly(oldFile);
-                    }
-
-                    // additional cleanup of pre-name-change files
-                    if (fileName.contains(Constants.MAIN)) {
-                        nameFilter = fileName.replace(Constants.MAIN + ".", "").replace(indexItem.getExpansionFileVersion(), "*");
-
-                        Log.d("DOWNLOAD", "CLEANUP: DELETING OLD FILES " + nameFilter + " FROM " + targetFolder.getPath());
-
-                        oldFileFilter = new WildcardFileFilter(nameFilter);
-                        for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
-                            Log.d("DOWNLOAD", "CLEANUP: FOUND OLD FILE " + oldFile.getPath() + ", DELETING");
-                            FileUtils.deleteQuietly(oldFile);
-                        }
-                    }
-
-                    File targetFile = new File(targetFolder, ligerObb + ".tmp");
-
-                    // initialize here where we have the folder/name
-                    /*
-                    File pf = new File(targetFolder, ligerObb + ".part");
-                    if (pf.exists()) {
-                        Log.d("DOWNLOAD", "PARTIAL FILE FOUND: " + pf.getPath());
-                        partialFile = pf;
-                    }
-                    */
-
-                    if (checkTor(useTor, context)) {
-                        downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, targetFile);
-                    } else {
-                        downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
-                    }
-                /* MANAGER/NO MANAGER IS BAESD ON TOR SETTINGS
-                } else {
-
-                    // useManager IS HARDCODED SO THIS CODE SHOULD PROBABLY BE REMOVED
-
-                    expansionFileUri = new URI(ligerUrl + ligerObb);
-
-                    DefaultHttpClient httpClient = new DefaultHttpClient();
-                    request = new HttpGet(expansionFileUri);
-                    response = httpClient.execute(request);
-
-                    File targetFile = new File(targetFolder, ligerObb);
-                    targetFile.getParentFile().mkdirs();
-
-                    BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
-
-                    try {
-                        FileOutputStream targetOutput = new FileOutputStream(targetFile);
-                        byte[] buf = new byte[1024];
-                        int i;
-                        while ((i = responseInput.read(buf)) > 0) {
-                            targetOutput.write(buf, 0, i);
-                        }
-                        targetOutput.close();
-                        responseInput.close();
-                        Log.d("DOWNLOAD", "SAVED DOWNLOAD TO " + targetFile);
-                    } catch (IOException ioe) {
-                        Log.e("DOWNLOAD", "FAILED TO SAVE DOWNLOAD TO " + targetFile + " -> " + ioe.getMessage());
-                        ioe.printStackTrace();
-                    }
-                }*/
-                /*
-            } catch (IOException ioe) {
-                Log.e("DOWNLOAD", "ERROR DOWNLOADING FROM " + expansionFileUri + " -> " + ioe.getMessage());
-                ioe.printStackTrace();
-
-                if (response != null) {
-                    response.getEntity().consumeContent();
+                oldFileFilter = new WildcardFileFilter(nameFilter);
+                for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
+                    Log.d("DOWNLOAD", "CLEANUP: FOUND OLD FILE " + oldFile.getPath() + ", DELETING");
+                    FileUtils.deleteQuietly(oldFile);
                 }
             }
-            */
+
+            File targetFile = new File(targetFolder, ligerObb + ".tmp");
+
+            if (checkTor(useTor, context)) {
+                downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, targetFile);
+            } else {
+                downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
+            }
+
         } catch (Exception e) {
             Log.e("DOWNLOAD", "DOWNLOAD ERROR: " + ligerUrl + ligerObb + " -> " + e.getMessage());
             e.printStackTrace();
@@ -553,8 +458,6 @@ public class LigerAltDownloadManager implements Runnable {
             return false;
         }
     }
-
-    // TODO: FINISH THIS PART
 
     private void downloadWithTor(Uri uri, String title, String desc, File targetFile) {
         Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
@@ -577,19 +480,21 @@ public class LigerAltDownloadManager implements Runnable {
                 long partBytes = partFile.length();
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
                 request.setHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
-                //         Range: bytes=64312833-64657026
             } else {
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
             }
 
             // HERE...
+
             HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             int statusCode = response.getStatusLine().getStatusCode();
 
             if ((statusCode == 200) || (statusCode == 206)) {
+
                 // ...TO HERE, 30 SECOND DELAY?
+
                 Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, STATUS CODE: " + statusCode);
 
                 // queue item here, "download" doesn't start until after we get a status code
@@ -615,21 +520,9 @@ public class LigerAltDownloadManager implements Runnable {
                     targetOutput.close();
                     responseInput.close();
                     Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
-
-                    //if (!handleFile(targetFile)) {
-                    //    Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + actualFileName); // + ", REMOVING FROM INSTALLED INDEX");
-
-                        // remove item from installed index if file processing fails
-                        // NO
-                        //IndexManager.unregisterInstalledIndexItem(context, actualFileName);
-                    //}
                 } catch (IOException ioe) {
-                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName); // + ", REMOVING FROM INSTALLED INDEX");
+                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName);
                     ioe.printStackTrace();
-
-                    // remove item from installed index if download fails
-                    // NO
-                    //IndexManager.unregisterInstalledIndexItem(context, actualFileName);
                 }
 
                 // remove from queue here, regardless of success
@@ -638,32 +531,16 @@ public class LigerAltDownloadManager implements Runnable {
                 // handle file here, regardless of success
                 // (assumes .tmp file will exist if download is interrupted)
                 if (!handleFile(targetFile)) {
-                    Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + actualFileName); // + ", REMOVING FROM INSTALLED INDEX");
-
-                    // remove item from installed index if file processing fails
-                    // NO
-                    //IndexManager.unregisterInstalledIndexItem(context, actualFileName);
+                    Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + actualFileName);
                 }
 
             } else {
-                Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", STATUS CODE: " + statusCode); // + ", REMOVING FROM INSTALLED INDEX");
-
-                // remove item from installed index if download fails
-                // NO
-                //IndexManager.unregisterInstalledIndexItem(context, actualFileName);
+                Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", STATUS CODE: " + statusCode);
             }
         } catch (IOException ioe) {
-            Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN"); // , REMOVING FROM INSTALLED INDEX");
+            Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN");
             ioe.printStackTrace();
-
-            // remove item from installed index if download fails
-            // NO
-            // IndexManager.unregisterInstalledIndexItem(context, actualFileName);
         }
-
-        //Log.d("DOWNLOAD/TOR", "PROCESSING INCOMPLETE DOWNLOAD OF FILE " + targetFile.getPath());
-
-        //managePartialFile(targetFile);
     }
 
     private synchronized StrongHttpsClient getHttpClientInstance() {
@@ -677,72 +554,48 @@ public class LigerAltDownloadManager implements Runnable {
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
         initDownloadManager();
 
-        //if (!foundInQueue) {
+        // if there is no connectivity, do not queue item (no longer seems to pause if connection is unavailable)
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
 
-            // if there is no connectivity, do not queue item (no longer seems to pause if connection is unavailable)
-            ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo ni = cm.getActiveNetworkInfo();
+        if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
-            if ((ni != null) && (ni.isConnectedOrConnecting())) {
+            Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
-                Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+            initReceivers();
 
-                initReceivers();
+            DownloadManager.Request request = new DownloadManager.Request(uri)
+                    .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                    .setAllowedOverRoaming(false)
+                    .setTitle(title)
+                    .setDescription(desc)
+                    .setVisibleInDownloadsUi(false)
+                    .setDestinationUri(uriFile);
 
-                DownloadManager.Request request = new DownloadManager.Request(uri)
-                        .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                        .setAllowedOverRoaming(false)
-                        .setTitle(title)
-                        .setDescription(desc)
-                        .setVisibleInDownloadsUi(false)
-                        .setDestinationUri(uriFile);
+            File partFile = new File(uriFile.toString().replace(".tmp", ".part"));
 
-                File partFile = new File(uriFile.toString().replace(".tmp", ".part"));
-
-                if (partFile.exists()) {
-                    long partBytes = partFile.length();
-                    Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
-                    request.addRequestHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
-                } else {
-                    Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
-                }
-
-                lastDownload = manager.enqueue(request);
-
-                // have to enqueue first to get manager id
-                String uriString = uriFile.toString();
-                QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriString.substring(uriString.lastIndexOf("/") + 1));
-
+            if (partFile.exists()) {
+                long partBytes = partFile.length();
+                Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
+                request.addRequestHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
             } else {
-                Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
-
-                //String fileName = uriFile.toString();
-                //fileName = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("."));
-                //Log.e("DOWNLOAD", "CANNOT DOWNLOAD " + fileName); //  + ", REMOVING FROM INSTALLED INDEX");
-
-                // remove item from installed index if the download is not queued
-                // NO
-                //IndexManager.unregisterInstalledIndexItem(context, fileName);
+                Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
             }
-        //}
+
+            lastDownload = manager.enqueue(request);
+
+            // have to enqueue first to get manager id
+            String uriString = uriFile.toString();
+            QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriString.substring(uriString.lastIndexOf("/") + 1));
+
+        } else {
+            Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+        }
     }
 
     private synchronized void initDownloadManager() {
         if (manager == null) {
             manager = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
-
-            // need to tie receiver creation to actual queueing of downloads
-            /*
-            FilteredBroadcastReceiver onComplete = new FilteredBroadcastReceiver(fileName);
-            BroadcastReceiver onNotificationClick = new BroadcastReceiver() {
-                public void onReceive(Context context, Intent intent) {
-                    // ???
-                }
-            };
-
-            context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-            context.registerReceiver(onNotificationClick, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
-            */
         }
     }
 
@@ -798,25 +651,16 @@ public class LigerAltDownloadManager implements Runnable {
                             fileReceived = true;
                         }
 
-                        //if (
                         QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
-                        //) {
-                            Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
 
-                            if (!handleFile(savedFile)) {
-                                Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName()); // + ", REMOVING FROM INSTALLED INDEX");
-                                // remove item from installed index if file processing fails
-                                // NO
-                                //IndexManager.unregisterInstalledIndexItem(context, fileCheck.getName());
-                            } else {
-                                Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName()); // + ", REMOVING FROM INSTALLED INDEX");
-                            }
-                        //} else {
-                          //  Log.d("QUEUE", "DOWNLOAD COMPLETE, BUT ITEM WAS NOT FOUND IN QUEUE: " + downloadId);
+                        Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
 
-                            // if the file has already been removed from queue, it implies the file has already been handled
+                        if (!handleFile(savedFile)) {
+                            Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
 
-                       // }
+                        } else {
+                            Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
+                        }
                     } else {
 
                         // COLUMN_LOCAL_URI seems to be null if download fails
@@ -824,8 +668,6 @@ public class LigerAltDownloadManager implements Runnable {
                         String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
                         String uriName = uriString.substring(uriString.lastIndexOf("/"));
 
-                        // String fileName = uriString.substring(uriString.lastIndexOf(File.separator) + 1);
-                        //File savedFile = new File(Uri.parse(uriString).getPath());
                         File savedFile = new File(IndexManager.buildFilePath(indexItem), uriName + ".tmp");
                         Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
@@ -872,49 +714,17 @@ public class LigerAltDownloadManager implements Runnable {
                             QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
 
                             if (!handleFile(savedFile)) {
-                                Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName()); // + ", REMOVING FROM INSTALLED INDEX");
-                                // remove item from installed index if file processing fails
-                                // NO
-                                //IndexManager.unregisterInstalledIndexItem(context, fileCheck.getName());
+                                Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
                             } else {
-                                Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName()); // + ", REMOVING FROM INSTALLED INDEX");
+                                Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
                             }
                         }
-
-                        /*
-                        ExpansionIndexItem expansionIndexItem = IndexManager.loadAvailableFileIndex(context).get(savedFile.getName());
-
-                        if (expansionIndexItem == null) {
-                            Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + savedFile.getName());
-                        } else {
-                            savedFile = new File(IndexManager.buildFilePath(expansionIndexItem), savedFile.getName() + ".tmp");
-
-                            Log.d("DOWNLOAD", "PROCESSING INCOMPLETE DOWNLOAD OF FILE " + savedFile.getPath());
-
-                            managePartialFile(savedFile);
-
-                            // do we think a failed download can result in a successfully assembled file?
-                        }
-                        */
-
-                        // some of the above are not strictly failure states, may need to revise this
-                        //Log.e("DOWNLOAD", "DOWNLOAD FAILED FOR " + fileName); // + ", REMOVING FROM INSTALLED INDEX");
-                        // remove item from installed index if the download fails
-                        // NO
-                        //IndexManager.unregisterInstalledIndexItem(context, fileName);
-
                     }
                 } else {
                     Log.e("DOWNLOAD", "MANAGER FAILED AT QUERY");
-
-                    // should we remove the item from installed index in this case?
-                    // NO
                 }
             } else {
                 Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");
-
-                // should we remove the item from installed index in this case?
-                // NO
             }
         }
     }
@@ -926,15 +736,6 @@ public class LigerAltDownloadManager implements Runnable {
         // need index item first to check file size
         File actualFile = new File(tempFile.getPath().substring(0, tempFile.getPath().lastIndexOf(".")));
         Log.d("DOWNLOAD", "ACTUAL FILE: " + actualFile.getAbsolutePath());
-
-        /*
-        ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(newFile.getName());
-
-        if (expansionIndexItem == null) {
-            Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + newFile.getName());
-            return false;
-        }
-        */
 
         // additional error checking
         if (tempFile.exists()) {
@@ -966,22 +767,9 @@ public class LigerAltDownloadManager implements Runnable {
             return false;
         }
 
-        // move .tmp file to actual file
-        // File newFile = new File(targetFile.getPath().substring(0, targetFile.getPath().lastIndexOf(".")));
-        // Log.d("DOWNLOAD", "ACTUAL FILE: " + newFile.getAbsolutePath());
-
         try {
             // clean up old obbs before renaming new file
             File directory = new File(actualFile.getParent());
-
-            /*
-            ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(newFile.getName());
-
-            if (expansionIndexItem == null) {
-                Log.e("DOWNLOAD", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + newFile.getName());
-                return false;
-            }
-            */
 
             String nameFilter = "";
             if (actualFile.getName().contains(indexItem.getExpansionFileVersion())) {
@@ -998,7 +786,6 @@ public class LigerAltDownloadManager implements Runnable {
                 FileUtils.deleteQuietly(oldFile);
             }
 
-            // FileUtils.moveFile(targetFile, newFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
             if ((appendedFile != null) && appendedFile.exists()) {
                 FileUtils.moveFile(appendedFile, actualFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
                 FileUtils.deleteQuietly(appendedFile); // for some reason I was getting an 0kb .tmp file lingereing
@@ -1018,7 +805,6 @@ public class LigerAltDownloadManager implements Runnable {
             return false;
         }
 
-        // Log.d("DOWNLOAD", "MOVED TEMP FILE " + targetFile.getPath() + " TO " + newFile.getPath());
         return true;
     }
 }
