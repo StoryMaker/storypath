@@ -37,29 +37,31 @@ public class DownloadHelper {
             }
         }
 
+        // content packs are checked/downloaded at startup and on click, so this just seems to lock the app up
+        /*
         HashMap<String, ExpansionIndexItem> installedPacksMap = IndexManager.loadInstalledIdIndex(context);
         HashMap<String, ExpansionIndexItem> availablePacksMap = IndexManager.loadAvailableIdIndex(context);
 
-        //HashMap<String, ExpansionIndexItem> updatedPacksMap = new HashMap<String, ExpansionIndexItem>();
-        //ExpansionIndexItem tempContentPack = null;
-        //boolean updateFlag = false;
-
         for (ExpansionIndexItem contentPack : installedPacksMap.values()) {
-
-            // while checking, update values <- NO, NOW DONE IN CHECK AND DOWNLOAD
-            //tempContentPack = fixStats(contentPack, availablePacksMap.get(contentPack.getExpansionId()));
-            //if (tempContentPack == null) {
-            //    updatedPacksMap.put(contentPack.getExpansionId(), contentPack);
-            //} else {
-            //    updatedPacksMap.put(tempContentPack.getExpansionId(), tempContentPack);
-            //    updateFlag = true;
-            //}
 
             File contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.MAIN));
 
             if (!contentPackFile.exists()) {
-                missingFiles.add(IndexManager.buildFileName(contentPack, Constants.MAIN));
+                // check for completed .tmp/.part files (they will be found and converted if menu item is selected)
+
+                File tmpFile = new File(contentPackFile.getPath() + ".tmp");
+                File partFile = new File(contentPackFile.getPath() + ".part");
+
+                if (((tmpFile.exists()) && (tmpFile.length() == contentPack.getExpansionFileSize())) ||
+                        ((partFile.exists()) && (partFile.length() == contentPack.getExpansionFileSize())))
+                {
+                    Log.e("CHECKING FILES", "FOUND UNCONVERTED TMP/PART FILE FOR " + contentPackFile.getName());
+                } else {
+                    missingFiles.add(IndexManager.buildFileName(contentPack, Constants.MAIN));
+                }
             } else if (contentPackFile.length() < contentPack.getExpansionFileSize()) {
+                // an incomplete actual file is an error condition
+
                 missingFiles.add(IndexManager.buildFileName(contentPack, Constants.MAIN));
             } // also need hash check
 
@@ -67,28 +69,26 @@ public class DownloadHelper {
                 contentPackFile = new File(IndexManager.buildFilePath(contentPack) + IndexManager.buildFileName(contentPack, Constants.PATCH));
 
                 if (!contentPackFile.exists()) {
-                    missingFiles.add(IndexManager.buildFileName(contentPack, Constants.PATCH));
+                    // check for completed .tmp/.part files (they will be found and converted if menu item is selected)
+
+                    File tmpFile = new File(contentPackFile.getPath() + ".tmp");
+                    File partFile = new File(contentPackFile.getPath() + ".part");
+
+                    if (((tmpFile.exists()) && (tmpFile.length() == contentPack.getExpansionFileSize())) ||
+                        ((partFile.exists()) && (partFile.length() == contentPack.getExpansionFileSize())))
+                    {
+                        Log.e("CHECKING FILES", "FOUND UNCONVERTED TMP/PART FILE FOR " + contentPackFile.getName());
+                    } else {
+                        missingFiles.add(IndexManager.buildFileName(contentPack, Constants.PATCH));
+                    }
                 } else if (contentPackFile.length() < contentPack.getPatchFileSize()) {
+                    // an incomplete actual file is an error condition
+
                     missingFiles.add(IndexManager.buildFileName(contentPack, Constants.PATCH));
                 } // also need hash check
             }
         }
-
-        //if (updateFlag) {
-
-            // persist updated index
-            //IndexManager.saveInstalledIndex(context, updatedPacksMap);
-
-            // need a better solution
-            //try {
-            //    synchronized (waitObj) {
-            //        Log.d("WAITING", "PERSISTING INDEX WITH UPDATED VALUES");
-            //        waitObj.wait(1000);
-            //    }
-            //} catch (InterruptedException e) {
-            //    e.printStackTrace();
-            //}
-        //}
+        */
 
         if (missingFiles.isEmpty()) {
             return true;
@@ -209,7 +209,7 @@ public class DownloadHelper {
             final LigerDownloadManager mainDownload = new LigerDownloadManager(Constants.MAIN, Constants.MAIN_VERSION, context, true);
             Thread mainDownloadThread = new Thread(mainDownload);
 
-            Toast.makeText(context, "Starting download of content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+            Toast.makeText(context, "Starting download of " + Constants.MAIN + " content pack...", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
             mainDownloadThread.start();
 
@@ -258,7 +258,7 @@ public class DownloadHelper {
                     final LigerDownloadManager patchDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
                     Thread patchDownloadThread = new Thread(patchDownload);
 
-                    Toast.makeText(context, "Starting download of patch for content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+                    Toast.makeText(context, "Starting download of " + Constants.PATCH + " content pack...", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                     patchDownloadThread.start();
 
@@ -427,10 +427,10 @@ public class DownloadHelper {
         } else {
             Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " MUST BE DOWNLOADED");
 
+            Toast.makeText(context, "Starting download of " + installedItem.getExpansionId() + " content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+
             final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(fileName, context, true, installedItem);
             Thread expansionDownloadThread = new Thread(expansionDownload);
-
-            Toast.makeText(context, "Starting download of expansion file.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
             expansionDownloadThread.start();
 

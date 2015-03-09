@@ -588,7 +588,7 @@ public class LigerAltDownloadManager implements Runnable {
             HttpEntity entity = response.getEntity();
             int statusCode = response.getStatusLine().getStatusCode();
 
-            if (statusCode == 200) {
+            if ((statusCode == 200) || (statusCode == 206)) {
                 // ...TO HERE, 30 SECOND DELAY?
                 Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, STATUS CODE: " + statusCode);
 
