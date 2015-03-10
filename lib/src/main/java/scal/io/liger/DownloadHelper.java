@@ -1,5 +1,6 @@
 package scal.io.liger;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -388,7 +389,7 @@ public class DownloadHelper {
         } else {
             Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " MUST BE DOWNLOADED");
 
-            Toast.makeText(context, "Starting download of " + installedItem.getExpansionId() + " content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+            // Toast.makeText(context, "Starting download of " + installedItem.getExpansionId() + " content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
             final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(fileName, context, true, installedItem);
             Thread expansionDownloadThread = new Thread(expansionDownload);
