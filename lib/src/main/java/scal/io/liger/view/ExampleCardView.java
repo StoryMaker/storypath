@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -22,6 +23,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ExampleCard;
 
 public class ExampleCardView implements DisplayableCard {
+    public static final String TAG = "ExampleCardView";
 
     public ExampleCard mCardModel;
     public Context mContext;
@@ -59,94 +61,90 @@ public class ExampleCardView implements DisplayableCard {
         //final File mediaFile = getValidFile(null, mCardModel.getExampleMediaPath());
 
         //if (mediaFile == null) {
-        if ((mCardModel.getExampleMediaFile() == null) ||
-            (mCardModel.getExampleMediaFile().getExampleURI(mCardModel) == null)) {
+
+        if (mCardModel.getExampleMediaFile() == null) {
+            // getExampleMediaFile().getExampleURI() is too expensive to call on the main thread
+                /* || (mCardModel.getExampleMediaFile().getExampleURI(mCardModel) == null) ) { */
             // using medium cliptype image as default in case media file is missing
             ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
             ivCardPhoto.setVisibility(View.VISIBLE);
         } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
-            if (medium.equals(Constants.VIDEO)) {
+            ivCardPhoto.setVisibility(View.VISIBLE);
+            mCardModel.getExampleMediaFile().loadThumbnail(ivCardPhoto);
+            switch(medium) {
+                case Constants.VIDEO:
 
-                //set up image as preview
-                //Bitmap videoFrame = Utility.getFrameFromVideo(mediaFile.getPath());
-                Bitmap videoFrame = mCardModel.getExampleMediaFile().getExampleThumbnail(mCardModel);
-                if(null != videoFrame) {
-                    ivCardPhoto.setImageBitmap(videoFrame);
-                }
+                    btnMediaPlay.setVisibility(View.VISIBLE);
+                    btnMediaPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Uri video = Uri.parse(mediaFile.getPath());
 
-                ivCardPhoto.setVisibility(View.VISIBLE);
-                btnMediaPlay.setVisibility(View.VISIBLE);
-                btnMediaPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //Uri video = Uri.parse(mediaFile.getPath());
-
-                        // need to extract video to a temp file before playing
-                        Uri video = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
-                        vvCardVideo.setVideoURI(video);
-                        vvCardVideo.seekTo(5);
-                        vvCardVideo.setMediaController(null);
-                        vvCardVideo.setVisibility(View.VISIBLE);
-                        ivCardPhoto.setVisibility(View.GONE);
-                        btnMediaPlay.setVisibility(View.GONE);
-                        vvCardVideo.start();
-                    }
-                });
-
-                //revert back to image on video completion
-                vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    public void onCompletion(MediaPlayer mp) {
-                        vvCardVideo.setVisibility(View.GONE);
-                        ivCardPhoto.setVisibility(View.VISIBLE);
-                        btnMediaPlay.setVisibility(View.VISIBLE);
-                        btnMediaPlay.setChecked(false);
-                    }
-                });
-            } else if (medium.equals(Constants.PHOTO)) {
-                //Uri uri = Uri.parse(mediaFile.getPath());
-                Uri uri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
-                ivCardPhoto.setImageURI(uri);
-                ivCardPhoto.setVisibility(View.VISIBLE);
-            } else if (medium.equals(Constants.AUDIO)) {
-                //Uri myUri = Uri.parse(mediaFile.getPath());
-                Uri myUri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
-                final MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-                //set background image (using medium cliptype image as placeholder)
-                ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
-                ivCardPhoto.setVisibility(View.VISIBLE);
-
-                //set up media player
-                try {
-                    mediaPlayer.setDataSource(mContext, myUri);
-                    mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                btnMediaPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            mediaPlayer.seekTo(5);
-                            mediaPlayer.start();
-                        } else {
-                            mediaPlayer.pause();
+                            // need to extract video to a temp file before playing
+                            Uri video = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
+                            vvCardVideo.setVideoURI(video);
+                            vvCardVideo.seekTo(5);
+                            vvCardVideo.setMediaController(null);
+                            vvCardVideo.setVisibility(View.VISIBLE);
+                            ivCardPhoto.setVisibility(View.GONE);
+                            btnMediaPlay.setVisibility(View.GONE);
+                            vvCardVideo.start();
                         }
-                    }
-                });
+                    });
 
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer arg0) {
-                        btnMediaPlay.setChecked(false);
-                    }
-                });
+                    //revert back to image on video completion
+                    vvCardVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mp) {
+                            vvCardVideo.setVisibility(View.GONE);
+                            ivCardPhoto.setVisibility(View.VISIBLE);
+                            btnMediaPlay.setVisibility(View.VISIBLE);
+                            btnMediaPlay.setChecked(false);
+                        }
+                    });
+                    break;
 
-                mediaPlayer.seekTo(5);
-                btnMediaPlay.setVisibility(View.VISIBLE);
-            } else {
-                //TODO handle invalid-medium error
+                case Constants.AUDIO:
+                    // TODO : Must remove call to getExampleURI on main thread
+                    Uri myUri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
+                    final MediaPlayer mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                    try {
+                        mediaPlayer.setDataSource(mContext, myUri);
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    btnMediaPlay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                mediaPlayer.seekTo(5);
+                                mediaPlayer.start();
+                            } else {
+                                mediaPlayer.pause();
+                            }
+                        }
+                    });
+
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer arg0) {
+                            btnMediaPlay.setChecked(false);
+                        }
+                    });
+
+                    mediaPlayer.seekTo(5);
+                    btnMediaPlay.setVisibility(View.VISIBLE);
+                    break;
+
+                case Constants.PHOTO:
+                    // do nothing beyond displaying thumbnail
+                    break;
+
+                default:
+                    Log.w(TAG, "Unknown medium " + medium);
+                    break;
             }
         }
 

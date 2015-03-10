@@ -492,6 +492,12 @@ public class StoryPath {
         }
     }
 
+    /**
+     * @return an absolute filesystem path for a given path relative to an obb file
+     *
+     * e.g: method called with path 'org.storymaker.app/burundi/00105/1.png' will return
+     * '/storage/emulated/0/Android/data/org.storymaker.app/files/org.storymaker.app_burundi_00105_1.png'
+     */
     public String buildTargetPath(String originalPath) {
         if (originalPath.startsWith(File.separator)) {
             return originalPath;

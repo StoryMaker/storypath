@@ -18,14 +18,19 @@ import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.view.AudioWaveform;
+
+import static org.apache.commons.io.IOUtils.copy;
 
 /**
  * Created by mnbogner on 7/14/14.
@@ -35,6 +40,10 @@ public class MediaHelper {
     private static final String TAG = "MediaHelper";
     private static final String LIGER_DIR = "Liger";
     private static final boolean VERBOSE = false;
+
+    private static final int DEFAULT_THUMB_WIDTH = 640;
+    private static final int DEFAULT_THUMB_HEIGHT = 480;
+
     private static File selectedFile = null;
     private static ArrayList<File> fileList = null;
     private static String sdLigerFilePath = null;
@@ -46,8 +55,20 @@ public class MediaHelper {
     @StringDef({Constants.VIDEO, Constants.AUDIO, Constants.PHOTO})
     public @interface MediaType {}
 
-    public static interface ThumbnailCallback {
-        public void newThumbnailGenerated(File thumbnail);
+    static {
+        setupFileStructure();
+    }
+
+    /**
+     * Callback to report when thumbnail requests resolve, as well as
+     * when the request resulted in the generation of a new thumbnail file
+     */
+    public static abstract class ThumbnailCallback {
+        /** Called when a thumbnail request requires generation of a new thumbnail */
+        public void newThumbnailGenerated(File thumbnail) {}
+
+        /** Called when a thumbnail request successfully resolves to a thumbnail file */
+        public void thumbnailLoaded(File thumbnail) {}
     }
 
     public static File loadFileFromPath(String filePath) {
@@ -88,7 +109,7 @@ public class MediaHelper {
         return null;
     }
 
-    public static void setupFileStructure(Context context) {
+    private static void setupFileStructure() {
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -152,11 +173,138 @@ public class MediaHelper {
      * Return a directory where media thumbnails will be stored
      * @throws IOException
      */
-    public static @Nullable File getThumbnailDirectory() throws IOException {
+    public static @NonNull File getThumbnailDirectory() throws IOException {
         File thumbDirectory = new File(sdLigerFilePath, "thumbs");
         recursiveCreateDirectory(thumbDirectory);
 
         return thumbDirectory;
+    }
+
+    /**
+     * Display a thumbnail for a given media asset contained in an {@link scal.io.liger.model.ExpansionIndexItem}.
+     * These assets require special treatment because they are stored within a zipped archive.
+     */
+    public static void displayExpansionMediaThumbnail(@NonNull @MediaType final String mediaType,
+                                                      @NonNull final String relativeExpansionPath,
+                                                      @Nullable ExpansionIndexItem expansionItem,
+                                                      @NonNull final ImageView target,
+                                                      @Nullable final ThumbnailCallback callback) {
+
+        final Context context = target.getContext();
+        final ExpansionIndexItem targetExpansion = expansionItem == null ?
+                ZipHelper.guessExpansionIndexItemForPath(relativeExpansionPath, context) :
+                expansionItem;
+
+        if (targetExpansion == null) {
+            Log.w(TAG, String.format("Cannot display thumbnail for path %s. No ExpansionIndexItem provided and none could be guessed", relativeExpansionPath));
+            return;
+        }
+
+        try {
+            File thumbnail = getThumbnailFileForPathInExpansion(relativeExpansionPath, targetExpansion);
+            if (thumbnail.exists()) displayImage(thumbnail, target);
+            else {
+                new AsyncTask<File, Void, File>() {
+
+                    @Override
+                    protected File doInBackground(File... params) {
+
+                        File thumbFile = params[0];
+
+                        switch (mediaType) {
+                            case Constants.AUDIO:
+                            case Constants.VIDEO:
+                                // We can't currently generate video and audio thumbnails
+                                // directly from the zip archive (N.B : We only have access to InputStream,
+                                // not FileInputStream, from the zip archive. FileInputStream would
+                                // give us access to a FileDescriptor, which we could use to generate
+                                // a video / audio thumbnail without first copying the stream to file.
+                                File tempDirectory = context.getExternalFilesDir(null);
+                                File tempFile = ZipHelper.getTempFile(relativeExpansionPath,
+                                                                      tempDirectory.getAbsolutePath(),
+                                                                      context);
+                                try {
+                                    return generateMediaThumbnail(context, tempFile, thumbFile, mediaType);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+
+                            case Constants.PHOTO:
+
+                                InputStream thumbStream = ZipHelper.getFileInputStreamForExpansionAndPath(targetExpansion,
+                                                                                                          relativeExpansionPath,
+                                                                                                          context);
+                                Bitmap newThumbBitmap = decodeSampledBitmapFromInputStream(thumbStream,
+                                                                                           DEFAULT_THUMB_WIDTH,
+                                                                                           DEFAULT_THUMB_HEIGHT);
+
+                                if (newThumbBitmap == null) {
+                                    Log.e(TAG, "Unable to generate thumbnail for " + relativeExpansionPath);
+                                    return null;
+                                }
+
+                                FileOutputStream fos = null;
+                                try {
+                                    fos = new FileOutputStream(thumbFile);
+                                    newThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos);
+                                    fos.close();
+                                    return thumbFile;
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(File result) {
+                        if (result != null) displayImage(result, target);
+                    }
+                }.execute(thumbnail);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayImage(File image, ImageView target) {
+        Picasso.with(target.getContext()).load(image).into(target);
+    }
+
+    public static void displayExpansionIndexItemThumbnail(@NonNull ExpansionIndexItem item,
+                                                          @NonNull ImageView target) {
+
+        try {
+            File thumbnail = getThumbnailFileForExpansionItem(item);
+            if (!thumbnail.exists()) {
+
+                // get inpustream efficiently for ExpansionIndexItem thumbnail
+                // TODO BG thread
+                InputStream inputStream = ZipHelper.getThumbnailInputStreamForItem(item, target.getContext());
+                if (inputStream == null) {
+                    Log.w(TAG, "Unable to get inputstream for expansion item thumb: " + item.getThumbnailPath());
+                    return;
+                }
+
+                Bitmap bitmap = decodeSampledBitmapFromInputStream(inputStream, DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT);
+                if (bitmap == null) {
+                    Log.w(TAG, "Unable to generate thumbnail for expansion item thumb: " + item.getThumbnailPath());
+                    return;
+                }
+
+                FileOutputStream fos = new FileOutputStream(thumbnail);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+                fos.close();
+            }
+
+            Picasso.with(target.getContext()).load(thumbnail).into(target);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -242,19 +390,17 @@ public class MediaHelper {
         try {
             final File thumbnailFile = getThumbnailFileForMediaFile(media);
             if (thumbnailFile.exists()) {
-                // we should only hit this code if a MediaFile object has no thumbnail path,
-                // so we want to initiate the callback and update the object either way.
                 if (callback != null) {
                     target.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.newThumbnailGenerated(thumbnailFile);
+                            callback.thumbnailLoaded(thumbnailFile);
                         }
                     });
                 }
                 return thumbnailFile;
             } else {
-                final File newThumbnail = generateThumbnail(target.getContext(), media, mediaType);
+                final File newThumbnail = generateMediaThumbnail(target.getContext(), media, null, mediaType);
                 if (callback != null) {
                     target.post(new Runnable() {
                         @Override
@@ -316,6 +462,19 @@ public class MediaHelper {
         return new File(getThumbnailDirectory(), media.getName() + ".thumb");
     }
 
+    public static File getThumbnailFileForExpansionItem(@NonNull ExpansionIndexItem item) throws IOException {
+        return new File(getThumbnailDirectory(),
+                        item.getExpansionId() + '_' + item.getExpansionFileVersion() + '_' +
+                                item.getThumbnailPath().replace(File.separatorChar, '_') + ".thumb");
+    }
+
+    public static File getThumbnailFileForPathInExpansion(@NonNull String path,
+                                                          @NonNull ExpansionIndexItem item) throws IOException {
+        return new File(getThumbnailDirectory(),
+                item.getExpansionId() + '_' + item.getExpansionFileVersion() + '_' +
+                        path.replace(File.separatorChar, '_') + ".thumb");
+    }
+
     public static File getThumbnailFileForMediaUri(@NonNull Uri media) throws IOException {
         // Convert last Uri path segmenet to file name, allowing only alphanumeric and underscores.
         return new File(getThumbnailDirectory(), media.getLastPathSegment().replaceAll("\\W+", "") + ".thumb");
@@ -344,14 +503,20 @@ public class MediaHelper {
     }
 
     /**
-     * Generate a thumbnanil for the given media file.
+     * Generate a thumbnail for the given media file.
      * Must be called from a background thread.
      * TODO Allow custom sizes
+     *
+     * @param thumbnailFile an optional parameter specifying where a thumbnail should be generated.
+     *                      Useful if the passed media file is only a temporary file representing an
+     *                      asset availale only via an InputStream. In this case we should not locate
+     *                      the thumbnail based on the location of the media file.
      */
-    private static @Nullable File generateThumbnail(@NonNull Context context,
-                                                    @NonNull File media,
-                                                    @NonNull @MediaType String mediaType)
-                                                    throws IOException {
+    private static @Nullable File generateMediaThumbnail(@NonNull Context context,
+                                                         @NonNull File media,
+                                                         @Nullable File thumbnailFile,
+                                                         @NonNull @MediaType String mediaType)
+                                                         throws IOException {
 
         Bitmap thumbnail = null;
 
@@ -363,12 +528,12 @@ public class MediaHelper {
                                                                 MediaStore.Images.Thumbnails.MINI_KIND);
                 break;
             case Constants.PHOTO:
-                thumbnail = decodeSampledBitmapFromResource(media, 640, 480);
+                thumbnail = decodeSampledBitmapFromFile(media, DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT);
                 break;
         }
 
         if (thumbnail != null) {
-            File thumbnailFile = getThumbnailFileForMediaFile(media);
+            if (thumbnailFile == null) thumbnailFile = getThumbnailFileForMediaFile(media);
             FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 75, thumbnailStream); // FIXME make compression level configurable
             thumbnailStream.flush();
@@ -381,9 +546,11 @@ public class MediaHelper {
         return null;
     }
 
-    private static @Nullable Bitmap decodeSampledBitmapFromResource(File media,
-                                                         int reqWidth,
-                                                         int reqHeight) {
+
+    private static @Nullable Bitmap decodeSampledBitmapFromFile(File media,
+                                                                int reqWidth,
+                                                                int reqHeight)
+                                                                throws FileNotFoundException {
 
         // First decode with inJustDecodeBounds=true to check dimensions
         // this does not allocate any memory for image data
@@ -397,6 +564,35 @@ public class MediaHelper {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(media.getAbsolutePath(), options);
+    }
+
+    private static @Nullable Bitmap decodeSampledBitmapFromInputStream(@NonNull InputStream media,
+                                                                       int reqWidth,
+                                                                       int reqHeight) {
+
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        // this does not allocate any memory for image data
+        if (media.markSupported()) {
+            media.mark(Integer.MAX_VALUE);
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(media, null, options);
+            options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+            try {
+                media.reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Failed to rewind InputStream. Could not generate thumbnail");
+                return null;
+            }
+        } else {
+            Log.w(TAG, "InputStream does not support marking. Thumbnail will be full size");
+        }
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeStream(media, null, options);
     }
 
     /**
