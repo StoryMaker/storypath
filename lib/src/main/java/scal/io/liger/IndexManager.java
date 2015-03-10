@@ -380,6 +380,54 @@ public class IndexManager {
         return indexMap;
     }
 
+    // only one key option for instance index
+    public static ArrayList<InstanceIndexItem> loadInstanceIndexAsList(Context context) {
+
+        String indexJson = null;
+        ArrayList<InstanceIndexItem> indexList = new ArrayList<InstanceIndexItem>();
+
+        String jsonFilePath = ZipHelper.getFileFolderName(context);
+
+        Log.d("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
+
+        File jsonFile = new File(jsonFilePath + instanceIndexName);
+        if (!jsonFile.exists()) {
+            Log.d("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
+        } else {
+
+            String sdCardState = Environment.getExternalStorageState();
+
+            if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+                try {
+                    InputStream jsonStream = new FileInputStream(jsonFile);
+
+                    int size = jsonStream.available();
+                    byte[] buffer = new byte[size];
+                    jsonStream.read(buffer);
+                    jsonStream.close();
+                    jsonStream = null;
+                    indexJson = new String(buffer);
+                } catch (IOException ioe) {
+                    // FIXME we need to centralize the path finding logic so we can have a single place with sensible degredation (fallback to internal if there's no SD, deal well with SD beign removed temporarily)
+                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
+                }
+            } else {
+                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                return indexList; // if there's no card, there's nowhere to read instance files from, so just stop here
+            }
+
+            if ((indexJson != null) && (indexJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                }.getType());
+            }
+        }
+
+        return indexList;
+    }
+
     // only one key option for content index, file is loaded from a zipped content pack
     // content index is read only, no register/update/save methods
     // TODO this should leverage the loadContentIndexAsList to avoid dupliction
