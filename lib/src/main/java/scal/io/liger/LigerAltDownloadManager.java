@@ -1,5 +1,6 @@
 package scal.io.liger;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.vending.licensing.AESObfuscator;
 import com.google.android.vending.licensing.APKExpansionPolicy;
@@ -34,6 +36,8 @@ import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.entity.mime.Header;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.params.BasicHttpParams;
+import ch.boye.httpclientandroidlib.params.HttpParams;
 import info.guardianproject.onionkit.trust.StrongHttpsClient;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import scal.io.liger.model.ExpansionIndexItem;
@@ -435,10 +439,23 @@ public class LigerAltDownloadManager implements Runnable {
 
             File targetFile = new File(targetFolder, ligerObb + ".tmp");
 
-            if (checkTor(useTor, context)) {
-                downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, targetFile);
+            // if there is no connectivity, do not queue item (no longer seems to pause if connection is unavailable)
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo ni = cm.getActiveNetworkInfo();
+
+            if ((ni != null) && (ni.isConnectedOrConnecting())) {
+
+                // assuming (Activity) cast is safe since HomeActivity is being passed in as context
+                Utility.toastOnUiThread((Activity)context, "Starting download of " + indexItem.getExpansionId() + " content pack.", true); // FIXME move to strings
+
+                if (checkTor(useTor, context)) {
+                    downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, targetFile);
+                } else {
+                    downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
+                }
+
             } else {
-                downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
+                Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + ligerUrl + ligerObb + " -> " + targetFile.getPath());
             }
 
         } catch (Exception e) {
@@ -464,6 +481,7 @@ public class LigerAltDownloadManager implements Runnable {
 
         StrongHttpsClient httpClient = getHttpClientInstance();
         httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
+
 
         String actualFileName = targetFile.getName().substring(0, targetFile.getName().lastIndexOf("."));
 
@@ -555,10 +573,10 @@ public class LigerAltDownloadManager implements Runnable {
         initDownloadManager();
 
         // if there is no connectivity, do not queue item (no longer seems to pause if connection is unavailable)
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = cm.getActiveNetworkInfo();
+        //ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        //NetworkInfo ni = cm.getActiveNetworkInfo();
 
-        if ((ni != null) && (ni.isConnectedOrConnecting())) {
+        //if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
             Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
@@ -588,9 +606,9 @@ public class LigerAltDownloadManager implements Runnable {
             String uriString = uriFile.toString();
             QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriString.substring(uriString.lastIndexOf("/") + 1));
 
-        } else {
-            Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
-        }
+        //} else {
+        //    Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+        //}
     }
 
     private synchronized void initDownloadManager() {
