@@ -67,7 +67,7 @@ public class ReviewCard extends GenericCard {
     public boolean checkReferencedValues() {
         // This prescribes visibility, and ReviewCard should be visible
         // even when no Clips are added to any ClipCards it references
-        return true;
+        return true; // FIXME this is causing 3 reviewcards in the learning guides
     }
 
     @Override
