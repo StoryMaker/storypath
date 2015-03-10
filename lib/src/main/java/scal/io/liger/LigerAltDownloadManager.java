@@ -62,11 +62,15 @@ public class LigerAltDownloadManager implements Runnable {
     boolean useManager = true;
     boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
 
+    private String mAppTitle;
+
     public LigerAltDownloadManager(String fileName, Context context, boolean useManager, ExpansionIndexItem indexItem) {
         this.fileName = fileName;
         this.context = context;
         this.useManager = useManager;
         this.indexItem = indexItem;
+
+        this.mAppTitle = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_APP_TITLE, "StoryPath");
     }
 
     public String getFileName() {
@@ -436,9 +440,9 @@ public class LigerAltDownloadManager implements Runnable {
             File targetFile = new File(targetFolder, ligerObb + ".tmp");
 
             if (checkTor(useTor, context)) {
-                downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, targetFile);
+                downloadWithTor(Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, targetFile);
             } else {
-                downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger expansion file download", ligerObb, Uri.fromFile(targetFile));
+                downloadWithManager(Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, Uri.fromFile(targetFile));
             }
 
         } catch (Exception e) {
