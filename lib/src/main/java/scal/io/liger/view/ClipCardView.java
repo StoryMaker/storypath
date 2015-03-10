@@ -120,15 +120,15 @@ public class ClipCardView extends ExampleCardView {
                     });
                     return;
                 }
-                mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            mContext.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).edit().putString(Constants.EXTRA_FILE_LOCATION, photoFile.getAbsolutePath()).apply();
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 requestId = Constants.REQUEST_IMAGE_CAPTURE;
             }
 
             if (medium.equals(Constants.AUDIO)) {
                 startRecordingAudio();
             } else if (null != intent && intent.resolveActivity(mContext.getPackageManager()) != null) {
-                mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
+                mContext.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
                 ((Activity) mContext).startActivityForResult(intent, requestId);
             }
         }
@@ -277,7 +277,7 @@ public class ClipCardView extends ExampleCardView {
                 intent.setType("*/*");
 
                 String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
-                mContext.getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
+                mContext.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
                 ((Activity) mContext).startActivityForResult(intent, requestId);
             }
         });

@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="hello_world">سلام به دنیا!</string>
   <string name="action_settings">تنظیم‌ها </string>
   <string name="lbl_video">ویدئو</string>
   <string name="lbl_audio">صدا</string>
