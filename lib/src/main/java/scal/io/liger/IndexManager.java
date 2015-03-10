@@ -100,12 +100,11 @@ public class IndexManager {
         Log.d("INDEX", "COPYING JSON FILE " + jsonFileName + " FROM ASSETS TO " + jsonFilePath);
 
         File jsonFile = new File(jsonFilePath + jsonFileName);
-        /*
         if (jsonFileName.equals(availableIndexName) && jsonFile.exists()) {
             Log.d("INDEX", "JSON FILE " + jsonFileName + " ALREADY EXISTS IN " + jsonFilePath + ", DELETING");
             jsonFile.delete();
+            //return;
         }
-        */
         // do not replace installed index
         if (jsonFileName.equals(installedIndexName) && jsonFile.exists()) {
             Log.d("INDEX", "JSON FILE " + jsonFileName + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
