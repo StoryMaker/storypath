@@ -67,11 +67,15 @@ public class LigerDownloadManager implements Runnable {
     boolean useManager = true;
     boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
 
+    private String mAppTitle;
+
     public LigerDownloadManager (String mainOrPatch, int version, Context context, boolean useManager) {
         this.mainOrPatch = mainOrPatch;
         this.version = version;
         this.context = context;
         this.useManager = useManager;
+
+        this.mAppTitle = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_APP_TITLE, "StoryPath");
     }
 
     public Context getContext() {
@@ -188,9 +192,9 @@ public class LigerDownloadManager implements Runnable {
                     File targetFile = new File(targetFolder, ligerObb + ".tmp");
 
                     if (checkTor(useTor, context)) {
-                        downloadWithTor(Uri.parse(ligerUrl + ligerObb), "Liger " + mainOrPatch + " file download", ligerObb, targetFile);
+                        downloadWithTor(Uri.parse(ligerUrl + ligerObb), mAppTitle + " " + mainOrPatch + " file download", ligerObb, targetFile);
                     } else {
-                        downloadWithManager(Uri.parse(ligerUrl + ligerObb), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
+                        downloadWithManager(Uri.parse(ligerUrl + ligerObb), mAppTitle + " " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
                     }
                 } else {
 
@@ -611,10 +615,10 @@ public class LigerDownloadManager implements Runnable {
 
                 if (checkTor(useTor, context)) {
 
-                    downloadWithTor(Uri.parse(ligerUrl), "Liger " + mainOrPatch + " file download", ligerObb, targetFile);
+                    downloadWithTor(Uri.parse(ligerUrl), mAppTitle + " " + mainOrPatch + " file download", ligerObb, targetFile);
 
                 } else {
-                    downloadWithManager(Uri.parse(ligerUrl), "Liger " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
+                    downloadWithManager(Uri.parse(ligerUrl), mAppTitle + " " + mainOrPatch + " file download", ligerObb, Uri.fromFile(targetFile));
                 }
             } else {
                 Log.e("DOWNLOAD", "GOOGLE PLAY DOWNLOADS MUST USE DOWNLOAD MANAGER");

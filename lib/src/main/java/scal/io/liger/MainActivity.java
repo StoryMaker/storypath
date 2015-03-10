@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -50,6 +49,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     /** Preferences received via launching intent */
     String mRequestedLanguage;
     int mPhotoSlideDuration;
+    private String mAppTitle;
 
     // new, store info to minimize file access
     public HashMap<String, InstanceIndexItem> instanceIndex;
@@ -122,7 +122,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             final ActionBar actionBar = getActionBar();
 
             if (i.hasExtra(INTENT_KEY_WINDOW_TITLE)) {
-                actionBar.setTitle(i.getStringExtra(INTENT_KEY_WINDOW_TITLE));
+                mAppTitle = i.getStringExtra(INTENT_KEY_WINDOW_TITLE);
+                getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).edit().putString(Constants.PREFS_APP_TITLE, mAppTitle).apply();
+                actionBar.setTitle(mAppTitle);
             }
             actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -213,8 +215,6 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
 
     private void showJsonSelectorPopup() {
-        SharedPreferences sp = getSharedPreferences("appPrefs", Context.MODE_PRIVATE);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] jsonFiles = JsonHelper.getJSONFileList(this);
 
@@ -529,7 +529,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 }
 
                 Log.d(TAG, "onActivityResult, video path:" + path);
-                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
                     return;
@@ -563,9 +563,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
-                String path = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.EXTRA_FILE_LOCATION, null);
+                String path = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.EXTRA_FILE_LOCATION, null);
                 Log.d(TAG, "onActivityResult, path:" + path);
-                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
                 if (null == pathId || null == path) {
                     return;
                 }
@@ -597,7 +597,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 Uri uri = intent.getData();
                 String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, audio path:" + path);
-                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
                     return;
@@ -635,7 +635,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 // FIXME this can get a file:// uri, e.g. from facebook: https://rink.hockeyapp.net/manage/apps/30627/app_versions/62/crash_reasons/24334871
                 String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, imported file path:" + path);
-                String pathId = this.getSharedPreferences("prefs", Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
+                String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
 

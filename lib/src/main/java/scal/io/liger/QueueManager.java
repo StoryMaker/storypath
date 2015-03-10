@@ -34,6 +34,8 @@ import scal.io.liger.model.StoryPathLibrary;
  */
 public class QueueManager {
 
+    public static long NO_MANAGER = -123;
+
     private static String downloadQueueName = "download_queue.json";
 
     public static long queueTimeout = Long.MAX_VALUE; // user-configurable?  setting to max value, will revisit later
@@ -121,7 +123,6 @@ public class QueueManager {
         Log.d("QUEUE", "PUT " + queueId + " IN QUEUE, NEW QUEUE " + queueList.keySet().toString());
 
         saveQueue(context, queueList, downloadQueueName);
-
         return;
     }
 
@@ -141,7 +142,7 @@ public class QueueManager {
         }
     }
 
-    public static boolean purgeFromQueue(Context context, Long queueId) {
+    public static synchronized boolean purgeFromQueue(Context context, Long queueId) {
 
         HashMap<Long, QueueItem> queueMap = loadQueue(context);
 
@@ -157,11 +158,12 @@ public class QueueManager {
             for (Long queueNumber : queueMap.keySet()) {
                 if (queueMap.get(queueNumber).getQueueFile().contains(fileToPurge)) {
                     queueMap.remove(queueNumber);
+
+                    Log.d("QUEUE", "REMOVED " + queueNumber + " FROM QUEUE, NEW QUEUE " + queueMap.keySet().toString());
                 }
             }
 
             saveQueue(context, queueMap, downloadQueueName);
-
             return true;
         } else{
             return false;
