@@ -282,8 +282,8 @@ public class ZipHelper {
                     // should be able to do this locally
                     // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
                     if (checkFile.exists()) {
-                        Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, fileName) + fileName + " FOUND, ADDING TO ZIP");
-                        expansionPaths.add(getExpansionFileFolder(context, fileName) + fileName);
+                        Log.d("ZIP", "EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
+                        expansionPaths.add(checkFile.getPath());
 
                         if ((item.getPatchFileVersion() != null) &&
                                 (item.getExpansionFileVersion() != null) &&
@@ -297,8 +297,8 @@ public class ZipHelper {
                             // should be able to do this locally
                             // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
                             if (checkFile.exists()) {
-                                Log.d("ZIP", "EXPANSION FILE " + getExpansionFileFolder(context, patchName) + patchName + " FOUND, ADDING TO ZIP");
-                                expansionPaths.add(getExpansionFileFolder(context, patchName) + patchName);
+                                Log.d("ZIP", "EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
+                                expansionPaths.add(checkFile.getPath());
                             } else {
                                 Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
                             }
@@ -347,18 +347,22 @@ public class ZipHelper {
         ArrayList<String> allExpansionPaths = getExpansionPaths(context);
         ArrayList<String> targetExpansionPaths = new ArrayList<>();
 
-        HashMap<String, ExpansionIndexItem> expansions = IndexManager.loadInstalledIdIndex(context);
+        // try to extract expansion id from target path
+        // assumes format org.storymaker.app/learning_guide/content_metadata-en.json
+        String[] parts = path.split("/");
 
-        Set<String> expansionIds = expansions.keySet();
-        for(String expansionId : expansionIds) {
-            if (path.contains(expansionId)) {
-                targetExpansionPaths.add(IndexManager.buildFileAbsolutePath(expansions.get(expansionId), Constants.MAIN));
+        for (String expansionPath : allExpansionPaths) {
+            if (expansionPath.contains(parts[1])) {
+                Log.d("PATCHING", "FOUND MATCH FOR " + parts[1] + " IN PATH " + expansionPath);
+                targetExpansionPaths.add(expansionPath);
             }
         }
 
-        Log.w(TAG, String.format("Found %d expansionId matches for path %s", targetExpansionPaths.size(), path));
-
-        if (targetExpansionPaths.size() == 0) targetExpansionPaths = allExpansionPaths;
+        // this shouldn't happen...
+        if (targetExpansionPaths.size() == 0) {
+            Log.d("PATCHING", "NO MATCHES FOR " + parts[1] + ", USING ALL PATHS");
+            targetExpansionPaths = allExpansionPaths;
+        }
 
         StringBuilder paths = new StringBuilder();
         for (String expansionPath : targetExpansionPaths) {

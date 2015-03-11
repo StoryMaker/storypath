@@ -798,14 +798,25 @@ public class LigerAltDownloadManager implements Runnable {
         File actualFile = new File(tempFile.getPath().substring(0, tempFile.getPath().lastIndexOf(".")));
         Log.d("DOWNLOAD", "ACTUAL FILE: " + actualFile.getAbsolutePath());
 
+        long fileSize = 0;
+
+        if (tempFile.getName().contains(Constants.MAIN)) {
+            fileSize = indexItem.getExpansionFileSize();
+        } else if (tempFile.getName().contains(Constants.PATCH)) {
+            fileSize = indexItem.getPatchFileSize();
+        } else {
+            Log.e("DOWNLOAD", "CAN'T DETERMINE FILE SIZE FOR " + tempFile.getName() + " (NOT A MAIN OR PATCH FILE)");
+            return false;
+        }
+
         // additional error checking
         if (tempFile.exists()) {
             if (tempFile.length() == 0) {
                 Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT IS A ZERO BYTE FILE");
                 return false;
-            } else if (tempFile.length() < indexItem.getExpansionFileSize()) {
+            } else if (tempFile.length() < fileSize) {
 
-                Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT IS TOO SMALL: " + Long.toString(tempFile.length()) + "/" + Long.toString(indexItem.getExpansionFileSize()));
+                Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT IS TOO SMALL: " + Long.toString(tempFile.length()) + "/" + Long.toString(fileSize));
 
                 // if file is too small, managePartialFile
                 appendedFile = managePartialFile(tempFile);
@@ -814,8 +825,8 @@ public class LigerAltDownloadManager implements Runnable {
                 if (appendedFile == null) {
                     Log.e("DOWNLOAD", "ERROR WHILE APPENDING TO PARTIAL FILE FOR " + tempFile.getPath());
                     return false;
-                } else if (appendedFile.length() < indexItem.getExpansionFileSize()) {
-                    Log.e("DOWNLOAD", "APPENDED FILE " + appendedFile.getPath() + " IS STILL TOO SMALL: " + Long.toString(appendedFile.length()) + "/" + Long.toString(indexItem.getExpansionFileSize()));
+                } else if (appendedFile.length() < fileSize) {
+                    Log.e("DOWNLOAD", "APPENDED FILE " + appendedFile.getPath() + " IS STILL TOO SMALL: " + Long.toString(appendedFile.length()) + "/" + Long.toString(fileSize));
                     return false;
                 } else {
                     Log.e("DOWNLOAD", "APPENDED FILE " + appendedFile.getPath() + " IS COMPLETE!");
