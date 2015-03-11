@@ -485,9 +485,7 @@ public class ClipCardView extends ExampleCardView {
             mediaFile = mCardModel.getExampleMediaFile();
         }
 
-        if ((mediaFile == null) ||
-           ((mediaFile instanceof ExampleMediaFile) &&
-           ((ExampleMediaFile)mediaFile).getExampleThumbnail(mCardModel) == null)) {
+        if (mediaFile == null) {
             Log.e(this.getClass().getName(), "no media file was found");
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType();
@@ -496,42 +494,44 @@ public class ClipCardView extends ExampleCardView {
             ivThumbnail.setVisibility(View.VISIBLE);
         } else {
 
-            mediaFile.loadThumbnail(ivThumbnail, new MediaHelper.ThumbnailCallback() {
-                @Override
-                public void newThumbnailGenerated(File thumbnail) {
-                        Log.d(TAG, "Notifying StoryPath of newly generated thumbnail");
-                        // need to update media file in model now that thumbnail is set
-                        // being overly cautious to avoid null pointers
-                        if ((mCardModel.getStoryPath() != null) &&
-                            (mCardModel.getStoryPath().getStoryPathLibrary() != null)) {
+            mediaFile.loadThumbnail(ivThumbnail, new MediaFile.MediaFileThumbnailCallback() {
 
-                            HashMap<String, MediaFile> mediaFiles = mCardModel.getStoryPath()
-                                                                              .getStoryPathLibrary()
-                                                                              .getMediaFiles();
-                            MediaFile targetMediaFile = null;
-                            for (String key : mediaFiles.keySet()) {
-                                MediaFile candidateMediaFile = mediaFiles.get(key);
-                                if (candidateMediaFile.getPath().equals(mediaFile.getPath())) {
-                                    targetMediaFile = candidateMediaFile;
+                        @Override
+                        public void newThumbnailAssigned(File newThumbnail) {
+                            Log.d(TAG, "Notifying StoryPath of newly assigned thumbnail");
+                            // need to update media file in model now that thumbnail is set
+                            // being overly cautious to avoid null pointers
+                            if ((mCardModel.getStoryPath() != null) &&
+                                    (mCardModel.getStoryPath().getStoryPathLibrary() != null)) {
+
+                                HashMap<String, MediaFile> mediaFiles = mCardModel.getStoryPath()
+                                        .getStoryPathLibrary()
+                                        .getMediaFiles();
+                                MediaFile targetMediaFile = null;
+                                for (String key : mediaFiles.keySet()) {
+                                    MediaFile candidateMediaFile = mediaFiles.get(key);
+                                    if (candidateMediaFile.getPath().equals(mediaFile.getPath())) {
+                                        targetMediaFile = candidateMediaFile;
+                                    }
                                 }
-                            }
-                            if (targetMediaFile != null) {
-                                mCardModel.getStoryPath().getStoryPathLibrary().saveMediaFile(mediaFile.getPath(), mediaFile);
+                                if (targetMediaFile != null) {
+                                    mCardModel.getStoryPath().getStoryPathLibrary().saveMediaFile(mediaFile.getPath(), mediaFile);
 
-                                // set metadata too
-                                if (mCardModel.getStoryPath().getStoryPathLibrary().getMetaThumbnail() == null) {
-                                    mCardModel.getStoryPath().getStoryPathLibrary().setMetaThumbnail(thumbnail.getPath());
+                                    // set metadata too
+                                    if (mCardModel.getStoryPath().getStoryPathLibrary().getMetaThumbnail() == null) {
+                                        mCardModel.getStoryPath().getStoryPathLibrary().setMetaThumbnail(newThumbnail.getPath());
+                                    }
+
+                                    // force save to store mediafile/metadata updates
+                                    // shouldn't need to save story path at this point
+                                    mCardModel.getStoryPath().getStoryPathLibrary().save(false);
+                                } else {
+                                    Log.w(TAG, "Could not find MediaFile corresponding to newly assigned thumbnail");
                                 }
-
-                                // force save to store mediafile/metadata updates
-                                // shouldn't need to save story path at this point
-                                mCardModel.getStoryPath().getStoryPathLibrary().save(false);
-                            } else {
-                                Log.w(TAG, "Could not find MediaFile corresponding to new thumbnail");
                             }
                         }
-                }
-            });
+                    }
+            );
 
             ivThumbnail.setVisibility(View.VISIBLE);
         }

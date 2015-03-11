@@ -3,6 +3,7 @@ package scal.io.liger;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.support.annotation.StringDef;
 import android.util.Log;
 
 import com.android.vending.expansion.zipfile.ZipResourceFile;
@@ -18,11 +19,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import scal.io.liger.model.ContentPackMetadata;
 import scal.io.liger.model.ExpansionIndexItem;
@@ -43,7 +47,16 @@ public class IndexManager {
 
     public static String noPatchFile = "NOPATCH";
 
-    public static String buildFileName(ExpansionIndexItem item, String mainOrPatch) {
+    public static String buildFileAbsolutePath(ExpansionIndexItem item,
+                                               @Constants.ObbType String mainOrPatch) {
+
+        // Use File constructor to avoid duplicate or missing file path separators after concatenation
+        return new File(buildFilePath(item) + buildFileName(item, mainOrPatch)).getAbsolutePath();
+
+    }
+
+    public static String buildFileName(ExpansionIndexItem item,
+                                       @Constants.ObbType String mainOrPatch) {
         if (Constants.MAIN.equals(mainOrPatch)) {
             return item.getExpansionId() + "." + mainOrPatch + "." + item.getExpansionFileVersion() + ".obb";
         } else if (Constants.PATCH.equals(mainOrPatch)) {
@@ -280,50 +293,67 @@ public class IndexManager {
     }
 
     // supressing messages for less text during polling
+    // TODO Temporarily public for debugging convenience
+    public static HashMap<String, ArrayList<ExpansionIndexItem>> cachedIndexes = new HashMap<>();
+
+    /**
+     * This method does an unacceptable amount of work for synchronous use from the main thread
+     */
+    @Deprecated
     private static ArrayList<ExpansionIndexItem> loadIndex(Context context, String jsonFileName) {
+        long startTime = System.currentTimeMillis();
 
-        String indexJson = null;
-        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+        ArrayList<ExpansionIndexItem> indexList = null;
 
-        String jsonFilePath = ZipHelper.getFileFolderName(context);
+        if (!cachedIndexes.containsKey(jsonFileName)) {
+            String indexJson = null;
+            indexList = new ArrayList<ExpansionIndexItem>();
 
-        // Log.d("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD");
+            String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        File jsonFile = new File(jsonFilePath + jsonFileName);
-        if (!jsonFile.exists()) {
-            Log.e("INDEX", jsonFilePath + jsonFileName + " WAS NOT FOUND");
-            return indexList;
-        }
+            // Log.d("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD");
 
-        String sdCardState = Environment.getExternalStorageState();
-
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
-            try {
-                InputStream jsonStream = new FileInputStream(jsonFile);
-
-                int size = jsonStream.available();
-                byte[] buffer = new byte[size];
-                jsonStream.read(buffer);
-                jsonStream.close();
-                jsonStream = null;
-                indexJson = new String(buffer);
-            } catch (IOException ioe) {
-                Log.e("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD FAILED");
+            File jsonFile = new File(jsonFilePath + jsonFileName);
+            if (!jsonFile.exists()) {
+                Log.e("INDEX", jsonFilePath + jsonFileName + " WAS NOT FOUND");
                 return indexList;
             }
+
+            String sdCardState = Environment.getExternalStorageState();
+
+            if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+                try {
+                    InputStream jsonStream = new FileInputStream(jsonFile);
+
+                    int size = jsonStream.available();
+                    byte[] buffer = new byte[size];
+                    jsonStream.read(buffer);
+                    jsonStream.close();
+                    jsonStream = null;
+                    indexJson = new String(buffer);
+                } catch (IOException ioe) {
+                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD FAILED");
+                    return indexList;
+                }
+            } else {
+                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                return indexList;
+            }
+
+            if ((indexJson != null) && (indexJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<ExpansionIndexItem>>() {
+                }.getType());
+
+                cachedIndexes.put(jsonFileName, indexList);
+            }
         } else {
-            Log.e("INDEX", "SD CARD WAS NOT FOUND");
-            return indexList;
+            indexList = cachedIndexes.get(jsonFileName);
         }
 
-        if ((indexJson != null) && (indexJson.length() > 0)) {
-            GsonBuilder gBuild = new GsonBuilder();
-            Gson gson = gBuild.create();
-
-            indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<ExpansionIndexItem>>() {
-            }.getType());
-        }
-
+        Log.d("loadIndex", String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return indexList;
     }
 
@@ -378,6 +408,54 @@ public class IndexManager {
         }
 
         return indexMap;
+    }
+
+    // only one key option for instance index
+    public static ArrayList<InstanceIndexItem> loadInstanceIndexAsList(Context context) {
+
+        String indexJson = null;
+        ArrayList<InstanceIndexItem> indexList = new ArrayList<InstanceIndexItem>();
+
+        String jsonFilePath = ZipHelper.getFileFolderName(context);
+
+        Log.d("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
+
+        File jsonFile = new File(jsonFilePath + instanceIndexName);
+        if (!jsonFile.exists()) {
+            Log.d("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
+        } else {
+
+            String sdCardState = Environment.getExternalStorageState();
+
+            if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+                try {
+                    InputStream jsonStream = new FileInputStream(jsonFile);
+
+                    int size = jsonStream.available();
+                    byte[] buffer = new byte[size];
+                    jsonStream.read(buffer);
+                    jsonStream.close();
+                    jsonStream = null;
+                    indexJson = new String(buffer);
+                } catch (IOException ioe) {
+                    // FIXME we need to centralize the path finding logic so we can have a single place with sensible degredation (fallback to internal if there's no SD, deal well with SD beign removed temporarily)
+                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
+                }
+            } else {
+                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                return indexList; // if there's no card, there's nowhere to read instance files from, so just stop here
+            }
+
+            if ((indexJson != null) && (indexJson.length() > 0)) {
+                GsonBuilder gBuild = new GsonBuilder();
+                Gson gson = gBuild.create();
+
+                indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                }.getType());
+            }
+        }
+
+        return indexList;
     }
 
     // only one key option for content index, file is loaded from a zipped content pack

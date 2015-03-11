@@ -9,8 +9,8 @@
         "expansionFileVersion": "1",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "http://storymaker.cc/appdata/obb/",
-        "expansionFileSize": "71601969",
-        "expansionFileChecksum": ""
+        "expansionFileSize": "71601968",
+        "expansionFileChecksum": "79f20d44faa2df0b415825144df10e9a7c6add813057bcbb74af80271fe2802f"
     },
     {
         "expansionId": "burundi",
@@ -23,6 +23,6 @@
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "http://storymaker.cc/appdata/obb/",
         "expansionFileSize": "264119980",
-        "expansionFileChecksum": ""
+        "expansionFileChecksum": "b8beb87e077ca0b47036b15ff6d028b56cedc22772127efb484d1701c0e71421"
     }
 ]

@@ -22,6 +22,13 @@ public class MediaFile implements Cloneable {
     @Expose protected String medium; // mime type?
     @Expose protected String thumbnailFilePath;
 
+    /**
+     * Callback to report when a new thumbnail is assigned to this MediaFile
+     */
+    public static interface MediaFileThumbnailCallback {
+        public void newThumbnailAssigned(File newThumbnail);
+    }
+
     public MediaFile() {
         // required for JSON/GSON
     }
@@ -72,7 +79,7 @@ public class MediaFile implements Cloneable {
      * TODO : multiple sizes?
      */
     public void loadThumbnail(@NonNull ImageView target,
-                              @Nullable final MediaHelper.ThumbnailCallback callback) {
+                              @Nullable final MediaFileThumbnailCallback callback) {
 
         if (TextUtils.isEmpty(thumbnailFilePath)) {
 
@@ -81,10 +88,12 @@ public class MediaFile implements Cloneable {
             MediaHelper.displayMediaThumbnail(medium, getPath(), target,
 
                     new MediaHelper.ThumbnailCallback() {
+
                         @Override
-                        public void newThumbnailGenerated(File thumbnail) {
+                        public void thumbnailLoaded(File thumbnail) {
+                            boolean newlyAssigned = thumbnailFilePath == null || !thumbnailFilePath.equals(thumbnail.getAbsolutePath());
                             thumbnailFilePath = thumbnail.getAbsolutePath();
-                            if (callback != null) callback.newThumbnailGenerated(thumbnail);
+                            if (callback != null && newlyAssigned) callback.newThumbnailAssigned(thumbnail);
                         }
                     }
             );

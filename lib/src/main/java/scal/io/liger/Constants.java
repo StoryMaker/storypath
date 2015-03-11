@@ -2,6 +2,10 @@ package scal.io.liger;
 
 
 import android.content.Context;
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class Constants {
 
@@ -68,6 +72,12 @@ public class Constants {
     public static final String LIGER_URL = "http://storymaker.cc/appdata/";
     public static final String MAIN = "main";
     public static final String PATCH = "patch";
+
+    /** Use @ObbType annotation on method parameter for compile time validation */
+    @StringDef({Constants.MAIN, Constants.PATCH})
+    @Retention(RetentionPolicy.SOURCE)
+    public static @interface ObbType{}
+
     public static final int MAIN_VERSION = 1031;
     public static final int PATCH_VERSION = 1020;
     public static final int MAIN_SIZE = 356561;
