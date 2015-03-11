@@ -27,17 +27,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.client.HttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
 import ch.boye.httpclientandroidlib.entity.mime.Header;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
+import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 import info.guardianproject.onionkit.trust.StrongHttpsClient;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import scal.io.liger.model.ExpansionIndexItem;
@@ -368,31 +375,41 @@ public class LigerAltDownloadManager implements Runnable {
 
                 return null;
             }
-        }
+        } else {
+            // if there is a current partial file, append .tmp file contents and remove .tmp file
+            try {
 
-        // if there is a current partial file, append .tmp file contents and remove .tmp file
-        try {
-            BufferedInputStream fileInput = new BufferedInputStream(new FileInputStream(tempFile));
-            FileOutputStream fileOutput = new FileOutputStream(partFile, true);
+                Log.d("APPEND", "MAKE FILE INPUT STREAM FOR " + tempFile.getPath());
+                BufferedInputStream fileInput = new BufferedInputStream(new FileInputStream(tempFile));
 
-            byte[] buf = new byte[1024];
-            int i;
-            while ((i = fileInput.read(buf)) > 0) {
-                fileOutput.write(buf, 0, i);
+                Log.d("APPEND", "MAKE FILE OUTPUT STREAM FOR " + partFile.getPath());
+                FileOutputStream fileOutput = new FileOutputStream(partFile, true);
+
+                byte[] buf = new byte[1024];
+                int i;
+                while ((i = fileInput.read(buf)) > 0) {
+                    fileOutput.write(buf, 0, i);
+                }
+
+                fileOutput.flush();
+                fileOutput.close();
+                fileOutput = null;
+
+                fileInput.close();
+                fileInput = null;
+
+
+                FileUtils.deleteQuietly(tempFile);
+                Log.d("DOWNLOAD", "APPENDED " + tempFile.getPath() + " TO " + partFile.getPath());
+
+                return partFile;
+
+            } catch (IOException ioe) {
+                Log.e("DOWNLOAD", "FAILED TO APPENDED " + tempFile.getPath() + " TO " + partFile.getPath());
+                ioe.printStackTrace();
+
+                return null;
             }
-
-            fileInput.close();
-            fileOutput.close();
-
-            FileUtils.deleteQuietly(tempFile);
-            Log.d("DOWNLOAD", "APPENDED " + tempFile.getPath() + " TO " + partFile.getPath());
-
-            return partFile;
-        } catch (IOException ioe) {
-            Log.e("DOWNLOAD", "FAILED TO APPENDED " + tempFile.getPath() + " TO " + partFile.getPath());
-            ioe.printStackTrace();
-
-            return null;
         }
     }
 
@@ -486,6 +503,16 @@ public class LigerAltDownloadManager implements Runnable {
         StrongHttpsClient httpClient = getHttpClientInstance();
         httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
 
+        // disable attempts to retry (more retries ties up connection and prevents failure handling)
+        HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(0, false);
+        httpClient.setHttpRequestRetryHandler(retryHandler);
+
+        // set modest timeout (longer timeout ties up connection and prevents failure handling)
+        HttpParams params = httpClient.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, 1000);
+        HttpConnectionParams.setSoTimeout(params, 1000);
+
+        httpClient.setParams(params);
 
         String actualFileName = targetFile.getName().substring(0, targetFile.getName().lastIndexOf("."));
 
@@ -542,9 +569,15 @@ public class LigerAltDownloadManager implements Runnable {
                     targetOutput.close();
                     responseInput.close();
                     Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
+                } catch (ConnectTimeoutException cte) {
+                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + " (CONNECTION EXCEPTION)");
+                    //cte.printStackTrace();
+                } catch (SocketTimeoutException ste) {
+                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + " (SOCKET EXCEPTION)");
+                    //ste.printStackTrace();
                 } catch (IOException ioe) {
-                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName);
-                    ioe.printStackTrace();
+                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + " (IO EXCEPTION)");
+                    //ioe.printStackTrace();
                 }
 
                 // remove from queue here, regardless of success
@@ -559,6 +592,12 @@ public class LigerAltDownloadManager implements Runnable {
             } else {
                 Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", STATUS CODE: " + statusCode);
             }
+
+            // clean up connection
+            EntityUtils.consume(entity);
+            request.abort();
+            request.releaseConnection();
+
         } catch (IOException ioe) {
             Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN");
             ioe.printStackTrace();
