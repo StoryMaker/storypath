@@ -353,7 +353,7 @@ public class IndexManager {
             indexList = cachedIndexes.get(jsonFileName);
         }
 
-        Log.d("loadIndex", String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
+        //Log.d("loadIndex", String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return indexList;
     }
 

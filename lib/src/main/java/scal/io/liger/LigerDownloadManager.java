@@ -55,17 +55,17 @@ public class LigerDownloadManager implements Runnable {
     private DownloadManager manager;
     private long lastDownload = -1L;
 
+    StrongHttpsClient mClient = null;
+
+    boolean useManager = true;
+    boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
+
     private static final String ligerId = "scal.io.liger";
     private static final String ligerDevice = Build.MODEL;
 
     AESObfuscator ligerObfuscator = null;
     APKExpansionPolicy ligerPolicy = null;
     LicenseChecker ligerChecker = null;
-
-    StrongHttpsClient mClient = null;
-
-    boolean useManager = true;
-    boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
 
     private String mAppTitle;
 
@@ -76,14 +76,6 @@ public class LigerDownloadManager implements Runnable {
         this.useManager = useManager;
 
         this.mAppTitle = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_APP_TITLE, "StoryPath");
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     public String getMainOrPatch() {
@@ -100,6 +92,14 @@ public class LigerDownloadManager implements Runnable {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public boolean isUseManager() {

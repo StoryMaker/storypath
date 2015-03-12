@@ -2,6 +2,8 @@ package scal.io.liger;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,14 +12,8 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.vending.licensing.AESObfuscator;
-import com.google.android.vending.licensing.APKExpansionPolicy;
-import com.google.android.vending.licensing.LicenseChecker;
-import com.google.android.vending.licensing.LicenseCheckerCallback;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -31,17 +27,13 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.client.HttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.conn.ConnectTimeoutException;
-import ch.boye.httpclientandroidlib.entity.mime.Header;
-import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpRequestRetryHandler;
-import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
@@ -61,11 +53,11 @@ public class LigerAltDownloadManager implements Runnable {
 
     // store in manager to skip index lookups
     private ExpansionIndexItem indexItem = null;
-
     private String fileName;
     private Context context;
 
-    private DownloadManager manager;
+    private DownloadManager dManager;
+    private NotificationManager nManager;
     private long lastDownload = -1L;
 
     StrongHttpsClient mClient = null;
@@ -75,11 +67,11 @@ public class LigerAltDownloadManager implements Runnable {
 
     private String mAppTitle;
 
-    public LigerAltDownloadManager(String fileName, Context context, boolean useManager, ExpansionIndexItem indexItem) {
+    public LigerAltDownloadManager(String fileName, ExpansionIndexItem indexItem, Context context, boolean useManager) {
         this.fileName = fileName;
+        this.indexItem = indexItem;
         this.context = context;
         this.useManager = useManager;
-        this.indexItem = indexItem;
 
         this.mAppTitle = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_APP_TITLE, "StoryPath");
     }
@@ -245,7 +237,7 @@ public class LigerAltDownloadManager implements Runnable {
 
                     DownloadManager.Query query = new DownloadManager.Query();
                     query.setFilterById(queueId.longValue());
-                    Cursor c = manager.query(query);
+                    Cursor c = dManager.query(query);
                     if (c.moveToFirst()) {
 
                         int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
@@ -498,19 +490,30 @@ public class LigerAltDownloadManager implements Runnable {
     }
 
     private void downloadWithTor(Uri uri, String title, String desc, File targetFile) {
+        initNotificationManager();
+
+        // generate id/tag for notification
+        String nTag = indexItem.getExpansionId();
+        int nId = 0;
+        if (fileName.contains(Constants.MAIN)) {
+            nId = Integer.parseInt(indexItem.getExpansionFileVersion());
+        } else if (fileName.contains(Constants.PATCH)) {
+            nId = Integer.parseInt(indexItem.getPatchFileVersion());
+        }
+
         Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
 
         StrongHttpsClient httpClient = getHttpClientInstance();
         httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
 
         // disable attempts to retry (more retries ties up connection and prevents failure handling)
-        HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(0, false);
+        HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
         httpClient.setHttpRequestRetryHandler(retryHandler);
 
         // set modest timeout (longer timeout ties up connection and prevents failure handling)
         HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 1000);
-        HttpConnectionParams.setSoTimeout(params, 1000);
+        HttpConnectionParams.setConnectionTimeout(params, 3000);
+        HttpConnectionParams.setSoTimeout(params, 3000);
 
         httpClient.setParams(params);
 
@@ -564,6 +567,19 @@ public class LigerAltDownloadManager implements Runnable {
                     byte[] buf = new byte[1024];
                     int i;
                     while ((i = responseInput.read(buf)) > 0) {
+
+
+                        // create status bar notification
+                        int nPercent = DownloadHelper.getDownloadPercent(context);
+                        Notification nProgress = new Notification.Builder(context)
+                                .setContentTitle(mAppTitle + " content download")
+                                .setContentText(fileName + " - " + (nPercent / 100.0) + "%")
+                                .setSmallIcon(android.R.drawable.arrow_down_float)
+                                .setProgress(100, (nPercent / 100), false)
+                                .build();
+                        nManager.notify(nTag, nId, nProgress);
+
+
                         targetOutput.write(buf, 0, i);
                     }
                     targetOutput.close();
@@ -571,17 +587,20 @@ public class LigerAltDownloadManager implements Runnable {
                     Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
                 } catch (ConnectTimeoutException cte) {
                     Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + " (CONNECTION EXCEPTION)");
-                    //cte.printStackTrace();
+                    cte.printStackTrace();
                 } catch (SocketTimeoutException ste) {
                     Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + " (SOCKET EXCEPTION)");
-                    //ste.printStackTrace();
+                    ste.printStackTrace();
                 } catch (IOException ioe) {
                     Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + actualFileName + " (IO EXCEPTION)");
-                    //ioe.printStackTrace();
+                    ioe.printStackTrace();
                 }
 
                 // remove from queue here, regardless of success
                 QueueManager.removeFromQueue(context, queueId);
+
+                // remove notification, regardless of success
+                nManager.cancel(nTag, nId);
 
                 // handle file here, regardless of success
                 // (assumes .tmp file will exist if download is interrupted)
@@ -643,7 +662,7 @@ public class LigerAltDownloadManager implements Runnable {
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
             }
 
-            lastDownload = manager.enqueue(request);
+            lastDownload = dManager.enqueue(request);
 
             // have to enqueue first to get manager id
             String uriString = uriFile.toString();
@@ -655,8 +674,14 @@ public class LigerAltDownloadManager implements Runnable {
     }
 
     private synchronized void initDownloadManager() {
-        if (manager == null) {
-            manager = (DownloadManager) context.getSystemService(context.DOWNLOAD_SERVICE);
+        if (dManager == null) {
+            dManager = (DownloadManager)context.getSystemService(context.DOWNLOAD_SERVICE);
+        }
+    }
+
+    private synchronized void initNotificationManager() {
+        if (nManager == null) {
+            nManager = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
         }
     }
 
@@ -687,7 +712,7 @@ public class LigerAltDownloadManager implements Runnable {
                 long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(downloadId);
-                Cursor c = manager.query(query);
+                Cursor c = dManager.query(query);
                 if (c.moveToFirst()) {
 
                     int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
