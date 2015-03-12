@@ -773,6 +773,11 @@ public class IndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
+        // need to update cached index
+        if (cachedIndexes.containsKey(jsonFileName)) {
+            cachedIndexes.put(jsonFileName, indexList);
+        }
+
         Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
 
         File jsonFile = new File(jsonFilePath + jsonFileName + ".tmp"); // write to temp and rename
