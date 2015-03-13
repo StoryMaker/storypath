@@ -34,6 +34,17 @@ public class ZipHelper {
         return filename;
     }
 
+    public static String getExpansionZipDirectory(Context ctx, String mainOrPatch, int version) {
+        // basically a wrapper for getExpansionFileFolder, but defaults to files directory
+        String filePath = getExpansionFileFolder(ctx, mainOrPatch, version);
+
+        if (filePath == null) {
+            return getFileFolderName(ctx);
+        } else {
+            return filePath;
+        }
+    }
+
     public static String getObbFolderName(Context ctx) {
         String packageName = ctx.getPackageName();
         File root = Environment.getExternalStorageDirectory();

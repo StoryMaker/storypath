@@ -206,15 +206,27 @@ public class LigerAltDownloadManager implements Runnable {
         boolean foundInQueue = false;
 
         // need to check if a download has already been queued for this file
-        HashMap<Long, QueueItem> queueMap = QueueManager.loadQueue(context);
+        //HashMap<Long, QueueItem> queueMap = QueueManager.loadQueue(context);
 
-        for (Long queueId : queueMap.keySet()) {
+        //for (Long queueId : queueMap.keySet()) {
 
-            Log.d("QUEUE", "QUEUE ITEM IS " + queueMap.get(queueId).getQueueFile() + " LOOKING FOR " + checkFile.getName());
+            //Log.d("QUEUE", "QUEUE ITEM IS " + queueMap.get(queueId).getQueueFile() + " LOOKING FOR " + checkFile.getName());
 
-            if (checkFile.getName().equals(queueMap.get(queueId).getQueueFile())) {
+            //if (checkFile.getName().equals(queueMap.get(queueId).getQueueFile())) {
 
-                if (queueId < 0) {
+                Long queueId = QueueManager.checkQueue(context, checkFile);
+
+        if (queueId == null) {
+
+            // not found
+            foundInQueue = false;
+
+        } else if (queueId == QueueManager.DUPLICATE_QUERY) {
+
+                    // not exactly in queue, but someone is already looking for this item, so avoid collision
+                    foundInQueue = true;
+
+                } else if (queueId < 0) {
                     // use negative numbers to flag non-manager downloads
 
                     if (checkFileProgress()) {
@@ -282,7 +294,7 @@ public class LigerAltDownloadManager implements Runnable {
                     // cleanup
                     c.close();
                 }
-            }
+            //}
 
             // skipping timeout check for now, timeout duration undecided
 
@@ -305,7 +317,7 @@ public class LigerAltDownloadManager implements Runnable {
                 }
             }
             */
-        }
+        //}
 
         return foundInQueue;
     }
@@ -568,7 +580,6 @@ public class LigerAltDownloadManager implements Runnable {
                     int i;
                     while ((i = responseInput.read(buf)) > 0) {
 
-
                         // create status bar notification
                         int nPercent = DownloadHelper.getDownloadPercent(context);
                         Notification nProgress = new Notification.Builder(context)
@@ -578,7 +589,6 @@ public class LigerAltDownloadManager implements Runnable {
                                 .setProgress(100, (nPercent / 100), false)
                                 .build();
                         nManager.notify(nTag, nId, nProgress);
-
 
                         targetOutput.write(buf, 0, i);
                     }
@@ -607,7 +617,6 @@ public class LigerAltDownloadManager implements Runnable {
                 if (!handleFile(targetFile)) {
                     Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + actualFileName);
                 }
-
             } else {
                 Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", STATUS CODE: " + statusCode);
             }
@@ -634,43 +643,33 @@ public class LigerAltDownloadManager implements Runnable {
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
         initDownloadManager();
 
-        // if there is no connectivity, do not queue item (no longer seems to pause if connection is unavailable)
-        //ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //NetworkInfo ni = cm.getActiveNetworkInfo();
+        Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
-        //if ((ni != null) && (ni.isConnectedOrConnecting())) {
+        initReceivers();
 
-            Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+        DownloadManager.Request request = new DownloadManager.Request(uri)
+                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(false)
+                .setTitle(title)
+                .setDescription(desc)
+                .setVisibleInDownloadsUi(false)
+                .setDestinationUri(uriFile);
 
-            initReceivers();
+        File partFile = new File(uriFile.toString().replace(".tmp", ".part"));
 
-            DownloadManager.Request request = new DownloadManager.Request(uri)
-                    .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                    .setAllowedOverRoaming(false)
-                    .setTitle(title)
-                    .setDescription(desc)
-                    .setVisibleInDownloadsUi(false)
-                    .setDestinationUri(uriFile);
+        if (partFile.exists()) {
+            long partBytes = partFile.length();
+            Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
+            request.addRequestHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
+        } else {
+            Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
+        }
 
-            File partFile = new File(uriFile.toString().replace(".tmp", ".part"));
+        lastDownload = dManager.enqueue(request);
 
-            if (partFile.exists()) {
-                long partBytes = partFile.length();
-                Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
-                request.addRequestHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
-            } else {
-                Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
-            }
-
-            lastDownload = dManager.enqueue(request);
-
-            // have to enqueue first to get manager id
-            String uriString = uriFile.toString();
-            QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriString.substring(uriString.lastIndexOf("/") + 1));
-
-        //} else {
-        //    Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
-        //}
+        // have to enqueue first to get manager id
+        String uriString = uriFile.toString();
+        QueueManager.addToQueue(context, Long.valueOf(lastDownload), uriString.substring(uriString.lastIndexOf("/") + 1));
     }
 
     private synchronized void initDownloadManager() {
@@ -812,6 +811,9 @@ public class LigerAltDownloadManager implements Runnable {
             } else {
                 Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");
             }
+
+            // once this has done its job, make it go away
+            context.unregisterReceiver(this);
         }
     }
 
@@ -819,7 +821,6 @@ public class LigerAltDownloadManager implements Runnable {
 
         File appendedFile = null;
 
-        // need index item first to check file size
         File actualFile = new File(tempFile.getPath().substring(0, tempFile.getPath().lastIndexOf(".")));
         Log.d("DOWNLOAD", "ACTUAL FILE: " + actualFile.getAbsolutePath());
 
