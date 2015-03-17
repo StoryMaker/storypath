@@ -422,8 +422,9 @@ public class LigerDownloadManager implements Runnable {
 
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
-                // assuming (Activity) cast is safe since HomeActivity is being passed in as context
-                Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", true); // FIXME move to strings
+                if (context instanceof Activity) {
+                    Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", true); // FIXME move to strings
+                }
 
                 if (checkTor(useTor, context)) {
                     downloadWithTor(Uri.parse(ligerUrl + ligerObb), mAppTitle + " " + mainOrPatch + " file download", ligerObb, targetFile);
@@ -879,8 +880,9 @@ public class LigerDownloadManager implements Runnable {
 
                 if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
-                    // assuming (Activity) cast is safe since HomeActivity is being passed in as context
-                    Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", true); // FIXME move to strings
+                    if (context instanceof Activity) {
+                        Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", true); // FIXME move to strings
+                    }
 
                     if (checkTor(useTor, context)) {
                         downloadWithTor(Uri.parse(ligerUrl), mAppTitle + " " + mainOrPatch + " file download", ligerObb, targetFile);
