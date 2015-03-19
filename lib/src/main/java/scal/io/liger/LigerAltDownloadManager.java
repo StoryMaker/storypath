@@ -8,10 +8,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -62,16 +64,16 @@ public class LigerAltDownloadManager implements Runnable {
 
     StrongHttpsClient mClient = null;
 
-    boolean useManager = true;
-    boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
+    //boolean useManager = true;
+    //boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
 
     private String mAppTitle;
 
-    public LigerAltDownloadManager(String fileName, ExpansionIndexItem indexItem, Context context, boolean useManager) {
+    public LigerAltDownloadManager(String fileName, ExpansionIndexItem indexItem, Context context) {
         this.fileName = fileName;
         this.indexItem = indexItem;
         this.context = context;
-        this.useManager = useManager;
+        //this.useManager = useManager;
 
         this.mAppTitle = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_APP_TITLE, "StoryPath");
     }
@@ -92,13 +94,13 @@ public class LigerAltDownloadManager implements Runnable {
         this.context = context;
     }
 
-    public boolean isUseManager() {
-        return useManager;
-    }
+    //public boolean isUseManager() {
+    //    return useManager;
+    //}
 
-    public void setUseManager(boolean useManager) {
-        this.useManager = useManager;
-    }
+    //public void setUseManager(boolean useManager) {
+    //    this.useManager = useManager;
+    //}
 
     @Override
     public void run() {
@@ -474,14 +476,36 @@ public class LigerAltDownloadManager implements Runnable {
                     Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getExpansionId() + " content pack.", true); // FIXME move to strings
                 }
 
-                if (checkTor(useTor, context)) {
-                    downloadWithTor(Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, targetFile);
-                } else {
+                // check preferences.  will also need to check whether tor is active within method
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean useTor = settings.getBoolean("pusetor", false);
+                boolean useManager = settings.getBoolean("pusedownloadmanager", true);
+
+                //if (checkTor(useTor, context)) {
+                if (useTor && useManager) {
+                    Log.e("DOWNLOAD", "ANDROID DOWNLOAD MANAGER IS NOT COMPATABLE WITH TOR");
+
+                    if (context instanceof Activity) {
+                        Utility.toastOnUiThread((Activity) context, "Check settings, can't use download manager and tor", true); // FIXME move to strings
+                    }
+
+                    QueueManager.checkQueueFinished(context, targetFile.getName());
+
+                } else if (useTor || !useManager) {
+                    downloadWithTor(useTor, Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, targetFile);
+                }else {
                     downloadWithManager(Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, Uri.fromFile(targetFile));
                 }
 
             } else {
                 Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + ligerUrl + ligerObb + " -> " + targetFile.getPath());
+
+                if (context instanceof Activity) {
+                    Utility.toastOnUiThread((Activity) context, "Check settings, no connection, can't start download", true); // FIXME move to strings
+                }
+
+                QueueManager.checkQueueFinished(context, targetFile.getName());
+
             }
 
         } catch (Exception e) {
@@ -490,10 +514,10 @@ public class LigerAltDownloadManager implements Runnable {
         }
     }
 
-    public static boolean checkTor(boolean useTor, Context mContext) {
+    public static boolean checkTor(Context mContext) {
         OrbotHelper orbotHelper = new OrbotHelper(mContext);
 
-        if(useTor && orbotHelper.isOrbotRunning()) {
+        if(orbotHelper.isOrbotRunning()) {
             Log.d("DOWNLOAD/TOR", "ORBOT RUNNING, USE TOR");
             return true;
         } else {
@@ -502,7 +526,7 @@ public class LigerAltDownloadManager implements Runnable {
         }
     }
 
-    private void downloadWithTor(Uri uri, String title, String desc, File targetFile) {
+    private void downloadWithTor(boolean useTor, Uri uri, String title, String desc, File targetFile) {
         initNotificationManager();
 
         // generate id/tag for notification
@@ -514,10 +538,27 @@ public class LigerAltDownloadManager implements Runnable {
             nId = Integer.parseInt(indexItem.getPatchFileVersion());
         }
 
-        Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
-
         StrongHttpsClient httpClient = getHttpClientInstance();
-        httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
+
+        // we're now using this method to support non-tor downloads as well, so settings must be checked
+        if (useTor) {
+            if (checkTor(context)) {
+
+                Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
+
+                httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
+            } else {
+                Log.e("DOWNLOAD/TOR", "CANNOT DOWNLOAD WITH TOR, TOR IS NOT ACTIVE");
+
+                if (context instanceof Activity) {
+                    Utility.toastOnUiThread((Activity) context, "Check settings, can't use tor if orbot isn't running", true); // FIXME move to strings
+                }
+
+                QueueManager.checkQueueFinished(context, targetFile.getName());
+
+                return;
+            }
+        }
 
         // disable attempts to retry (more retries ties up connection and prevents failure handling)
         HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
@@ -579,17 +620,24 @@ public class LigerAltDownloadManager implements Runnable {
                     FileOutputStream targetOutput = new FileOutputStream(targetFile);
                     byte[] buf = new byte[1024];
                     int i;
+                    int oldPercent = 0;
                     while ((i = responseInput.read(buf)) > 0) {
 
                         // create status bar notification
                         int nPercent = DownloadHelper.getDownloadPercent(context);
-                        Notification nProgress = new Notification.Builder(context)
-                                .setContentTitle(mAppTitle + " content download")
-                                .setContentText(fileName + " - " + (nPercent / 100.0) + "%")
-                                .setSmallIcon(android.R.drawable.arrow_down_float)
-                                .setProgress(100, (nPercent / 100), false)
-                                .build();
-                        nManager.notify(nTag, nId, nProgress);
+
+                        if (oldPercent == nPercent) {
+                            // need to cut back on notification traffic
+                        } else {
+                            oldPercent = nPercent;
+                            Notification nProgress = new Notification.Builder(context)
+                                    .setContentTitle(mAppTitle + " content download")
+                                    .setContentText(fileName + " - " + (nPercent / 10.0) + "%")
+                                    .setSmallIcon(android.R.drawable.arrow_down_float)
+                                    .setProgress(100, (nPercent / 10), false)
+                                    .build();
+                            nManager.notify(nTag, nId, nProgress);
+                        }
 
                         targetOutput.write(buf, 0, i);
                     }
@@ -620,6 +668,8 @@ public class LigerAltDownloadManager implements Runnable {
                 }
             } else {
                 Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", STATUS CODE: " + statusCode);
+
+                QueueManager.checkQueueFinished(context, targetFile.getName());
             }
 
             // clean up connection
@@ -630,6 +680,8 @@ public class LigerAltDownloadManager implements Runnable {
         } catch (IOException ioe) {
             Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN");
             ioe.printStackTrace();
+
+            QueueManager.checkQueueFinished(context, targetFile.getName());
         }
     }
 
