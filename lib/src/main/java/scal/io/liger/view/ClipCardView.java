@@ -564,8 +564,6 @@ public class ClipCardView extends ExampleCardView {
         /** Setup initial values that don't require media loaded */
         clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
-        clipStartMs.set(selectedClip.getStartTime());
-        clipStopMs.set(selectedClip.getStopTime());
         volumeSeek.setProgress((int) (mCardModel.getSelectedClip().getVolume() * volumeSeek.getMax()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
