@@ -34,18 +34,58 @@ import scal.io.liger.model.StoryPathLibrary;
  */
 public class QueueManager {
 
-    public static long NO_MANAGER = -123;
+    //public static long NO_MANAGER = -123;
+
+    public static Long DUPLICATE_QUERY = Long.valueOf(0);
 
     private static String downloadQueueName = "download_queue.json";
 
     public static long queueTimeout = Long.MAX_VALUE; // user-configurable?  setting to max value, will revisit later
 
-    // need to ensure multiple threads don't grab the file at the same time
+    // caching to avoid file collision issues (cache should ensure correct data is read/written)
+    public static HashMap<Long, QueueItem> cachedQueue = new HashMap<Long, QueueItem>();
+    public static ArrayList<String> cachedQueries = new ArrayList<String>();
+
+    // need some sort of solution to prevent multiple simultaneous checks from all looking and all finding nothing
+    public static synchronized Long checkQueue(Context context, File queueFile) {
+
+        loadQueue(context); // fills cached queue
+
+        if (cachedQueries.contains(queueFile.getName())) {
+            Log.d("QUEUE", "QUEUE ITEM IS " + queueFile.getName() + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
+
+            return DUPLICATE_QUERY;
+        } else {
+            Log.d("QUEUE", "ADDING CACHED QUERY FOR " + queueFile.getName());
+
+            cachedQueries.add(queueFile.getName());
+        }
+
+        for (Long queueId : cachedQueue.keySet()) {
+
+            Log.d("QUEUE", "QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile.getName());
+
+            if (queueFile.getName().equals(cachedQueue.get(queueId).getQueueFile())) {
+                Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile.getName() + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
+
+                cachedQueries.remove(queueFile.getName());
+
+                return queueId;
+            }
+        }
+
+        Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile.getName() + " NOT FOUND");
+
+        return null;
+    }
 
     public static synchronized HashMap<Long, QueueItem> loadQueue(Context context) {
 
+        if (cachedQueue.size() > 0) {
+            return cachedQueue;
+        }
+
         String queueJson = null;
-        HashMap<Long, QueueItem> queueList = new HashMap<Long, QueueItem>();
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
@@ -54,7 +94,7 @@ public class QueueManager {
         File jsonFile = new File(jsonFilePath + downloadQueueName);
         if (!jsonFile.exists()) {
             Log.e("QUEUE", jsonFilePath + downloadQueueName + " WAS NOT FOUND");
-            return queueList;
+            return cachedQueue;
         }
 
         String sdCardState = Environment.getExternalStorageState();
@@ -71,11 +111,11 @@ public class QueueManager {
                 queueJson = new String(buffer);
             } catch (IOException ioe) {
                 Log.e("QUEUE", "READING JSON FILE " + jsonFilePath + downloadQueueName + " FROM SD CARD FAILED");
-                return queueList;
+                return cachedQueue;
             }
         } else {
             Log.e("QUEUE", "SD CARD WAS NOT FOUND");
-            return queueList;
+            return cachedQueue;
         }
 
         if ((queueJson != null) && (queueJson.length() > 0)) {
@@ -84,7 +124,8 @@ public class QueueManager {
 
             // trying to account for issues with old queue files
             try {
-                queueList = gson.fromJson(queueJson, new TypeToken<HashMap<Long, QueueItem>>(){}.getType());
+                cachedQueue = gson.fromJson(queueJson, new TypeToken<HashMap<Long, QueueItem>>() {
+                }.getType());
             } catch (Exception ise) {
                 // this will hopefully catch existing Long/String queue files
 
@@ -94,13 +135,15 @@ public class QueueManager {
                     jsonFile.delete();
                 }
 
-                queueList = new HashMap<Long, QueueItem>();
+                cachedQueue = new HashMap<Long, QueueItem>();
             }
         }
 
-        return queueList;
+        return cachedQueue;
     }
 
+    // unused
+    /*
     public static long checkQueue(String fileName, HashMap<Long, QueueItem> queueMap) {
 
         for (Long queueNumber : queueMap.keySet()) {
@@ -111,37 +154,51 @@ public class QueueManager {
 
         return -1;
     }
+    */
 
     public static synchronized void addToQueue(Context context, Long queueId, String queueFile) {
 
-        HashMap<Long, QueueItem> queueList = loadQueue(context);
+        if (cachedQueue.size() == 0) {
+            cachedQueue = loadQueue(context);
+        }
 
         QueueItem queueItem = new QueueItem(queueFile, new Date());
 
-        queueList.put(queueId, queueItem);
+        cachedQueue.put(queueId, queueItem);
 
-        Log.d("QUEUE", "PUT " + queueId + " IN QUEUE, NEW QUEUE " + queueList.keySet().toString());
+        // we have an actual entry for the item now, remove temp item
+        if (cachedQueries.contains(queueFile)) {
+            Log.d("QUEUE", "REMOVING CACHED QUERY FOR " + queueFile);
 
-        saveQueue(context, queueList, downloadQueueName);
+            cachedQueries.remove(queueFile);
+        }
+
+        Log.d("QUEUE", "PUT " + queueId + " IN QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
+
+        saveQueue(context, cachedQueue, downloadQueueName);
         return;
     }
 
     public static synchronized boolean removeFromQueue(Context context, Long queueId) {
 
-        HashMap<Long, QueueItem> queueList = loadQueue(context);
+        if (cachedQueue.size() == 0) {
+            cachedQueue = loadQueue(context);
+        }
 
-        if (queueList.keySet().contains(queueId)) {
-            queueList.remove(queueId);
+        if (cachedQueue.keySet().contains(queueId)) {
+            cachedQueue.remove(queueId);
 
-            Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + queueList.keySet().toString());
+            Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 
-            saveQueue(context, queueList, downloadQueueName);
+            saveQueue(context, cachedQueue, downloadQueueName);
             return true;
         } else{
             return false;
         }
     }
 
+    // unused
+    /*
     public static synchronized boolean purgeFromQueue(Context context, Long queueId) {
 
         HashMap<Long, QueueItem> queueMap = loadQueue(context);
@@ -169,6 +226,7 @@ public class QueueManager {
             return false;
         }
     }
+    */
 
     private static synchronized void saveQueue(Context context, HashMap<Long, QueueItem> queueMap, String jsonFileName) {
 

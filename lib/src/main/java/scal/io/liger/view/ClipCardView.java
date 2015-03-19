@@ -56,14 +56,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
-import scal.io.liger.MediaHelper;
 import scal.io.liger.R;
 import scal.io.liger.av.AudioRecorder;
 import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
-import scal.io.liger.model.ExampleMediaFile;
 import scal.io.liger.model.MediaFile;
 
 
@@ -566,8 +564,6 @@ public class ClipCardView extends ExampleCardView {
         /** Setup initial values that don't require media loaded */
         clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
-        clipStartMs.set(selectedClip.getStartTime());
-        clipStopMs.set(selectedClip.getStopTime());
         volumeSeek.setProgress((int) (mCardModel.getSelectedClip().getVolume() * volumeSeek.getMax()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
@@ -588,33 +584,60 @@ public class ClipCardView extends ExampleCardView {
         });
 
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
-            int lastLeftIdx;
-            int lastRightIdx;
+            int lastStartIdx;
+            int lastEndIdx;
 
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int leftIdx, int rightIdx) {
-                //Log.i(TAG, String.format("Seek to leftIdx %d rightIdx %d. left: %d. right: %d", leftIdx, rightIdx, rangeBar.getLeft(), rangeBar.getRight()));
+//                Log.i(TAG, String.format("Seek to leftIdx %d rightIdx %d. left: %d. right: %d",
+//                                         leftIdx, rightIdx, rangeBar.getLeft(), rangeBar.getRight()));
 
-                if (lastLeftIdx != leftIdx) {
-                    // Left seek was adjusted, seek to it
-                    clipStartMs.set(getMsFromRangeBarIndex(leftIdx, tickCount, clipMediaDurationMs.get()));
+                // NOTE : RangeBar indices go from 0 (left) to 100 (right)
+                // regardless of layout direction
+
+                int startIdx, endIdx;
+                boolean rightToLeft = false;
+                // Adjust for RTL layouts if necessary
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+                    mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+
+                    rightToLeft = true;
+                    startIdx = rightIdx;
+                    endIdx = leftIdx;
+
+                } else {
+                    startIdx = leftIdx;
+                    endIdx = rightIdx;
+                }
+
+                if (lastStartIdx != startIdx) {
+                    // Start seek was adjusted, seek to it
+                    clipStartMs.set(getMsFromRangeBarIndex(startIdx,
+                                                           tickCount,
+                                                           clipMediaDurationMs.get(),
+                                                           rightToLeft));
+
                     player.seekTo(clipStartMs.get());
                     clipStart.setText(Util.makeTimeString(clipStartMs.get()));
-                    //Log.i(TAG, String.format("Left seek to %d ms", clipStartMs.get()));
-                    if (playbackBar.getProgress() < leftIdx) playbackBar.setProgress(leftIdx);
+                    //Log.i(TAG, String.format("Start seek to %d ms", clipStartMs.get()));
+                    if (playbackBar.getProgress() < startIdx) playbackBar.setProgress(startIdx);
 
 
-                } else if (lastRightIdx != rightIdx) {
-                    // Right seek was adjusted, seek to it
-                    clipStopMs.set(getMsFromRangeBarIndex(rightIdx, tickCount, clipMediaDurationMs.get()));
+                } else if (lastEndIdx != endIdx) {
+                    // End seek was adjusted, seek to it
+                    clipStopMs.set(getMsFromRangeBarIndex(endIdx,
+                                                          tickCount,
+                                                          clipMediaDurationMs.get(),
+                                                          rightToLeft));
+
                     player.seekTo(clipStopMs.get());
                     clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
 
-                    if (playbackBar.getProgress() > rightIdx) playbackBar.setProgress(rightIdx);
-                    //Log.i(TAG, String.format("Right seek to %d ms", clipStopMs.get()));
+                    if (playbackBar.getProgress() > endIdx) playbackBar.setProgress(endIdx);
+                    //Log.i(TAG, String.format("Stop seek to %d ms", clipStopMs.get()));
                 }
-                lastLeftIdx = leftIdx;
-                lastRightIdx = rightIdx;
+                lastStartIdx = startIdx;
+                lastEndIdx = endIdx;
                 clipDurationMs.set(clipStopMs.get() - clipStartMs.get());
                 clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
             }
@@ -663,10 +686,14 @@ public class ClipCardView extends ExampleCardView {
                     clipDurationMs.set(clipStopMs.get() - clipStartMs.get());
 
                     // Setup initial views requiring knowledge of clip media
+
+                    boolean rightToLeft = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+                                          mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+
                     if (selectedClip.getStopTime() == 0) selectedClip.setStopTime(clipDurationMs.get());
                     player.seekTo(selectedClip.getStartTime());
-                    rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipMediaDurationMs.get()),
-                                             getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipMediaDurationMs.get()));
+                    rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipMediaDurationMs.get(), rightToLeft),
+                                             getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipMediaDurationMs.get(), rightToLeft));
                     clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
                     clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
                 } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
@@ -740,14 +767,27 @@ public class ClipCardView extends ExampleCardView {
         dialog.show();
     }
 
-    private int getMsFromRangeBarIndex(int tick, int max, int clipDurationMs) {
-        int seekMs =  (int) (clipDurationMs * Math.min(1, ((float) tick / max)));
+    private int getMsFromRangeBarIndex(int tick, int max, int clipDurationMs, boolean rightToLeft) {
+        int seekMs;
+
+        if (rightToLeft)
+            seekMs = (int) (clipDurationMs * Math.min(1, ((float) (max - tick) / max)));
+        else
+            seekMs = (int) (clipDurationMs * Math.min(1, ((float) tick / max)));
         //Log.i(TAG, String.format("Seek to index %d equals %d ms. Duration: %d ms", idx, seekMs, clipDurationMs.get()));
         return seekMs;
     }
 
-    private int getRangeBarIndexForMs(int positionMs, int max, int clipDurationMs) {
-        int idx = (int) Math.min(((positionMs * max) / (float) clipDurationMs), max - 1); // Range bar goes from 0 to (max - 1)
+    private int getRangeBarIndexForMs(int positionMs, int max, int clipDurationMs, boolean rightToLeft) {
+        // Range bar goes from 0 to (max - 1)
+
+        int idx;
+
+        if (rightToLeft)
+            idx = (int) Math.min((((clipDurationMs - positionMs) * max) / (float) clipDurationMs), max - 1);
+        else
+            idx = (int) Math.min(((positionMs * max) / (float) clipDurationMs), max - 1);
+
         Log.i(TAG, String.format("Converted %d ms to rangebar position %d", positionMs, idx));
         return idx;
     }
@@ -994,6 +1034,7 @@ public class ClipCardView extends ExampleCardView {
                     Log.w(TAG, "ClipCardView detached while recording in progress. Recording will be lost.");
                     mRecorder.stopRecording();
                     mRecorder.release();
+                    mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(false, mCardModel);
                     // TODO : Can we attach this recording to the card model without :
                     //  java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling
                     // attaching media to ClipCardView will trigger observers in odd state. Could create separate ClipCard#saveMediaFile
@@ -1015,6 +1056,7 @@ public class ClipCardView extends ExampleCardView {
             return;
         }
         mRecorder.startRecording();
+        mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(true, mCardModel);
 
         tvCapture.setVisibility(View.GONE);
         tvStop.setVisibility(View.VISIBLE);
@@ -1022,6 +1064,7 @@ public class ClipCardView extends ExampleCardView {
 
     private void stopRecordingAudio() {
         MediaFile mf = mRecorder.stopRecording();
+        mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(false, mCardModel);
         mRecorder.release();
         mRecorder = null;
         if (mf != null) {

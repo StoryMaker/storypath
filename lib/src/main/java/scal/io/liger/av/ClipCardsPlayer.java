@@ -451,12 +451,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                         break;
                 }
 
+                int currentClipStartTimeMs = mCurrentlyPlayingCard.getSelectedClip().getStartTime();
                 int durationOfPreviousClips = 0;
                 int currentlyPlayingCardIndex = mClipCards.indexOf(mCurrentlyPlayingCard);
                 if (currentlyPlayingCardIndex > 0)
                     durationOfPreviousClips = accumulatedDurationByMediaCard.get(currentlyPlayingCardIndex - 1);
                 if (mPlaybackProgress != null) {
-                    mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
+                    mPlaybackProgress.setProgress((int) (mPlaybackProgress.getMax() * ((float) durationOfPreviousClips + currentClipElapsedTime - currentClipStartTimeMs) / mClipCollectionDurationMs)); // Show progress relative to clip collection duration
                 }
                 mTimeCode.setText(Util.makeTimeString(durationOfPreviousClips + currentClipElapsedTime));
                 //Log.i("Timer", String.format("current clip (%d) elapsed time: %d. max photo time: %d. progress: %d", currentlyPlayingCardIndex, currentClipElapsedTime, mPhotoSlideDurationMs, mPlaybackProgress == null ? 0 : mPlaybackProgress.getProgress()));

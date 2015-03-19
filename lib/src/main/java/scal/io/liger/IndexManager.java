@@ -47,6 +47,9 @@ public class IndexManager {
 
     public static String noPatchFile = "NOPATCH";
 
+    // TODO Temporarily public for debugging convenience
+    public static HashMap<String, ArrayList<ExpansionIndexItem>> cachedIndexes = new HashMap<>();
+
     public static String buildFileAbsolutePath(ExpansionIndexItem item,
                                                @Constants.ObbType String mainOrPatch) {
 
@@ -293,8 +296,6 @@ public class IndexManager {
     }
 
     // supressing messages for less text during polling
-    // TODO Temporarily public for debugging convenience
-    public static HashMap<String, ArrayList<ExpansionIndexItem>> cachedIndexes = new HashMap<>();
 
     /**
      * This method does an unacceptable amount of work for synchronous use from the main thread
