@@ -31,6 +31,7 @@ import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
+import scal.io.liger.view.ScrollLockRecyclerView;
 
 
 public class MainActivity extends Activity implements StoryPathLibrary.StoryPathLibraryListener{
@@ -41,7 +42,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     public static final String INTENT_KEY_STORYPATH_LIBRARY_PATH = "storypath_library_path";
     public static final String INTENT_KEY_STORYPATH_INSTANCE_PATH = "storypath_instance_path";
 
-    RecyclerView mRecyclerView;
+    ScrollLockRecyclerView mRecyclerView;
     StoryPathLibrary mStoryPathLibrary;
     public CardAdapter mCardAdapter = null;
     String language = null;
@@ -74,7 +75,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         DownloadHelper.checkAndDownload(MainActivity.this);
 
         setContentView(R.layout.activity_main);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (ScrollLockRecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 ////        if (DEVELOPER_MODE) {
@@ -766,6 +767,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     @Override
     public void onStoryPathLoaded() {
         refreshCardList();
+    }
+
+    @Override
+    public void onScrollLockRequested(boolean scrollLockRequested, Card hostCard) {
+        scrollRecyclerViewToCard(hostCard);
+        mRecyclerView.setCanScroll(!scrollLockRequested);
     }
 
     @Override

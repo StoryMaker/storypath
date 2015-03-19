@@ -1036,6 +1036,7 @@ public class ClipCardView extends ExampleCardView {
                     Log.w(TAG, "ClipCardView detached while recording in progress. Recording will be lost.");
                     mRecorder.stopRecording();
                     mRecorder.release();
+                    mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(false, mCardModel);
                     // TODO : Can we attach this recording to the card model without :
                     //  java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling
                     // attaching media to ClipCardView will trigger observers in odd state. Could create separate ClipCard#saveMediaFile
@@ -1057,6 +1058,7 @@ public class ClipCardView extends ExampleCardView {
             return;
         }
         mRecorder.startRecording();
+        mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(true, mCardModel);
 
         tvCapture.setVisibility(View.GONE);
         tvStop.setVisibility(View.VISIBLE);
@@ -1064,6 +1066,7 @@ public class ClipCardView extends ExampleCardView {
 
     private void stopRecordingAudio() {
         MediaFile mf = mRecorder.stopRecording();
+        mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(false, mCardModel);
         mRecorder.release();
         mRecorder = null;
         if (mf != null) {

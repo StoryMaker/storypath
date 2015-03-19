@@ -67,6 +67,15 @@ public class StoryPathLibrary extends StoryPath {
         public void onCardsSwapped(Card cardOne, Card cardTwo);
         public void onCardRemoved(Card removedCard);
         public void onStoryPathLoaded();
+
+        /** Called when scrolling or seeking through the StoryPath content should be prohibited.
+         *  This may occur when media recording or playback is occurring */
+        public void onScrollLockRequested(boolean scrollLockRequested, Card hostCard);
+    }
+
+    public void notifyScrollLockRequested(boolean scrollLockRequested, Card hostCard) {
+        if (mListener != null)
+            mListener.onScrollLockRequested(scrollLockRequested, hostCard);
     }
 
     @Override
