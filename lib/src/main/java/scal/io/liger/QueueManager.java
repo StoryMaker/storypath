@@ -48,35 +48,55 @@ public class QueueManager {
 
     // need some sort of solution to prevent multiple simultaneous checks from all looking and all finding nothing
     public static synchronized Long checkQueue(Context context, File queueFile) {
+        return checkQueue(context, queueFile.getName());
+    }
+
+    public static synchronized Long checkQueue(Context context, String queueFile) {
 
         loadQueue(context); // fills cached queue
 
-        if (cachedQueries.contains(queueFile.getName())) {
-            Log.d("QUEUE", "QUEUE ITEM IS " + queueFile.getName() + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
+        if (cachedQueries.contains(queueFile)) {
+            Log.d("QUEUE", "QUEUE ITEM IS " + queueFile + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
 
             return DUPLICATE_QUERY;
         } else {
-            Log.d("QUEUE", "ADDING CACHED QUERY FOR " + queueFile.getName());
+            Log.d("QUEUE", "ADDING CACHED QUERY FOR " + queueFile);
 
-            cachedQueries.add(queueFile.getName());
+            cachedQueries.add(queueFile);
         }
 
         for (Long queueId : cachedQueue.keySet()) {
 
-            Log.d("QUEUE", "QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile.getName());
+            Log.d("QUEUE", "QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile);
 
-            if (queueFile.getName().equals(cachedQueue.get(queueId).getQueueFile())) {
-                Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile.getName() + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
+            if (queueFile.equals(cachedQueue.get(queueId).getQueueFile())) {
+                Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
 
-                cachedQueries.remove(queueFile.getName());
+                cachedQueries.remove(queueFile);
 
                 return queueId;
             }
         }
 
-        Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile.getName() + " NOT FOUND");
+        Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile + " NOT FOUND");
 
         return null;
+    }
+
+    public static synchronized void checkQueueFinished(Context context, File queueFile) {
+        checkQueueFinished(context, queueFile.getName());
+    }
+
+    public static synchronized void checkQueueFinished(Context context, String queueFile) {
+
+        Log.d("QUEUE", "LOOKING FOR CACHED QUERY FOR " + queueFile);
+
+        // done checking queue for item, remove temp item
+        if (cachedQueries.contains(queueFile)) {
+            Log.d("QUEUE", "REMOVING CACHED QUERY FOR " + queueFile);
+
+            cachedQueries.remove(queueFile);
+        }
     }
 
     public static synchronized HashMap<Long, QueueItem> loadQueue(Context context) {
@@ -186,7 +206,10 @@ public class QueueManager {
         }
 
         if (cachedQueue.keySet().contains(queueId)) {
-            cachedQueue.remove(queueId);
+            QueueItem removedItem = cachedQueue.remove(queueId);
+
+            // check for cached queries
+            checkQueueFinished(context, removedItem.getQueueFile());
 
             Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 

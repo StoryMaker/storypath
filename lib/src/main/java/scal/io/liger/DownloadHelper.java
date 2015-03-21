@@ -113,7 +113,7 @@ public class DownloadHelper {
     // return extra digits for greater precision in notification
     public static int getDownloadPercent(Context context) {
         float percentFloat = getDownloadProgress(context);
-        int percentInt = (int) (percentFloat * 10000);
+        int percentInt = (int) (percentFloat * 1000);
         return percentInt;
     }
 
@@ -422,7 +422,7 @@ public class DownloadHelper {
         } else {
             Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " MUST BE DOWNLOADED");
 
-            final LigerDownloadManager expansionDownload = new LigerDownloadManager(Constants.MAIN, Constants.MAIN_VERSION, context, true);
+            final LigerDownloadManager expansionDownload = new LigerDownloadManager(Constants.MAIN, Constants.MAIN_VERSION, context);
             Thread expansionDownloadThread = new Thread(expansionDownload);
 
             expansionDownloadThread.start();
@@ -479,7 +479,7 @@ public class DownloadHelper {
                 } else {
                     Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " MUST BE DOWNLOADED");
 
-                    final LigerDownloadManager expansionDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
+                    final LigerDownloadManager expansionDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context);
                     Thread expansionDownloadThread = new Thread(expansionDownload);
 
                     expansionDownloadThread.start();
@@ -612,7 +612,7 @@ public class DownloadHelper {
 
             // Toast.makeText(context, "Starting download of " + installedItem.getExpansionId() + " content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
-            final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(fileName, installedItem, context, true);
+            final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(fileName, installedItem, context);
             Thread expansionDownloadThread = new Thread(expansionDownload);
 
             expansionDownloadThread.start();
@@ -681,7 +681,7 @@ public class DownloadHelper {
                 } else {
                     Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " MUST BE DOWNLOADED");
 
-                    final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(patchName, installedItem, context, true);
+                    final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(patchName, installedItem, context);
                     Thread expansionDownloadThread = new Thread(expansionDownload);
 
                     Toast.makeText(context, "Starting download of expansion file patch.", Toast.LENGTH_LONG).show(); // FIXME move to strings
