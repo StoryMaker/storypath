@@ -427,6 +427,9 @@ public class DownloadHelper {
 
             expansionDownloadThread.start();
 
+            // downloading a new main file, must clear ZipHelper cache
+            ZipHelper.clearCache();
+
             fileStateOk = false;
         }
 
@@ -483,6 +486,9 @@ public class DownloadHelper {
                     Thread expansionDownloadThread = new Thread(expansionDownload);
 
                     expansionDownloadThread.start();
+
+                    // downloading a new patch file, must clear ZipHelper cache
+                    ZipHelper.clearCache();
 
                     fileStateOk = false;
                 }

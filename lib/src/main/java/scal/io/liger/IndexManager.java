@@ -11,7 +11,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +41,7 @@ import scal.io.liger.model.StoryPathLibrary;
  */
 public class IndexManager {
 
-    private static String availableIndexName = "available_index.json";
+    private static String availableIndexName = "available_index";
     private static String installedIndexName = "installed_index.json";
     private static String instanceIndexName = "instance_index.json";
     private static String contentIndexName = "content_index.json";
@@ -91,47 +93,48 @@ public class IndexManager {
         }
     }
 
+    // only available index should be copied, so collapsing methods
+
     public static void copyAvailableIndex(Context context) {
-
-        copyIndex(context, availableIndexName);
-
-        return;
-    }
-
-    public static void copyInstalledIndex(Context context) {
-
-        copyIndex(context, installedIndexName);
-
-        return;
-    }
-
-    // instance and content index shouldn't be part of assets
-
-    private static void copyIndex(Context context, String jsonFileName) {
 
         AssetManager assetManager = context.getAssets();
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "COPYING JSON FILE " + jsonFileName + " FROM ASSETS TO " + jsonFilePath);
+        Log.d("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath);
 
-        File jsonFile = new File(jsonFilePath + jsonFileName);
-        if (jsonFileName.equals(availableIndexName) && jsonFile.exists()) {
-            Log.d("INDEX", "JSON FILE " + jsonFileName + " ALREADY EXISTS IN " + jsonFilePath + ", DELETING");
-            jsonFile.delete();
-            //return;
-        }
-        // do not replace installed index
-        if (jsonFileName.equals(installedIndexName) && jsonFile.exists()) {
-            Log.d("INDEX", "JSON FILE " + jsonFileName + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
+        // only replace file if version is different
+        File jsonFile = new File(jsonFilePath + getAvailableVersionName());
+        if (jsonFile.exists()) {
+            Log.d("INDEX", "JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
             return;
+        } else {
+
+            // delete old patch versions
+            String nameFilter = availableIndexName + "." + "*" + ".json";
+
+            Log.d("INDEX", "CLEANUP: DELETING " + nameFilter + " FROM " + jsonFilePath);
+
+            WildcardFileFilter indexFileFilter = new WildcardFileFilter(nameFilter);
+            File indexDirectory = new File(jsonFilePath);
+            for (File indexFile : FileUtils.listFiles(indexDirectory, indexFileFilter, null)) {
+                Log.d("INDEX", "CLEANUP: FOUND " + indexFile.getPath() + ", DELETING");
+                FileUtils.deleteQuietly(indexFile);
+            }
+
+            // delete old un-numbered files
+            File oldFile = new File(jsonFilePath + availableIndexName + ".json");
+            if (oldFile.exists()) {
+                Log.d("INDEX", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                FileUtils.deleteQuietly(oldFile);
+            }
         }
 
         InputStream assetIn = null;
         OutputStream assetOut = null;
 
         try {
-            assetIn = assetManager.open(jsonFileName);
+            assetIn = assetManager.open(availableIndexName + ".json");
 
             assetOut = new FileOutputStream(jsonFile);
 
@@ -146,13 +149,13 @@ public class IndexManager {
             assetOut.close();
             assetOut = null;
         } catch (IOException ioe) {
-            Log.e("INDEX", "COPYING JSON FILE " + jsonFileName + " FROM ASSETS TO " + jsonFilePath + " FAILED");
+            Log.e("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED");
             return;
         }
 
         // check for zero-byte files
         if (jsonFile.exists() && (jsonFile.length() == 0)) {
-            Log.e("INDEX", "COPYING JSON FILE " + jsonFileName + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            Log.e("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
             jsonFile.delete();
         }
 
@@ -215,7 +218,7 @@ public class IndexManager {
 
     public static HashMap<String, ExpansionIndexItem> loadAvailableFileIndex(Context context) {
 
-        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName());
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
@@ -245,7 +248,7 @@ public class IndexManager {
 
     public static HashMap<String, ExpansionIndexItem> loadAvailableOrderIndex(Context context) {
 
-        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName());
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
@@ -271,7 +274,7 @@ public class IndexManager {
 
     public static HashMap<String, ExpansionIndexItem> loadAvailableIdIndex(Context context) {
 
-        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, availableIndexName);
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName());
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
@@ -682,6 +685,8 @@ public class IndexManager {
         return indexList;
     }
 
+    // unused
+    /*
     public static void registerAvailableIndexItem(Context context, ExpansionIndexItem indexItem) {
 
         HashMap<String, ExpansionIndexItem> indexMap = loadAvailableIdIndex(context);
@@ -690,9 +695,10 @@ public class IndexManager {
         for (ExpansionIndexItem eii : indexMap.values()) {
             indexList.add(eii);
         }
-        saveIndex(context, indexList, availableIndexName);
+        saveIndex(context, indexList, getAvailableVersionName());
         return;
     }
+    */
 
     public static void registerInstalledIndexItem(Context context, ExpansionIndexItem indexItem) {
 
@@ -706,6 +712,8 @@ public class IndexManager {
         return;
     }
 
+    // unused
+    /*
     public static void unregisterAvailableIndexItem(Context context, ExpansionIndexItem indexItem) {
 
         HashMap<String, ExpansionIndexItem> indexMap = loadAvailableIdIndex(context);
@@ -714,7 +722,7 @@ public class IndexManager {
         for (ExpansionIndexItem eii : indexMap.values()) {
             indexList.add(eii);
         }
-        saveIndex(context, indexList, availableIndexName);
+        saveIndex(context, indexList, getAvailableVersionName());
         return;
     }
 
@@ -729,7 +737,10 @@ public class IndexManager {
         saveIndex(context, indexList, installedIndexName);
         return;
     }
+    */
 
+    // unused
+    /*
     public static void unregisterAvailableIndexItem(Context context, String fileName) {
 
         HashMap<String, ExpansionIndexItem> indexMap = loadAvailableFileIndex(context);
@@ -738,7 +749,7 @@ public class IndexManager {
         for (ExpansionIndexItem eii : indexMap.values()) {
             indexList.add(eii);
         }
-        saveIndex(context, indexList, availableIndexName);
+        saveIndex(context, indexList, getAvailableVersionName());
         return;
     }
 
@@ -753,13 +764,17 @@ public class IndexManager {
         saveIndex(context, indexList, installedIndexName);
         return;
     }
+    */
 
+    // unused
+    /*
     public static void saveAvailableIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 
-        saveIndex(context, new ArrayList(indexMap.values()), availableIndexName);
+        saveIndex(context, new ArrayList(indexMap.values()), getAvailableVersionName());
 
         return;
     }
+    */
 
     public static void saveInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 
@@ -778,6 +793,9 @@ public class IndexManager {
         if (cachedIndexes.containsKey(jsonFileName)) {
             cachedIndexes.put(jsonFileName, indexList);
         }
+
+        // need to purge ZipHelper cache to force update
+        ZipHelper.clearCache();
 
         Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
 
@@ -869,5 +887,9 @@ public class IndexManager {
             Log.e("INDEX", "SD CARD WAS NOT FOUND");
             return;
         }
+    }
+
+    public static String getAvailableVersionName() {
+        return availableIndexName + "." + Constants.AVAILABLE_INDEX_VERSION + ".json";
     }
 }

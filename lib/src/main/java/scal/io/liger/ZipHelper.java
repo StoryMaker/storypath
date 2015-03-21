@@ -252,6 +252,10 @@ public class ZipHelper {
         return targetExpansionPath;
     }
 
+    public static void clearCache() {
+        expansionPaths = null;
+    }
+
     /**
      * @return a list of absolute paths to all available expansion files.
      */
