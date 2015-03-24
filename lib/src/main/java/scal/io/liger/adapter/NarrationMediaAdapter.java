@@ -52,6 +52,9 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
             title              = (TextView) v.findViewById(R.id.title);
             checkBox           = (CheckBox) v.findViewById(R.id.check_box);
             narrationIndicator = (ImageView) v.findViewById(R.id.narrationIndicator);
+
+            // Temporarily remove ability to select clips
+            checkBox.setVisibility(View.GONE);
         }
     }
 
@@ -68,7 +71,9 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         }
         mSelectedItems = new Boolean[cards.size()];
         for(int x = 0; x < mSelectedItems.length; x++) {
-            mSelectedItems[x] = false;
+            // Temporarily remove ability to select clips
+            //mSelectedItems[x] = false;
+            mSelectedItems[x] = true;
         }
 
         mStoryPathLibrary = mClipCards.get(0).getStoryPath().getStoryPathLibrary();
