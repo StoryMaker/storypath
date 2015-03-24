@@ -427,7 +427,7 @@ public class LigerDownloadManager implements Runnable {
                 // check preferences.  will also need to check whether tor is active within method
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean useTor = settings.getBoolean("pusetor", false);
-                boolean useManager = settings.getBoolean("pusedownloadmanager", true);
+                boolean useManager = settings.getBoolean("pusedownloadmanager", false);
 
                 //if (checkTor(useTor, context)) {
                 if (useTor && useManager) {
@@ -928,7 +928,7 @@ public class LigerDownloadManager implements Runnable {
                 // check preferences.  will also need to check whether tor is active within method
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean useTor = settings.getBoolean("pusetor", false);
-                boolean useManager = settings.getBoolean("pusedownloadmanager", true);
+                boolean useManager = settings.getBoolean("pusedownloadmanager", false);
 
                 //if (checkTor(useTor, context)) {
                 if (useTor && useManager) {

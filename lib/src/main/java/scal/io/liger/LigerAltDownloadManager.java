@@ -479,7 +479,7 @@ public class LigerAltDownloadManager implements Runnable {
                 // check preferences.  will also need to check whether tor is active within method
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean useTor = settings.getBoolean("pusetor", false);
-                boolean useManager = settings.getBoolean("pusedownloadmanager", true);
+                boolean useManager = settings.getBoolean("pusedownloadmanager", false);
 
                 //if (checkTor(useTor, context)) {
                 if (useTor && useManager) {
@@ -493,7 +493,7 @@ public class LigerAltDownloadManager implements Runnable {
 
                 } else if (useTor || !useManager) {
                     downloadWithTor(useTor, Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, targetFile);
-                }else {
+                } else {
                     downloadWithManager(Uri.parse(ligerUrl + ligerObb), mAppTitle + " content download", ligerObb, Uri.fromFile(targetFile));
                 }
 
