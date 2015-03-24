@@ -6,6 +6,11 @@
   <string name="lbl_continue">متابعة</string>
   <string name="lbl_next">التالي</string>
   <string name="lbl_congrats_or">--- أو ---</string>
+  <string name="cliptype_character">شخصية</string>
+  <string name="cliptype_action">حركة</string>
+  <string name="cliptype_result">نتيجة</string>
+  <string name="cliptype_place">مكان</string>
+  <string name="cliptype_signature">دليل</string>
   <string name="choose_medium">اختر متوسط</string>
   <string name="lbl_video">الفيديو</string>
   <string name="lbl_audio">الصوت</string>
@@ -18,9 +23,11 @@
   <string name="menu_done">انتهى</string>
   <string name="clip_order">ترتيب المقاطع</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">ابدأ التسجيل</string>
   <string name="dialog_done">انتهى</string>
   <string name="dialog_pause">توقف</string>
   <string name="dialog_resume">استأنف</string>
+  <string name="dialog_stop">أوقف التسجيل</string>
   <string name="dialog_redo">أعِد</string>
   <string name="edit_card">تعديل البطاقة</string>
   <string name="change_goal">غير الهدف</string>
@@ -51,6 +58,7 @@
   <string name="state_paused_by_request">اوقفَ التحميل</string>
   <string name="state_paused_wifi_unavailable">أُوقفَ التحميل نظرا لانعدام الواي فاي</string>
   <string name="state_paused_wifi_disabled">أُوقفَ التحميل نظرا لأن الواي فاي غير شغال</string>
+  <string name="state_paused_roaming">تم إيقاف التحميل لأنك في وضع التجوال الدولي</string>
   <string name="state_paused_sdcard_unavailable">أُوقفَ التحميل نظرا لعدم وجود ذاكرة خارجية</string>
   <string name="state_failed_unlicensed">فشل التحميل لأنك قد لا تكون قد اشتريت هذا التطبيق</string>
   <string name="state_failed_fetching_url">فشل التحميل لتعذّر العثور على المصادر</string>
@@ -62,6 +70,7 @@
   <string name="time_remaining_notification">باقي %1$s</string>
   <string name="add_clips_before_narrating">إضافة بعض المقاطع قبل إضافة التعليق</string>
   <string name="add_clips_before_reordering">إضافة مقاطع قبل تغيير ترتيبهم</string>
+  <string name="add_clips_generic">أضف كليبات أولا</string>
   <string name="title_section3">القسم 3</string>
   <string name="title_section2">القسم 2</string>
   <string name="title_section1">القسم 1</string>
@@ -122,8 +131,16 @@
   <string name="sd_card_not_available">بطاقة الذاكرة غير متاحة</string>
   <string name="open_file_explorer">افتح متصفح الملفات</string>
   <string name="alert_message_delete_record">هل تريد حذف هذا السجل؟</string>
+  <string name="recording_narration">تسجيل التعليق</string>
+  <string name="could_not_start_narration">لا يمكن تشغيل التعليق!</string>
+  <string name="jumble">دمج</string>
   <string name="order">ترتيب</string>
+  <string name="narrate">علّق</string>
   <string name="publish">نشر</string>
+  <string name="total">المجموع</string>
   <string name="cancel">إلغاء</string>
+  <string name="trim_clip">قطع الفيديو</string>
+  <string name="narration">التعليق</string>
+  <string name="this_story_has_no_clips_to_publish">هذه القصة لا تحتوي على مقاطع فيديو لنشرها!</string>
   <!--add for libra end-->
 </resources>
