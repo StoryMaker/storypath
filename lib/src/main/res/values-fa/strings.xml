@@ -1,85 +1,146 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="action_settings">تنظیم‌ها </string>
-  <string name="lbl_level">سطح:</string>
+  <string name="action_settings">تنظیمات</string>
+  <string name="lbl_level">سطح</string>
+  <string name="lbl_time">زمان:</string>
+  <string name="lbl_continue">ادامه</string>
   <string name="lbl_next">بعدی</string>
-  <string name="lbl_video">ویدئو</string>
+  <string name="lbl_congrats_or">----- یا ------</string>
+  <string name="cliptype_character">سوژه</string>
+  <string name="cliptype_action">حرکت</string>
+  <string name="cliptype_result">نتیجه</string>
+  <string name="cliptype_place">مکان</string>
+  <string name="cliptype_signature">تصویرهای خاص و منحصر به فرد عکاس یا فیلم‌بردار</string>
+  <string name="choose_medium">یک وسیله یا رسانه انتخاب کنید.</string>
+  <string name="lbl_video">تصویر</string>
   <string name="lbl_audio">صدا</string>
   <string name="lbl_photo">عکس</string>
+  <string name="lbl_record">ضبط کلیپ</string>
+  <string name="lbl_order_media_desc">اکنون کلیپ‌هایتان را به منظور نشان دادن آغاز، میانه و پایانی شفاف کنار هم بگذارید.</string>
+  <string name="lbl_card_tap">برای انتخاب یک کلیپ متفاوت، فشار دهید.</string>
+  <string name="lbl_import">وارد کردن</string>
+  <string name="lbl_capture">گرفتن</string>
+  <string name="menu_done">انجام شد</string>
+  <string name="clip_order">ترتیب کلیپ</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">ضبط را شروع کنید.</string>
+  <string name="dialog_done">انجام شد</string>
+  <string name="dialog_pause">توقف</string>
+  <string name="dialog_resume">شروع دوباره</string>
+  <string name="dialog_stop">ضبط را متوقف کنید.</string>
+  <string name="dialog_redo">دوباره تکرار کنید</string>
+  <string name="edit_card">کارت ویرایش</string>
+  <string name="change_goal">تغییر هدف</string>
+  <string name="duplicate_card">کپی کارت</string>
+  <string name="duplicate_clip">کپی کلیپ</string>
+  <string name="remove_card">حذف کارت</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_complete">انجام موفقیت‌آمیز بارگیری</string>
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download failed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_failed">انجام ناموفق بارگیری</string>
+  <string name="state_unknown">شروع.....\"</string>
+  <string name="state_idle">منتظر باشید تا بارگیری آغاز شود.</string>
+  <string name="state_fetching_url">در حال جست‌وجوی منبع برای بارگیری</string>
+  <string name="state_connecting">در حال اتصال به سرور بارگیری</string>
+  <string name="state_downloading">بارگیری منابع</string>
+  <string name="state_completed">بارگیری به پایان رسید</string>
+  <string name="state_paused_network_unavailable">بارگیری به دلیل عدم اتصال به شبکه متوقف شد</string>
+  <string name="state_paused_network_setup_failure">بارگیری متوقف شد. وب‌سایتی را در موتور جست‌وجوی اینترنت بیازمایید.</string>
+  <string name="state_paused_by_request">بارگیری متوقف شد.</string>
+  <string name="state_paused_wifi_unavailable">بارگیری به دلیل عدم اتصال به اینترنت متوقف شد.</string>
+  <string name="state_paused_wifi_disabled">بارگیری به دلیل قطع وای فای متوقف شد</string>
+  <string name="state_paused_roaming">بارگیری به دلیل جابه جایی مخابراتی متوقف شد.</string>
+  <string name="state_paused_sdcard_unavailable">بارگیری به دلیل عدم دسترسی به حافظه خارجی متوقف شد.</string>
+  <string name="state_failed_unlicensed">بارگیری به دلیل این که احتمالا اپلیکیشن را نخریده‌اید، ابطال شد.</string>
+  <string name="state_failed_fetching_url">بارگیری به دلیل یافت نشدن منابع ابطال شد.</string>
+  <string name="state_failed_sdcard_full">بارگیری به دلیل پر بودن حافظه خارجی ابطال شد.</string>
+  <string name="state_failed_cancelled">بارگیری ابطال شد.</string>
+  <string name="state_failed">بارگیری ناموفق بود.</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">زمان باقی مانده %1$s</string>
+  <string name="time_remaining_notification">%1$s باقی مانده</string>
+  <string name="add_clips_before_narrating">قبل از افزودن گفتار متن، چند کلیپ اضافه کنید.</string>
+  <string name="add_clips_before_reordering">قبل از تغییر چینش، تعدادی کلیپ اضافه کنید.</string>
+  <string name="add_clips_generic">ابتدا کلیپ را اضافه کنید</string>
   <string name="title_section3">بخش 3</string>
   <string name="title_section2">بخش 2</string>
   <string name="title_section1">بخش 1</string>
-  <string name="title_activity_test_drag">تست درگ</string>
+  <string name="title_activity_test_drag">آزمایش کشیدن</string>
   <!--Screen title before and during recording-->
   <!--Screen title after recording-->
   <!--Screen title while playing back a recording-->
   <!--Label shown during recording-->
-  <string name="recording">در حال ضبط</string>
+  <string name="recording">ضبط</string>
   <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
-  <string name="recording_stopped">ضبط متوقف شده است</string>
+  <string name="recording_stopped">ضبط متوقف شد.</string>
   <!--label shown when there is not enough space to record something-->
-  <string name="storage_is_full">ظرفیت پر شده است</string>
+  <string name="storage_is_full">حافظه پر است.</string>
   <!--label shown when the recording has reached maximum allowed file size-->
-  <string name="max_length_reached">حداکثر زمان ضبط</string>
+  <string name="max_length_reached">رسیدن به حداکثر طول موجود</string>
   <!--label shown when there is no sd card available to record to-->
-  <string name="insert_sd_card">کارت SD را وارد کنید</string>
+  <string name="insert_sd_card"> اس دی کارت لازم است.</string>
   <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
   <!--label shown when there is less than 1 minute of space left to record-->
   <!--button to accept the current recording and return it to the caller-->
   <!--button to discard the current recording and return to the caller-->
   <!--acknowlegement button in a number of dialogs-->
-  <string name="button_ok">OK</string>
+  <string name="button_ok">تایید</string>
   <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
   <!--label shown before the user has recorded anything-->
   <!--the name under which recordings will be visible in the media database is formatted like this-->
   <!--all recordings will show up in the media database with this 'artist' name-->
-  <string name="audio_db_artist_name">ضبط های شما</string>
+  <string name="audio_db_artist_name">محتوای ضبط شده شما</string>
   <!--all recordings will show up in the media database with this 'album' name-->
-  <string name="audio_db_album_name">صداهای ضبط‌ شده</string>
+  <string name="audio_db_album_name">محتوای ضبط شده صوتی</string>
   <!--all recordings will show up in the media database in a playlist with this name-->
-  <string name="audio_db_playlist_name">فایل‌های من</string>
+  <string name="audio_db_playlist_name">محتوای ضبط شده من</string>
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
-  <string name="error_sdcard_access">عدم امکان دسترسی به مخزن ذخیره داخلی یا خارجی</string>
+  <string name="error_sdcard_access">ناتوان در دسترسی به مخزن خارجی یا داخلی</string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
-  <string name="error_app_internal">خطا در اپلیکیشن داخلی</string>
+  <string name="error_app_internal">خطا در درخواست داخلی</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
-  <string name="error_mediadb_new_record">ضبط صدا امکان‌پذیر نیست</string>
+  <string name="error_mediadb_new_record"> ذخیره صداهای ضبط شده ممکن نیست.</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
-  <string name="error_storage_space" formatted="false">اوخ اوخ، حافظه تمام شد. لطفا چیزی در حدود %.2f%nMBخالی کنید و مجددا امتحان کنید!</string>
+  <string name="error_storage_space" formatted="false">متاسفانه فضای کافی موجود نیست.لطفا حدود %.2f%nMB فضای خالی فراهم کرده و دوباره سعی کنید.</string>
   <!--add for libra begin-->
-  <string name="default_record_name">فایل بی نام</string>
-  <string name="menu_view_record_list">نمایش فهرست فایل‌های ضبط‌ شده</string>
-  <string name="menu_setting">تنظیم‌ها </string>
-  <string name="delete_dialog_title">آیا می‌خواهید فایل فعلی را پاک کنید؟</string>
-  <string name="overwrite_dialog_title">% موجود است. آیا می‌خواهید روی آن ضبط کنید؟ </string>
-  <string name="preferences_title">تنظیم‌ها </string>
-  <string name="pref_title_record_type">نوع فایل ضبط شده</string>
-  <string name="prefDialogTitle_recordType">لطفا نوع فایل را انتخاب کنید</string>
-  <string name="prefDefault_recordType">audio/3gpp</string>
+  <string name="default_record_name">ضبط بدون عنوان</string>
+  <string name="menu_view_record_list">لیست موارد ضبط شده را ببینید</string>
+  <string name="menu_setting">تنظیمات</string>
+  <string name="delete_dialog_title">آیا می خواهید فایل ضبط شده کنونی را حذف کنید؟</string>
+  <string name="overwrite_dialog_title">%s فضای خالی موجود است. آیا می‌خواهید متن را بازنویسی کنید؟</string>
+  <string name="preferences_title">تنظیمات</string>
+  <string name="pref_title_record_type">ذخیره نوع فایل</string>
+  <string name="prefDialogTitle_recordType">لطفا نوع فایل را انتخاب کنید.</string>
+  <string name="prefDefault_recordType">/3gpp صوتی</string>
   <string name="pref_title_enable_high_quality">فعال‌سازی کیفیت بالا</string>
-  <string name="pref_summary_enable_high_quality">فایل صوتی با کیفیت بالا می‌تواند بزرگتر باشد</string>
-  <string name="pref_title_enable_sound_effect">فعال‌سازی جلوه‌های صوتی</string>
-  <string name="pref_summary_enable_sound_effect">پخش جلوه صوتی در صورت تغییر حالت</string>
-  <string name="notification_recording">در حال ضبط...</string>
-  <string name="notification_stopped">ضبط متوقف شده</string>
-  <string name="notification_warning">ظرفیت کم (کمتر از % دقیقه) </string>
-  <string name="sd_card_not_available">کارت SD موجود نیست</string>
-  <string name="open_file_explorer">باز کردن جستجو گر فایل ها</string>
-  <string name="alert_message_delete_record">آیا می خواهید فایل انتخاب شده را پاک کنید؟</string>
-  <string name="order">ترتیب</string>
+  <string name="pref_summary_enable_high_quality">فایل صوتی با کیفیت بالا می‌تواند بزرگ‌تر باشد.</string>
+  <string name="pref_title_enable_sound_effect">فعال سازی افکت‌های صوتی</string>
+  <string name="pref_summary_enable_sound_effect">نمایش افکت‌های صوت وقتی که کیفیت تغییر کرده است</string>
+  <string name="notification_recording">در حال ضبط</string>
+  <string name="notification_stopped">ضبط متوقف شد.</string>
+  <string name="notification_warning">خافظ ناکافی ( کم‌تر از %d دقیقه)</string>
+  <string name="sd_card_not_available">اس دی کارت در دسترس نیست.</string>
+  <string name="open_file_explorer">جست‌جوگر فایل را باز کنید.</string>
+  <string name="alert_message_delete_record">آیا می‌خواهید فایل ضبط شده کنونی را حذف کنید؟</string>
+  <string name="recording_narration">ضبط گفتار متن</string>
+  <string name="could_not_start_narration">گفتار متن قابل شروع شدن نیست!</string>
+  <string name="jumble">نامرتب</string>
+  <string name="order">نظم</string>
+  <string name="narrate">گفتار</string>
   <string name="publish">انتشار</string>
-  <string name="cancel">انصراف</string>
+  <string name="total">مجموع</string>
+  <string name="cancel">لغو</string>
+  <string name="trim_clip">برش کلیپ</string>
+  <string name="narration">گویندگی</string>
+  <string name="this_story_has_no_clips_to_publish">این گزارش هیچ کلیپی برای انتشار ندارد!</string>
   <!--add for libra end-->
 </resources>
