@@ -27,5 +27,18 @@
         "patchFileVersion": "3",
         "patchFileSize": "58383",
         "patchFileChecksum": "4ec3e7db852daf11f7cf74872bb73178c4b0e41e6e91efb566e7ea0c21af2674"
+    },
+    {
+        "expansionId": "persian",
+        "patchOrder": "3",
+        "title": "Persian Content",
+        "packageName": "org.storymaker.app",
+        "description": "Lesson Pack for Iranian Diaspora",
+        "thumbnailPath": "images/content_packs/persianpack_cover.jpg",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "3",
+        "expansionFileSize": "277900933",
+        "expansionFileChecksum": "261d8df6d88e1bf490504d2ce7ef1a4306337343154673c80ef016666f5b2615"
     }
 ]

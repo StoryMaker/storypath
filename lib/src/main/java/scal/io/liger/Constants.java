@@ -85,7 +85,7 @@ public class Constants {
     public static final String MAIN_CHECKSUM = "foo";
     public static final String PATCH_CHECKSUM = "foo";
 
-    public static final int AVAILABLE_INDEX_VERSION = 1;
+    public static final int AVAILABLE_INDEX_VERSION = 2;
 
     public final static String TOR_PROXY_HOST = "localhost";
     public final static int TOR_PROXY_PORT = 8118;
