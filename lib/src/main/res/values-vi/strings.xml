@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Thiết đặt</string>
+  <string name="lbl_level">Tầng:</string>
+  <string name="lbl_time">Thời gian:</string>
+  <string name="lbl_continue">Tiếp tục</string>
+  <string name="lbl_next">Tiếp</string>
+  <string name="lbl_congrats_or">--- hoặc ---</string>
+  <string name="cliptype_character">Nhân vật</string>
+  <string name="cliptype_action">Hành động</string>
+  <string name="cliptype_result">Kết quả</string>
+  <string name="cliptype_place">Địa điểm</string>
+  <string name="cliptype_signature">Chữ ký</string>
+  <string name="choose_medium">Chọn Phương Tiện</string>
+  <string name="lbl_video">Video</string>
+  <string name="lbl_audio">Âm Thanh</string>
+  <string name="lbl_photo">Hình Ảnh</string>
+  <string name="lbl_record">Thâu Clip</string>
+  <string name="lbl_order_media_desc">Bây giờ xắp xếp các clip theo thứ tự để trình bày các phần mở đầu, giữa và kết thúc cho rõ ràng.</string>
+  <string name="lbl_card_tap">Nhấn để chọn clip khác</string>
+  <string name="lbl_import">Nhập</string>
+  <string name="lbl_capture">Thâu</string>
+  <string name="menu_done">Xong</string>
+  <string name="clip_order">Thứ tự clip</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">BẮT ĐẦU THÂU</string>
+  <string name="dialog_done">XONG</string>
+  <string name="dialog_pause">TẠM DỪNG</string>
+  <string name="dialog_resume">TIẾP TỤC</string>
+  <string name="dialog_stop">NGỪNG THÂU</string>
+  <string name="dialog_redo">LÀM LẠI</string>
+  <string name="edit_card">Sửa Thẻ</string>
+  <string name="change_goal">Đổi Mục Tiêu</string>
+  <string name="duplicate_card">Sao lại Thẻ</string>
+  <string name="duplicate_clip">Sao lại Clip</string>
+  <string name="remove_card">Xóa Thẻ</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Tải xuống xong</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Tải xuống thất bại</string>
+  <string name="state_unknown">Bắt đầu...\"</string>
+  <string name="state_idle">Chờ tải xuống</string>
+  <string name="state_fetching_url">Tìm tài nguyên để tải xuống</string>
+  <string name="state_connecting">Kết nối vào máy chủ tải xuống</string>
+  <string name="state_downloading">Tải xuống tài nguyên</string>
+  <string name="state_completed">Tải xuống kết thúc</string>
+  <string name="state_paused_network_unavailable">Tải xuống tạm dừng vì không nối mạng được</string>
+  <string name="state_paused_network_setup_failure">Tải xuống tạm dừng. Thử vào một trang mạng bằng trình duyệt</string>
+  <string name="state_paused_by_request">Tải xuống tạm dừng</string>
+  <string name="state_paused_wifi_unavailable">Tải xuống tạm dừng vì không có wifi</string>
+  <string name="state_paused_wifi_disabled">Tải xuống tạm dừng vì wifi bị tắt</string>
+  <string name="state_paused_roaming">Tải xuống tạm dừng vì bạn đang chuyển vùng dữ liệu (roaming)</string>
+  <string name="state_paused_sdcard_unavailable">Tải xuống tạm dừng vì chỗ chứa bên ngoài không có</string>
+  <string name="state_failed_unlicensed">Tải xuống thất bại vì bạn chưa mua ứng dụng này</string>
+  <string name="state_failed_fetching_url">Tải xuống thất bại vì không tìm thấy tài nguyên </string>
+  <string name="state_failed_sdcard_full">Tải xuống thất bại vì chỗ chứa bên ngoài đã đầy</string>
+  <string name="state_failed_cancelled">Tải xuống bị hủy</string>
+  <string name="state_failed">Tải xuống thất bại</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Thời gian còn lại: %1$s</string>
+  <string name="time_remaining_notification">còn lại %1$s</string>
+  <string name="add_clips_before_narrating">Thêm vài clip trước khi thêm phần tường thuật</string>
+  <string name="add_clips_before_reordering">Thêm clip trước khi thay đổi thứ tự của chúng</string>
+  <string name="add_clips_generic">Thêm clips trước</string>
+  <string name="title_section3">Đoạn 3</string>
+  <string name="title_section2">Đoạn 2</string>
+  <string name="title_section1">Đoạn 1</string>
+  <string name="title_activity_test_drag">TestDrag</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Đang thâu</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Ngừng thâu</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Chỗ chứa đã đầy</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Đã đụng độ dài tối đa </string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Cần có thẻ nhớ SD</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Băng thâu của bạn</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Băng ghi âm</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Băng thâu của tôi</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Không thể đọc được chỗ chứa trong hay ngoài</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Có lỗi nội bộ của ứng dụng </string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Không thể lưu trữ âm thanh đã thâu</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Ối chao, hết chỗ rồi. Xin vui lòng tìm thêm %.2f%nMB rồi thử lại!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">Băng thâu chưa đặt tên</string>
+  <string name="menu_view_record_list">Xem danh sách băng thâu</string>
+  <string name="menu_setting">Thiết đặt</string>
+  <string name="delete_dialog_title">Bạn có muốn xóa băng thâu hiện thời?</string>
+  <string name="overwrite_dialog_title">%s đã có. Bạn có muốn chép chồng lên nó?</string>
+  <string name="preferences_title">Thiết đặt</string>
+  <string name="pref_title_record_type">Dạng tập tin của băng thâu</string>
+  <string name="prefDialogTitle_recordType">Xin chọn dạng tập tin</string>
+  <string name="prefDefault_recordType">âm thanh/3gpp</string>
+  <string name="pref_title_enable_high_quality">Bật mở chất lượng cao</string>
+  <string name="pref_summary_enable_high_quality">Tập tin âm thanh với chất lượng cao có thể rất lớn</string>
+  <string name="pref_title_enable_sound_effect">Bật mở hiệu ứng âm thanh</string>
+  <string name="pref_summary_enable_sound_effect">Phát ra hiệu ứng âm thanh khi tình trạng có đổi </string>
+  <string name="notification_recording">Đang thâu...</string>
+  <string name="notification_stopped">Ngừng thâu</string>
+  <string name="notification_warning">Chỗ chứa gần hết (ít hơn %d phút)...</string>
+  <string name="sd_card_not_available">Thẻ nhớ SD không có</string>
+  <string name="open_file_explorer">Mở trình quản lý tập tin</string>
+  <string name="alert_message_delete_record">Bạn có muốn xóa băng thâu được chọn?</string>
+  <string name="recording_narration">Thâu Lời Tường Thuật</string>
+  <string name="could_not_start_narration">Không bắt đầu lời tường thuật được!</string>
+  <string name="jumble">Xáo trộn</string>
+  <string name="order">Thứ tự</string>
+  <string name="narrate">Tường thuật</string>
+  <string name="publish">Xuất bản</string>
+  <string name="total">Tổng cộng</string>
+  <string name="cancel">Hủy</string>
+  <string name="trim_clip">Cắt xén Clip</string>
+  <string name="narration">Tường thuật</string>
+  <string name="this_story_has_no_clips_to_publish">Bản tin này không có clip nào để phát hành!</string>
+  <!--add for libra end-->
+</resources>
