@@ -79,20 +79,18 @@ public class Constants {
     public static @interface ObbType{}
 
     public static final int MAIN_VERSION = 1031;
-    public static final int PATCH_VERSION = 1020;
+    public static final int PATCH_VERSION = 1044; // FIXME move these obb constants into a .json file so I can autogenerate it easily from the content scripts
     public static final int MAIN_SIZE = 356561;
-    public static final int PATCH_SIZE = -1;
-    public static final String MAIN_CHECKSUM = "foo";
-    public static final String PATCH_CHECKSUM = "foo";
+    public static final int PATCH_SIZE = 263464;
+    public static final String MAIN_CHECKSUM = "4248a1dd806071d9fa837c6c7cd25be07d1d76aacef9d4801ec42e37c9c9c6c3";
+    public static final String PATCH_CHECKSUM = "1114d9db9c1dded087bd8ced87ed86c34528fb62d069f26638d5ac2f23320623";
 
     public static final int AVAILABLE_INDEX_VERSION = 2;
 
-    public final static String TOR_PROXY_HOST = "localhost";
+    public final static String TOR_PROXY_HOST = "localhost"; // FIMXE these Orbot host/ports should be pulled from Netcipher instead of hard coded
     public final static int TOR_PROXY_PORT = 8118;
 
     public static final String EXTRA_STORY_TITLE = "story_title";
     public static final String EXTRA_EXPORT_CLIPS = "export_clips";
     public static final String EXTRA_EXPORT_AUDIOCLIPS = "export_audioclips";
-
-    public final static String DEFAULT_AUDIO_SAMPLE_RATE = "22050";  // FIXME probe if a better audio rate is supported on this device
 }

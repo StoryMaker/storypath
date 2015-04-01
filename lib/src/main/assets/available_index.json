@@ -10,7 +10,10 @@
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
         "expansionFileSize": "71601968",
-        "expansionFileChecksum": "79f20d44faa2df0b415825144df10e9a7c6add813057bcbb74af80271fe2802f"
+        "expansionFileChecksum": "79f20d44faa2df0b415825144df10e9a7c6add813057bcbb74af80271fe2802f",
+        "patchFileVersion": "2",
+        "patchFileSize": "2043242",
+        "patchFileChecksum": "31f08240b6e26c2cb724bb0e54c1a9bf36865769b0d7b9d9687a47486177f32a"
     },
     {
         "expansionId": "burundi",
@@ -24,9 +27,9 @@
         "expansionFileVersion": "2",
         "expansionFileSize": "264119980",
         "expansionFileChecksum": "b8beb87e077ca0b47036b15ff6d028b56cedc22772127efb484d1701c0e71421",
-        "patchFileVersion": "3",
-        "patchFileSize": "58383",
-        "patchFileChecksum": "4ec3e7db852daf11f7cf74872bb73178c4b0e41e6e91efb566e7ea0c21af2674"
+        "patchFileVersion": "4",
+        "patchFileSize": "712102",
+        "patchFileChecksum": "9c30fcb4b45f68c36bc3328f7cdb67246a03e1b172551ca90c29a2d829e8104a"
     },
     {
         "expansionId": "persian",
@@ -37,8 +40,8 @@
         "thumbnailPath": "images/content_packs/persianpack_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "3",
-        "expansionFileSize": "277900933",
-        "expansionFileChecksum": "261d8df6d88e1bf490504d2ce7ef1a4306337343154673c80ef016666f5b2615"
+        "expansionFileVersion": "4",
+        "expansionFileSize": "278078561",
+        "expansionFileChecksum": "0dd165a155a15b69299430f19478dc90e10ac5f9e84ad28701a64fe0dbcd69e0"
     }
 ]
