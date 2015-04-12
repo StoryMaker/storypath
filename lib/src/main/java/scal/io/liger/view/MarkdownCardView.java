@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class MarkdownCardView implements DisplayableCard {
         }
         */
 
+        tvText.setLinksClickable(true);
+        tvText.setMovementMethod(LinkMovementMethod.getInstance());
         Spanned htmlSpanned = Html.fromHtml(html, new Html.ImageGetter() {
             @Override
             public Drawable getDrawable(final String source) {
