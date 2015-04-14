@@ -22,6 +22,7 @@ import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.Dependency;
 import scal.io.liger.model.MediaFile;
+import scal.io.liger.model.PublishProfile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
 import scal.io.liger.model.VideoCaptureTypeCard;
@@ -75,6 +76,64 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         if (tempElement != null) {
             String currentStoryPathFile = tempElement.getAsString();
             spl.setCurrentStoryPathFile(currentStoryPathFile);
+        }
+
+        tempElement = jObj.get("publishProfile");
+        if (tempElement != null) {
+            JsonObject ppObj = tempElement.getAsJsonObject();
+            PublishProfile publishProfile = new PublishProfile();
+
+            if (ppObj.has("title")) {
+                publishProfile.setTitle(ppObj.get("title").getAsString());
+            }
+
+            if (ppObj.has("titlePrefix")) {
+                publishProfile.setTitlePrefix(ppObj.get("titlePrefix").getAsString());
+            }
+
+            if (ppObj.has("titlePostfix")) {
+                publishProfile.setTitlePostfix(ppObj.get("titlePostfix").getAsString());
+            }
+
+            if (ppObj.has("description")) {
+                publishProfile.setDescription(ppObj.get("description").getAsString());
+            }
+
+            if (ppObj.has("descriptionPrefix")) {
+                publishProfile.setDescriptionPrefix(ppObj.get("descriptionPrefix").getAsString());
+            }
+
+            if (ppObj.has("descriptionPostfix")) {
+                publishProfile.setDescriptionPostfix(ppObj.get("descriptionPostfix").getAsString());
+            }
+
+            if (ppObj.has("tags")) {
+                JsonArray jArr = ppObj.get("tags").getAsJsonArray();
+                ArrayList<String> tags = new ArrayList<String>();
+                for (int i = 0; i < jArr.size(); i++) {
+                    tags.add(i, jArr.get(i).getAsString());
+                }
+                publishProfile.setTags(tags);
+            }
+
+            if (ppObj.has("uploadSiteKeys")) {
+                JsonArray jArr = ppObj.get("uploadSiteKeys").getAsJsonArray();
+                ArrayList<String> uploadSiteKeys = new ArrayList<String>();
+                for (int i = 0; i < jArr.size(); i++) {
+                    uploadSiteKeys.add(i, jArr.get(i).getAsString());
+                }
+                publishProfile.setUploadSiteKeys(uploadSiteKeys);
+            }
+
+            if (ppObj.has("publishSiteKeys")) {
+                JsonArray jArr = ppObj.get("publishSiteKeys").getAsJsonArray();
+                ArrayList<String> publishSiteKeys = new ArrayList<String>();
+                for (int i = 0; i < jArr.size(); i++) {
+                    publishSiteKeys.add(i, jArr.get(i).getAsString());
+                }
+                publishProfile.setPublishSiteKeys(publishSiteKeys);
+            }
+            spl.setPublishProfile(publishProfile);
         }
 
         // additional metadata for publishing

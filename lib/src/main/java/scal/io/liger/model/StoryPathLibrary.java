@@ -50,6 +50,8 @@ public class StoryPathLibrary extends StoryPath {
     @Expose private String metaLocation;
     @Expose private ArrayList<String> metaTags;
 
+    @Expose PublishProfile publishProfile;
+
     /**
      * User preferences set by MainActivity. Delivered to MainActivity via Intent extras
      * from liger library client.
@@ -99,6 +101,14 @@ public class StoryPathLibrary extends StoryPath {
 
         // SEEMS LIKE A REASONABLE TIME TO SAVE
         save(true);
+    }
+
+    public PublishProfile getPublishProfile() {
+        return publishProfile;
+    }
+
+    public void setPublishProfile(PublishProfile publishProfile) {
+        this.publishProfile = publishProfile;
     }
 
     public void setStoryPathLibraryListener(StoryPathLibraryListener listener) {

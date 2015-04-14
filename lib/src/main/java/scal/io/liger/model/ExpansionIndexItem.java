@@ -28,7 +28,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     // optional
     String author;
     String website;
-    String date;
+    //String date; // FIXME remove this as its unclear waht its for.  we should probably have dateCreated and dateInstalled or dateDownloaded or something to show when it hit this phone
     ArrayList<String> languages;
     ArrayList<String> tags;
     HashMap<String, String> extras;
@@ -152,13 +152,13 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         this.website = website;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(String date) {
+//        this.date = date;
+//    }
 
     public ArrayList<String> getLanguages() {
         return languages;

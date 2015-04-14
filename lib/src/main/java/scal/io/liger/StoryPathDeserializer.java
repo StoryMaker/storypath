@@ -10,9 +10,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import scal.io.liger.model.Card;
 import scal.io.liger.model.Dependency;
+import scal.io.liger.model.PublishProfile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.VideoCaptureTypeCard;
 
@@ -47,40 +49,40 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
         spm.setTitle(title);
         spm.setClassPackage(class_package);
 
-        JsonElement tempObj = null;
+        JsonElement tempElement = null;
 
-        tempObj = jObj.get("fileLocation");
-        if (tempObj != null) {
+        tempElement = jObj.get("fileLocation");
+        if (tempElement != null) {
             String fileLocation = jObj.get("fileLocation").getAsString();
             spm.setFileLocation(fileLocation);
         }
 
-        tempObj = jObj.get("savedFileName");
-        if (tempObj != null) {
+        tempElement = jObj.get("savedFileName");
+        if (tempElement != null) {
             String savedFileName = jObj.get("savedFileName").getAsString();
             spm.setSavedFileName(savedFileName);
         }
 
-        tempObj = jObj.get("storyPathLibraryFile");
-        if (tempObj != null) {
+        tempElement = jObj.get("storyPathLibraryFile");
+        if (tempElement != null) {
             String storyPathLibraryFile = jObj.get("storyPathLibraryFile").getAsString();
             spm.setStoryPathLibraryFile(storyPathLibraryFile);
         }
 
-        tempObj = jObj.get("language");
-        if (tempObj != null) {
+        tempElement = jObj.get("language");
+        if (tempElement != null) {
             String language = jObj.get("language").getAsString();
             spm.setLanguage(language);
         }
 
-        tempObj = jObj.get("version");
-        if (tempObj != null) {
+        tempElement = jObj.get("version");
+        if (tempElement != null) {
             int version = jObj.get("version").getAsInt();
             spm.setVersion(version);
         }
 
-        tempObj = jObj.get("templatePath");
-        if (tempObj != null) {
+        tempElement = jObj.get("templatePath");
+        if (tempElement != null) {
             String templatePath = jObj.get("templatePath").getAsString();
             spm.setTemplatePath(templatePath);
         }
