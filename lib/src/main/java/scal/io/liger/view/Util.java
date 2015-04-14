@@ -54,6 +54,10 @@ public class Util {
             Intent i = new Intent();
             i.setAction(Constants.ACTION_PUBLISH);
             i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
+            i.putExtra(Constants.EXTRA_STORY_INSTANCE_PATH, storyPath.getStoryPathLibraryFile());
+//            i.putExtra(Constants.EXTRA_REQUIRED_UPLOAD_TARGETS, storyPath.getRequiredUploadTargets());
+//            i.putExtra(Constants.EXTRA_REQUIRED_PUBLISH_TARGETS, storyPath.getRequiredPublishTargets());
+//            i.putExtra(Constants.EXTRA_REQUIRED_TAGS, storyPath.getRequiredTags());
             i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
             if (exportAudioClipsMetadata != null) {
                 i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_AUDIOCLIPS, exportAudioClipsMetadata);

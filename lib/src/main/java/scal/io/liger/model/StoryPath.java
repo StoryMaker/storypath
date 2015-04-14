@@ -54,6 +54,10 @@ public class StoryPath {
     @Expose protected int version;
     @Expose protected String templatePath;
 
+//    @Expose protected ArrayList<String> requiredUploadTargets; // if defined, this story can only upload to this target and we skip the selection ui
+//    @Expose protected ArrayList<String> requiredPublishTargets; // if defined, this story can only pulish to this target and we skip the selection ui
+//    @Expose protected ArrayList<String> requiredTags; // if defined, these tags will be prepended to the story's tags
+
     // this is used by the JsonHelper class to load json assets
     // if there is an alternate way to load them, this should be removed
     // also must be cleared before serializing story path

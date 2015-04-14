@@ -91,6 +91,10 @@ public class Constants {
     public final static int TOR_PROXY_PORT = 8118;
 
     public static final String EXTRA_STORY_TITLE = "story_title";
+    public static final String EXTRA_STORY_INSTANCE_PATH = "story_instance_path";
     public static final String EXTRA_EXPORT_CLIPS = "export_clips";
     public static final String EXTRA_EXPORT_AUDIOCLIPS = "export_audioclips";
+    public static final String EXTRA_REQUIRED_UPLOAD_TARGETS = "extra_required_upload_targets";
+    public static final String EXTRA_REQUIRED_PUBLISH_TARGETS = "extra_required_publish_targets";
+    public static final String EXTRA_REQUIRED_TAGS = "extra_required_tags";
 }
