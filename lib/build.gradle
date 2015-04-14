@@ -42,4 +42,5 @@ dependencies {
     compile project(':android-iconify')
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
+    compile project(':external:cacheword:cachewordlib')
 }

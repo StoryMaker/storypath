@@ -34,7 +34,7 @@ import scal.io.liger.model.StoryPathLibrary;
 import scal.io.liger.view.ScrollLockRecyclerView;
 
 
-public class MainActivity extends Activity implements StoryPathLibrary.StoryPathLibraryListener{
+public class MainActivity extends LockableActivity implements StoryPathLibrary.StoryPathLibraryListener{
     private static final String TAG = "MainActivity";
 
     public static final String INTENT_KEY_WINDOW_TITLE = "window_title";
