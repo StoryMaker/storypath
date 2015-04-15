@@ -113,7 +113,7 @@ public class ZipHelper {
             }
         }
 
-        Log.e("DIRECTORIES", + mainOrPatch + " " + version + " NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
+        Log.e("DIRECTORIES", mainOrPatch + " " + version + " NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
         return null;
     }
 
