@@ -53,8 +53,8 @@
         "thumbnailPath": "images/content_packs/ijf15_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "3",
-        "expansionFileSize": "43554",
-        "expansionFileChecksum": "5c9f2436a2112f78ba9006945168cf4efb197d780352fa18c11834c4441df38e"
+        "expansionFileVersion": "4",
+        "expansionFileSize": "18909",
+        "expansionFileChecksum": "228eab1b920aab08b02059adddf993128889329dc565634b224619019c03d11d"
     }
 ]
