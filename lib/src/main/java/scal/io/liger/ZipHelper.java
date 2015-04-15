@@ -96,7 +96,7 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + getExpansionZipFilename(ctx, mainOrPatch, version));
                 if (checkFile.exists()) {
-                    // Log.d("DIRECTORIES", "FOUND OBB IN OBB DIRECTORY: " + checkFile.getPath());
+                    Log.d("DIRECTORIES", "FOUND " + mainOrPatch + " " + version + " IN OBB DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
@@ -107,13 +107,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + getExpansionZipFilename(ctx, mainOrPatch, version));
                 if (checkFile.exists()) {
-                    // Log.d("DIRECTORIES", "FOUND OBB IN FILES DIRECTORY: " + checkFile.getPath());
+                    Log.d("DIRECTORIES", "FOUND " + mainOrPatch + " " + version + " IN FILES DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        // Log.e("DIRECTORIES", "FILE NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
+        Log.e("DIRECTORIES", + mainOrPatch + " " + version + " NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
         return null;
     }
 
@@ -131,13 +131,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + fileName);
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND OBB IN DIRECTORY: " + checkFile.getPath());
+                    Log.d("DIRECTORIES", "FOUND " + fileName + " IN DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        Log.e("DIRECTORIES", "FILE NOT FOUND");
+        Log.e("DIRECTORIES", fileName + " NOT FOUND");
         return null;
     }
 
@@ -154,13 +154,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + fileName);
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND OBB IN DIRECTORY: " + checkFile.getPath());
+                    Log.d("DIRECTORIES", "FOUND " + fileName + " IN DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        Log.e("DIRECTORIES", "FILE NOT FOUND");
+        Log.e("DIRECTORIES", fileName + " NOT FOUND");
         return null;
     }
 
