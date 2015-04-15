@@ -188,9 +188,18 @@ public class ZipHelper {
         if (language != null) {
             // just in case, check whether country code has already been inserted
             if (path.lastIndexOf("-" + language + path.substring(path.lastIndexOf("."))) < 0) {
-                localizedFilePath = path.substring(0, path.lastIndexOf(".")) + "-" + language + path.substring(path.lastIndexOf("."));
+                // if not already appended, don't bother to append -en
+                if (!"en".equals(language)) {
+                    localizedFilePath = path.substring(0, path.lastIndexOf(".")) + "-" + language + path.substring(path.lastIndexOf("."));
+                    Log.d("LANGUAGE", "getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
+                } else {
+                    Log.d("LANGUAGE", "getFileInputStream() - TRYING PATH: " + localizedFilePath);
+                }
+            } else {
+                Log.d("LANGUAGE", "getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
             }
-            Log.d("LANGUAGE", "getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
+        } else {
+            Log.d("LANGUAGE", "getFileInputStream() - TRYING PATH: " + localizedFilePath);
         }
 
         InputStream fileStream = getFileInputStream(localizedFilePath, context);
@@ -262,7 +271,14 @@ public class ZipHelper {
     private static  ArrayList<String> getExpansionPaths(Context context) {
         if (expansionPaths == null) {
             expansionPaths = new ArrayList<>();
-            expansionPaths.add(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+
+            File mainFile = new File(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
+            if (mainFile.exists() && (mainFile.length() > 0)) {
+                expansionPaths.add(mainFile.getPath());
+            } else {
+                Log.e("ZIP", mainFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
+            }
+
             if (Constants.PATCH_VERSION > 0) {
 
                 // if the main file is newer than the patch file, do not apply a patch file
@@ -270,7 +286,13 @@ public class ZipHelper {
                     Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
                 } else {
                     Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
-                    expansionPaths.add(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+
+                    File patchFile = new File(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
+                    if (patchFile.exists() && (patchFile.length() > 0)) {
+                        expansionPaths.add(patchFile.getPath());
+                    }else {
+                        Log.e("ZIP", patchFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
+                    }
                 }
 
             }
@@ -296,7 +318,7 @@ public class ZipHelper {
 
                     // should be able to do this locally
                     // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
-                    if (checkFile.exists()) {
+                    if (checkFile.exists() && (checkFile.length() > 0)) {
                         Log.d("ZIP", "EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
                         expansionPaths.add(checkFile.getPath());
 
@@ -311,15 +333,15 @@ public class ZipHelper {
 
                             // should be able to do this locally
                             // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
-                            if (checkFile.exists()) {
+                            if (checkFile.exists() && (checkFile.length() > 0)) {
                                 Log.d("ZIP", "EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
                                 expansionPaths.add(checkFile.getPath());
                             } else {
-                                Log.e("ZIP", "EXPANSION FILE " + patchName + " NOT FOUND, CANNOT ADD TO ZIP");
+                                Log.e("ZIP", checkFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
                             }
                         }
                     } else {
-                        Log.e("ZIP", "EXPANSION FILE " + fileName + " NOT FOUND, CANNOT ADD TO ZIP");
+                        Log.e("ZIP", checkFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
                     }
                 }
             }
