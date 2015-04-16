@@ -238,9 +238,11 @@ public class IndexManager {
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
 
         for (ExpansionIndexItem item : indexList) {
-            // construct name (index by main file names)
-            String fileName = buildFileName(item, Constants.MAIN);
-            indexMap.put(fileName, item);
+            // construct names (index by main and patch file names)
+            String mainName = buildFileName(item, Constants.MAIN);
+            indexMap.put(mainName, item);
+            String patchName = buildFileName(item, Constants.MAIN);
+            indexMap.put(patchName, item);
         }
 
         return indexMap;

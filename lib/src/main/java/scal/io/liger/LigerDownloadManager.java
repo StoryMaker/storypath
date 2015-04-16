@@ -560,6 +560,7 @@ public class LigerDownloadManager implements Runnable {
                             .setContentTitle(mAppTitle + " content download")
                             .setContentText(fileName)
                             .setSmallIcon(android.R.drawable.arrow_down_float)
+                            .setWhen(startTime.getTime())
                             .build();
                     nManager.notify(nTag, nId, nProgress);
 
@@ -847,6 +848,9 @@ public class LigerDownloadManager implements Runnable {
             Log.e("DOWNLOAD", "ERROR DURING CLEANUP/MOVING TEMP FILE: " + ioe.getMessage());
             return false;
         }
+
+        // download finished, must clear ZipHelper cache
+        ZipHelper.clearCache();
 
         return true;
     }

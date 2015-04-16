@@ -111,13 +111,15 @@ public class DownloadHelper {
     }
 
     // return extra digits for greater precision in notification
-    public static int getDownloadPercent(Context context) {
-        float percentFloat = getDownloadProgress(context);
+    public static int getDownloadPercent(Context context, String fileName) {
+        float percentFloat = getDownloadProgress(context, fileName);
         int percentInt = (int) (percentFloat * 1000);
         return percentInt;
     }
 
-    public static float getDownloadProgress(Context context) {
+    public static float getDownloadProgress(Context context, String fileName) {
+
+        //Log.d("DOWNLOAD", "CHECKING PROGRESS FOR " + fileName);
 
         long totalExpectedSize = 0;
         long totalCurrentSize = 0;
@@ -127,30 +129,59 @@ public class DownloadHelper {
 
         // also currently omitting .part files...
 
-        HashMap<String, ExpansionIndexItem> contentPacksMap = IndexManager.loadInstalledIdIndex(context);
+        HashMap<String, ExpansionIndexItem> contentPacksMap = IndexManager.loadInstalledFileIndex(context);
 
-        for (ExpansionIndexItem contentPack : contentPacksMap.values()) {
-            File contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN));
+        ExpansionIndexItem contentPack = contentPacksMap.get(fileName);
 
-            if (contentPack.getExpansionFileSize() == 0) {
+        if(contentPack != null) {
+            File contentPackFile = null;
+
+            if (fileName.contains(Constants.MAIN)) {
+                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN));
+            } else if (fileName.contains(Constants.PATCH)) {
+                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH));
+            } else {
+                //Log.e("DOWNLOAD", "CAN'T DETERMINE IF " + fileName + " IS A MAIN OR PATCH FILE");
+                sizeUndefined = true;
+            }
+
+            if ((contentPackFile == null) || (contentPack.getExpansionFileSize() == 0)) {
                 // no size defined, can't evaluate
+                //Log.e("DOWNLOAD", "NO FILE SIZE FOUND FOR " + fileName);
                 sizeUndefined = true;
             } else {
-                totalExpectedSize = totalExpectedSize + contentPack.getExpansionFileSize();
+                if (fileName.contains(Constants.MAIN)) {
+                    totalExpectedSize = totalExpectedSize + contentPack.getExpansionFileSize();
+                } else if (fileName.contains(Constants.PATCH)) {
+                    totalExpectedSize = totalExpectedSize + contentPack.getPatchFileSize();
+                } else {
+                    //Log.e("DOWNLOAD", "CAN'T DETERMINE IF " + fileName + " IS A MAIN OR PATCH FILE");
+                    sizeUndefined = true;
+                }
 
                 if (!contentPackFile.exists()) {
                     // actual file doesn't exist, check for temp file
-                    contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN) + ".tmp");
+                    File contentPackFileTemp = new File(contentPackFile.getPath() + ".tmp");
 
-                    if (!contentPackFile.exists()) {
+                    if (!contentPackFileTemp.exists()) {
                         // still no file, add nothing to current size
                     } else {
-                        totalCurrentSize = totalCurrentSize + contentPackFile.length();
+                        totalCurrentSize = totalCurrentSize + contentPackFileTemp.length();
+                    }
+
+                    // also check for partial file
+                    File contentPackFilePart = new File(contentPackFile.getPath() + ".part");
+
+                    if (!contentPackFilePart.exists()) {
+                        // still no file, add nothing to current size
+                    } else {
+                        totalCurrentSize = totalCurrentSize + contentPackFilePart.length();
                     }
                 } else {
                     totalCurrentSize = totalCurrentSize + contentPackFile.length();
                 }
 
+                /*
                 if (!IndexManager.buildFileName(contentPack, Constants.PATCH).equals(IndexManager.noPatchFile)) {
                     contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH));
 
@@ -174,7 +205,12 @@ public class DownloadHelper {
                         }
                     }
                 }
+                */
             }
+        } else {
+            // no file information found, can't evaluate
+            //Log.e("DOWNLOAD", "NO METADATA FOUND FOR " + fileName);
+            sizeUndefined = true;
         }
 
         if (sizeUndefined) {
@@ -623,6 +659,9 @@ public class DownloadHelper {
 
             expansionDownloadThread.start();
 
+            // downloading a new content pack file, must clear ZipHelper cache
+            ZipHelper.clearCache();
+
             fileStateOk = false;
         }
 
@@ -693,6 +732,9 @@ public class DownloadHelper {
                     Toast.makeText(context, "Starting download of expansion file patch.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                     expansionDownloadThread.start();
+
+                    // downloading a new content pack patch, must clear ZipHelper cache
+                    ZipHelper.clearCache();
 
                     fileStateOk = false;
                 }
