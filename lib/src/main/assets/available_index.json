@@ -1,6 +1,6 @@
 [
     {
-        "expansionId": "learning_guide",
+        "expansionId": "learning_test",
         "patchOrder": "1",
         "title": "Learning Guide",
         "packageName": "org.storymaker.app",
@@ -9,10 +9,10 @@
         "expansionFileVersion": "1",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileSize": "71601968",
+        "expansionFileSize": "943048",
         "expansionFileChecksum": "79f20d44faa2df0b415825144df10e9a7c6add813057bcbb74af80271fe2802f",
         "patchFileVersion": "2",
-        "patchFileSize": "2043242",
+        "patchFileSize": "1204629",
         "patchFileChecksum": "31f08240b6e26c2cb724bb0e54c1a9bf36865769b0d7b9d9687a47486177f32a"
     },
     {
