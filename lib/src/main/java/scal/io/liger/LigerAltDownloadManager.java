@@ -212,11 +212,11 @@ public class LigerAltDownloadManager implements Runnable {
 
         //for (Long queueId : queueMap.keySet()) {
 
-            //Log.d("QUEUE", "QUEUE ITEM IS " + queueMap.get(queueId).getQueueFile() + " LOOKING FOR " + checkFile.getName());
+        //Log.d("QUEUE", "QUEUE ITEM IS " + queueMap.get(queueId).getQueueFile() + " LOOKING FOR " + checkFile.getName());
 
-            //if (checkFile.getName().equals(queueMap.get(queueId).getQueueFile())) {
+        //if (checkFile.getName().equals(queueMap.get(queueId).getQueueFile())) {
 
-                Long queueId = QueueManager.checkQueue(context, checkFile);
+        Long queueId = QueueManager.checkQueue(context, checkFile);
 
         if (queueId == null) {
 
@@ -225,80 +225,80 @@ public class LigerAltDownloadManager implements Runnable {
 
         } else if (queueId == QueueManager.DUPLICATE_QUERY) {
 
-                    // not exactly in queue, but someone is already looking for this item, so avoid collision
+            // not exactly in queue, but someone is already looking for this item, so avoid collision
+            foundInQueue = true;
+
+        } else if (queueId < 0) {
+            // use negative numbers to flag non-manager downloads
+
+            if (checkFileProgress()) {
+
+                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD PROGRESS OBSERVED, LEAVING " + queueId.toString() + " IN QUEUE ");
+                foundInQueue = true;
+
+            } else {
+
+                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NO DOWNLOAD PROGRESS OBSERVED, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+            }
+
+        } else {
+            // use download manager ids to flag manager downloads
+
+            // need to init download manager to check queue
+            initDownloadManager();
+
+            DownloadManager.Query query = new DownloadManager.Query();
+            query.setFilterById(queueId.longValue());
+            Cursor c = dManager.query(query);
+            if (c.moveToFirst()) {
+
+                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
+
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+                } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
+
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
                     foundInQueue = true;
 
-                } else if (queueId < 0) {
-                    // use negative numbers to flag non-manager downloads
+                } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
 
-                    if (checkFileProgress()) {
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                    foundInQueue = true;
 
-                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD PROGRESS OBSERVED, LEAVING " + queueId.toString() + " IN QUEUE ");
-                        foundInQueue = true;
+                } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
 
-                    } else {
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                    foundInQueue = true;
 
-                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NO DOWNLOAD PROGRESS OBSERVED, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                    }
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                 } else {
-                    // use download manager ids to flag manager downloads
 
-                    // need to init download manager to check queue
-                    initDownloadManager();
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
-                    DownloadManager.Query query = new DownloadManager.Query();
-                    query.setFilterById(queueId.longValue());
-                    Cursor c = dManager.query(query);
-                    if (c.moveToFirst()) {
-
-                        int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
-                        if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
-
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                            QueueManager.removeFromQueue(context, Long.valueOf(queueId));
-
-                        } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
-
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
-                            foundInQueue = true;
-
-                        } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
-
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
-                            foundInQueue = true;
-
-                        } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
-
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
-                            foundInQueue = true;
-
-                        } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
-
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                            QueueManager.removeFromQueue(context, Long.valueOf(queueId));
-
-                        } else {
-
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                            QueueManager.removeFromQueue(context, Long.valueOf(queueId));
-
-                        }
-                    } else {
-
-                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
-
-                    }
-
-                    // cleanup
-                    c.close();
                 }
-            //}
+            } else {
 
-            // skipping timeout check for now, timeout duration undecided
+                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+            }
+
+            // cleanup
+            c.close();
+        }
+        //}
+
+        // skipping timeout check for now, timeout duration undecided
 
             /*
             if (foundInQueue) {
@@ -624,7 +624,7 @@ public class LigerAltDownloadManager implements Runnable {
                     while ((i = responseInput.read(buf)) > 0) {
 
                         // create status bar notification
-                        int nPercent = DownloadHelper.getDownloadPercent(context);
+                        int nPercent = DownloadHelper.getDownloadPercent(context, fileName);
 
                         if (oldPercent == nPercent) {
                             // need to cut back on notification traffic
@@ -635,6 +635,7 @@ public class LigerAltDownloadManager implements Runnable {
                                     .setContentText(fileName + " - " + (nPercent / 10.0) + "%")
                                     .setSmallIcon(android.R.drawable.arrow_down_float)
                                     .setProgress(100, (nPercent / 10), false)
+                                    .setWhen(startTime.getTime())
                                     .build();
                             nManager.notify(nTag, nId, nProgress);
                         }
@@ -908,7 +909,7 @@ public class LigerAltDownloadManager implements Runnable {
                     Log.e("DOWNLOAD", "APPENDED FILE " + appendedFile.getPath() + " IS STILL TOO SMALL: " + Long.toString(appendedFile.length()) + "/" + Long.toString(fileSize));
                     return false;
                 } else {
-                    Log.e("DOWNLOAD", "APPENDED FILE " + appendedFile.getPath() + " IS COMPLETE!");
+                    Log.d("DOWNLOAD", "APPENDED FILE " + appendedFile.getPath() + " IS COMPLETE!");
                 }
             } else {
                 Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " AND FILE LOOKS OK");
@@ -955,6 +956,9 @@ public class LigerAltDownloadManager implements Runnable {
             Log.e("DOWNLOAD", "ERROR DURING CLEANUP/MOVING TEMP FILE: " + ioe.getMessage());
             return false;
         }
+
+        // download finished, must clear ZipHelper cache
+        ZipHelper.clearCache();
 
         return true;
     }

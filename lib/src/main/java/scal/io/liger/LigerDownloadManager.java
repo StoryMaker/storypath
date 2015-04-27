@@ -169,7 +169,8 @@ public class LigerDownloadManager implements Runnable {
         if (downloadRequired) {
             File actualFile = new File(filePath, fileName);
 
-            if (actualFile.exists()) {
+            // can't check size, but can at least check for zero byte files
+            if (actualFile.exists() && (actualFile.length() > 0)) {
                 Log.d("DOWNLOAD", actualFile.getPath() + " FOUND, DO NOT DOWNLOAD AGAIN");
                 downloadRequired = false;
             }
@@ -559,6 +560,7 @@ public class LigerDownloadManager implements Runnable {
                             .setContentTitle(mAppTitle + " content download")
                             .setContentText(fileName)
                             .setSmallIcon(android.R.drawable.arrow_down_float)
+                            .setWhen(startTime.getTime())
                             .build();
                     nManager.notify(nTag, nId, nProgress);
 
@@ -846,6 +848,9 @@ public class LigerDownloadManager implements Runnable {
             Log.e("DOWNLOAD", "ERROR DURING CLEANUP/MOVING TEMP FILE: " + ioe.getMessage());
             return false;
         }
+
+        // download finished, must clear ZipHelper cache
+        ZipHelper.clearCache();
 
         return true;
     }

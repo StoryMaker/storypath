@@ -321,6 +321,10 @@ public class FileUtils {
             return uri.getPath();
         }
 
+        else {
+            return uri.getPath();
+        }
+
         return null;
     }
 

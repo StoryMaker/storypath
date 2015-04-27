@@ -697,9 +697,18 @@ public class JsonHelper {
         if (language != null) {
             // just in case, check whether country code has already been inserted
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
-                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+                // if not already appended, don't bother to append -en
+                if (!"en".equals(language)) {
+                    localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
+                } else {
+                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - PATH: " + localizedFilePath);
+                }
+            } else {
+                Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
             }
-            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+        } else {
+            Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - PATH: " + localizedFilePath);
         }
 
         return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
@@ -758,6 +767,7 @@ public class JsonHelper {
                     if (newTemplate.lastIndexOf('-') > 0) {
                         newTemplate = newTemplate.substring(0, newTemplate.lastIndexOf('-'));
                     }
+                    // FIXME: language sometimes comes in as "english" rather than "en"
                     if (!"en".equals(language)) {
                         newTemplate = newTemplate + '-' + language;
                     }
@@ -766,6 +776,8 @@ public class JsonHelper {
 
                     StoryPathLibrary newStoryPathLibrary = loadStoryPathLibraryFromZip(newTemplate, referencedFiles, context, language);
 
+                    // FIXME: method was updated to handle nulls, but we should probably find a better way to
+                    // FIXME: skip the whole localization process if the selected language isn't available
                     updateStoryPathLibraryStrings(storyPathLibrary, newStoryPathLibrary);
                     storyPathLibrary.setLanguage(language);
                     storyPathLibrary.setTemplatePath(newTemplate);
@@ -826,6 +838,12 @@ public class JsonHelper {
     }
 
     public static void updateStoryPathLibraryStrings(StoryPathLibrary storyPathLibrary, StoryPathLibrary storyPathLibraryTemplate) {
+
+        if (storyPathLibraryTemplate == null) {
+            Log.e("LANGUAGE", "TEMPLATE WAS NULL, CAN'T UPDATE STRINGS");
+            return;
+        }
+
         for (Card card : storyPathLibraryTemplate.getCards()) {
             try {
                 storyPathLibrary.getCardByIdOnly(card.getId()).copyText(card);
@@ -1011,9 +1029,17 @@ public class JsonHelper {
         if (language != null) {
         // just in case, check whether country code has already been inserted
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
-                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+                if (!"en".equals(language)) {
+                    localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
+                    Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+                } else {
+                    Log.d("LANGUAGE", "loadStoryPathFromZip() - PATH: " + localizedFilePath);
+                }
+            } else {
+                Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
             }
-            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+        } else {
+            Log.d("LANGUAGE", "loadStoryPathFromZip() - PATH: " + localizedFilePath);
         }
 
         return deserializeStoryPath(storyPathJson, localizedFilePath, storyPathLibrary, referencedFiles, context, language);
