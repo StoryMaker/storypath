@@ -16,7 +16,6 @@ public class BasicTextCard extends Card {
 
     public BasicTextCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

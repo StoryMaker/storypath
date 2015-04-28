@@ -25,7 +25,6 @@ public class ClipCard extends ExampleCard implements Cloneable {
 
     public ClipCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

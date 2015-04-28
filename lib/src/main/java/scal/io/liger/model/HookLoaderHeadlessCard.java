@@ -19,7 +19,6 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
 
     public HookLoaderHeadlessCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     public String getAction() {

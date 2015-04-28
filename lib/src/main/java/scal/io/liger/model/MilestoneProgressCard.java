@@ -25,7 +25,6 @@ public class MilestoneProgressCard extends Card {
 
     public MilestoneProgressCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     // NEW - SHOULD THESE BE SERIALIZED?

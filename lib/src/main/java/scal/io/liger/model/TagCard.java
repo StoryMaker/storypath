@@ -16,7 +16,6 @@ public class TagCard extends Card {
 
     public TagCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

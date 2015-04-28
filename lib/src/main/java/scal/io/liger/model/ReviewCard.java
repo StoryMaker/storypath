@@ -22,7 +22,6 @@ public class ReviewCard extends GenericCard {
 
     public ReviewCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     /**
