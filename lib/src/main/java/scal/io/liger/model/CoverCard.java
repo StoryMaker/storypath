@@ -18,7 +18,6 @@ public class CoverCard extends Card {
 
     public CoverCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

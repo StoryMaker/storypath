@@ -22,7 +22,6 @@ public class TipCard extends MarkdownCard {
 
     public TipCard() {
         super();
-        this.type = this.getClass().getName();
         this.random = new Random();
     }
 

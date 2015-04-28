@@ -25,7 +25,6 @@ public class PreviewCard extends Card {
 
     public PreviewCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     // NEW - SHOULD THESE BE SERIALIZED?

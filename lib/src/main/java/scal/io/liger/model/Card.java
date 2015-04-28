@@ -453,9 +453,10 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
             // NOTE : This requires all children of Card to have a no-arg constructor
             Card clone = getClass().getDeclaredConstructor().newInstance();
             // TODO : How to assign a new unique id for this card?
-            clone.id = this.id; // Strings are immutable
+            clone.id = this.id; // Strings are immutable // FIXME id needs to be unique!!
             clone.title = this.title;
             clone.storyPath = this.storyPath; // do not copy
+            clone.setType(this.getType());
             if (this.references != null) clone.references = (ArrayList<String>) this.references.clone();
             if (this.values != null) clone.values = (HashMap<String, String>) this.values.clone();
             return clone;

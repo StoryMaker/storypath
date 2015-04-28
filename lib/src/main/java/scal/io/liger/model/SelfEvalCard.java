@@ -22,7 +22,6 @@ public class SelfEvalCard extends Card {
 
     public SelfEvalCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

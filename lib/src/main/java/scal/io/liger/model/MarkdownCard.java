@@ -16,7 +16,6 @@ public class MarkdownCard extends Card {
 
     public MarkdownCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

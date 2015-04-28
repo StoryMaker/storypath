@@ -17,7 +17,6 @@ public class EditTextCard extends Card {
 
     public EditTextCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

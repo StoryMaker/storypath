@@ -16,7 +16,6 @@ public class PublishButtonCard extends Card {
 
     public PublishButtonCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

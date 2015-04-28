@@ -17,7 +17,6 @@ public class LinkCard extends Card {
 
     public LinkCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override
