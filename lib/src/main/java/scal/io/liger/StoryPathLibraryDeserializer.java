@@ -41,7 +41,8 @@ import scal.io.liger.model.VideoCaptureTypeCard;
  *
  * System.out.println("TEST: " + gson.toJson(spm));
  */
-public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathLibrary>{
+public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathLibrary> {
+    private static final String TAG = "StoryPathLibraryDeseria";
 
     @Override
     public StoryPathLibrary deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -253,13 +254,20 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
                 JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                String cardType = class_package + "." + arrObj.get("type").getAsString();
+                String cardType = arrObj.get("type").getAsString();
+                String fqCardType;
+                if (cardType.contains(".")) {
+                    Log.d(TAG, "StoryPathLibrary JSON contains fully qualitfied card type: " + cardType);
+                    fqCardType = cardType;
+                } else {
+                    fqCardType = class_package + "." + cardType;
+                }
                 try {
-                    Class cardClass = Class.forName(cardType);
+                    Class cardClass = Class.forName(fqCardType);
                     Card card = (Card)(gson.fromJson(arrObj, cardClass));
                     spl.addCard(card);
                 } catch (ClassNotFoundException e) {
-                    System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + cardType);
+                    System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + fqCardType);
                     errorFlag = true;
                 }
             }
