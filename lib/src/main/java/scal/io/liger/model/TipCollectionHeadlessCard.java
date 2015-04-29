@@ -19,7 +19,6 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
 
     public TipCollectionHeadlessCard(ArrayList<Tip> tips) {
         super();
-        this.type = this.getClass().getName();
         this.tips = tips;
     }
 
@@ -60,7 +59,6 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
 
     public TipCollectionHeadlessCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

@@ -21,7 +21,6 @@ public class ExampleCard extends Card implements Cloneable {
 
     public ExampleCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override
@@ -69,7 +68,6 @@ public class ExampleCard extends Card implements Cloneable {
         clone.medium = this.medium;
         clone.exampleMediaPath = this.exampleMediaPath;
         if (this.exampleMediaFile != null) clone.exampleMediaFile = (ExampleMediaFile) this.exampleMediaFile.clone();
-        clone.type = this.getClass().getName();
 
         return clone;
     }

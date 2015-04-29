@@ -16,7 +16,6 @@ public class HowToCard extends Card {
 
     public HowToCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

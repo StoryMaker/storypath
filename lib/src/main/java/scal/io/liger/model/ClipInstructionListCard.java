@@ -23,7 +23,6 @@ public class ClipInstructionListCard extends Card {
 
     public ClipInstructionListCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

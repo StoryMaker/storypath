@@ -18,7 +18,6 @@ public abstract class HeadlessCard extends Card {
 
     public HeadlessCard() {
         super();
-//        this.type = this.getClass().getName();
     }
 
     @Override

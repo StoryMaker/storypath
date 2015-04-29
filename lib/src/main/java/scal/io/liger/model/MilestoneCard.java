@@ -19,7 +19,6 @@ public class MilestoneCard extends Card {
 
     public MilestoneCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override
