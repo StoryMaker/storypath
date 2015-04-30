@@ -43,18 +43,5 @@
         "expansionFileVersion": "4",
         "expansionFileSize": "278078561",
         "expansionFileChecksum": "0dd165a155a15b69299430f19478dc90e10ac5f9e84ad28701a64fe0dbcd69e0"
-    },
-    {
-        "expansionId": "ijf15",
-        "patchOrder": "4",
-        "title": "What surprised you at IJF15?",
-        "packageName": "org.storymaker.app",
-        "description": "Share your experience with the StoryMaker community.",
-        "thumbnailPath": "images/content_packs/ijf15_cover.jpg",
-        "expansionFilePath": "Android/data/org.storymaker.app/files/",
-        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "4",
-        "expansionFileSize": "18909",
-        "expansionFileChecksum": "228eab1b920aab08b02059adddf993128889329dc565634b224619019c03d11d"
     }
 ]

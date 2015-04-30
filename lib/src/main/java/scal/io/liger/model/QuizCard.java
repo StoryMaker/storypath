@@ -30,7 +30,6 @@ public class QuizCard extends Card {
 
     public QuizCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

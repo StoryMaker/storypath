@@ -16,7 +16,6 @@ public class ButtonCard extends Card {
 
     public ButtonCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

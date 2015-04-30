@@ -21,7 +21,6 @@ public class VideoCaptureTypeCard extends Card {
 
     public VideoCaptureTypeCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

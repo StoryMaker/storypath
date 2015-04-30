@@ -19,6 +19,7 @@ import scal.io.liger.model.ExpansionIndexItem;
  */
 public class DownloadHelper {
 
+    private static final String TAG = "DownloadHelper";
     private static final Object waitObj = new Object();
 
     public static boolean checkAllFiles(Context context) {
@@ -318,27 +319,42 @@ public class DownloadHelper {
         ExpansionIndexItem tempIndexItem = null;
         boolean updateFlag = false;
 
+        // loop through installed items to see if we need to update any of them
         for (String id : installedIndex.keySet()) {
 
             ExpansionIndexItem installedItem = installedIndex.get(id);
             ExpansionIndexItem availableItem = availableIndex.get(id);
 
-            tempIndexItem = updateItem(context, installedItem, availableItem); // DO STUFF
-
-            // build list and update index once
-            if (tempIndexItem == null) {
-                if (!checkAndDownload(context, installedItem)) {
-                    contentPacksOk = false;
-                }
-
-                updatedIndex.put(installedItem.getExpansionId(), installedItem);
-            } else {
-                if (!checkAndDownload(context, tempIndexItem)) {
-                    contentPacksOk = false;
-                }
-
-                updatedIndex.put(tempIndexItem.getExpansionId(), tempIndexItem);
+            // if availableItem is null, this was likely removed from the available index and we should purge it from the installed and remove the obb file
+            if (availableItem == null) {
+                Log.d(TAG, "item removed from availabe index. deleting obb file and removing from isntalled index");
                 updateFlag = true;
+                String absPath = IndexManager.buildFileAbsolutePath(installedItem, Constants.MAIN);
+                new File(absPath).delete();
+
+                absPath = IndexManager.buildFileAbsolutePath(installedItem, Constants.PATCH);
+                File file = new File(absPath);
+                if (file.exists()) {
+                    file.delete();
+                }
+            } else {
+                tempIndexItem = updateItem(context, installedItem, availableItem); // DO STUFF
+
+                // build list and update index once
+                if (tempIndexItem == null) {
+                    if (!checkAndDownload(context, installedItem)) {
+                        contentPacksOk = false;
+                    }
+
+                    updatedIndex.put(installedItem.getExpansionId(), installedItem);
+                } else {
+                    if (!checkAndDownload(context, tempIndexItem)) {
+                        contentPacksOk = false;
+                    }
+
+                    updatedIndex.put(tempIndexItem.getExpansionId(), tempIndexItem);
+                    updateFlag = true;
+                }
             }
         }
 

@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -32,7 +34,8 @@ import scal.io.liger.model.VideoCaptureTypeCard;
  *
  * System.out.println("TEST: " + gson.toJson(spm));
  */
-public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
+public class StoryPathDeserializer implements JsonDeserializer<StoryPath> {
+    private static final String TAG = "StoryPathDeserializer";
 
     @Override
     public StoryPath deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -107,13 +110,20 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath>{
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
                 JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                String cardType = class_package + "." + arrObj.get("type").getAsString();
+                String cardType = arrObj.get("type").getAsString();
+                String fqCardType;
+                if (cardType.contains(".")) {
+                    Log.d(TAG, "StoryPath JSON contains fully qualitfied card type: " + cardType);
+                    fqCardType = cardType;
+                } else {
+                    fqCardType = class_package + "." + cardType;
+                }
                 try {
-                    Class cardClass = Class.forName(cardType);
+                    Class cardClass = Class.forName(fqCardType);
                     Card card = (Card)(gson.fromJson(arrObj, cardClass));
                     spm.addCard(card);
                 } catch (ClassNotFoundException e) {
-                    System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + cardType);
+                    System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + fqCardType);
                     errorFlag = true;
                 }
             }

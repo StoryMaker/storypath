@@ -23,7 +23,6 @@ public class IntroCard extends Card {
 
     public IntroCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

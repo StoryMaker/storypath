@@ -22,7 +22,6 @@ public class QuizReportCard extends Card {
 
     public QuizReportCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override

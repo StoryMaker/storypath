@@ -26,7 +26,6 @@ public class OrderMediaCard extends Card {
 
     public OrderMediaCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     // NEW - SHOULD THESE BE SERIALIZED?

@@ -24,7 +24,6 @@ public class GenericCard extends Card {
 
     public GenericCard() {
         super();
-        this.type = this.getClass().getName();
     }
 
     @Override
