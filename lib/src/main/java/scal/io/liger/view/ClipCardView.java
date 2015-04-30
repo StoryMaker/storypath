@@ -942,7 +942,6 @@ public class ClipCardView extends ExampleCardView {
                 } else if (itemId == R.id.menu_remove_card) {
 
                 }
-                Toast.makeText(mContext, "Selected " + (String) item.getTitleCondensed(), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
