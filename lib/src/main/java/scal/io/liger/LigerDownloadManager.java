@@ -140,11 +140,14 @@ public class LigerDownloadManager implements Runnable {
         } else {
             Log.d("DOWNLOAD", "NO OTHER PROCESS IS DOWNLOADING " + fileName + ", CHECKING FOR FILES");
 
+            // force subsequent file check
+            downloadRequired = true;
+
             File tempFile = new File(filePath, fileName + ".tmp");
 
             if (tempFile.exists()) {
 
-                // TODO - can't support partial files until file size is known
+                // TODO - not supporting partial files at this time due to small file size (<1MB)
 
                 File actualFile = new File(filePath, fileName);
 
@@ -156,11 +159,9 @@ public class LigerDownloadManager implements Runnable {
                     Log.e("DOWNLOAD", "FAILED TO MOVE TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
                     ioe.printStackTrace();
                     FileUtils.deleteQuietly(tempFile); // cleanup
-                    downloadRequired = true;
                 }
             } else {
                 Log.d("DOWNLOAD", tempFile.getPath() + " DOES NOT EXIST");
-                downloadRequired = true;
             }
         }
 
@@ -169,10 +170,21 @@ public class LigerDownloadManager implements Runnable {
         if (downloadRequired) {
             File actualFile = new File(filePath, fileName);
 
-            // can't check size, but can at least check for zero byte files
+            // if file exists, check file size
             if (actualFile.exists() && (actualFile.length() > 0)) {
-                Log.d("DOWNLOAD", actualFile.getPath() + " FOUND, DO NOT DOWNLOAD AGAIN");
-                downloadRequired = false;
+
+                if ((Constants.MAIN.equals(mainOrPatch)) && (Constants.MAIN_SIZE > 0) && (Constants.MAIN_SIZE > actualFile.length())) {
+                    Log.e("DOWNLOAD", actualFile.getPath() + " FOUND, BUT IS TOO SMALL (" + actualFile.length() + "/" + Constants.MAIN_SIZE + ")");
+                    // delete incomplete/corrupt file
+                    FileUtils.deleteQuietly(actualFile);
+                } else if ((Constants.PATCH.equals(mainOrPatch)) && (Constants.PATCH_SIZE > 0) && (Constants.PATCH_SIZE > actualFile.length())) {
+                    Log.e("DOWNLOAD", actualFile.getPath() + " FOUND, BUT IS TOO SMALL (" + actualFile.length() + "/" + Constants.PATCH_SIZE + ")");
+                    // delete incomplete/corrupt file
+                    FileUtils.deleteQuietly(actualFile);
+                } else {
+                    Log.d("DOWNLOAD", actualFile.getPath() + " FOUND, DO NOT DOWNLOAD AGAIN");
+                    downloadRequired = false;
+                }
             }
         }
 
