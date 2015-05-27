@@ -233,25 +233,27 @@ public class MediaHelper {
                             case Constants.PHOTO:
 
                                 InputStream thumbStream = ZipHelper.getFileInputStreamForExpansionAndPath(targetExpansion,
-                                                                                                          relativeExpansionPath,
-                                                                                                          context);
-                                Bitmap newThumbBitmap = decodeSampledBitmapFromInputStream(thumbStream,
-                                                                                           DEFAULT_THUMB_WIDTH,
-                                                                                           DEFAULT_THUMB_HEIGHT);
+                                        relativeExpansionPath,
+                                        context);
+                                if (thumbStream != null) {
+                                    Bitmap newThumbBitmap = decodeSampledBitmapFromInputStream(thumbStream,
+                                            DEFAULT_THUMB_WIDTH,
+                                            DEFAULT_THUMB_HEIGHT);
 
-                                if (newThumbBitmap == null) {
-                                    Log.e(TAG, "Unable to generate thumbnail for " + relativeExpansionPath);
-                                    return null;
-                                }
+                                    if (newThumbBitmap == null) {
+                                        Log.e(TAG, "Unable to generate thumbnail for " + relativeExpansionPath);
+                                        return null;
+                                    }
 
-                                FileOutputStream fos = null;
-                                try {
-                                    fos = new FileOutputStream(thumbFile);
-                                    newThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos);
-                                    fos.close();
-                                    return thumbFile;
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    FileOutputStream fos = null;
+                                    try {
+                                        fos = new FileOutputStream(thumbFile);
+                                        newThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos);
+                                        fos.close();
+                                        return thumbFile;
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 break;
                         }
