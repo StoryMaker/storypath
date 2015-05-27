@@ -50,7 +50,7 @@
         "title": "Beta Content",
         "packageName": "org.storymaker.app",
         "description": "Beta Content Pack for Testing",
-        "thumbnailPath": "images/content_packs/beta_cover.jpg",
+        "thumbnailPath": "images/content_packs/beta_cover.png",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
         "expansionFileVersion": "1",
