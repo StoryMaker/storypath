@@ -61,7 +61,8 @@ public class IntroCard extends Card {
         }
 
         if (exampleMediaFile == null) {
-            exampleMediaFile = new ExampleMediaFile(storyPath.buildZipPath(exampleMediaPath), "photo");
+            String zipPath = storyPath.buildZipPath(exampleMediaPath);
+            exampleMediaFile = new ExampleMediaFile(zipPath, "photo");
         }
 
         return exampleMediaFile;
