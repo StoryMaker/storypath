@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -555,6 +556,7 @@ public class ClipCardView extends ExampleCardView {
         final ClipMetadata selectedClip = mCardModel.getSelectedClip();
         final AtomicInteger clipDurationMs = new AtomicInteger();
         final AtomicInteger clipMediaDurationMs = new AtomicInteger();
+        final AtomicInteger lastPlaybackPosition = new AtomicInteger(); // Set when trim set begins. This let's us reset the player to the playback position it was at before trimming started
 
         /** Values modified by RangeBar listener. Used by Dialog trim listener to
          *  set final trim selections on ClipMetadata */
@@ -581,6 +583,63 @@ public class ClipCardView extends ExampleCardView {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { /* ignored */}
+        });
+
+        // Seek MediaPlayer when playbackBar dragged
+        playbackBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    boolean rightToLeft = false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+                            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                        rightToLeft = true;
+                    }
+
+                    int seekPointMs = getMsFromRangeBarIndex(progress,
+                            tickCount,
+                            clipMediaDurationMs.get(),
+                            rightToLeft);
+
+                    Log.d(TAG, "Seeking to " + seekPointMs);
+                    player.seekTo(getMsFromRangeBarIndex(progress,
+                                           tickCount,
+                                           clipMediaDurationMs.get(),
+                                           rightToLeft));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // unused
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // unused
+            }
+        });
+
+        // Save / Restore MediaPlayer position before / after trim adjustment
+        // This is necessary because we must seek the MediaPlayer position during trim adjustment
+        // in order to preview the seek position.
+        rangeBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        lastPlaybackPosition.set(player.getCurrentPosition());
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+
+                        player.seekTo(lastPlaybackPosition.get());
+                        break;
+                }
+                return false;
+            }
         });
 
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
@@ -616,7 +675,7 @@ public class ClipCardView extends ExampleCardView {
                                                            tickCount,
                                                            clipMediaDurationMs.get(),
                                                            rightToLeft));
-
+                    //Log.d(TAG, String.format("Seeking start to %d / %d ms from %d / %d", clipStartMs.get(), clipMediaDurationMs.get(), startIdx, tickCount));
                     player.seekTo(clipStartMs.get());
                     clipStart.setText(Util.makeTimeString(clipStartMs.get()));
                     //Log.i(TAG, String.format("Start seek to %d ms", clipStartMs.get()));
@@ -630,6 +689,7 @@ public class ClipCardView extends ExampleCardView {
                                                           clipMediaDurationMs.get(),
                                                           rightToLeft));
 
+                    //Log.d(TAG, String.format("Seeking end to %d / %d ms from %d / %d", clipStopMs.get(), clipMediaDurationMs.get(), endIdx, tickCount));
                     player.seekTo(clipStopMs.get());
                     clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
 
@@ -651,7 +711,10 @@ public class ClipCardView extends ExampleCardView {
                 if (player.isPlaying()) {
                     player.pause();
                 } else {
-                    player.seekTo(clipStartMs.get());
+                    // Begin playback from beginning of clip only if the player
+                    // is very near the end of the current clip
+                    if (clipStopMs.get() - player.getCurrentPosition() < 50)
+                        player.seekTo(clipStartMs.get());
                     player.start();
                 }
             }
