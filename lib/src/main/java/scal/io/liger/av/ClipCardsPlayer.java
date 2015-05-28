@@ -628,6 +628,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private void _pausePlayback() {
         if (!changeUiState(PlayerState.READY)) return;
 
+        mTextureView.setKeepScreenOn(false);
+
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.pause();
         }
@@ -649,6 +651,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     private void _resumePlayback() {
         if (!changeUiState(PlayerState.PLAYING)) return;
+
+        mTextureView.setKeepScreenOn(true);
 
         if (!mCurrentlyPlayingCard.getMedium().equals(Constants.PHOTO) &&
             mMainPlayer != null &&
@@ -672,6 +676,8 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     protected void _stopPlayback() {
         if (!changeUiState(PlayerState.READY)) return;
+
+        mTextureView.setKeepScreenOn(false);
 
         if (mMainPlayer != null && mMainPlayer.isPlaying()) {
             mMainPlayer.stop();

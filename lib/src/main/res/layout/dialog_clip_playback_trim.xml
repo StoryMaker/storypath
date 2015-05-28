@@ -76,6 +76,7 @@
         android:layout_below="@id/clipStart"
         android:thumb="@drawable/ic_seek"
         android:enabled="false"
+        android:focusable="false"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:progressDrawable="@android:color/transparent"
