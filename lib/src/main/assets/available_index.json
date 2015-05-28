@@ -46,7 +46,7 @@
     },
     {
         "expansionId": "beta",
-        "patchOrder": "3",
+        "patchOrder": "4",
         "title": "Beta Content",
         "packageName": "org.storymaker.app",
         "description": "Beta Content Pack for Testing",
