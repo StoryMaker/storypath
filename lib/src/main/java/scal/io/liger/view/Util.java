@@ -41,11 +41,11 @@ public class Util {
      * @return a String of form "MM:SS:MS" from a raw ms value
      */
     public static String makeTimeString(long timeMs) {
-        long millisecond = timeMs % 1000;
+        long millisecond = (timeMs % 1000) / 10;
         long second = (timeMs / 1000) % 60;
         long minute = (timeMs / (1000 * 60)) % 60;
 
-        return String.format("%02d:%02d:%02d", minute, second, millisecond);
+        return String.format("%02d:%02d;%02d", minute, second, millisecond);
     }
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
