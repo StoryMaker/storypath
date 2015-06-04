@@ -74,10 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/clipStart"
-        android:thumb="@drawable/ic_seek"
+        android:thumb="@drawable/ic_playback_marker"
         android:enabled="false"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:progressDrawable="@android:color/transparent"
         android:max="@integer/trim_bar_tick_count" />
 
@@ -87,11 +85,12 @@
         custom:tickCount="@integer/trim_bar_tick_count"
         custom:tickHeight="0dp"
         custom:connectingLineColor="@color/storymaker_highlight"
-        custom:thumbImageNormal="@drawable/scrubber_control_normal_holo"
-        custom:thumbImagePressed="@drawable/scrubber_control_pressed_holo"
+        custom:thumbImageNormal="@drawable/ic_scrubber_control_pressed"
+        custom:thumbImagePressed="@drawable/ic_scrubber_control_pressed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/clipStart"/>
+        android:layout_below="@id/clipStart"
+        android:layout_marginTop="25dp"/>
 
     <!--
     <com.efor18.rangeseekbar.RangeSeekBar

@@ -43,5 +43,18 @@
         "expansionFileVersion": "4",
         "expansionFileSize": "278078561",
         "expansionFileChecksum": "0dd165a155a15b69299430f19478dc90e10ac5f9e84ad28701a64fe0dbcd69e0"
+    },
+    {
+        "expansionId": "beta",
+        "patchOrder": "4",
+        "title": "Beta Content",
+        "packageName": "org.storymaker.app",
+        "description": "Beta Content Pack for Testing",
+        "thumbnailPath": "images/content_packs/beta_cover.png",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "3",
+        "expansionFileSize": "1808405",
+        "expansionFileChecksum": "f0d21d4e6feb2dabdc15e9b98405f1fb6924b636a5a162e4dc80516c906e3504"
     }
 ]

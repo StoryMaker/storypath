@@ -456,12 +456,18 @@ public class DownloadHelper {
         File expansionFile = new File(filePath + fileName);
 
         if (expansionFile.exists()) {
-            // file exists, check size/hash (TODO: actual size/hash check)
+            // file exists, check size/hash (TODO: hash check)
 
             if (expansionFile.length() == 0) {
                 Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " IS A ZERO BYTE FILE ");
                 mainFileOk = false;
             }
+
+            if ((Constants.MAIN_SIZE > 0) && (Constants.MAIN_SIZE > expansionFile.length())) {
+                Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " IS TOO SMALL (" + expansionFile.length() + "/" + Constants.MAIN_SIZE + ")");
+                mainFileOk = false;
+            }
+
         } else {
             // file does not exist, flag for downloading
 
@@ -516,12 +522,18 @@ public class DownloadHelper {
                 expansionFile = new File(filePath + patchName);
 
                 if (expansionFile.exists()) {
-                    // file exists, check size/hash (TODO: actual size/hash check)
+                    // file exists, check size/hash (TODO: hash check)
 
                     if (expansionFile.length() == 0) {
                         Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " IS A ZERO BYTE FILE ");
                         patchFileOk = false;
                     }
+
+                    if ((Constants.PATCH_SIZE > 0) && (Constants.PATCH_SIZE > expansionFile.length())) {
+                        Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + fileName + " IS TOO SMALL (" + expansionFile.length() + "/" + Constants.PATCH_SIZE + ")");
+                        patchFileOk = false;
+                    }
+
                 } else {
                     // file does not exist, flag for downloading
 
@@ -547,85 +559,6 @@ public class DownloadHelper {
             }
         }
 
-        /*
-        if (checkExpansionFiles(context, Constants.MAIN, Constants.MAIN_VERSION)) {
-            Log.d("DOWNLOAD", "MAIN EXPANSION FILE FOUND (NO DOWNLOAD)");
-        } else {
-            Log.d("DOWNLOAD", "MAIN EXPANSION FILE NOT FOUND (DOWNLOADING)");
-
-            final LigerDownloadManager mainDownload = new LigerDownloadManager(Constants.MAIN, Constants.MAIN_VERSION, context, true);
-            Thread mainDownloadThread = new Thread(mainDownload);
-
-            Toast.makeText(context, "Starting download of " + Constants.MAIN + " content pack...", Toast.LENGTH_LONG).show(); // FIXME move to strings
-
-            mainDownloadThread.start();
-
-            // need a better solution
-            // REVISIT QUEUE CHECK ON COMPLETION
-            try {
-                synchronized (waitObj) {
-                    Log.d("WAITING", Constants.MAIN + " " + Constants.MAIN_VERSION);
-                    waitObj.wait(5000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        */
-
-        /*
-        if (Constants.PATCH_VERSION > 0) {
-
-            // if the main file is newer than the patch file, remove the patch file rather than downloading
-            if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
-                File obbDirectory = new File(ZipHelper.getObbFolderName(context));
-                File fileDirectory = new File(ZipHelper.getFileFolderName(context));
-
-                String nameFilter = Constants.PATCH + ".*." + context.getPackageName() + ".obb";
-
-                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + obbDirectory.getPath());
-
-                WildcardFileFilter obbFileFilter = new WildcardFileFilter(nameFilter);
-                for (File obbFile : FileUtils.listFiles(obbDirectory, obbFileFilter, null)) {
-                    Log.d("DOWNLOAD", "CLEANUP: FOUND " + obbFile.getPath() + ", DELETING");
-                    FileUtils.deleteQuietly(obbFile);
-                }
-
-                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + fileDirectory.getPath());
-
-                WildcardFileFilter fileFileFilter = new WildcardFileFilter(nameFilter);
-                for (File fileFile : FileUtils.listFiles(fileDirectory, fileFileFilter, null)) {
-                    Log.d("DOWNLOAD", "CLEANUP: FOUND " + fileFile.getPath() + ", DELETING");
-                    FileUtils.deleteQuietly(fileFile);
-                }
-            } else {
-                if (checkExpansionFiles(context, Constants.PATCH, Constants.PATCH_VERSION)) {
-                    Log.d("DOWNLOAD", "PATCH EXPANSION FILE FOUND (NO DOWNLOAD)");
-                } else {
-                    Log.d("DOWNLOAD", "PATCH EXPANSION FILE NOT FOUND (DOWNLOADING)");
-
-                    final LigerDownloadManager patchDownload = new LigerDownloadManager(Constants.PATCH, Constants.PATCH_VERSION, context, true);
-                    Thread patchDownloadThread = new Thread(patchDownload);
-
-                    Toast.makeText(context, "Starting download of " + Constants.PATCH + " content pack...", Toast.LENGTH_LONG).show(); // FIXME move to strings
-
-                    patchDownloadThread.start();
-
-                    // need a better solution
-                    // REVISIT QUEUE CHECK ON COMPLETION
-                    try {
-                        synchronized (waitObj) {
-                            Log.d("WAITING", Constants.PATCH + " " + Constants.PATCH_VERSION);
-                            waitObj.wait(5000);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        */
-
         return fileStateOk;
     }
 
@@ -644,12 +577,12 @@ public class DownloadHelper {
             // file exists, check size/hash (TODO: hash check)
 
             if (expansionFile.length() == 0) {
-                Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " IS A ZERO BYTE FILE ");
+                Log.d("CHECK/DOWNLOAD", "CONTENT PACK FILE " + fileName + " IS A ZERO BYTE FILE ");
                 mainFileOk = false;
             }
 
             if ((installedItem.getExpansionFileSize() > 0) && (installedItem.getExpansionFileSize() > expansionFile.length())) {
-                Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " IS TOO SMALL (" + expansionFile.length() + "/" + installedItem.getExpansionFileSize() + ")");
+                Log.d("CHECK/DOWNLOAD", "CONTENT PACK FILE " + fileName + " IS TOO SMALL (" + expansionFile.length() + "/" + installedItem.getExpansionFileSize() + ")");
                 mainFileOk = false;
             }
 
@@ -658,15 +591,15 @@ public class DownloadHelper {
         } else {
             // file does not exist, flag for downloading
             // (download process will handle .tmp and .part files)
-            Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " DOES NOT EXIST ");
+            Log.d("CHECK/DOWNLOAD", "CONTENT PACK FILE " + fileName + " DOES NOT EXIST ");
             mainFileOk = false;
         }
 
         if (mainFileOk) {
-            Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " CHECKS OUT, NO DOWNLOAD");
+            Log.d("CHECK/DOWNLOAD", "CONTENT PACK FILE " + fileName + " CHECKS OUT, NO DOWNLOAD");
 
         } else {
-            Log.d("CHECK/DOWNLOAD", "MAIN EXPANSION FILE " + fileName + " MUST BE DOWNLOADED");
+            Log.d("CHECK/DOWNLOAD", "CONTENT PACK FILE " + fileName + " MUST BE DOWNLOADED");
 
             // Toast.makeText(context, "Starting download of " + installedItem.getExpansionId() + " content pack.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
@@ -716,12 +649,12 @@ public class DownloadHelper {
                     // file exists, check size/hash (TODO: hash check)
 
                     if (expansionFile.length() == 0) {
-                        Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " IS A ZERO BYTE FILE ");
+                        Log.d("CHECK/DOWNLOAD", "CONTENT PACK PATCH " + patchName + " IS A ZERO BYTE FILE ");
                         patchFileOk = false;
                     }
 
                     if ((installedItem.getPatchFileSize() > 0) && (installedItem.getPatchFileSize() > expansionFile.length())) {
-                        Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " IS TOO SMALL (" + expansionFile.length() + "/" + installedItem.getPatchFileSize() + ")");
+                        Log.d("CHECK/DOWNLOAD", "CONTENT PACK PATCH " + patchName + " IS TOO SMALL (" + expansionFile.length() + "/" + installedItem.getPatchFileSize() + ")");
                         patchFileOk = false;
                     }
 
@@ -731,16 +664,16 @@ public class DownloadHelper {
                 } else {
                     // file does not exist, flag for downloading
                     // (download process will handle .tmp and .part files)
-                    Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " DOES NOT EXIST ");
+                    Log.d("CHECK/DOWNLOAD", "CONTENT PACK PATCH " + patchName + " DOES NOT EXIST ");
                     patchFileOk = false;
                 }
 
                 if (patchFileOk) {
-                    Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " CHECKS OUT, NO DOWNLOAD");
+                    Log.d("CHECK/DOWNLOAD", "CONTENT PACK PATCH " + patchName + " CHECKS OUT, NO DOWNLOAD");
 
 
                 } else {
-                    Log.d("CHECK/DOWNLOAD", "EXPANSION FILE PATCH " + patchName + " MUST BE DOWNLOADED");
+                    Log.d("CHECK/DOWNLOAD", "CONTENT PACK PATCH " + patchName + " MUST BE DOWNLOADED");
 
                     final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(patchName, installedItem, context);
                     Thread expansionDownloadThread = new Thread(expansionDownload);

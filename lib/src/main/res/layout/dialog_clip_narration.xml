@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/vumeter_layout"
-        android:thumb="@drawable/scrubber_control_normal_holo"
+        android:thumb="@drawable/ic_playback_marker"
         android:enabled="false"
         android:max="@integer/trim_bar_tick_count" />
 
