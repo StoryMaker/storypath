@@ -53,8 +53,8 @@
         "thumbnailPath": "images/content_packs/beta_cover.png",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "2",
-        "expansionFileSize": "1807929",
-        "expansionFileChecksum": "2830e08c5d46b9e1321359caf408d877133aceeea7f09f2a709f885260c373dd"
+        "expansionFileVersion": "3",
+        "expansionFileSize": "1808405",
+        "expansionFileChecksum": "f0d21d4e6feb2dabdc15e9b98405f1fb6924b636a5a162e4dc80516c906e3504"
     }
 ]
