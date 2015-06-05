@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
@@ -627,7 +628,7 @@ public class ClipCardView extends ExampleCardView {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
 
                         lastPlaybackPosition.set(player.getCurrentPosition());
@@ -658,7 +659,7 @@ public class ClipCardView extends ExampleCardView {
                 boolean rightToLeft = false;
                 // Adjust for RTL layouts if necessary
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                    mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                        mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
 
                     rightToLeft = true;
                     startIdx = rightIdx;
@@ -672,9 +673,9 @@ public class ClipCardView extends ExampleCardView {
                 if (lastStartIdx != startIdx) {
                     // Start seek was adjusted, seek to it
                     clipStartMs.set(getMsFromRangeBarIndex(startIdx,
-                                                           tickCount,
-                                                           clipMediaDurationMs.get(),
-                                                           rightToLeft));
+                            tickCount,
+                            clipMediaDurationMs.get(),
+                            rightToLeft));
                     //Log.d(TAG, String.format("Seeking start to %d / %d ms from %d / %d", clipStartMs.get(), clipMediaDurationMs.get(), startIdx, tickCount));
                     player.seekTo(clipStartMs.get());
                     clipStart.setText(Util.makeTimeString(clipStartMs.get()));
@@ -685,9 +686,9 @@ public class ClipCardView extends ExampleCardView {
                 } else if (lastEndIdx != endIdx) {
                     // End seek was adjusted, seek to it
                     clipStopMs.set(getMsFromRangeBarIndex(endIdx,
-                                                          tickCount,
-                                                          clipMediaDurationMs.get(),
-                                                          rightToLeft));
+                            tickCount,
+                            clipMediaDurationMs.get(),
+                            rightToLeft));
 
                     //Log.d(TAG, String.format("Seeking end to %d / %d ms from %d / %d", clipStopMs.get(), clipMediaDurationMs.get(), endIdx, tickCount));
                     player.seekTo(clipStopMs.get());
@@ -722,6 +723,25 @@ public class ClipCardView extends ExampleCardView {
 
         videoView.setOnClickListener(playbackToggleClickListener);
         thumbnailView.setOnClickListener(playbackToggleClickListener);
+
+        // DEBUGGING : Remove after resolve clipping issue on small screens
+        thumbnailView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+
+                float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+                float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+                Toast.makeText(mContext,
+                               String.format("Display metrics: %.0f x %.0f dp", dpWidth, dpHeight),
+                               Toast.LENGTH_LONG)
+                        .show();
+
+
+                return false;
+            }
+        });
 
         videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
