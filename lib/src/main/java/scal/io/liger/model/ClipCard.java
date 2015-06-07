@@ -202,8 +202,16 @@ public class ClipCard extends ExampleCard implements Cloneable {
         clone.clipType = this.clipType; // Strings are immutable
         if (this.goals != null) clone.goals = (ArrayList<String>) this.goals.clone();
         if (this.clips != null) clone.clips = (ArrayList<ClipMetadata>) this.clips.clone();
-        clone.type = this.getClass().getName();
 
+        String uuid = UUID.randomUUID().toString();
+        String rand = uuid.substring(uuid.length() - 4, uuid.length());
+        String newId = getId() + "." + rand;
+        while (storyPath.getCardByIdOnly(newId) != null) {
+            uuid = UUID.randomUUID().toString();
+            rand = uuid.substring(uuid.length() - 4, uuid.length());
+            newId = getId() + "." + rand;
+        }
+        clone.setId(newId);
         return clone;
     }
 
