@@ -138,7 +138,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditClipPopup ecp = new EditClipPopup(context, ffcm, fccm.getStoryPath(), fccm.getSelectedClip(), fccm.getSelectedMediaFile());
+                EditClipPopup ecp = new EditClipPopup(context, fccm.getStoryPath(), fccm.getSelectedClip(), fccm.getSelectedMediaFile());
                 ecp.show();
             }
         });
