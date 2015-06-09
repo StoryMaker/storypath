@@ -49,7 +49,7 @@ public class Util {
     }
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
-        ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
+        ArrayList<FullMetadata> exportMetadata = storyPath.exportSelectedFullMetadata(); // TODO : Place in AsyncTask?
         ArrayList<AudioClipFull> exportAudioClipsMetadata = storyPath.exportAudioClips();
         if (exportMetadata.size() > 0) {
             Intent i = new Intent();
