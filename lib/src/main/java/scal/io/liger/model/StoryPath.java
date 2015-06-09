@@ -704,7 +704,7 @@ public class StoryPath {
     }
 
     /**
-     * Get a Collection of meta data for all Clips.
+     * Get a Collection of meta data for all Clips.  This filters out duplicated clips
      *
      * To retrieve the corresponding MediaFile for each ClipMetaData, see
      * {@link #loadMediaFile(String)} using the uuid found via
@@ -732,7 +732,7 @@ public class StoryPath {
     }
 
     /**
-     * Get a Collection of meta data for all Clips.
+     * Get a Collection of meta data for selected Clips.
      *
      * To retrieve the corresponding MediaFile for each ClipMetaData, see
      * {@link #loadMediaFile(String)} using the uuid found via
@@ -748,13 +748,8 @@ public class StoryPath {
             // should be safe to cast, cards fetched based on class
             ClipCard cc = (ClipCard)c;
 
-            if (cc.getClips() != null) {
-                for (ClipMetadata cmd : cc.getClips()) {
-                    if (!metadata.contains(cmd)) { // FIXME why do we do this ?  we can't havethe exact same clip twice in a row?
-                        metadata.add(cmd);
-                        break; // we only export the first clip in each clipcard, as this is the selected one
-                    }
-                }
+            if (cc.getClips() != null && cc.getClips().size() > 0) {
+                metadata.add(cc.getClips().get(0));
             }
         }
         return metadata;
