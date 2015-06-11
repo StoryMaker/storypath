@@ -201,9 +201,17 @@ public class ClipCard extends ExampleCard implements Cloneable {
         ClipCard clone = (ClipCard) super.clone();
         clone.clipType = this.clipType; // Strings are immutable
         if (this.goals != null) clone.goals = (ArrayList<String>) this.goals.clone();
-        if (this.clips != null) clone.clips = (ArrayList<ClipMetadata>) this.clips.clone();
-
-        String uuid = UUID.randomUUID().toString();
+        if (this.clips != null) {
+            // we need to clone all the clips in the arraylist so when you trim on in teh new card it doesn't effect them in the old card
+            ArrayList<ClipMetadata> newClips = new ArrayList<ClipMetadata>();
+            for (ClipMetadata clip : this.clips) {
+                ClipMetadata newClip = (ClipMetadata) clip.clone();
+                newClips.add(newClip);
+            }
+            clone.clips = newClips;
+        }
+        
+        String uuid = UUID.randomUUID().toString(); // FIXME move this logic up to the Card base class
         String rand = uuid.substring(uuid.length() - 4, uuid.length());
         String newId = getId() + "." + rand;
         while (storyPath.getCardByIdOnly(newId) != null) {
@@ -212,6 +220,9 @@ public class ClipCard extends ExampleCard implements Cloneable {
             newId = getId() + "." + rand;
         }
         clone.setId(newId);
+
+
+
         return clone;
     }
 
