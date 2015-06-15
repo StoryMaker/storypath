@@ -210,7 +210,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
             }
             clone.clips = newClips;
         }
-        
+
         String uuid = UUID.randomUUID().toString(); // FIXME move this logic up to the Card base class
         String rand = uuid.substring(uuid.length() - 4, uuid.length());
         String newId = getId() + "." + rand;
