@@ -20,8 +20,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -63,6 +65,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.ClipMetadata;
 import scal.io.liger.model.MediaFile;
+import scal.io.liger.popup.EditClipPopup;
 
 
 public class ClipCardView extends ExampleCardView {
@@ -160,7 +163,8 @@ public class ClipCardView extends ExampleCardView {
                 } else if (mCardModel.getMedium().equals(Constants.VIDEO) ||
                         mCardModel.getMedium().equals(Constants.AUDIO)) { //TODO : Support audio trimming
                     //show trim dialog
-                    showClipPlaybackAndTrimming();
+                    EditClipPopup ecp = new EditClipPopup(mContext,mCardModel.getStoryPath(), mCardModel.getSelectedClip(), mCardModel.getSelectedMediaFile());
+                    ecp.show();
                 }
             } else {
                 // Clicked clip is not primary clip
@@ -486,7 +490,7 @@ public class ClipCardView extends ExampleCardView {
         if (mediaFile == null) {
             Log.e(this.getClass().getName(), "no media file was found");
             // Clip has no attached media. Show generic drawable based on clip type
-            String clipType = mCardModel.getClipType();
+            String clipType = mCardModel.getClipType(); // FIXME why not media.get
 
             setClipExampleDrawables(clipType, ivThumbnail);
             ivThumbnail.setVisibility(View.VISIBLE);
@@ -533,263 +537,6 @@ public class ClipCardView extends ExampleCardView {
 
             ivThumbnail.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void showClipPlaybackAndTrimming() {
-        View v = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.dialog_clip_playback_trim, null);
-
-        /** Trim dialog views */
-        final TextureView videoView = (TextureView) v.findViewById(R.id.textureView);
-        final ImageView thumbnailView = (ImageView) v.findViewById(R.id.thumbnail);
-        final TextView clipLength = (TextView) v.findViewById(R.id.clipLength);
-        final TextView clipStart = (TextView) v.findViewById(R.id.clipStart);
-        final TextView clipEnd = (TextView) v.findViewById(R.id.clipEnd);
-        final RangeBar rangeBar = (RangeBar) v.findViewById(R.id.rangeSeekbar);
-        final SeekBar playbackBar = (SeekBar) v.findViewById(R.id.playbackProgress);
-        final SeekBar volumeSeek = (SeekBar) v.findViewById(R.id.volumeSeekbar);
-        final int tickCount = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
-
-        /** Media player and media */
-        final MediaPlayer player = new MediaPlayer();
-        final ClipMetadata selectedClip = mCardModel.getSelectedClip();
-        final AtomicInteger clipDurationMs = new AtomicInteger();
-        final AtomicInteger clipMediaDurationMs = new AtomicInteger();
-
-        /** Values modified by RangeBar listener. Used by Dialog trim listener to
-         *  set final trim selections on ClipMetadata */
-        final AtomicInteger clipStartMs = new AtomicInteger(selectedClip.getStartTime());
-        final AtomicInteger clipStopMs = new AtomicInteger(selectedClip.getStopTime());
-
-        /** Setup initial values that don't require media loaded */
-        clipStart.setText(Util.makeTimeString(selectedClip.getStartTime()));
-        clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
-        volumeSeek.setProgress((int) (mCardModel.getSelectedClip().getVolume() * volumeSeek.getMax()));
-
-        Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", selectedClip.getStartTime(), selectedClip.getStopTime()));
-
-        volumeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float newVolume = progress / (float) seekBar.getMax();
-                mCardModel.getSelectedClip().setVolume(newVolume);
-                player.setVolume(newVolume, newVolume);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { /* ignored */}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { /* ignored */}
-        });
-
-        rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
-            int lastStartIdx;
-            int lastEndIdx;
-
-            @Override
-            public void onIndexChangeListener(RangeBar rangeBar, int leftIdx, int rightIdx) {
-//                Log.i(TAG, String.format("Seek to leftIdx %d rightIdx %d. left: %d. right: %d",
-//                                         leftIdx, rightIdx, rangeBar.getLeft(), rangeBar.getRight()));
-
-                // NOTE : RangeBar indices go from 0 (left) to 100 (right)
-                // regardless of layout direction
-
-                int startIdx, endIdx;
-                boolean rightToLeft = false;
-                // Adjust for RTL layouts if necessary
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                    mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-
-                    rightToLeft = true;
-                    startIdx = rightIdx;
-                    endIdx = leftIdx;
-
-                } else {
-                    startIdx = leftIdx;
-                    endIdx = rightIdx;
-                }
-
-                if (lastStartIdx != startIdx) {
-                    // Start seek was adjusted, seek to it
-                    clipStartMs.set(getMsFromRangeBarIndex(startIdx,
-                                                           tickCount,
-                                                           clipMediaDurationMs.get(),
-                                                           rightToLeft));
-
-                    player.seekTo(clipStartMs.get());
-                    clipStart.setText(Util.makeTimeString(clipStartMs.get()));
-                    //Log.i(TAG, String.format("Start seek to %d ms", clipStartMs.get()));
-                    if (playbackBar.getProgress() < startIdx) playbackBar.setProgress(startIdx);
-
-
-                } else if (lastEndIdx != endIdx) {
-                    // End seek was adjusted, seek to it
-                    clipStopMs.set(getMsFromRangeBarIndex(endIdx,
-                                                          tickCount,
-                                                          clipMediaDurationMs.get(),
-                                                          rightToLeft));
-
-                    player.seekTo(clipStopMs.get());
-                    clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
-
-                    if (playbackBar.getProgress() > endIdx) playbackBar.setProgress(endIdx);
-                    //Log.i(TAG, String.format("Stop seek to %d ms", clipStopMs.get()));
-                }
-                lastStartIdx = startIdx;
-                lastEndIdx = endIdx;
-                clipDurationMs.set(clipStopMs.get() - clipStartMs.get());
-                clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
-            }
-        });
-
-        View.OnClickListener playbackToggleClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                thumbnailView.setVisibility(View.GONE);
-
-                if (player.isPlaying()) {
-                    player.pause();
-                } else {
-                    player.seekTo(clipStartMs.get());
-                    player.start();
-                }
-            }
-        };
-
-        videoView.setOnClickListener(playbackToggleClickListener);
-        thumbnailView.setOnClickListener(playbackToggleClickListener);
-
-        videoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                setThumbnailForClip(thumbnailView, mCardModel.getSelectedMediaFile());
-
-                Uri video = Uri.parse(mCardModel.getSelectedMediaFile().getPath());
-                Surface s = new Surface(surface);
-                try {
-                    player.setDataSource(mContext, video);
-                    player.setSurface(s);
-                    player.prepare();
-                    player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-                    player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            player.seekTo(clipStartMs.get());
-                        }
-                    });
-
-                    ClipCardsPlayer.adjustAspectRatio(videoView, player.getVideoWidth(), player.getVideoHeight());
-
-                    clipMediaDurationMs.set(player.getDuration());
-                    if (clipStopMs.get() == 0) clipStopMs.set(clipMediaDurationMs.get()); // If no stop point set, play whole clip
-                    clipDurationMs.set(clipStopMs.get() - clipStartMs.get());
-
-                    // Setup initial views requiring knowledge of clip media
-
-                    boolean rightToLeft = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                                          mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
-
-                    if (selectedClip.getStopTime() == 0) selectedClip.setStopTime(clipDurationMs.get());
-                    player.seekTo(selectedClip.getStartTime());
-                    rangeBar.setThumbIndices(getRangeBarIndexForMs(selectedClip.getStartTime(), tickCount, clipMediaDurationMs.get(), rightToLeft),
-                                             getRangeBarIndexForMs(selectedClip.getStopTime(), tickCount, clipMediaDurationMs.get(), rightToLeft));
-                    clipLength.setText(mContext.getString(R.string.total) + " : " + Util.makeTimeString(clipDurationMs.get()));
-                    clipEnd.setText(Util.makeTimeString(selectedClip.getStopTime()));
-                } catch (IllegalArgumentException | IllegalStateException | SecurityException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-
-        });
-
-        // Poll MediaPlayer for position, ensuring it never exceeds clipStopMs
-        final Timer timer = new Timer("mplayer");
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    if (player.isPlaying()) {
-                        if (player.getCurrentPosition() > clipStopMs.get()) {
-                            player.pause();
-                            Log.i(TAG, "stopping playback at clip end selection");
-                        }
-                        playbackBar.setProgress((int) (tickCount * ((float) player.getCurrentPosition()) / player.getDuration()));
-                    }
-                } catch (IllegalStateException e) { /* MediaPlayer in invalid state. Ignore */}
-            }
-        }, 100, 100);
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setView(v)
-                .setPositiveButton(mContext.getString(R.string.trim_clip).toUpperCase(), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mCardModel.getSelectedClip().setStartTime(clipStartMs.get());
-                        mCardModel.getSelectedClip().setStopTime(clipStopMs.get());
-
-                        // need to save here
-                        Log.d(TAG, "SAVING START/STOP TIME");
-                        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
-                    }
-                })
-                .setNegativeButton(mContext.getString(R.string.cancel).toUpperCase(), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        Dialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Log.d(TAG, "dialog dismissed");
-                if (player.isPlaying()) player.stop();
-                player.release();
-                timer.cancel();
-            }
-        });
-        dialog.show();
-    }
-
-    private int getMsFromRangeBarIndex(int tick, int max, int clipDurationMs, boolean rightToLeft) {
-        int seekMs;
-
-        if (rightToLeft)
-            seekMs = (int) (clipDurationMs * Math.min(1, ((float) (max - tick) / max)));
-        else
-            seekMs = (int) (clipDurationMs * Math.min(1, ((float) tick / max)));
-        //Log.i(TAG, String.format("Seek to index %d equals %d ms. Duration: %d ms", idx, seekMs, clipDurationMs.get()));
-        return seekMs;
-    }
-
-    private int getRangeBarIndexForMs(int positionMs, int max, int clipDurationMs, boolean rightToLeft) {
-        // Range bar goes from 0 to (max - 1)
-
-        int idx;
-
-        if (rightToLeft)
-            idx = (int) Math.min((((clipDurationMs - positionMs) * max) / (float) clipDurationMs), max - 1);
-        else
-            idx = (int) Math.min(((positionMs * max) / (float) clipDurationMs), max - 1);
-
-        Log.i(TAG, String.format("Converted %d ms to rangebar position %d", positionMs, idx));
-        return idx;
     }
 
     private final int STAGGERED_ANIMATION_GAP_MS = 70;
@@ -912,7 +659,8 @@ public class ClipCardView extends ExampleCardView {
 
                 if (itemId == R.id.menu_edit_card) {
                     if (mCardModel.getSelectedClip() != null) {
-                        showClipPlaybackAndTrimming();
+                        EditClipPopup ecp = new EditClipPopup(mContext,mCardModel.getStoryPath(), mCardModel.getSelectedClip(), mCardModel.getSelectedMediaFile());
+                        ecp.show();
                     } else {
                         Toast.makeText(mContext, mContext.getString(R.string.add_clips_generic), Toast.LENGTH_SHORT).show();
                     }
@@ -928,6 +676,7 @@ public class ClipCardView extends ExampleCardView {
                         Card newCard = (Card) mCardModel.clone();
                         mCardModel.getStoryPath().addCardAtPosition(newCard, thisCardIndex);
                         mCardModel.getStoryPath().notifyCardChanged(newCard);
+                        ((MainActivity) mContext).refreshCardList(); // FIXME this refreshes the list and jumps to the top, which isn't super friendly
                         // TODO Make Card#stateVisiblity true
                     } catch (CloneNotSupportedException e) {
                         Log.e(TAG, "Failed to clone this ClipCard");
@@ -942,7 +691,6 @@ public class ClipCardView extends ExampleCardView {
                 } else if (itemId == R.id.menu_remove_card) {
 
                 }
-                Toast.makeText(mContext, "Selected " + (String) item.getTitleCondensed(), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

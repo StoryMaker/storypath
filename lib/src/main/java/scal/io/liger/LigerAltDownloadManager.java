@@ -252,49 +252,52 @@ public class LigerAltDownloadManager implements Runnable {
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(queueId.longValue());
             Cursor c = dManager.query(query);
-            if (c.moveToFirst()) {
+            try {
+                if (c.moveToFirst()) {
 
-                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
-                if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
+                    int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                    if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
-                } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
-                    foundInQueue = true;
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        foundInQueue = true;
 
-                } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
-                    foundInQueue = true;
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        foundInQueue = true;
 
-                } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
-                    foundInQueue = true;
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        foundInQueue = true;
 
-                } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
+                    } else {
+
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+                    }
                 } else {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
                     QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                 }
-            } else {
-
-                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                QueueManager.removeFromQueue(context, Long.valueOf(queueId));
-
+            } finally {
+                if (c != null) {
+                    c.close(); // cleanup
+                }
             }
-
-            // cleanup
-            c.close();
         }
         //}
 
@@ -766,101 +769,107 @@ public class LigerAltDownloadManager implements Runnable {
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(downloadId);
                 Cursor c = dManager.query(query);
-                if (c.moveToFirst()) {
+                try {
+                    if (c.moveToFirst()) {
 
-                    int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-                    if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                        if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                        String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
-                        File savedFile = new File(Uri.parse(uriString).getPath());
-                        Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
+                            File savedFile = new File(Uri.parse(uriString).getPath());
+                            Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
-                        File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+                            File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
-                        if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
-                            return;
-                        } else if (!fileCheck.getName().equals(fileFilter)) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
-                            return;
-                        } else {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
-                            fileReceived = true;
-                        }
-
-                        QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
-
-                        Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
-
-                        if (!handleFile(savedFile)) {
-                            Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
-
-                        } else {
-                            Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
-                        }
-                    } else {
-
-                        // COLUMN_LOCAL_URI seems to be null if download fails
-                        // COLUMN_URI is the download url, not the .tmp file path
-                        String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
-                        String uriName = uriString.substring(uriString.lastIndexOf("/"));
-
-                        File savedFile = new File(IndexManager.buildFilePath(indexItem), uriName + ".tmp");
-                        Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
-
-                        File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
-
-                        if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
-                            return;
-                        } else if (!fileCheck.getName().equals(fileFilter)) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
-                            return;
-                        } else {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
-                            fileReceived = true;
-                        }
-
-                        String status;
-                        boolean willResume = true;
-
-                        // improve feedback
-                        if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
-                            status = "RUNNING";
-                        } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
-                            status = "PENDING";
-                        } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
-                            status = "PAUSED";
-                        } else if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
-                            status = "FAILED";
-                            willResume = false;
-                        } else {
-                            status = "UNKNOWN";
-                            willResume = false;
-                        }
-
-                        Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK, STATUS IS " + status);
-
-                        if (willResume) {
-                            Log.e("DOWNLOAD", "STATUS IS " + status + ", LEAVING QUEUE/FILES AS-IS FOR MANAGER TO HANDLE");
-                        } else {
-                            Log.e("DOWNLOAD", "STATUS IS " + status + ", CLEANING UP QUEUE/FILES, MANAGER WILL NOT RESUME");
-
-                            Log.d("QUEUE", "DOWNLOAD STOPPED, REMOVING FROM QUEUE: " + downloadId);
+                            if (fileReceived) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
+                                return;
+                            } else if (!fileCheck.getName().equals(fileFilter)) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                                return;
+                            } else {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                                fileReceived = true;
+                            }
 
                             QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
 
+                            Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
+
                             if (!handleFile(savedFile)) {
                                 Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
+
                             } else {
                                 Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
                             }
+                        } else {
+
+                            // COLUMN_LOCAL_URI seems to be null if download fails
+                            // COLUMN_URI is the download url, not the .tmp file path
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
+                            String uriName = uriString.substring(uriString.lastIndexOf("/"));
+
+                            File savedFile = new File(IndexManager.buildFilePath(indexItem), uriName + ".tmp");
+                            Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
+
+                            File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+
+                            if (fileReceived) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
+                                return;
+                            } else if (!fileCheck.getName().equals(fileFilter)) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                                return;
+                            } else {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                                fileReceived = true;
+                            }
+
+                            String status;
+                            boolean willResume = true;
+
+                            // improve feedback
+                            if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
+                                status = "RUNNING";
+                            } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
+                                status = "PENDING";
+                            } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
+                                status = "PAUSED";
+                            } else if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
+                                status = "FAILED";
+                                willResume = false;
+                            } else {
+                                status = "UNKNOWN";
+                                willResume = false;
+                            }
+
+                            Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK, STATUS IS " + status);
+
+                            if (willResume) {
+                                Log.e("DOWNLOAD", "STATUS IS " + status + ", LEAVING QUEUE/FILES AS-IS FOR MANAGER TO HANDLE");
+                            } else {
+                                Log.e("DOWNLOAD", "STATUS IS " + status + ", CLEANING UP QUEUE/FILES, MANAGER WILL NOT RESUME");
+
+                                Log.d("QUEUE", "DOWNLOAD STOPPED, REMOVING FROM QUEUE: " + downloadId);
+
+                                QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
+
+                                if (!handleFile(savedFile)) {
+                                    Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
+                                } else {
+                                    Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
+                                }
+                            }
                         }
+                    } else {
+                        Log.e("DOWNLOAD", "MANAGER FAILED AT QUERY");
                     }
-                } else {
-                    Log.e("DOWNLOAD", "MANAGER FAILED AT QUERY");
+                } finally {
+                    if (c != null) {
+                        c.close();
+                    }
                 }
             } else {
                 Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");

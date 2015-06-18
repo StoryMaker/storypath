@@ -1,12 +1,16 @@
 package scal.io.liger.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 
 import scal.io.liger.model.Card;
 import scal.io.liger.model.IntroCard;
@@ -38,8 +42,15 @@ public class IntroCardView implements DisplayableCard {
         //TODO set ivCardImage from model.getMediaPath()
 
         //Uri uri = Uri.parse(mediaFile.getPath());
-        Uri uri = Uri.parse(mCardModel.getExampleMediaFile().getExampleURI(mCardModel));
-        ivCardImage.setImageURI(uri);
+        Uri uri = null;
+        String uriString = mCardModel.getExampleMediaFile().getExampleURI(mCardModel);
+        if (uriString != null) {
+            uri = Uri.parse(uriString);
+            ivCardImage.setImageURI(uri);
+        } else {
+            Drawable drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character); // FIXME replace this with a more sensible placeholder default image
+            ivCardImage.setImageDrawable(drawable);
+        }
         ivCardImage.setVisibility(View.VISIBLE);
 
         tvHeadline.setText(mCardModel.getHeadline());
