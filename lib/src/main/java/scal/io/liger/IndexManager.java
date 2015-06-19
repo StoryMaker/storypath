@@ -768,15 +768,12 @@ public class IndexManager {
     }
     */
 
-    // unused
-    /*
     public static void saveAvailableIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 
         saveIndex(context, new ArrayList(indexMap.values()), getAvailableVersionName());
 
         return;
     }
-    */
 
     public static void saveInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 

@@ -17,6 +17,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
@@ -29,6 +33,7 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
@@ -541,9 +546,12 @@ public class LigerAltDownloadManager implements Runnable {
             nId = Integer.parseInt(indexItem.getPatchFileVersion());
         }
 
-        StrongHttpsClient httpClient = getHttpClientInstance();
+        // incompatible with lungcast certificate
+        // StrongHttpsClient httpClient = getHttpClientInstance();
+        OkHttpClient httpClient = new OkHttpClient();
 
         // we're now using this method to support non-tor downloads as well, so settings must be checked
+        /*
         if (useTor) {
             if (checkTor(context)) {
 
@@ -562,17 +570,20 @@ public class LigerAltDownloadManager implements Runnable {
                 return;
             }
         }
+        */
 
         // disable attempts to retry (more retries ties up connection and prevents failure handling)
-        HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
-        httpClient.setHttpRequestRetryHandler(retryHandler);
+        // HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
+        // httpClient.setHttpRequestRetryHandler(retryHandler);
+        httpClient.setRetryOnConnectionFailure(false);
 
         // set modest timeout (longer timeout ties up connection and prevents failure handling)
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 3000);
-        HttpConnectionParams.setSoTimeout(params, 3000);
+        // HttpParams params = httpClient.getParams();
+        // HttpConnectionParams.setConnectionTimeout(params, 3000);
+        // HttpConnectionParams.setSoTimeout(params, 3000);
 
-        httpClient.setParams(params);
+        // httpClient.setParams(params);
+        httpClient.setConnectTimeout(3000, TimeUnit.MILLISECONDS);
 
         String actualFileName = targetFile.getName().substring(0, targetFile.getName().lastIndexOf("."));
 
@@ -580,7 +591,8 @@ public class LigerAltDownloadManager implements Runnable {
 
         try {
 
-            HttpGet request = new HttpGet(uri.toString());
+            // HttpGet request = new HttpGet(uri.toString());
+            Request request = new Request.Builder().url(uri.toString()).build();
 
             // check for partially downloaded file
             File partFile = new File(targetFile.getPath().replace(".tmp", ".part"));
@@ -588,17 +600,20 @@ public class LigerAltDownloadManager implements Runnable {
             if (partFile.exists()) {
                 long partBytes = partFile.length();
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
-                request.setHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
+                // request.setHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
+                request = new Request.Builder().url(uri.toString()).addHeader("Range", "bytes=" + Long.toString(partBytes) + "-").build();
             } else {
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
             }
 
             // HERE...
 
-            HttpResponse response = httpClient.execute(request);
+            // HttpResponse response = httpClient.execute(request);
+            Response response = httpClient.newCall(request).execute();
 
-            HttpEntity entity = response.getEntity();
-            int statusCode = response.getStatusLine().getStatusCode();
+            // HttpEntity entity = response.getEntity();
+            // int statusCode = response.getStatusLine().getStatusCode();
+            int statusCode = response.code();
 
             if ((statusCode == 200) || (statusCode == 206)) {
 
@@ -617,7 +632,8 @@ public class LigerAltDownloadManager implements Runnable {
 
                 Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, GETTING ENTITY...");
 
-                BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
+                // BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
+                BufferedInputStream responseInput = new BufferedInputStream(response.body().byteStream());
 
                 try {
                     FileOutputStream targetOutput = new FileOutputStream(targetFile);
@@ -677,9 +693,9 @@ public class LigerAltDownloadManager implements Runnable {
             }
 
             // clean up connection
-            EntityUtils.consume(entity);
-            request.abort();
-            request.releaseConnection();
+            // EntityUtils.consume(entity);
+            // request.abort();
+            // request.releaseConnection();
 
         } catch (IOException ioe) {
             Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN");
@@ -689,6 +705,7 @@ public class LigerAltDownloadManager implements Runnable {
         }
     }
 
+    /*
     private synchronized StrongHttpsClient getHttpClientInstance() {
         if (mClient == null) {
             mClient = new StrongHttpsClient(context);
@@ -696,6 +713,7 @@ public class LigerAltDownloadManager implements Runnable {
 
         return mClient;
     }
+    */
 
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
         initDownloadManager();
