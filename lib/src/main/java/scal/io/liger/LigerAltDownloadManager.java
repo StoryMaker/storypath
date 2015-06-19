@@ -481,7 +481,7 @@ public class LigerAltDownloadManager implements Runnable {
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
                 if (context instanceof Activity) {
-                    Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getExpansionId() + " content pack.", true); // FIXME move to strings
+                    Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getTitle() + ".", true); // FIXME move to strings
                 }
 
                 // check preferences.  will also need to check whether tor is active within method
@@ -651,7 +651,7 @@ public class LigerAltDownloadManager implements Runnable {
                             oldPercent = nPercent;
                             Notification nProgress = new Notification.Builder(context)
                                     .setContentTitle(mAppTitle + " content download")
-                                    .setContentText(fileName + " - " + (nPercent / 10.0) + "%")
+                                    .setContentText(indexItem.getTitle() + " - " + (nPercent / 10.0) + "%") // assignment file names are meaningless uuids
                                     .setSmallIcon(android.R.drawable.arrow_down_float)
                                     .setProgress(100, (nPercent / 10), false)
                                     .setWhen(startTime.getTime())
