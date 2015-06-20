@@ -1,6 +1,11 @@
 package scal.io.liger.model;
 
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -29,6 +34,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     String author;
     String website;
     //String date; // FIXME remove this as its unclear waht its for.  we should probably have dateCreated and dateInstalled or dateDownloaded or something to show when it hit this phone
+    String dateUpdated;
     ArrayList<String> languages;
     ArrayList<String> tags;
     HashMap<String, String> extras;
@@ -214,10 +220,37 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
             this.extras.remove(key);
         }
     }
+
+    public String getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
     @Override
     public int compareTo(Object another) {
         if (another instanceof InstanceIndexItem) {
             return -1; // should always appear below instance index items
+        } else if (another instanceof ExpansionIndexItem){
+
+            // if this date is later or null, appear below
+            // -1
+
+            // if that date is later or null, appear above
+            // 1
+
+            if (dateUpdated == null) {
+                return -1;
+            }
+
+            if (((ExpansionIndexItem)another).getDateUpdated() == null) {
+                return 1;
+            }
+
+            return dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated());
+
         } else {
             return 0; // otherwise don't care
         }
