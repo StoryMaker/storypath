@@ -43,11 +43,18 @@ public class IntroCardView implements DisplayableCard {
 
         //Uri uri = Uri.parse(mediaFile.getPath());
         Uri uri = null;
-        String uriString = mCardModel.getExampleMediaFile().getExampleURI(mCardModel);
-        if (uriString != null) {
-            uri = Uri.parse(uriString);
-            ivCardImage.setImageURI(uri);
-        } else {
+
+        try {
+            String uriString = mCardModel.getExampleMediaFile().getExampleURI(mCardModel);
+            if (uriString != null) {
+                uri = Uri.parse(uriString);
+                ivCardImage.setImageURI(uri);
+            } else {
+                Drawable drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character); // FIXME replace this with a more sensible placeholder default image
+                ivCardImage.setImageDrawable(drawable);
+            }
+        } catch (NullPointerException npe) {
+            // sample media file probably missing, handle the same as the default case
             Drawable drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character); // FIXME replace this with a more sensible placeholder default image
             ivCardImage.setImageDrawable(drawable);
         }

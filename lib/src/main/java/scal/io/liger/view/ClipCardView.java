@@ -438,7 +438,11 @@ public class ClipCardView extends ExampleCardView {
     }
 
     private int getClipTypeColor(String clipType) {
-        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+        if (clipType == null) {
+            // handle nulls (same as default case)
+            Log.d(TAG, "No value found for clipType. (getClipTypeColor)");
+            return mContext.getResources().getColor(R.color.storymaker_highlight);
+        } else if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
             return mContext.getResources().getColor(R.color.storymaker_blue);
         } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
             return mContext.getResources().getColor(R.color.storymaker_orange);
@@ -454,7 +458,12 @@ public class ClipCardView extends ExampleCardView {
 
     private void setClipExampleDrawables(String clipType, ImageView imageView) {
         Drawable drawable;
-        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+        if (clipType == null) {
+            // handle nulls (same as failure case)
+            Log.d(TAG, "No value found for clipType. (setClipExampleDrawables)");
+            drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
+            itvClipTypeIcon.setText("{fa-card_capture_photo}");
+        } else if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
             drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character);
             itvClipTypeIcon.setText("{fa-ic_clip_character}");
         } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {

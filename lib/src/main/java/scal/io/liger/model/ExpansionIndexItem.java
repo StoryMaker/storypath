@@ -232,7 +232,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     @Override
     public int compareTo(Object another) {
         if (another instanceof InstanceIndexItem) {
-            Log.d("COMPARE", title + " COMPARED TO INSTANCE ITEM: -1");
+            //Log.d("COMPARE", title + " COMPARED TO INSTANCE ITEM: -1");
             return -1; // should always appear below instance index items
         } else if (another instanceof ExpansionIndexItem){
 
@@ -243,20 +243,20 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
             // 1
 
             if (dateUpdated == null) {
-                Log.d("COMPARE", title + " HAS NO DATE: -1");
+                //Log.d("COMPARE", title + " HAS NO DATE: -1");
                 return -1;
             }
 
             if (((ExpansionIndexItem)another).getDateUpdated() == null) {
-                Log.d("COMPARE", title + " HAS A DATE BUT " + ((ExpansionIndexItem)another).getTitle() + " DOES NOT: 1");
+                //Log.d("COMPARE", title + " HAS A DATE BUT " + ((ExpansionIndexItem)another).getTitle() + " DOES NOT: 1");
                 return 1;
             }
 
-            Log.d("COMPARE", "COMPARING DATE OF " + title + " TO DATE OF " + ((ExpansionIndexItem)another).getTitle() + ": " + dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated()));
+            //Log.d("COMPARE", "COMPARING DATE OF " + title + " TO DATE OF " + ((ExpansionIndexItem)another).getTitle() + ": " + dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated()));
             return dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated());
 
         } else {
-            Log.d("COMPARE", title + " HAS NO POINT OF COMPARISON: 0");
+            //Log.d("COMPARE", title + " HAS NO POINT OF COMPARISON: 0");
             return 0; // otherwise don't care
         }
     }

@@ -440,7 +440,7 @@ public class LigerDownloadManager implements Runnable {
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
                 if (context instanceof Activity) {
-                    Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", true); // FIXME move to strings
+                    Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", false); // FIXME move to strings
                 }
 
                 // check preferences.  will also need to check whether tor is active within method
@@ -949,7 +949,7 @@ public class LigerDownloadManager implements Runnable {
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
                 if (context instanceof Activity) {
-                    Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", true); // FIXME move to strings
+                    Utility.toastOnUiThread((Activity) context, "Starting download of " + mainOrPatch + " expansion file.", false); // FIXME move to strings
                 }
 
                 // TODO: revisit this check, if the intent is to download from google play, we probably can't use tor
