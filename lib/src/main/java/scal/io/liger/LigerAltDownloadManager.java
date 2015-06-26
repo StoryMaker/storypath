@@ -940,6 +940,10 @@ public class LigerAltDownloadManager implements Runnable {
                 }
             } else {
                 Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " AND FILE LOOKS OK");
+
+                // show notification
+                Utility.toastOnUiThread((Activity) context, "Finished downloading " + indexItem.getTitle() + ".", true); // FIXME move to strings
+
             }
         } else {
             Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT DOES NOT EXIST");

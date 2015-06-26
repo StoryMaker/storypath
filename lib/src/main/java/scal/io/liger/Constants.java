@@ -3,6 +3,7 @@ package scal.io.liger;
 
 import android.content.Context;
 import android.support.annotation.StringDef;
+import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -44,7 +45,10 @@ public class Constants {
     public static final String NARRATION = "narration";
 
     public static String getClipTypeLocalized(Context context, String clipType) {
-        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+        if (clipType == null) {
+            // replace with empty string to prevent null pointer exceptions
+            clipType = "";
+        } else if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
             return context.getString(R.string.cliptype_character);
         } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
             return context.getString(R.string.cliptype_action);
