@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
+import com.squareup.picasso.Picasso;
 
 import scal.io.liger.model.Card;
 import scal.io.liger.model.IntroCard;
@@ -45,13 +46,25 @@ public class IntroCardView implements DisplayableCard {
         Uri uri = null;
 
         try {
-            String uriString = mCardModel.getExampleMediaFile().getExampleURI(mCardModel);
-            if (uriString != null) {
-                uri = Uri.parse(uriString);
-                ivCardImage.setImageURI(uri);
+            if (mCardModel.getExampleMediaFile() != null) {
+                String uriString = mCardModel.getExampleMediaFile().getExampleURI(mCardModel);
+                if (uriString != null) {
+                    uri = Uri.parse(uriString);
+                    ivCardImage.setImageURI(uri);
+                } else {
+                    Drawable drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character); // FIXME replace this with a more sensible placeholder default image
+                    ivCardImage.setImageDrawable(drawable);
+                }
             } else {
-                Drawable drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character); // FIXME replace this with a more sensible placeholder default image
-                ivCardImage.setImageDrawable(drawable);
+                if (mCardModel.getExampleMediaPath().startsWith("http")) {
+                    Picasso.with(context)
+                            .load(mCardModel.getExampleMediaPath())
+                            .into(ivCardImage);
+                } else {
+                    // sample media file probably missing, handle the same as the default case
+                    Drawable drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_character); // FIXME replace this with a more sensible placeholder default image
+                    ivCardImage.setImageDrawable(drawable);
+                }
             }
         } catch (NullPointerException npe) {
             // sample media file probably missing, handle the same as the default case
