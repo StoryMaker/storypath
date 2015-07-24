@@ -38,17 +38,18 @@ import scal.io.liger.model.StoryPath;
 public class Util {
 
     /**
-     * @return a String of form "MM:SS" from a raw ms value
+     * @return a String of form "MM:SS:MS" from a raw ms value
      */
     public static String makeTimeString(long timeMs) {
+        long millisecond = (timeMs % 1000) / 10;
         long second = (timeMs / 1000) % 60;
         long minute = (timeMs / (1000 * 60)) % 60;
 
-        return String.format("%02d:%02d", minute, second);
+        return String.format("%02d:%02d;%02d", minute, second, millisecond);
     }
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
-        ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
+        ArrayList<FullMetadata> exportMetadata = storyPath.exportSelectedFullMetadata(); // TODO : Place in AsyncTask?
         ArrayList<AudioClipFull> exportAudioClipsMetadata = storyPath.exportAudioClips();
         if (exportMetadata.size() > 0) {
             Intent i = new Intent();

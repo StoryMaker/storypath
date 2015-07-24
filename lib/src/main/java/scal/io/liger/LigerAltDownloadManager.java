@@ -17,6 +17,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
@@ -29,6 +33,7 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.HttpResponse;
@@ -252,49 +257,52 @@ public class LigerAltDownloadManager implements Runnable {
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(queueId.longValue());
             Cursor c = dManager.query(query);
-            if (c.moveToFirst()) {
+            try {
+                if (c.moveToFirst()) {
 
-                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
-                if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
+                    int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                    if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
-                } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
-                    foundInQueue = true;
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        foundInQueue = true;
 
-                } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
-                    foundInQueue = true;
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        foundInQueue = true;
 
-                } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
-                    foundInQueue = true;
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        foundInQueue = true;
 
-                } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                    } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                    QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
+                    } else {
+
+                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        QueueManager.removeFromQueue(context, Long.valueOf(queueId));
+
+                    }
                 } else {
 
-                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                    Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
                     QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                 }
-            } else {
-
-                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
-                QueueManager.removeFromQueue(context, Long.valueOf(queueId));
-
+            } finally {
+                if (c != null) {
+                    c.close(); // cleanup
+                }
             }
-
-            // cleanup
-            c.close();
         }
         //}
 
@@ -473,7 +481,7 @@ public class LigerAltDownloadManager implements Runnable {
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
                 if (context instanceof Activity) {
-                    Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getExpansionId() + " content pack.", true); // FIXME move to strings
+                    Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getTitle() + ".", false); // FIXME move to strings
                 }
 
                 // check preferences.  will also need to check whether tor is active within method
@@ -538,9 +546,12 @@ public class LigerAltDownloadManager implements Runnable {
             nId = Integer.parseInt(indexItem.getPatchFileVersion());
         }
 
-        StrongHttpsClient httpClient = getHttpClientInstance();
+        // incompatible with lungcast certificate
+        // StrongHttpsClient httpClient = getHttpClientInstance();
+        OkHttpClient httpClient = new OkHttpClient();
 
         // we're now using this method to support non-tor downloads as well, so settings must be checked
+        /*
         if (useTor) {
             if (checkTor(context)) {
 
@@ -559,17 +570,20 @@ public class LigerAltDownloadManager implements Runnable {
                 return;
             }
         }
+        */
 
         // disable attempts to retry (more retries ties up connection and prevents failure handling)
-        HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
-        httpClient.setHttpRequestRetryHandler(retryHandler);
+        // HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
+        // httpClient.setHttpRequestRetryHandler(retryHandler);
+        httpClient.setRetryOnConnectionFailure(false);
 
         // set modest timeout (longer timeout ties up connection and prevents failure handling)
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 3000);
-        HttpConnectionParams.setSoTimeout(params, 3000);
+        // HttpParams params = httpClient.getParams();
+        // HttpConnectionParams.setConnectionTimeout(params, 3000);
+        // HttpConnectionParams.setSoTimeout(params, 3000);
 
-        httpClient.setParams(params);
+        // httpClient.setParams(params);
+        httpClient.setConnectTimeout(3000, TimeUnit.MILLISECONDS);
 
         String actualFileName = targetFile.getName().substring(0, targetFile.getName().lastIndexOf("."));
 
@@ -577,7 +591,8 @@ public class LigerAltDownloadManager implements Runnable {
 
         try {
 
-            HttpGet request = new HttpGet(uri.toString());
+            // HttpGet request = new HttpGet(uri.toString());
+            Request request = new Request.Builder().url(uri.toString()).build();
 
             // check for partially downloaded file
             File partFile = new File(targetFile.getPath().replace(".tmp", ".part"));
@@ -585,17 +600,20 @@ public class LigerAltDownloadManager implements Runnable {
             if (partFile.exists()) {
                 long partBytes = partFile.length();
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " FOUND, SETTING RANGE HEADER: " + "Range" + " / " + "bytes=" + Long.toString(partBytes) + "-");
-                request.setHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
+                // request.setHeader("Range", "bytes=" + Long.toString(partBytes) + "-");
+                request = new Request.Builder().url(uri.toString()).addHeader("Range", "bytes=" + Long.toString(partBytes) + "-").build();
             } else {
                 Log.d("DOWNLOAD", "PARTIAL FILE " + partFile.getPath() + " NOT FOUND, STARTING AT BYTE 0");
             }
 
             // HERE...
 
-            HttpResponse response = httpClient.execute(request);
+            // HttpResponse response = httpClient.execute(request);
+            Response response = httpClient.newCall(request).execute();
 
-            HttpEntity entity = response.getEntity();
-            int statusCode = response.getStatusLine().getStatusCode();
+            // HttpEntity entity = response.getEntity();
+            // int statusCode = response.getStatusLine().getStatusCode();
+            int statusCode = response.code();
 
             if ((statusCode == 200) || (statusCode == 206)) {
 
@@ -614,7 +632,8 @@ public class LigerAltDownloadManager implements Runnable {
 
                 Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, GETTING ENTITY...");
 
-                BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
+                // BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
+                BufferedInputStream responseInput = new BufferedInputStream(response.body().byteStream());
 
                 try {
                     FileOutputStream targetOutput = new FileOutputStream(targetFile);
@@ -632,7 +651,7 @@ public class LigerAltDownloadManager implements Runnable {
                             oldPercent = nPercent;
                             Notification nProgress = new Notification.Builder(context)
                                     .setContentTitle(mAppTitle + " content download")
-                                    .setContentText(fileName + " - " + (nPercent / 10.0) + "%")
+                                    .setContentText(indexItem.getTitle() + " - " + (nPercent / 10.0) + "%") // assignment file names are meaningless uuids
                                     .setSmallIcon(android.R.drawable.arrow_down_float)
                                     .setProgress(100, (nPercent / 10), false)
                                     .setWhen(startTime.getTime())
@@ -674,9 +693,9 @@ public class LigerAltDownloadManager implements Runnable {
             }
 
             // clean up connection
-            EntityUtils.consume(entity);
-            request.abort();
-            request.releaseConnection();
+            // EntityUtils.consume(entity);
+            // request.abort();
+            // request.releaseConnection();
 
         } catch (IOException ioe) {
             Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + actualFileName + ", EXCEPTION THROWN");
@@ -686,6 +705,7 @@ public class LigerAltDownloadManager implements Runnable {
         }
     }
 
+    /*
     private synchronized StrongHttpsClient getHttpClientInstance() {
         if (mClient == null) {
             mClient = new StrongHttpsClient(context);
@@ -693,6 +713,7 @@ public class LigerAltDownloadManager implements Runnable {
 
         return mClient;
     }
+    */
 
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
         initDownloadManager();
@@ -766,101 +787,107 @@ public class LigerAltDownloadManager implements Runnable {
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(downloadId);
                 Cursor c = dManager.query(query);
-                if (c.moveToFirst()) {
+                try {
+                    if (c.moveToFirst()) {
 
-                    int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-                    if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                        if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                        String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
-                        File savedFile = new File(Uri.parse(uriString).getPath());
-                        Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
+                            File savedFile = new File(Uri.parse(uriString).getPath());
+                            Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
-                        File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+                            File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
-                        if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
-                            return;
-                        } else if (!fileCheck.getName().equals(fileFilter)) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
-                            return;
-                        } else {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
-                            fileReceived = true;
-                        }
-
-                        QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
-
-                        Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
-
-                        if (!handleFile(savedFile)) {
-                            Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
-
-                        } else {
-                            Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
-                        }
-                    } else {
-
-                        // COLUMN_LOCAL_URI seems to be null if download fails
-                        // COLUMN_URI is the download url, not the .tmp file path
-                        String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
-                        String uriName = uriString.substring(uriString.lastIndexOf("/"));
-
-                        File savedFile = new File(IndexManager.buildFilePath(indexItem), uriName + ".tmp");
-                        Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
-
-                        File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
-
-                        if (fileReceived) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
-                            return;
-                        } else if (!fileCheck.getName().equals(fileFilter)) {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
-                            return;
-                        } else {
-                            Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
-                            fileReceived = true;
-                        }
-
-                        String status;
-                        boolean willResume = true;
-
-                        // improve feedback
-                        if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
-                            status = "RUNNING";
-                        } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
-                            status = "PENDING";
-                        } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
-                            status = "PAUSED";
-                        } else if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
-                            status = "FAILED";
-                            willResume = false;
-                        } else {
-                            status = "UNKNOWN";
-                            willResume = false;
-                        }
-
-                        Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK, STATUS IS " + status);
-
-                        if (willResume) {
-                            Log.e("DOWNLOAD", "STATUS IS " + status + ", LEAVING QUEUE/FILES AS-IS FOR MANAGER TO HANDLE");
-                        } else {
-                            Log.e("DOWNLOAD", "STATUS IS " + status + ", CLEANING UP QUEUE/FILES, MANAGER WILL NOT RESUME");
-
-                            Log.d("QUEUE", "DOWNLOAD STOPPED, REMOVING FROM QUEUE: " + downloadId);
+                            if (fileReceived) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
+                                return;
+                            } else if (!fileCheck.getName().equals(fileFilter)) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                                return;
+                            } else {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                                fileReceived = true;
+                            }
 
                             QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
 
+                            Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
+
                             if (!handleFile(savedFile)) {
                                 Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
+
                             } else {
                                 Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
                             }
+                        } else {
+
+                            // COLUMN_LOCAL_URI seems to be null if download fails
+                            // COLUMN_URI is the download url, not the .tmp file path
+                            String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
+                            String uriName = uriString.substring(uriString.lastIndexOf("/"));
+
+                            File savedFile = new File(IndexManager.buildFilePath(indexItem), uriName + ".tmp");
+                            Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
+
+                            File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
+
+                            if (fileReceived) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
+                                return;
+                            } else if (!fileCheck.getName().equals(fileFilter)) {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                                return;
+                            } else {
+                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                                fileReceived = true;
+                            }
+
+                            String status;
+                            boolean willResume = true;
+
+                            // improve feedback
+                            if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
+                                status = "RUNNING";
+                            } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
+                                status = "PENDING";
+                            } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
+                                status = "PAUSED";
+                            } else if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
+                                status = "FAILED";
+                                willResume = false;
+                            } else {
+                                status = "UNKNOWN";
+                                willResume = false;
+                            }
+
+                            Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK, STATUS IS " + status);
+
+                            if (willResume) {
+                                Log.e("DOWNLOAD", "STATUS IS " + status + ", LEAVING QUEUE/FILES AS-IS FOR MANAGER TO HANDLE");
+                            } else {
+                                Log.e("DOWNLOAD", "STATUS IS " + status + ", CLEANING UP QUEUE/FILES, MANAGER WILL NOT RESUME");
+
+                                Log.d("QUEUE", "DOWNLOAD STOPPED, REMOVING FROM QUEUE: " + downloadId);
+
+                                QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
+
+                                if (!handleFile(savedFile)) {
+                                    Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
+                                } else {
+                                    Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
+                                }
+                            }
                         }
+                    } else {
+                        Log.e("DOWNLOAD", "MANAGER FAILED AT QUERY");
                     }
-                } else {
-                    Log.e("DOWNLOAD", "MANAGER FAILED AT QUERY");
+                } finally {
+                    if (c != null) {
+                        c.close();
+                    }
                 }
             } else {
                 Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");
@@ -913,6 +940,10 @@ public class LigerAltDownloadManager implements Runnable {
                 }
             } else {
                 Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " AND FILE LOOKS OK");
+
+                // show notification
+                Utility.toastOnUiThread((Activity) context, "Finished downloading " + indexItem.getTitle() + ".", false); // FIXME move to strings
+
             }
         } else {
             Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT DOES NOT EXIST");

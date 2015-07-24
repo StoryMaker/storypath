@@ -43,5 +43,31 @@
         "expansionFileVersion": "4",
         "expansionFileSize": "278078561",
         "expansionFileChecksum": "0dd165a155a15b69299430f19478dc90e10ac5f9e84ad28701a64fe0dbcd69e0"
+    },
+    {
+        "expansionId": "beta",
+        "patchOrder": "4",
+        "title": "Beta Content",
+        "packageName": "org.storymaker.app",
+        "description": "Beta Content Pack for Testing",
+        "thumbnailPath": "images/content_packs/beta_cover.png",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "4",
+        "expansionFileSize": "1819765",
+        "expansionFileChecksum": "fbd5bbf02c5db0b1ebf89517aa3ed1b6bf07791e856a67d986712ffd19b11a70"
+    },
+    {
+        "expansionId": "mobile_photo_101",
+        "patchOrder": "5",
+        "title": "Mobile Photo 101",
+        "packageName": "org.storymaker.app",
+        "description": "Beta Pack of Mobile Photo Lessons",
+        "thumbnailPath": "images/content_packs/mobile_photo_101_cover.jpg",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "1",
+        "expansionFileSize": "4053863",
+        "expansionFileChecksum": "69dc1ac7b5c1a1425db325fd1bf5504889800c8e5f5c11862b9ab563ee7be87d"
     }
 ]

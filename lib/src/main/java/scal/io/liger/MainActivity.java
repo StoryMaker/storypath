@@ -63,6 +63,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         this.language = language;
     }
 
+    // added for testing
+    public void scroll(int position) {
+        Log.d("TEST", "Scrolling to index item " + position);
+        mRecyclerView.setCanScroll(true); // is this required?
+        mRecyclerView.scrollToPosition(position);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -670,11 +677,15 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         Cursor imageCursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
         String imagePath = null;
 
-        if(imageCursor.moveToFirst()){
-            int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
-            imagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            imageCursor.close();
-            imageCursor = null;
+        try {
+            if (imageCursor.moveToFirst()) {
+                int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
+                imagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+        } finally {
+            if (imageCursor != null) {
+                imageCursor.close();
+            }
         }
 
         return imagePath;

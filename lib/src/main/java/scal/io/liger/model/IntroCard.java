@@ -54,14 +54,19 @@ public class IntroCard extends Card {
         this.time = time;
     }
 
+    public String getExampleMediaPath() {
+        return exampleMediaPath;
+    }
+
     public ExampleMediaFile getExampleMediaFile() {
         if (exampleMediaPath == null) {
             Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
             return null;
         }
 
-        if (exampleMediaFile == null) {
-            exampleMediaFile = new ExampleMediaFile(storyPath.buildZipPath(exampleMediaPath), "photo");
+        if (exampleMediaFile == null && !exampleMediaPath.startsWith("http")) {
+            String zipPath = storyPath.buildZipPath(exampleMediaPath);
+            exampleMediaFile = new ExampleMediaFile(zipPath, "photo");
         }
 
         return exampleMediaFile;

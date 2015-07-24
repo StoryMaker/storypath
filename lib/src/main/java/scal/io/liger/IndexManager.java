@@ -95,7 +95,7 @@ public class IndexManager {
 
     // only available index should be copied, so collapsing methods
 
-    public static void copyAvailableIndex(Context context) {
+    public static void copyAvailableIndex(Context context, boolean forceCopy) {
 
         AssetManager assetManager = context.getAssets();
 
@@ -105,7 +105,7 @@ public class IndexManager {
 
         // only replace file if version is different
         File jsonFile = new File(jsonFilePath + getAvailableVersionName());
-        if (jsonFile.exists()) {
+        if (jsonFile.exists() && !forceCopy) {
             Log.d("INDEX", "JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
             return;
         } else {
@@ -768,15 +768,12 @@ public class IndexManager {
     }
     */
 
-    // unused
-    /*
     public static void saveAvailableIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 
         saveIndex(context, new ArrayList(indexMap.values()), getAvailableVersionName());
 
         return;
     }
-    */
 
     public static void saveInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 

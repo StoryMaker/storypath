@@ -19,6 +19,7 @@ import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.MediaFile;
+import scal.io.liger.popup.EditClipPopup;
 import scal.io.liger.view.ReorderableRecyclerView;
 
 /**
@@ -91,7 +92,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
     @Override
     public void onBindViewHolder(OrderMediaAdapter.ViewHolder viewHolder, int position) {
-        Context context = viewHolder.thumbnail.getContext();
+        final Context context = viewHolder.thumbnail.getContext();
         // TESTING
         ((View) viewHolder.draggable.getParent()).setTag(position);
         viewHolder.draggable.setTag(position);
@@ -116,6 +117,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
             return; // Should filter ArrayList at construction so we don't have meaningless list items
         }
 
+
         String title;
         if (ccm.getTitle() == null || ccm.getTitle().length() == 0) {
             String goal = ccm.getFirstGoal();
@@ -132,6 +134,14 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
         } else {
             mf.loadThumbnail(viewHolder.thumbnail);
         }
+        final ClipCard fccm = ccm;
+        viewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditClipPopup ecp = new EditClipPopup(context, fccm.getStoryPath(), fccm.getSelectedClip(), fccm.getSelectedMediaFile());
+                ecp.show();
+            }
+        });
     }
 
     @Override

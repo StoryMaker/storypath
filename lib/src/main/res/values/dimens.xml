@@ -10,6 +10,7 @@
     <dimen name="card_quiz_response_margin_top">16dp</dimen>
     <dimen name="card_quiz_response_height">60dp</dimen>
     <dimen name="clip_thumb_height">200dp</dimen>
+    <dimen name="clip_trim_thumb_height">150dp</dimen>
 
     <dimen name="text_xsmall">14.0sp</dimen>
     <dimen name="text_small">16.0sp</dimen>

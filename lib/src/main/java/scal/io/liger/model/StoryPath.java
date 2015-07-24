@@ -704,12 +704,13 @@ public class StoryPath {
     }
 
     /**
-     * Get a Collection of meta data for all Clips.
+     * Get a Collection of meta data for all Clips.  This filters out duplicated clips
      *
      * To retrieve the corresponding MediaFile for each ClipMetaData, see
      * {@link #loadMediaFile(String)} using the uuid found via
      * {@link ClipMetadata#getUuid()}
      */
+    // FIXME doesn't this belong in SPL?
     public ArrayList<ClipMetadata> exportMetadata() {
         ArrayList<ClipMetadata> metadata = new ArrayList<>();
         ArrayList<String> classReference = new ArrayList<>();
@@ -730,6 +731,30 @@ public class StoryPath {
         return metadata;
     }
 
+    /**
+     * Get a Collection of meta data for selected Clips.
+     *
+     * To retrieve the corresponding MediaFile for each ClipMetaData, see
+     * {@link #loadMediaFile(String)} using the uuid found via
+     * {@link ClipMetadata#getUuid()}
+     */
+    // FIXME doesn't this belong in SPL?
+    public ArrayList<ClipMetadata> exportSelectedClipMetadata() {
+        ArrayList<ClipMetadata> metadata = new ArrayList<>();
+        ArrayList<String> classReference = new ArrayList<>();
+        classReference.add(this.getId() + "::<<" + ClipCard.class.getName() + ">>");
+        ArrayList<Card> clipCards = getCards(classReference);
+        for (Card c : clipCards) {
+            // should be safe to cast, cards fetched based on class
+            ClipCard cc = (ClipCard)c;
+
+            if (cc.getClips() != null && cc.getClips().size() > 0) {
+                metadata.add(cc.getClips().get(0));
+            }
+        }
+        return metadata;
+    }
+
     public void importMetadata(ArrayList<ClipMetadata> metadata) {
         ArrayList<String> classReference = new ArrayList<String>();
         classReference.add(this.getId() + "::<<" + ClipCard.class.getName() + ">>");
@@ -743,6 +768,50 @@ public class StoryPath {
                 ClipMetadata cmd = metadata.remove(0);
                 cc.addClip(cmd, false);
             }
+        }
+    }
+
+    public ArrayList<FullMetadata> adaptClipMetadataToFullMetadata(ArrayList<ClipMetadata> metadata) {
+        ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
+        for (ClipMetadata cm : metadata) {
+            MediaFile mf = loadMediaFile(cm.getUuid());
+            String path = mf.getPath();
+            if (mf.getPath().startsWith("content://")) {
+                path = getPath(context, Uri.parse(path));
+            }
+            mf.setPath(path);
+            if (mf == null) {
+                Log.e(TAG, "no media file was found for uuid " + cm.getUuid());
+            } else {
+                FullMetadata fm = new FullMetadata(cm, mf);
+                allMetadata.add(fm);
+            }
+        }
+        return allMetadata;
+    }
+
+    // FIXME doesn't this belong in SPL?
+    public ArrayList<FullMetadata> exportAllMetadata() {
+        ArrayList<ClipMetadata> metadata = exportMetadata();
+        return adaptClipMetadataToFullMetadata(metadata);
+    }
+
+    // FIXME doesn't this belong in SPL?
+    public ArrayList<FullMetadata> exportSelectedFullMetadata() {
+        ArrayList<ClipMetadata> metadata = exportSelectedClipMetadata();
+        return adaptClipMetadataToFullMetadata(metadata);
+    }
+
+    public ArrayList<AudioClipFull> exportAudioClips() {
+        ArrayList<AudioClip> acs = getStoryPathLibrary().getAudioClips();
+        if (acs != null) {
+            ArrayList<AudioClipFull> acfs = new ArrayList<AudioClipFull>();
+            for (AudioClip ac : acs) {
+                acfs.add(new AudioClipFull(getStoryPathLibrary(), ac));
+            }
+            return acfs;
+        } else {
+            return null;
         }
     }
 
@@ -875,41 +944,6 @@ public class StoryPath {
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
-
-    // FIXME doesn't this belong in SPL?
-    public ArrayList<FullMetadata> exportAllMetadata() {
-        ArrayList<ClipMetadata> metadata = exportMetadata();
-        ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
-        for (ClipMetadata cm : metadata) {
-            MediaFile mf = loadMediaFile(cm.getUuid());
-            String path = mf.getPath();
-            if (mf.getPath().startsWith("content://")) {
-                path = getPath(context, Uri.parse(path));
-            }
-            mf.setPath(path);
-            if (mf == null) {
-                Log.e(TAG, "no media file was found for uuid " + cm.getUuid());
-            } else {
-                FullMetadata fm = new FullMetadata(cm, mf);
-                allMetadata.add(fm);
-            }
-        }
-        return allMetadata;
-    }
-
-    public ArrayList<AudioClipFull> exportAudioClips() {
-        ArrayList<AudioClip> acs = getStoryPathLibrary().getAudioClips();
-        if (acs != null) {
-            ArrayList<AudioClipFull> acfs = new ArrayList<AudioClipFull>();
-            for (AudioClip ac : acs) {
-                acfs.add(new AudioClipFull(getStoryPathLibrary(), ac));
-            }
-            return acfs;
-        } else {
-            return null;
-        }
-    }
-
 
     public ArrayList<MediaFile> getExternalMediaFile(String reference) {
 
