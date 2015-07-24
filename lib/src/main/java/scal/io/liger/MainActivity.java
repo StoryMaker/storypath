@@ -63,6 +63,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         this.language = language;
     }
 
+    // added for testing
+    public void scroll(int position) {
+        Log.d("TEST", "Scrolling to index item " + position);
+        mRecyclerView.setCanScroll(true); // is this required?
+        mRecyclerView.scrollToPosition(position);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
