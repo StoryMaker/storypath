@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.Date;
@@ -551,13 +554,15 @@ public class LigerAltDownloadManager implements Runnable {
         OkHttpClient httpClient = new OkHttpClient();
 
         // we're now using this method to support non-tor downloads as well, so settings must be checked
-        /*
         if (useTor) {
             if (checkTor(context)) {
 
                 Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
 
-                httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
+                SocketAddress torSocket = new InetSocketAddress(Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT);
+                Proxy torProxy = new Proxy(Proxy.Type.HTTP, torSocket);
+                httpClient.setProxy(torProxy);
+
             } else {
                 Log.e("DOWNLOAD/TOR", "CANNOT DOWNLOAD WITH TOR, TOR IS NOT ACTIVE");
 
@@ -570,7 +575,6 @@ public class LigerAltDownloadManager implements Runnable {
                 return;
             }
         }
-        */
 
         // disable attempts to retry (more retries ties up connection and prevents failure handling)
         // HttpRequestRetryHandler retryHandler = new DefaultHttpRequestRetryHandler(1, false);
