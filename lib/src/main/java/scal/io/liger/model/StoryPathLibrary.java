@@ -312,7 +312,7 @@ public class StoryPathLibrary extends StoryPath {
                 item.setThumbnailPath(this.getCoverImageThumbnailPath());
                 item.setStoryType(this.getMedium());
 
-                IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
+                IndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex);
                 Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
             }
         } else if (!(context instanceof MainActivity)) {
@@ -559,7 +559,7 @@ public class StoryPathLibrary extends StoryPath {
                 } else {
                     item.setTitle(story.getTitle());
 
-                    IndexManager.updateInstanceIndex(context, item, ((MainActivity) context).instanceIndex);
+                    IndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex);
                     Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
                 }
             } else if (!(context instanceof MainActivity)) {
@@ -622,7 +622,7 @@ public class StoryPathLibrary extends StoryPath {
 
             // need source for title/description/type
 
-            IndexManager.updateInstanceIndex(context, newItem, ((MainActivity)context).instanceIndex);
+            IndexManager.instanceIndexAdd(context, newItem, ((MainActivity)context).instanceIndex);
 
             Log.d(TAG, "Added index item for new instance file : " + savedStoryPathLibraryFile);
 

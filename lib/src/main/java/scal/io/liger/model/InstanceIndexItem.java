@@ -1,10 +1,16 @@
 package scal.io.liger.model;
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
+
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+
+import scal.io.liger.JsonHelper;
 
 /**
  * Created by mnbogner on 12/8/14.
@@ -116,6 +122,32 @@ public class InstanceIndexItem extends BaseIndexItem {
             return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
         } else {
             return 0; // otherwise don't care
+        }
+    }
+
+    public void deleteAssociatedFiles(Context context) {
+
+        File libraryToDelete = new File(instanceFilePath);
+
+        if (libraryToDelete.exists()) {
+
+            // open library to get associated file(s) to delete
+            String jsonString = JsonHelper.loadJSON(libraryToDelete, language);
+            ArrayList<String> referencedFiles = new ArrayList<String>(); // no need to insert dependencies to open for checking file path
+            StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, libraryToDelete.getAbsolutePath(), referencedFiles, context, language);
+
+            if (spl.getCurrentStoryPathFile() != null) {
+
+                File pathToDelete = new File(spl.getCurrentStoryPathFile());
+
+                if (pathToDelete.exists()) {
+                    Log.d("INDEX", "DELETING STORY PATH INSTANCE " + pathToDelete.getName());
+                    pathToDelete.delete();
+                }
+            }
+
+            Log.d("INDEX", "DELETING STORY LIBRARY INSTANCE " + libraryToDelete.getName());
+            libraryToDelete.delete();
         }
     }
 }

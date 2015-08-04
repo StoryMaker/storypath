@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import scal.io.liger.model.BaseIndexItem;
 import scal.io.liger.model.ContentPackMetadata;
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.InstanceIndexItem;
@@ -611,6 +612,34 @@ public class IndexManager {
 
         int initialSize = indexList.size();
 
+        // make a pass to remove deleted files from the index
+
+        ArrayList<String> keys = new ArrayList<String>();
+
+        for (String key : indexList.keySet()) {
+            InstanceIndexItem item = indexList.get(key);
+            File checkFile = new File(item.getInstanceFilePath());
+            if (!checkFile.exists()) {
+                Log.d("INDEX", "REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
+                keys.add(key);
+            }
+        }
+
+        for (String key: keys) {
+            indexList.remove(key);
+        }
+
+        // check for changes
+        if (indexList.size() != initialSize) {
+            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS REMOVED FROM INSTANCE INDEX, FORCING SAVE");
+            // update flag
+            forceSave = true;
+            // update initial size
+            initialSize = indexList.size();
+        }
+
+        // make a pass to add non-indexed files
+
         for (final File f : instanceFiles) {
             if (indexList.containsKey(f.getAbsolutePath()) && language.equals(indexList.get(f.getAbsolutePath()).getLanguage())) {
                 Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
@@ -675,13 +704,21 @@ public class IndexManager {
             }
         }
 
+        // check for changes again
+        if (indexList.size() != initialSize) {
+            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, FORCING SAVE");
+            // update flag
+            forceSave = true;
+            // update initial size
+            initialSize = indexList.size();
+        }
+
         // persist updated index (if necessary)
-        if ((indexList.size() == initialSize) && !forceSave) {
-            Log.d("INDEX", "NOTHING ADDED TO INSTANCE INDEX, NO SAVE");
-        } else {
-            Log.d("INDEX", (indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, SAVING");
+        if (forceSave) {
             ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
             saveInstanceIndex(context, indexArray, instanceIndexName);
+        } else {
+            Log.d("INDEX", "NOTHING ADDED TO/REMOVED FROM INSTANCE INDEX, NO SAVE");
         }
 
         return indexList;
@@ -834,14 +871,27 @@ public class IndexManager {
         }
     }
 
-    public static void updateInstanceIndex(Context context, InstanceIndexItem newItem, HashMap<String, InstanceIndexItem> indexList) {
+    public static void instanceIndexAdd(Context context, InstanceIndexItem addItem, HashMap<String, InstanceIndexItem> indexList) {
 
-        indexList.put(newItem.getInstanceFilePath(), newItem);
+        indexList.put(addItem.getInstanceFilePath(), addItem);
 
         ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
 
         saveInstanceIndex(context, indexArray, instanceIndexName);
 
+    }
+
+    public static void instanceIndexRemove(Context context, InstanceIndexItem removeItem, HashMap<String, InstanceIndexItem> indexList, boolean deleteFiles) {
+
+        indexList.remove(removeItem.getInstanceFilePath());
+
+        ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+
+        saveInstanceIndex(context, indexArray, instanceIndexName);
+
+        if (deleteFiles) {
+            removeItem.deleteAssociatedFiles(context);
+        }
     }
 
     public static void saveInstanceIndex(Context context, ArrayList<InstanceIndexItem> indexList, String jsonFileName) {
