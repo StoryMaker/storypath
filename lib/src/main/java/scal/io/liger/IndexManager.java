@@ -881,7 +881,7 @@ public class IndexManager {
 
     }
 
-    public static void instanceIndexRemove(Context context, InstanceIndexItem removeItem, HashMap<String, InstanceIndexItem> indexList, boolean deleteFiles) {
+    public static void instanceIndexRemove(Context context, InstanceIndexItem removeItem, HashMap<String, InstanceIndexItem> indexList, boolean deleteFiles, boolean deleteMedia) {
 
         indexList.remove(removeItem.getInstanceFilePath());
 
@@ -890,7 +890,7 @@ public class IndexManager {
         saveInstanceIndex(context, indexArray, instanceIndexName);
 
         if (deleteFiles) {
-            removeItem.deleteAssociatedFiles(context);
+            removeItem.deleteAssociatedFiles(context, deleteMedia);
         }
     }
 

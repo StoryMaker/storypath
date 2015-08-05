@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -8,7 +9,9 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
 
@@ -125,7 +128,7 @@ public class InstanceIndexItem extends BaseIndexItem {
         }
     }
 
-    public void deleteAssociatedFiles(Context context) {
+    public void deleteAssociatedFiles(Context context, boolean deleteMedia) {
 
         File libraryToDelete = new File(instanceFilePath);
 
@@ -135,6 +138,34 @@ public class InstanceIndexItem extends BaseIndexItem {
             String jsonString = JsonHelper.loadJSON(libraryToDelete, language);
             ArrayList<String> referencedFiles = new ArrayList<String>(); // no need to insert dependencies to open for checking file path
             StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, libraryToDelete.getAbsolutePath(), referencedFiles, context, language);
+
+            // if specified, delete all media files associated with this story
+            // (this may cause issues if another story imported these files)
+            if (deleteMedia) {
+                HashMap<String, MediaFile> mediaMap = spl.getMediaFiles();
+                if (mediaMap != null) {
+                    Collection<MediaFile> mediaFiles = mediaMap.values();
+                    if (mediaFiles != null) {
+                        for (MediaFile mediaFile : mediaFiles) {
+                            File f1 = new File(mediaFile.getPath());
+
+                            if (f1.exists()) {
+                                Log.d("INDEX", "DELETING STORY MEDIA FILE " + f1.getName());
+                                f1.delete();
+                            }
+
+                            File f2 = new File(mediaFile.getThumbnailFilePath());
+
+                            if (f2.exists()) {
+                                Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getName());
+                                f2.delete();
+                            }
+                        }
+                    }
+                }
+
+                // audio clips appear to be metadata + a uuid to a media file so the previous block should delete them
+            }
 
             if (spl.getCurrentStoryPathFile() != null) {
 
