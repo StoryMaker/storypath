@@ -253,7 +253,9 @@ public class JsonHelper {
         // this only works until the class is garbage collected
         // return sdLigerFilePath;
 
-        String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+        // String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+        String sdCardFolderPath = StorageHelper.getActualStorageDirectory(context).getPath();
+
         String sdLigerFilePath = sdCardFolderPath + File.separator;
 
         Log.d("NOT_STATIC", "CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
@@ -370,11 +372,9 @@ public class JsonHelper {
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             // FIXME we need to remove this, it seems like the popup stuff requires it even though we acutally read files from .obb not the Liger folder
 
-            // need to switch to context-based external directory
-            // String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
-            String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+            // String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+            String sdCardFolderPath = StorageHelper.getActualStorageDirectory(context).getPath();
 
-            // sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
             sdLigerFilePath = sdCardFolderPath + File.separator;
             Log.d("FILES", "NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
 

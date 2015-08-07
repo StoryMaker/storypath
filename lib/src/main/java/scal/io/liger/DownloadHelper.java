@@ -138,9 +138,9 @@ public class DownloadHelper {
             File contentPackFile = null;
 
             if (fileName.contains(Constants.MAIN)) {
-                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN));
+                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.MAIN, context));
             } else if (fileName.contains(Constants.PATCH)) {
-                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH));
+                contentPackFile = new File(IndexManager.buildFileAbsolutePath(contentPack, Constants.PATCH, context));
             } else {
                 //Log.e("DOWNLOAD", "CAN'T DETERMINE IF " + fileName + " IS A MAIN OR PATCH FILE");
                 sizeUndefined = true;
@@ -329,10 +329,10 @@ public class DownloadHelper {
             if (availableItem == null) {
                 Log.d(TAG, "item removed from availabe index. deleting obb file and removing from isntalled index");
                 updateFlag = true;
-                String absPath = IndexManager.buildFileAbsolutePath(installedItem, Constants.MAIN);
+                String absPath = IndexManager.buildFileAbsolutePath(installedItem, Constants.MAIN, context);
                 new File(absPath).delete();
 
-                absPath = IndexManager.buildFileAbsolutePath(installedItem, Constants.PATCH);
+                absPath = IndexManager.buildFileAbsolutePath(installedItem, Constants.PATCH, context);
                 File file = new File(absPath);
                 if (file.exists()) {
                     file.delete();
@@ -568,7 +568,7 @@ public class DownloadHelper {
         boolean patchFileOk = true;
         boolean fileStateOk = true;
 
-        String filePath = IndexManager.buildFilePath(installedItem);
+        String filePath = IndexManager.buildFilePath(installedItem, context);
         String fileName = IndexManager.buildFileName(installedItem, Constants.MAIN);
 
         File expansionFile = new File(filePath + fileName);

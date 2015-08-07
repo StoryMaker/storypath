@@ -125,7 +125,7 @@ public class LigerAltDownloadManager implements Runnable {
         } else {
             Log.d("DOWNLOAD", "NO OTHER PROCESS IS DOWNLOADING " + fileName + ", CHECKING FOR FILES");
 
-            File tempFile = new File(IndexManager.buildFilePath(indexItem), fileName + ".tmp");
+            File tempFile = new File(IndexManager.buildFilePath(indexItem, context), fileName + ".tmp");
 
             if (tempFile.exists()) {
 
@@ -212,7 +212,7 @@ public class LigerAltDownloadManager implements Runnable {
 
     public boolean checkQueue() {
 
-        File checkFile = new File(IndexManager.buildFilePath(indexItem), fileName + ".tmp");
+        File checkFile = new File(IndexManager.buildFilePath(indexItem, context), fileName + ".tmp");
         boolean foundInQueue = false;
 
         // need to check if a download has already been queued for this file
@@ -340,7 +340,7 @@ public class LigerAltDownloadManager implements Runnable {
         // not a great solution, but should indicate if file is being actively downloaded
         // only .tmp files should be download targets
 
-        File checkFile = new File(IndexManager.buildFilePath(indexItem), fileName + ".tmp");
+        File checkFile = new File(IndexManager.buildFilePath(indexItem, context), fileName + ".tmp");
         if (checkFile.exists()) {
             long firstSize = checkFile.length();
 
@@ -433,7 +433,7 @@ public class LigerAltDownloadManager implements Runnable {
     private void downloadFromLigerServer() {
 
         String ligerUrl = indexItem.getExpansionFileUrl();
-        String ligerPath = IndexManager.buildFilePath(indexItem);
+        String ligerPath = IndexManager.buildFilePath(indexItem, context);
         String ligerObb = fileName;
 
         Log.d("DOWNLOAD", "DOWNLOADING " + ligerObb + " FROM " + ligerUrl + " TO " + ligerPath);
@@ -833,7 +833,7 @@ public class LigerAltDownloadManager implements Runnable {
                             String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI));
                             String uriName = uriString.substring(uriString.lastIndexOf("/"));
 
-                            File savedFile = new File(IndexManager.buildFilePath(indexItem), uriName + ".tmp");
+                            File savedFile = new File(IndexManager.buildFilePath(indexItem, context), uriName + ".tmp");
                             Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
                             File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));

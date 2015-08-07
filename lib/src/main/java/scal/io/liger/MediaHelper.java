@@ -219,7 +219,10 @@ public class MediaHelper {
                                 // not FileInputStream, from the zip archive. FileInputStream would
                                 // give us access to a FileDescriptor, which we could use to generate
                                 // a video / audio thumbnail without first copying the stream to file.
-                                File tempDirectory = context.getExternalFilesDir(null);
+
+                                //File tempDirectory = context.getExternalFilesDir(null);
+                                File tempDirectory = StorageHelper.getActualStorageDirectory(context);
+
                                 File tempFile = ZipHelper.getTempFile(relativeExpansionPath,
                                                                       tempDirectory.getAbsolutePath(),
                                                                       context);

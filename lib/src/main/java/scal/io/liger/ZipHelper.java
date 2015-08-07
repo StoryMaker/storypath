@@ -53,9 +53,11 @@ public class ZipHelper {
 
     public static String getFileFolderName(Context ctx) {
         // TODO Why doesn't this use ctx.getExternalFilesDir(null) (like JsonHelper)?
-        String packageName = ctx.getPackageName();
-        File root = Environment.getExternalStorageDirectory();
-        return root.toString() + "/Android/data/" + packageName + "/files/";
+
+        // String packageName = ctx.getPackageName();
+        // File root = Environment.getExternalStorageDirectory();
+        // return root.toString() + "/Android/data/" + packageName + "/files/";
+        return StorageHelper.getActualStorageDirectory(ctx).getPath() + "/";
     }
 
     public static String getFileFolderName(Context context, String fileName) {
@@ -72,8 +74,10 @@ public class ZipHelper {
             return null;
         }
 
-        File root = Environment.getExternalStorageDirectory();
-        return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
+        // TODO - switching to the new storage method ignores the value set in the expansion index item
+        // File root = Environment.getExternalStorageDirectory();
+        // return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
+        return StorageHelper.getActualStorageDirectory(context).getPath() + "/";
     }
 
     public static String getFileFolderName(Context context, String fileName, ExpansionIndexItem item) {
@@ -83,8 +87,10 @@ public class ZipHelper {
             fileName.replace(Constants.PATCH, Constants.MAIN);
         }
 
-        File root = Environment.getExternalStorageDirectory();
-        return root.toString() + File.separator + item.getExpansionFilePath();
+        // TODO - switching to the new storage method ignores the value set in the expansion index item
+        // File root = Environment.getExternalStorageDirectory();
+        // return root.toString() + File.separator + item.getExpansionFilePath();
+        return StorageHelper.getActualStorageDirectory(context).getPath() + "/";
     }
 
     // supressing messages for less text during polling
@@ -228,13 +234,13 @@ public class ZipHelper {
                                                                               @NonNull String path,
                                                                               @NonNull Context context) {
 
-        return getFileInputStreamFromFile(IndexManager.buildFileAbsolutePath(expansion, Constants.MAIN), path, context);
+        return getFileInputStreamFromFile(IndexManager.buildFileAbsolutePath(expansion, Constants.MAIN, context), path, context);
     }
 
     public static InputStream getThumbnailInputStreamForItem(ExpansionIndexItem item, Context context) {
         ZipResourceFile resourceFile = null;
         try {
-            resourceFile = APKExpansionSupport.getResourceZipFile(new String[]{IndexManager.buildFileAbsolutePath(item, Constants.MAIN)});
+            resourceFile = APKExpansionSupport.getResourceZipFile(new String[]{IndexManager.buildFileAbsolutePath(item, Constants.MAIN, context)});
             return resourceFile.getInputStream(item.getThumbnailPath());
 
         } catch (IOException e) {
@@ -311,7 +317,7 @@ public class ZipHelper {
                 } else {
 
                     // construct name
-                    String pathName = IndexManager.buildFilePath(item);
+                    String pathName = IndexManager.buildFilePath(item, context);
                     String fileName = IndexManager.buildFileName(item, Constants.MAIN);
 
                     File checkFile = new File(pathName + fileName);

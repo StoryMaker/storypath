@@ -54,10 +54,11 @@ public class IndexManager {
     public static HashMap<String, ArrayList<ExpansionIndexItem>> cachedIndexes = new HashMap<>();
 
     public static String buildFileAbsolutePath(ExpansionIndexItem item,
-                                               @Constants.ObbType String mainOrPatch) {
+                                               @Constants.ObbType String mainOrPatch,
+                                               Context context) {
 
         // Use File constructor to avoid duplicate or missing file path separators after concatenation
-        return new File(buildFilePath(item) + buildFileName(item, mainOrPatch)).getAbsolutePath();
+        return new File(buildFilePath(item, context) + buildFileName(item, mainOrPatch)).getAbsolutePath();
 
     }
 
@@ -81,9 +82,11 @@ public class IndexManager {
         }
     }
 
-    public static String buildFilePath(ExpansionIndexItem item) {
+    public static String buildFilePath(ExpansionIndexItem item, Context context) {
 
-        String checkPath = Environment.getExternalStorageDirectory().toString() + File.separator + item.getExpansionFilePath();
+        // TODO - switching to the new storage method ignores the value set in the expansion index item
+        // String checkPath = Environment.getExternalStorageDirectory().toString() + File.separator + item.getExpansionFilePath();
+        String checkPath = StorageHelper.getActualStorageDirectory(context).getPath() + File.separator;
 
         File checkDir = new File(checkPath);
         if (checkDir.isDirectory() || checkDir.mkdirs()) {
