@@ -154,12 +154,16 @@ public class InstanceIndexItem extends BaseIndexItem {
                                 f1.delete();
                             }
 
-                            File f2 = new File(mediaFile.getThumbnailFilePath());
+                            if (mediaFile.getThumbnailFilePath() != null) {
 
-                            if (f2.exists()) {
-                                Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getName());
-                                f2.delete();
+                                File f2 = new File(mediaFile.getThumbnailFilePath());
+
+                                if (f2.exists()) {
+                                    Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getName());
+                                    f2.delete();
+                                }
                             }
+
                         }
                     }
                 }
