@@ -67,10 +67,10 @@ public class MediaHelper {
      */
     public static abstract class ThumbnailCallback {
         /** Called when a thumbnail request requires generation of a new thumbnail */
-        public void newThumbnailGenerated(File thumbnail) {}
+        public abstract void newThumbnailGenerated(File thumbnail);
 
         /** Called when a thumbnail request successfully resolves to a thumbnail file */
-        public void thumbnailLoaded(File thumbnail) {}
+        public abstract void thumbnailLoaded(File thumbnail);
     }
 
     public static File loadFileFromPath(String filePath, Context context) {

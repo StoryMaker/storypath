@@ -89,10 +89,21 @@ public class MediaFile implements Cloneable {
 
                     new MediaHelper.ThumbnailCallback() {
 
+                        // we more or less want to do the same thing whether the thumbnail is loaded or created
+
+                        @Override
+                        public void newThumbnailGenerated(File thumbnail) {
+                            boolean newlyAssigned = thumbnailFilePath == null || !thumbnailFilePath.equals(thumbnail.getAbsolutePath());
+                            thumbnailFilePath = thumbnail.getAbsolutePath();
+
+                            if (callback != null && newlyAssigned) callback.newThumbnailAssigned(thumbnail);
+                        }
+
                         @Override
                         public void thumbnailLoaded(File thumbnail) {
                             boolean newlyAssigned = thumbnailFilePath == null || !thumbnailFilePath.equals(thumbnail.getAbsolutePath());
                             thumbnailFilePath = thumbnail.getAbsolutePath();
+
                             if (callback != null && newlyAssigned) callback.newThumbnailAssigned(thumbnail);
                         }
                     }

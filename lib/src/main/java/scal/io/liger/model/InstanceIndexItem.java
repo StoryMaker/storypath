@@ -150,7 +150,7 @@ public class InstanceIndexItem extends BaseIndexItem {
                             File f1 = new File(mediaFile.getPath());
 
                             if (f1.exists()) {
-                                Log.d("INDEX", "DELETING STORY MEDIA FILE " + f1.getName());
+                                Log.d("INDEX", "DELETING STORY MEDIA FILE " + f1.getPath());
                                 f1.delete();
                             }
 
@@ -159,7 +159,7 @@ public class InstanceIndexItem extends BaseIndexItem {
                                 File f2 = new File(mediaFile.getThumbnailFilePath());
 
                                 if (f2.exists()) {
-                                    Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getName());
+                                    Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getPath());
                                     f2.delete();
                                 }
                             }
