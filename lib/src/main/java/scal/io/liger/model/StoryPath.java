@@ -771,33 +771,54 @@ public class StoryPath {
         }
     }
 
-    public ArrayList<FullMetadata> adaptClipMetadataToFullMetadata(ArrayList<ClipMetadata> metadata) {
+    public ArrayList<FullMetadata> adaptClipMetadataToFullMetadata(ArrayList<ClipMetadata> metadata) throws MediaException {
         ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
         for (ClipMetadata cm : metadata) {
             MediaFile mf = loadMediaFile(cm.getUuid());
-            String path = mf.getPath();
-            if (mf.getPath().startsWith("content://")) {
-                path = getPath(context, Uri.parse(path));
-            }
-            mf.setPath(path);
+
             if (mf == null) {
                 Log.e(TAG, "no media file was found for uuid " + cm.getUuid());
+                throw new MediaException("Error: missing media file information");
             } else {
-                FullMetadata fm = new FullMetadata(cm, mf);
-                allMetadata.add(fm);
+                String path = mf.getPath();
+
+                // a null media path causes errors downstream
+
+                if (path == null) {
+                    Log.e(TAG, "no media file path was found for uuid " + cm.getUuid());
+                    throw new MediaException("Error: missing media file path");
+                } else {
+
+                    if (mf.getPath().startsWith("content://")) {
+                        path = getPath(context, Uri.parse(path));
+                    }
+
+                    mf.setPath(path);
+                    FullMetadata fm = new FullMetadata(cm, mf);
+                    allMetadata.add(fm);
+                }
             }
         }
         return allMetadata;
     }
 
+    public static class MediaException extends Exception {
+
+        // wrapper class
+
+        public MediaException(String detailMessage) {
+            super(detailMessage);
+        }
+    }
+
     // FIXME doesn't this belong in SPL?
-    public ArrayList<FullMetadata> exportAllMetadata() {
+    public ArrayList<FullMetadata> exportAllMetadata() throws MediaException {
         ArrayList<ClipMetadata> metadata = exportMetadata();
         return adaptClipMetadataToFullMetadata(metadata);
     }
 
     // FIXME doesn't this belong in SPL?
-    public ArrayList<FullMetadata> exportSelectedFullMetadata() {
+    public ArrayList<FullMetadata> exportSelectedFullMetadata() throws MediaException {
         ArrayList<ClipMetadata> metadata = exportSelectedClipMetadata();
         return adaptClipMetadataToFullMetadata(metadata);
     }
@@ -825,7 +846,7 @@ public class StoryPath {
      * @author paulburke
      */
     @SuppressLint("NewApi")
-    public static String getPath(final Context context, final Uri uri) {
+    public static String getPath(final Context context, final Uri uri) throws MediaException {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -884,7 +905,10 @@ public class StoryPath {
             return uri.getPath();
         }
 
-        return null;
+        // need to propogate this error up the stack
+
+        Log.e(TAG, "failed to determine actual file path for " + uri.toString());
+        throw new MediaException("Error: could not locate imported media files");
     }
 
     /**
