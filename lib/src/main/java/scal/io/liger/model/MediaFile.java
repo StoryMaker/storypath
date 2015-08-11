@@ -33,7 +33,7 @@ public class MediaFile implements Cloneable {
         // required for JSON/GSON
     }
 
-    public MediaFile(String path, String medium) {
+    public MediaFile(@NonNull String path, @NonNull String medium) {
         this.path = path;
         this.medium = medium;
 
