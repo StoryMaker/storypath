@@ -3,6 +3,7 @@ package scal.io.liger.model;
 import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import scal.io.liger.Constants;
@@ -26,7 +27,7 @@ public class FullMetadata implements Parcelable {
     private String effect;
     private String type;
     private String medium;
-    private String filePath;
+    @NonNull private String filePath;
 
     public FullMetadata (ClipMetadata cm, MediaFile mf) {
         this.startTime = cm.getStartTime();
