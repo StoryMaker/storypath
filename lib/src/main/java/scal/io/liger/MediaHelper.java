@@ -431,7 +431,10 @@ public class MediaHelper {
                 return thumbnailFile;
             } else {
                 final File newThumbnail = generateMediaThumbnail(target.getContext(), media, null, mediaType);
-                if (callback != null) {
+
+                // some errors may cause generateMediaThumbnail to return a null value which should not be passed to the callback
+
+                if ((callback != null) && (newThumbnail != null)) {
                     target.post(new Runnable() {
                         @Override
                         public void run() {
@@ -552,6 +555,9 @@ public class MediaHelper {
         Bitmap thumbnail = null;
 
         switch (mediaType) {
+
+            // mediaType appears to be set based on story type, which may cause an error if a different type of media file is imported
+
             case Constants.AUDIO:
                 return getWaveformForAudioFile(context, media);
             case Constants.VIDEO:
@@ -572,7 +578,7 @@ public class MediaHelper {
             Log.d(TAG, "Generated thumbnail at " + thumbnailFile.getAbsolutePath());
             return thumbnailFile;
         } else {
-            Log.w(TAG, "Unable to generate thumbnail for " + media.getAbsolutePath());
+            Log.e(TAG, "Unable to generate thumbnail for " + media.getAbsolutePath() + " (expected media type: " + mediaType + ")");
         }
         return null;
     }
