@@ -2,6 +2,7 @@ package scal.io.liger.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,6 +15,10 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.VideoView;
+
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -64,10 +69,46 @@ public class ExampleCardView implements DisplayableCard {
 
         if (mCardModel.getExampleMediaFile() == null) {
             // getExampleMediaFile().getExampleURI() is too expensive to call on the main thread
-                /* || (mCardModel.getExampleMediaFile().getExampleURI(mCardModel) == null) ) { */
+            // || (mCardModel.getExampleMediaFile().getExampleURI(mCardModel) == null) ) {
+
             // using medium cliptype image as default in case media file is missing
-            ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
+            // ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
+            // ivCardPhoto.setVisibility(View.VISIBLE);
+
+            // need to support urls as paths (this code was originally from IntroCardView)
+            // this will need to support all mediums but with no value i'm assuming photos
+            switch(medium) {
+                case Constants.VIDEO:
+
+                    Log.d(TAG, "currently unable to generate thumbnails for video files");
+
+                    ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
+
+                case Constants.AUDIO:
+
+                    Log.d(TAG, "currently unable to generate thumbnails for audio files");
+
+                    ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
+
+                default:
+
+                    if ((mCardModel.getExampleMediaPath() != null) && (mCardModel.getExampleMediaPath().startsWith("http"))) {
+
+                        Log.d(TAG, "generating " + medium + " thumbnail from path " + mCardModel.getExampleMediaPath());
+
+                        Picasso.with(context)
+                                .load(mCardModel.getExampleMediaPath())
+                                .into(ivCardPhoto);
+                    } else {
+
+                        Log.d(TAG, "unable to generate " + medium + " thumbnail from path " + mCardModel.getExampleMediaPath());
+
+                        ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
+                    }
+            }
+
             ivCardPhoto.setVisibility(View.VISIBLE);
+
         } else { //if (mediaFile.exists() && !mediaFile.isDirectory()) {
             ivCardPhoto.setVisibility(View.VISIBLE);
             mCardModel.getExampleMediaFile().loadThumbnail(ivCardPhoto);
