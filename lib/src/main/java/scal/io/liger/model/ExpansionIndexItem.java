@@ -17,6 +17,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     String packageName;
     String expansionId;
     String patchOrder;
+    String contentType;
     String expansionFileVersion;
     String expansionFilePath; // relative to Environment.getExternalStorageDirectory() <- need to shift to user-specified directory
     String expansionFileUrl;
@@ -43,10 +44,11 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     }
 
-    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
+    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String contentType, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
         this.packageName = packageName;
         this.expansionId = expansionId;
         this.patchOrder = patchOrder;
+        this.contentType = contentType;
         // this.expansionFileName = expansionFileName;
         this.expansionFileVersion = expansionFileVersion;
         this.expansionFilePath = expansionFilePath;
@@ -76,6 +78,14 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     public void setPatchOrder(String patchOrder) {
         this.patchOrder = patchOrder;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getExpansionFileVersion() {
