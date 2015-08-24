@@ -8,6 +8,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -484,7 +487,9 @@ public class JsonHelper {
         // check for nulls (uncertain as to cause of nulls)
         if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
             for (File jsonFile : jsonFolder.listFiles()) {
-                if (jsonFile.getName().contains("-library-instance") && !jsonFile.isDirectory()) {
+                if (jsonFile.getName().contains("-library-instance") &&
+                        jsonFile.getName().endsWith(".json") &&
+                        !jsonFile.isDirectory()) {
                     Log.d("FILES", "FOUND LIBRARY INSTANCE FILE: " + jsonFile.getName());
                     File localFile = new File(jsonFile.getPath());
                     results.add(localFile);
@@ -1264,6 +1269,20 @@ public class JsonHelper {
         */
 
         return storyPathJson;
+    }
+
+    public static void cleanup (String swapFilePath) {
+        // delete lingering .swap files from failed saves
+        String swapFilter = "*.swap";
+
+        Log.d(TAG, "CLEANUP: DELETING " + swapFilter + " FROM " + swapFilePath);
+
+        WildcardFileFilter swapFileFilter = new WildcardFileFilter(swapFilter);
+        File swapDirectory = new File(swapFilePath);
+        for (File swapFile : FileUtils.listFiles(swapDirectory, swapFileFilter, null)) {
+            Log.d(TAG, "CLEANUP: FOUND " + swapFile.getPath() + ", DELETING");
+            FileUtils.deleteQuietly(swapFile);
+        }
     }
 
 }
