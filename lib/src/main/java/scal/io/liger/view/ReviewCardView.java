@@ -112,7 +112,11 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             @Override
             public void onClick(View v) {
                 if (mMediaCards.size() > 0) {
-                    if (mCardsPlayer != null && mCardsPlayer.isPlaying()) mCardsPlayer.stopPlayback();
+                    if (mCardsPlayer != null) {
+                        if (mCardsPlayer.isPlaying()) {
+                            mCardsPlayer.stopPlayback();
+                        }
+                    }
                     OrderMediaPopup.show((Activity) mContext, mMedium, mMediaCards, ReviewCardView.this);
                 } else
                     Toast.makeText(mContext, mContext.getString(R.string.add_clips_before_reordering), Toast.LENGTH_SHORT).show();
