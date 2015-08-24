@@ -488,7 +488,7 @@ public class JsonHelper {
         if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
             for (File jsonFile : jsonFolder.listFiles()) {
                 if (jsonFile.getName().contains("-library-instance") &&
-                        !jsonFile.getName().endsWith(".swap") &&
+                        jsonFile.getName().endsWith(".json") &&
                         !jsonFile.isDirectory()) {
                     Log.d("FILES", "FOUND LIBRARY INSTANCE FILE: " + jsonFile.getName());
                     File localFile = new File(jsonFile.getPath());
