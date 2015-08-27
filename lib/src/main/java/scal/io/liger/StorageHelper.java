@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -19,6 +20,7 @@ public class StorageHelper {
 
     public static final String KEY_USE_INTERNAL = "p_use_internal_storage";
 
+    @Nullable
     public static File getActualStorageDirectory(Context context) {
 
         // locate actual external storage path if available
@@ -40,53 +42,31 @@ public class StorageHelper {
             returnValue = context.getExternalFilesDir(null);
 
         } else {
-
             // use new method to get all directories, only the first directory should be internal storage
-
             File[] externalFilesDirs = context.getExternalFilesDirs(null);
-
             storageCount = externalFilesDirs.length;
+            /// FIXME what if internal is null?  try to use external even though they said useIinternal
+            returnValue = externalFilesDirs[0]; // FIXME default our returnValue to the internal so if we fail finding a more appropriate place this is our fallback
+            storageState = 2; // FIXME just for debugging now
 
-            if (externalFilesDirs.length > 1) {
-
-                // check app settings
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean useInternal = settings.getBoolean(KEY_USE_INTERNAL, false);
-
-                if (useInternal) {
-
-                    storageState = 2;
-
-                    returnValue = externalFilesDirs[0];
-
-                } else {
-
-                    // is there a more intelligent way to make this selection?
-                    
-                    // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING NEW METHOD (" + externalFilesDirs.length + " OPTIONS): " + externalFilesDirs[0].getPath());
-
-                    storageState = 3;
-
-                    int i = 1;
-
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean useInternal = settings.getBoolean(KEY_USE_INTERNAL, false);
+            if (useInternal) {
+                storageState = 4;
+            } else {
+                if (externalFilesDirs.length > 1) {
                     // iterate over storage options in case one or more is unavailable
-                    while ((i < externalFilesDirs.length) && (returnValue == null)) {
-                        returnValue = externalFilesDirs[i];
+                    int i = 1;
+                    while (i < externalFilesDirs.length) {
+                        if (externalFilesDirs[i] != null) {
+                            storageState = 3;
+                            returnValue = externalFilesDirs[i];
+                            break; // FIXME using the first available card, if we detect more than one we should probably let the user pick which one?
+                        }
                         i++;
                     }
                 }
-            } else {
-
-                // no external directories available, use internal storage
-
-                // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING NEW METHOD (1 OPTION): " + externalFilesDirs[0].getPath());
-
-                storageState = 4;
-
-                returnValue = externalFilesDirs[0];
-
             }
-        }
 
         if (returnValue == null) {
             Log.e("STORAGE_ERROR", "EXTERNAL FILES DIRECTORY IS NULL (STORAGE IS UNAVAILABLE)");
