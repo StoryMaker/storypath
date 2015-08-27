@@ -67,6 +67,7 @@ public class StorageHelper {
                     }
                 }
             }
+        }
 
         if (returnValue == null) {
             Log.e("STORAGE_ERROR", "EXTERNAL FILES DIRECTORY IS NULL (STORAGE IS UNAVAILABLE)");
