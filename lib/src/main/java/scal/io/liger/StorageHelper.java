@@ -23,19 +23,29 @@ public class StorageHelper {
 
         // locate actual external storage path if available
 
+        File returnValue = null;
+
+        // values for debugging
+        int storageState = 0;
+        int storageCount = 0;
+
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
 
             // can't use this method for older versions, just use existing method
 
             // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING OLD METHOD: " + context.getExternalFilesDir(null).getPath());
 
-            return context.getExternalFilesDir(null);
+            storageState = 1;
+
+            returnValue = context.getExternalFilesDir(null);
 
         } else {
 
             // use new method to get all directories, only the first directory should be internal storage
 
             File[] externalFilesDirs = context.getExternalFilesDirs(null);
+
+            storageCount = externalFilesDirs.length;
 
             if (externalFilesDirs.length > 1) {
 
@@ -45,7 +55,9 @@ public class StorageHelper {
 
                 if (useInternal) {
 
-                    return externalFilesDirs[0];
+                    storageState = 2;
+
+                    returnValue = externalFilesDirs[0];
 
                 } else {
 
@@ -53,20 +65,52 @@ public class StorageHelper {
                     
                     // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING NEW METHOD (" + externalFilesDirs.length + " OPTIONS): " + externalFilesDirs[0].getPath());
 
-                    return externalFilesDirs[1];
+                    storageState = 3;
 
+                    int i = 1;
+
+                    // iterate over storage options in case one or more is unavailable
+                    while ((i < externalFilesDirs.length) && (returnValue == null)) {
+                        returnValue = externalFilesDirs[i];
+                        i++;
+                    }
                 }
-
             } else {
 
                 // no external directories available, use internal storage
 
                 // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING NEW METHOD (1 OPTION): " + externalFilesDirs[0].getPath());
 
-                return externalFilesDirs[0];
+                storageState = 4;
+
+                returnValue = externalFilesDirs[0];
 
             }
         }
+
+        if (returnValue == null) {
+            Log.e("STORAGE_ERROR", "EXTERNAL FILES DIRECTORY IS NULL (STORAGE IS UNAVAILABLE)");
+
+            switch (storageState) {
+                case 1:
+                    Log.e("STORAGE_ERROR", "PRE-JELLYBEAN BUILD " + Build.VERSION.SDK_INT + " FOUND SO INTERNAL STORAGE MUST BE USED");
+                    break;
+                case 2:
+                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND BUT USER SELECTED INTERNAL STORAGE");
+                    break;
+                case 3:
+                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND AND USER SELECTED EXTERNAL STORAGE");
+                    break;
+                case 4:
+                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND SO INTERNAL STORAGE MUST BE USED");
+                    break;
+                default:
+                    Log.e("STORAGE_ERROR", "UNEXPECTED STATE");
+                    break;
+            }
+        }
+
+        return returnValue;
     }
 
     public static String fixPath (String currentPath, Context context) {
