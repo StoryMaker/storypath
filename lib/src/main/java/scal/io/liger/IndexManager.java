@@ -9,6 +9,7 @@ import android.util.Log;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.FileUtils;
@@ -408,8 +409,13 @@ public class IndexManager {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
-                indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
-                }.getType());
+                try {
+                    indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                    }.getType());
+                } catch (Exception e) {
+                    Log.e("IndexManager", indexJson);
+                    throw e;
+                }
             }
 
             for (InstanceIndexItem item : indexList) {
