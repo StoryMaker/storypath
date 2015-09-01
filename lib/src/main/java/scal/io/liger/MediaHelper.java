@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import hugo.weaving.DebugLog;
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.view.AudioWaveform;
 
@@ -350,6 +351,7 @@ public class MediaHelper {
      *
      * Safe to call from the UI thread.
      */
+    @DebugLog
     public static void displayMediaThumbnail(@NonNull @MediaType final String mediaType,
                                              @NonNull final String path,
                                              @NonNull final ImageView target,
