@@ -57,9 +57,9 @@
         "thumbnailPath": "images/content_packs/beta_cover.png",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "4",
-        "expansionFileSize": "1819765",
-        "expansionFileChecksum": "fbd5bbf02c5db0b1ebf89517aa3ed1b6bf07791e856a67d986712ffd19b11a70"
+        "expansionFileVersion": "5",
+        "expansionFileSize": "1211939",
+        "expansionFileChecksum": "78ce98dc8d323434ab115c5456800b2a238e44c26c12cd84271069a3046376a8"
     },
     {
         "expansionId": "mobile_photo_101",
@@ -71,8 +71,8 @@
         "thumbnailPath": "images/content_packs/mobile_photo_101_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "1",
-        "expansionFileSize": "4053863",
-        "expansionFileChecksum": "69dc1ac7b5c1a1425db325fd1bf5504889800c8e5f5c11862b9ab563ee7be87d"
+        "expansionFileVersion": "2",
+        "expansionFileSize": "3553131",
+        "expansionFileChecksum": "588ec689615f4adff659a71cd7267581bf69d5f65ee083e48b0e312e0e74dd9b"
     }
 ]

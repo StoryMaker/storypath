@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -19,9 +20,16 @@ public class StorageHelper {
 
     public static final String KEY_USE_INTERNAL = "p_use_internal_storage";
 
+    @Nullable
     public static File getActualStorageDirectory(Context context) {
 
         // locate actual external storage path if available
+
+        File returnValue = null;
+
+        // values for debugging
+        int storageState = 0;
+        int storageCount = 0;
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
 
@@ -29,44 +37,61 @@ public class StorageHelper {
 
             // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING OLD METHOD: " + context.getExternalFilesDir(null).getPath());
 
-            return context.getExternalFilesDir(null);
+            storageState = 1;
+
+            returnValue = context.getExternalFilesDir(null);
 
         } else {
-
             // use new method to get all directories, only the first directory should be internal storage
-
             File[] externalFilesDirs = context.getExternalFilesDirs(null);
+            storageCount = externalFilesDirs.length;
+            /// FIXME what if internal is null?  try to use external even though they said useIinternal
+            returnValue = externalFilesDirs[0]; // FIXME default our returnValue to the internal so if we fail finding a more appropriate place this is our fallback
+            storageState = 2; // FIXME just for debugging now
 
-            if (externalFilesDirs.length > 1) {
-
-                // check app settings
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean useInternal = settings.getBoolean(KEY_USE_INTERNAL, false);
-
-                if (useInternal) {
-
-                    return externalFilesDirs[0];
-
-                } else {
-
-                    // is there a more intelligent way to make this selection?
-                    
-                    // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING NEW METHOD (" + externalFilesDirs.length + " OPTIONS): " + externalFilesDirs[0].getPath());
-
-                    return externalFilesDirs[1];
-
-                }
-
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            boolean useInternal = settings.getBoolean(KEY_USE_INTERNAL, false);
+            if (useInternal) {
+                storageState = 4;
             } else {
-
-                // no external directories available, use internal storage
-
-                // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING NEW METHOD (1 OPTION): " + externalFilesDirs[0].getPath());
-
-                return externalFilesDirs[0];
-
+                if (externalFilesDirs.length > 1) {
+                    // iterate over storage options in case one or more is unavailable
+                    int i = 1;
+                    while (i < externalFilesDirs.length) {
+                        if (externalFilesDirs[i] != null) {
+                            storageState = 3;
+                            returnValue = externalFilesDirs[i];
+                            break; // FIXME using the first available card, if we detect more than one we should probably let the user pick which one?
+                        }
+                        i++;
+                    }
+                }
             }
         }
+
+        if (returnValue == null) {
+            Log.e("STORAGE_ERROR", "EXTERNAL FILES DIRECTORY IS NULL (STORAGE IS UNAVAILABLE)");
+
+            switch (storageState) {
+                case 1:
+                    Log.e("STORAGE_ERROR", "PRE-JELLYBEAN BUILD " + Build.VERSION.SDK_INT + " FOUND SO INTERNAL STORAGE MUST BE USED");
+                    break;
+                case 2:
+                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND BUT USER SELECTED INTERNAL STORAGE");
+                    break;
+                case 3:
+                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND AND USER SELECTED EXTERNAL STORAGE");
+                    break;
+                case 4:
+                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND SO INTERNAL STORAGE MUST BE USED");
+                    break;
+                default:
+                    Log.e("STORAGE_ERROR", "UNEXPECTED STATE");
+                    break;
+            }
+        }
+
+        return returnValue;
     }
 
     public static String fixPath (String currentPath, Context context) {
