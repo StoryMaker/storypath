@@ -1,5 +1,20 @@
 apply plugin: 'com.android.library'
 
+// required for sqlbrite/apt
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // replace with the current version of the Android plugin
+        classpath 'com.android.tools.build:gradle:1.3.0'
+        // the latest version of the android-apt plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.7'
+    }
+}
+
+apply plugin: 'com.neenbedankt.android-apt'
+
 android {
     compileSdkVersion 21
     buildToolsVersion '21.1.1'
@@ -42,4 +57,9 @@ dependencies {
     compile project(':android-iconify')
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
+
+    // new db stuff
+    compile 'com.hannesdorfmann.sqlbrite:dao:0.2.2'
+    compile 'com.hannesdorfmann.sqlbrite:annotations:0.2.2'
+    apt 'com.hannesdorfmann.sqlbrite:object-mapper:0.2.2'
 }

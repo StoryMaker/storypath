@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
+import com.hannesdorfmann.sqlbrite.dao.DaoManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +21,10 @@ import java.util.HashMap;
 import java.util.Set;
 
 import scal.io.liger.model.ExpansionIndexItem;
+import scal.io.liger.model.sqlbrite.AvailableIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
+import scal.io.liger.model.sqlbrite.QueueItemDao;
 
 /**
  * @author Matt Bogner
@@ -255,6 +260,8 @@ public class ZipHelper {
      * @return an absolute path to an expansion file with the given expansionId, or null if no
      * match could be made.
      */
+    // unused, removing for now
+    /*
     public static @Nullable String getExpansionPathForExpansionId(Context context, String expansionId) {
         String targetExpansionPath = null;
         ArrayList<String> expansionPaths = getExpansionPaths(context);
@@ -266,6 +273,7 @@ public class ZipHelper {
         }
         return targetExpansionPath;
     }
+    */
 
     public static void clearCache() {
         expansionPaths = null;
@@ -303,22 +311,31 @@ public class ZipHelper {
 
             }
 
+            // need db access to get installed files
+            InstalledIndexItemDao dao = null;
+
+            if (context instanceof MainActivity) {
+                dao = ((MainActivity)context).getInstalledIndexItemDao(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+            } else {
+                Log.e(TAG, "NO DAO IN getExpansionPaths");
+            }
+
             // add 3rd party stuff
-            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
+            HashMap<String, scal.io.liger.model.sqlbrite.ExpansionIndexItem> expansionIndex = StorymakerIndexManager.loadInstalledOrderIndex(context, dao);
 
             // need to sort patch order keys, numbers may not be consecutive
             ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
             Collections.sort(orderNumbers);
 
             for (String orderNumber : orderNumbers) {
-                ExpansionIndexItem item = expansionIndex.get(orderNumber);
+                scal.io.liger.model.sqlbrite.ExpansionIndexItem item = expansionIndex.get(orderNumber);
                 if (item == null) {
                     Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
 
                     // construct name
-                    String pathName = IndexManager.buildFilePath(item, context);
-                    String fileName = IndexManager.buildFileName(item, Constants.MAIN);
+                    String pathName = StorymakerIndexManager.buildFilePath(item, context);
+                    String fileName = StorymakerIndexManager.buildFileName(item, Constants.MAIN);
 
                     File checkFile = new File(pathName + fileName);
 
@@ -333,7 +350,7 @@ public class ZipHelper {
                                 (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
                                 (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
                             // construct name
-                            String patchName = IndexManager.buildFileName(item, Constants.PATCH);
+                            String patchName = StorymakerIndexManager.buildFileName(item, Constants.PATCH);
 
                             checkFile = new File(pathName + patchName);
 

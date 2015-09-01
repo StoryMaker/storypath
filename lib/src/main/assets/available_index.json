@@ -2,6 +2,7 @@
     {
         "expansionId": "learning_guide",
         "patchOrder": "1",
+        "contentType": "GUIDE",
         "title": "Learning Guide",
         "packageName": "org.storymaker.app",
         "description": "Learn the Basic Elements of a Story",
@@ -18,6 +19,7 @@
     {
         "expansionId": "burundi",
         "patchOrder": "2",
+        "contentType": "LESSON",
         "title": "Burundi Content",
         "packageName": "org.storymaker.app",
         "description": "Lesson Pack for Burundi",
@@ -34,6 +36,7 @@
     {
         "expansionId": "persian",
         "patchOrder": "3",
+        "contentType": "LESSON",
         "title": "Persian Content",
         "packageName": "org.storymaker.app",
         "description": "Lesson Pack for Iranian Diaspora",
@@ -47,6 +50,7 @@
     {
         "expansionId": "beta",
         "patchOrder": "4",
+        "contentType": "TEMPLATE",
         "title": "Beta Content",
         "packageName": "org.storymaker.app",
         "description": "Beta Content Pack for Testing",
@@ -60,6 +64,7 @@
     {
         "expansionId": "mobile_photo_101",
         "patchOrder": "5",
+        "contentType": "GUIDE",
         "title": "Mobile Photo 101",
         "packageName": "org.storymaker.app",
         "description": "Beta Pack of Mobile Photo Lessons",
