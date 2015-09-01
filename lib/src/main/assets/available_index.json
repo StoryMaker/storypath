@@ -2,6 +2,7 @@
     {
         "expansionId": "learning_guide",
         "patchOrder": "1",
+        "contentType": "GUIDE",
         "title": "Learning Guide",
         "packageName": "org.storymaker.app",
         "contentType": "guide",
@@ -19,6 +20,7 @@
     {
         "expansionId": "burundi",
         "patchOrder": "2",
+        "contentType": "LESSON",
         "title": "Burundi Content",
         "packageName": "org.storymaker.app",
         "contentType": "lesson",
@@ -36,6 +38,7 @@
     {
         "expansionId": "persian",
         "patchOrder": "3",
+        "contentType": "LESSON",
         "title": "Persian Content",
         "packageName": "org.storymaker.app",
         "contentType": "lesson",
@@ -50,6 +53,7 @@
     {
         "expansionId": "beta",
         "patchOrder": "4",
+        "contentType": "TEMPLATE",
         "title": "Beta Content",
         "packageName": "org.storymaker.app",
         "contentType": "template",
@@ -64,6 +68,7 @@
     {
         "expansionId": "mobile_photo_101",
         "patchOrder": "5",
+        "contentType": "GUIDE",
         "title": "Mobile Photo 101",
         "packageName": "org.storymaker.app",
         "contentType": "guide",

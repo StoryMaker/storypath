@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
+import com.hannesdorfmann.sqlbrite.dao.DaoManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,6 +32,10 @@ import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
+import scal.io.liger.model.sqlbrite.AvailableIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
+import scal.io.liger.model.sqlbrite.QueueItemDao;
 import scal.io.liger.view.ScrollLockRecyclerView;
 
 
@@ -54,6 +59,31 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     // new, store info to minimize file access
     public HashMap<String, InstanceIndexItem> instanceIndex;
+
+    // new stuff
+    private InstanceIndexItemDao instanceIndexItemDao;
+    private AvailableIndexItemDao availableIndexItemDao;
+    private InstalledIndexItemDao installedIndexItemDao;
+    private QueueItemDao queueItemDao;
+    private DaoManager daoManager;
+    private int dbVersion = 1;
+
+    // must set dao stuff in constructor?
+    public MainActivity() {
+
+        instanceIndexItemDao = new InstanceIndexItemDao();
+        availableIndexItemDao = new AvailableIndexItemDao();
+        installedIndexItemDao = new InstalledIndexItemDao();
+        queueItemDao = new QueueItemDao();
+
+        daoManager = new DaoManager(MainActivity.this, "Storymaker.db", dbVersion, instanceIndexItemDao, availableIndexItemDao, installedIndexItemDao, queueItemDao);
+        daoManager.setLogging(false);
+
+    }
+
+    public InstalledIndexItemDao getInstalledIndexItemDao () {
+        return installedIndexItemDao;
+    }
 
     public String getLanguage() {
         return language;

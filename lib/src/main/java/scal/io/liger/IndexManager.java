@@ -83,6 +83,36 @@ public class IndexManager {
         }
     }
 
+
+
+    // adding these to smooth transition to storymaker ExpansionIndexItem class
+
+    public static String buildFileAbsolutePath(String expansionId,
+                                               String mainOrPatch,
+                                               String version,
+                                               Context context) {
+
+        String filePath = buildFilePath(context);
+
+        String fileName = buildFileName(expansionId, mainOrPatch, version);
+
+        return new File(filePath, fileName).getAbsolutePath();
+    }
+
+    public static String buildFilePath(Context context) {
+
+        return StorageHelper.getActualStorageDirectory(context).getPath();
+    }
+
+    public static String buildFileName(String expansionId,
+                                       String mainOrPatch,
+                                       String version) {
+
+        return expansionId + "." + mainOrPatch + "." + version + ".obb";
+    }
+
+
+
     public static String buildFilePath(ExpansionIndexItem item, Context context) {
 
         // TODO - switching to the new storage method ignores the value set in the expansion index item
