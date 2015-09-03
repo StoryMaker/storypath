@@ -145,6 +145,9 @@ public class StorymakerQueueManager {
             // check for cached queries
             checkQueueFinished(context, removedItem.getQueueFile());
 
+            // need to actually delete item from db (saving updated list will not remove it)
+            dao.removeQueueItem(removedItem);
+
             Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 
             saveQueue(context, cachedQueue, downloadQueueName, dao);

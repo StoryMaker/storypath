@@ -597,9 +597,10 @@ public class StorymakerIndexManager {
         return indexList;
     }
 
-    public static void registerInstalledIndexItem(Context context, ExpansionIndexItem indexItem, Dao dao) {
+    public static void installedIndexAdd(Context context, InstalledIndexItem indexItem, Dao dao) {
 
         HashMap<String, ExpansionIndexItem> indexMap = loadInstalledIdIndex(context, dao);
+
         indexMap.put(indexItem.getExpansionId(), indexItem);
         ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
         for (ExpansionIndexItem eii : indexMap.values()) {
@@ -607,6 +608,36 @@ public class StorymakerIndexManager {
         }
         saveIndex(context, indexList, installedIndexName, dao);
         return;
+    }
+
+    public static void installedIndexRemove(Context context, InstalledIndexItem indexItem, Dao dao) {
+
+        HashMap<String, ExpansionIndexItem> indexMap = loadInstalledIdIndex(context, dao);
+
+        if (indexMap.keySet().contains(indexItem.getExpansionId())) {
+            indexMap.remove(indexItem.getExpansionId());
+            ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+            for (ExpansionIndexItem eii : indexMap.values()) {
+                indexList.add(eii);
+            }
+
+            // need to actually delete item from db (saving updated list will not remove it)
+            if (dao instanceof InstalledIndexItemDao) {
+
+                InstalledIndexItemDao installedDao = (InstalledIndexItemDao) dao;
+                installedDao.removeInstalledIndexItem(indexItem);
+
+                Log.d("INDEX", "UN-INSTALLED " + indexItem.getExpansionId() + " FROM INDEX");
+
+            } else {
+
+                Log.e("INDEX", "FAILED TO UN-INSTALL " + indexItem.getExpansionId() + " (DAO CASTING ISSUE)");
+
+            }
+
+            saveIndex(context, indexList, installedIndexName, dao);
+            return;
+        }
     }
 
     public static void saveAvailableIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap, Dao dao) {
@@ -638,6 +669,8 @@ public class StorymakerIndexManager {
         if (jsonFileName.contains(Constants.AVAILABLE)) {
             if (dao instanceof AvailableIndexItemDao) {
 
+                Log.d("INDEX", "SAVING AVAILABLE INDEX");
+
                 AvailableIndexItemDao availableDao = (AvailableIndexItemDao)dao;
 
                 for (ExpansionIndexItem item : indexList) {
@@ -645,13 +678,21 @@ public class StorymakerIndexManager {
                         availableDao.addAvailableIndexItem((AvailableIndexItem) item, true);
                     } else {
                         // error
+
+                        Log.e("INDEX", "ITEM MISMATCH? " + item.getExpansionId());
+
                     }
                 }
             } else {
                 //error
+
+                Log.e("INDEX", "DAO MISMATCH? " + jsonFileName);
+
             }
         } else if (jsonFileName.contains(Constants.INSTALLED)) {
             if (dao instanceof InstalledIndexItemDao) {
+
+                Log.d("INDEX", "SAVING INSTALLED INDEX");
 
                 InstalledIndexItemDao installedDao = (InstalledIndexItemDao)dao;
 
@@ -660,10 +701,16 @@ public class StorymakerIndexManager {
                         installedDao.addInstalledIndexItem((InstalledIndexItem) item, true);
                     } else {
                         // error
+
+                        Log.e("INDEX", "ITEM MISMATCH? " + item.getExpansionId());
+
                     }
                 }
             } else {
                 //error
+
+                Log.e("INDEX", "DAO MISMATCH? " + jsonFileName);
+
             }
         } else {
             //error

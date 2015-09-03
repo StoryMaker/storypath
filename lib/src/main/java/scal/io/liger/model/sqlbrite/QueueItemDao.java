@@ -89,4 +89,22 @@ public class QueueItemDao extends Dao {
                 item.queueTime,
                 replace);
     }
+
+    public Observable<Integer> removeQueueItem(QueueItem item) {
+
+        // remove an existing record
+
+        return removeQueueItemByKey(item.getQueueFile());
+    }
+
+    public Observable<Integer> removeQueueItemByKey(String key) {
+
+        // remove an existing record with a matching key
+
+        Log.d("DB_REMOVE", "REMOVE ROW FOR " + key);
+
+        return delete(QueueItem.TABLE_NAME,
+                QueueItem.COLUMN_QUEUEFILE + " = ? ",
+                key);
+    }
 }

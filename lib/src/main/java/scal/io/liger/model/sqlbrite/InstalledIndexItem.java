@@ -16,6 +16,33 @@ public class InstalledIndexItem extends ExpansionIndexItem {
 
     }
 
+    public InstalledIndexItem(ExpansionIndexItem item) {
+        super(item.getId(),
+                item.getTitle(),
+                item.getDescription(),
+                item.getThumbnailPath(),
+                item.getPackageName(),
+                item.getExpansionId(),
+                item.getPatchOrder(),
+                item.getContentType(),
+                item.getExpansionFileUrl(),
+                item.getExpansionFilePath(),
+                item.getExpansionFileVersion(),
+                item.getExpansionFileSize(),
+                item.getExpansionFileChecksum(),
+                item.getPatchFileVersion(),
+                item.getPatchFileSize(),
+                item.getPatchFileChecksum(),
+                item.getAuthor(),
+                item.getWebsite(),
+                item.getDateUpdated(),
+                item.getLanguages(),
+                item.getTags(),
+                item.getInstalledFlag(),
+                item.getMainDownloadFlag(),
+                item.getPatchDownloadFlag());
+    }
+
     public InstalledIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag) {
         super(id,
                 title,
