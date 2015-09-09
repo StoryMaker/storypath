@@ -10,6 +10,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
@@ -196,17 +197,33 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         HashMap<String, String> storyPathTemplateFiles = new HashMap<String, String>();
         tempElement = jObj.get("storyPathTemplateFiles");
         if (tempElement != null) {
-            tempObj = tempElement.getAsJsonObject();
-            storyPathTemplateFiles = gson.fromJson(tempObj, storyPathTemplateFiles.getClass());
-            spl.setStoryPathTemplateFiles(storyPathTemplateFiles);
+            try {
+                tempObj = tempElement.getAsJsonObject();
+                storyPathTemplateFiles = gson.fromJson(tempObj, storyPathTemplateFiles.getClass());
+                spl.setStoryPathTemplateFiles(storyPathTemplateFiles);
+            } catch (IllegalStateException ise) {
+                System.err.println("ILLEGAL STATE WHILE PROCESSING \"storyPathTemplateFiles\" -> " + ise.getMessage());
+                errorFlag = true;
+            } catch (JsonSyntaxException jse) {
+                System.err.println("JSON SYNTAX ERROR WHILE PROCESSING \"storyPathTemplateFiles\" -> " + jse.getMessage());
+                errorFlag = true;
+            }
         }
 
         HashMap<String, MediaFile> mediaFiles = new HashMap<String, MediaFile>();
         tempElement = jObj.get("mediaFiles");
         if (tempElement != null) {
-            tempObj = tempElement.getAsJsonObject();
-            mediaFiles = gson.fromJson(tempObj, new TypeToken<HashMap<String, MediaFile>>(){}.getType());
-            spl.setMediaFiles(mediaFiles);
+            try {
+                tempObj = tempElement.getAsJsonObject();
+                mediaFiles = gson.fromJson(tempObj, new TypeToken<HashMap<String, MediaFile>>() {}.getType());
+                spl.setMediaFiles(mediaFiles);
+            } catch (IllegalStateException ise) {
+                System.err.println("ILLEGAL STATE WHILE PROCESSING \"mediaFiles\" -> " + ise.getMessage());
+                errorFlag = true;
+            } catch (JsonSyntaxException jse) {
+                System.err.println("JSON SYNTAX ERROR WHILE PROCESSING \"mediaFiles\" -> " + jse.getMessage());
+                errorFlag = true;
+            }
         }
 
         ArrayList<AudioClip> audioClips = new ArrayList<AudioClip>();
@@ -214,8 +231,16 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         if (tempElement != null) {
             JsonArray jArr = tempElement.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
-                AudioClip clip = gson.fromJson(jArr.get(i), new TypeToken<AudioClip>(){}.getType());
-                audioClips.add(clip);
+                try {
+                    AudioClip clip = gson.fromJson(jArr.get(i), new TypeToken<AudioClip>() {}.getType());
+                    audioClips.add(clip);
+                } catch (IllegalStateException ise) {
+                    System.err.println("ILLEGAL STATE WHILE PROCESSING \"audioClips\" (#" + i + ") -> " + ise.getMessage());
+                    errorFlag = true;
+                } catch (JsonSyntaxException jse) {
+                    System.err.println("JSON SYNTAX ERROR WHILE PROCESSING \"audioClips\" (#" + i + ") -> " + jse.getMessage());
+                    errorFlag = true;
+                }
             }
             spl.setAudioClips(audioClips);
         }
@@ -243,9 +268,17 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
         if (jEle != null) {
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
-                JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                Dependency dependency = (gson.fromJson(arrObj, Dependency.class));
-                spl.addDependency(dependency);
+                try {
+                    JsonObject arrObj = jArr.get(i).getAsJsonObject();
+                    Dependency dependency = (gson.fromJson(arrObj, Dependency.class));
+                    spl.addDependency(dependency);
+                } catch (IllegalStateException ise) {
+                    System.err.println("ILLEGAL STATE WHILE PROCESSING \"dependencies\" (#" + i + ") -> " + ise.getMessage());
+                    errorFlag = true;
+                } catch (JsonSyntaxException jse) {
+                    System.err.println("JSON SYNTAX ERROR WHILE PROCESSING \"dependencies\" (#" + i + ") -> " + jse.getMessage());
+                    errorFlag = true;
+                }
             }
         }
 
@@ -264,10 +297,16 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
                 }
                 try {
                     Class cardClass = Class.forName(fqCardType);
-                    Card card = (Card)(gson.fromJson(arrObj, cardClass));
+                    Card card = (Card) (gson.fromJson(arrObj, cardClass));
                     spl.addCard(card);
                 } catch (ClassNotFoundException e) {
                     System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + fqCardType);
+                    errorFlag = true;
+                } catch (IllegalStateException ise) {
+                    System.err.println("ILLEGAL STATE WHILE PROCESSING CARD TYPE: " + fqCardType + " -> " + ise.getMessage());
+                    errorFlag = true;
+                } catch (JsonSyntaxException jse) {
+                    System.err.println("JSON SYNTAX ERROR WHILE PROCESSING CARD TYPE: " + fqCardType + " -> " + jse.getMessage());
                     errorFlag = true;
                 }
             }
