@@ -54,8 +54,8 @@
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
         "expansionFileVersion": "5",
-        "expansionFileSize": "1211939",
-        "expansionFileChecksum": "78ce98dc8d323434ab115c5456800b2a238e44c26c12cd84271069a3046376a8"
+        "expansionFileSize": "1212050",
+        "expansionFileChecksum": "c8579074960aa46cfba26e57504b2c1524cf65032f895d6d7f33acbc2fb26e9a"
     },
     {
         "expansionId": "mobile_photo_101",
