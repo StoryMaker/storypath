@@ -76,7 +76,7 @@ public class InstanceIndexItemDao extends Dao {
                 });
     }
 
-    public Observable<Long> addInstanceIndexItem(long id, String title, String description, String thumbnailPath, String instanceFilePath, long storyCreationDate, long storySaveDate, String storyType, String language, String storyPathId, String storyPathPrerequisites, long storyCompletionDate) {
+    public Observable<Long> addInstanceIndexItem(long id, String title, String description, String thumbnailPath, String instanceFilePath, long storyCreationDate, long storySaveDate, String storyType, String language, String storyPathId, String storyPathPrerequisites, long storyCompletionDate, boolean replace) {
 
         Observable<Long> rowId = null;
 
@@ -96,7 +96,11 @@ public class InstanceIndexItemDao extends Dao {
                 .build();
 
         try {
-            rowId = insert(InstanceIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+            if (replace) {
+                rowId = insert(InstanceIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+            } else {
+                rowId = insert(InstanceIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_IGNORE);
+            }
         } catch (SQLiteConstraintException sce) {
             Log.d("RX_DB", "INSERT FAILED: " + sce.getMessage());
         }
@@ -104,7 +108,7 @@ public class InstanceIndexItemDao extends Dao {
         return rowId;
     }
 
-    public Observable<Long> addInstanceIndexItem(scal.io.liger.model.InstanceIndexItem item) {
+    public Observable<Long> addInstanceIndexItem(scal.io.liger.model.InstanceIndexItem item, boolean replace) {
 
         String sppString = null;
 
@@ -124,10 +128,11 @@ public class InstanceIndexItemDao extends Dao {
                 item.getLanguage(),
                 item.getStoryPathId(),
                 sppString,
-                item.getStoryCompletionDate());
+                item.getStoryCompletionDate(),
+                replace);
     }
 
-    public Observable<Long> addInstanceIndexItem(InstanceIndexItem item) {
+    public Observable<Long> addInstanceIndexItem(InstanceIndexItem item, boolean replace) {
 
         return addInstanceIndexItem(item.getId(),
                 item.getTitle(),
@@ -140,6 +145,7 @@ public class InstanceIndexItemDao extends Dao {
                 item.getLanguage(),
                 item.getStoryPathId(),
                 item.getStoryPathPrerequisites(),
-                item.getStoryCompletionDate());
+                item.getStoryCompletionDate(),
+                replace);
     }
 }

@@ -749,7 +749,7 @@ public class StorymakerIndexManager {
             InstanceIndexItemDao instanceDao = (InstanceIndexItemDao) dao;
 
             for (InstanceIndexItem item : indexList) {
-                instanceDao.addInstanceIndexItem(item);
+                instanceDao.addInstanceIndexItem(item, true);
             }
         } else {
             //error
