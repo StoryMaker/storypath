@@ -81,7 +81,7 @@ public class MediaFile implements Cloneable {
     public void loadThumbnail(@NonNull ImageView target,
                               @Nullable final MediaFileThumbnailCallback callback) {
 
-        if (TextUtils.isEmpty(thumbnailFilePath)) {
+        if (TextUtils.isEmpty(thumbnailFilePath) || !(new File(thumbnailFilePath)).exists()) {
 
             MediaHelper.displayLoadingIndicator(medium, target);
 
