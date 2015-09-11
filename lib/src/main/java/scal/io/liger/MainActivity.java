@@ -572,7 +572,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                         mCardAdapter.changeCard(cc);
                         scrollRecyclerViewToCard(cc);
                     } else {
-                        Log.e(TAG, "onActivityResult, expected " + Constants.VIDEO + " but found " + mimeType);
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.VIDEO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.VIDEO + " file but found " + mimeType);
                         return;
                     }
                 } else {
@@ -610,7 +613,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                     if (mimeType.startsWith(Constants.IMAGE)) {
 
-                        MediaFile mf = new MediaFile(path, Constants.PHOTO); // TODO: switch over to "image" to match mime type?
+                        MediaFile mf = new MediaFile(path, Constants.PHOTO);
                         cc.saveMediaFile(mf);
 
                         // SEEMS LIKE A REASONABLE TIME TO SAVE
@@ -619,7 +622,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                         mCardAdapter.changeCard(cc);
                         scrollRecyclerViewToCard(cc);
                     } else {
-                        Log.e(TAG, "onActivityResult, expected " + Constants.IMAGE + " but found " + mimeType);
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.PHOTO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.IMAGE + " file but found " + mimeType);
                         return;
                     }
                 } else {
@@ -664,7 +670,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                         mCardAdapter.changeCard(cc);
                         scrollRecyclerViewToCard(cc);
                     } else {
-                        Log.e(TAG, "onActivityResult, expected " + Constants.AUDIO + " but found " + mimeType);
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.AUDIO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.AUDIO + " file but found " + mimeType);
                         return;
                     }
                 } else {
@@ -718,7 +727,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                         mCardAdapter.changeCard(cc);
                         scrollRecyclerViewToCard(cc);
                     } else {
-                        Log.e(TAG, "onActivityResult, expected " + checkType + " but found " + mimeType);
+
+                        Utility.toastOnUiThread(this, "Expecting " + cc.getMedium() + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + checkType + " file but found " + mimeType);
                         return;
                     }
                 } else {
