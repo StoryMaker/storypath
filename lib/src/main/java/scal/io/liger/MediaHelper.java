@@ -602,7 +602,8 @@ public class MediaHelper {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(media.getAbsolutePath(), options);
+        Bitmap bitmap = BitmapFactory.decodeFile(media.getAbsolutePath(), options);
+        return ExifUtils.rotateBitmapForExifData(media.getAbsolutePath(), bitmap);
     }
 
     private static @Nullable Bitmap decodeSampledBitmapFromInputStream(@NonNull InputStream media,

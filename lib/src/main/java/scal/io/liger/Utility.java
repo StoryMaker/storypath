@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -156,5 +157,19 @@ public class Utility {
         }
 
         return source.subSequence(0, i+1);
+    }
+
+    public static String getIntentMediaType(String mediaType) {
+        String intentType = null;
+
+        if (TextUtils.equals(mediaType, Constants.PHOTO)) {
+            intentType = "image/*";
+        } else if (TextUtils.equals(mediaType, Constants.VIDEO)){
+            intentType = "video/*";
+        } else if (TextUtils.equals(mediaType, Constants.AUDIO)){
+            intentType = "audio/*";
+        }
+
+        return intentType;
     }
 }
