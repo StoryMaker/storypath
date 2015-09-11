@@ -35,6 +35,7 @@ public class Constants {
     public static final String AUDIO = "audio";
     public static final String PHOTO = "photo";
     public static final String VIDEO = "video";
+    public static final String IMAGE = "image";
 
     /** Values for {@link scal.io.liger.model.ClipMetadata#type */
     public static final String CHARACTER = "character";
