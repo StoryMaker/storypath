@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -641,7 +642,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 }
 
                 // FIXME this can get a file:// uri, e.g. from facebook: https://rink.hockeyapp.net/manage/apps/30627/app_versions/62/crash_reasons/24334871
-                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
+                //String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
+                String path = FileUtils.getPath(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, imported file path:" + path);
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 

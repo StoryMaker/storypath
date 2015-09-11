@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 import scal.io.liger.av.AudioRecorder;
 import scal.io.liger.av.ClipCardsPlayer;
 import scal.io.liger.model.Card;
@@ -275,8 +276,7 @@ public class ClipCardView extends ExampleCardView {
                 // file (as opposed to a list of contacts or timezones)
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                // TODO : Adjust based on medium?
-                intent.setType("*/*");
+                intent.setType(Utility.getIntentMediaType(mCardModel.getMedium()));
 
                 String cardMediaId = mCardModel.getStoryPath().getId() + "::" + mCardModel.getId() + "::" + MEDIA_PATH_KEY;
                 mContext.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).edit().putString(Constants.PREFS_CALLING_CARD_ID, cardMediaId).apply(); // Apply is async and fine for UI thread. commit() is synchronous
