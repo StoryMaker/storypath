@@ -21,6 +21,7 @@ import com.google.gson.stream.MalformedJsonException;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -554,14 +555,29 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(path, Constants.VIDEO);
-                    cc.saveMediaFile(mf);
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // confirm mime type
+                    String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(Constants.VIDEO)) {
+
+                        MediaFile mf = new MediaFile(path, Constants.VIDEO);
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.VIDEO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.VIDEO + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     if (c != null) {
                         Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
@@ -589,14 +605,29 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(path, Constants.PHOTO);
-                    cc.saveMediaFile(mf);
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // confirm mime type
+                    String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(Constants.IMAGE)) {
+
+                        MediaFile mf = new MediaFile(path, Constants.PHOTO);
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.PHOTO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.IMAGE + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
                 }
@@ -622,14 +653,29 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(path, Constants.AUDIO);
-                    cc.saveMediaFile(mf);
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // confirm mime type
+                    String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(Constants.AUDIO)) {
+
+                        MediaFile mf = new MediaFile(path, Constants.AUDIO);
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.AUDIO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.AUDIO + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
                 }
@@ -640,8 +686,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 if (Build.VERSION.SDK_INT >= 19) {
                     getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
-
+                
                 String path = FileUtils.getPath(getApplicationContext(), uri);
+
                 Log.d(TAG, "onActivityResult, imported file path:" + path);
 
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
@@ -649,16 +696,41 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
 
                 if (c instanceof ClipCard) {
-                    ClipCard cc = (ClipCard)c;
+                    ClipCard cc = (ClipCard) c;
 
-                    MediaFile mf = new MediaFile(uri.toString(), cc.getMedium());
-                    cc.saveMediaFile(mf);
+                    String checkType = cc.getMedium();
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // adjust target value if needed
+                    if (checkType.equals(Constants.PHOTO)) {
+                        checkType = Constants.IMAGE;
+                    }
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    // confirm mime type
+                    String mimeType = "";
+
+                    if (path != null) {
+                        mimeType = URLConnection.guessContentTypeFromName(path); // TODO: a null path causes failure, is that ok?
+                    }
+                    
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(checkType)) {
+
+                        MediaFile mf = new MediaFile(uri.toString(), cc.getMedium());
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + cc.getMedium() + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + checkType + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }

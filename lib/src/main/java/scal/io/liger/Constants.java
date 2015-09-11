@@ -101,4 +101,7 @@ public class Constants {
     public static final String EXTRA_REQUIRED_UPLOAD_TARGETS = "extra_required_upload_targets";
     public static final String EXTRA_REQUIRED_PUBLISH_TARGETS = "extra_required_publish_targets";
     public static final String EXTRA_REQUIRED_TAGS = "extra_required_tags";
+
+    // mime type ("photo" is not a valid mime type)
+    public static final String IMAGE = "image";
 }
