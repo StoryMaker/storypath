@@ -41,8 +41,13 @@ public class FullMetadata implements Parcelable {
         if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             Log.d(TAG, "retriever.setDataSource(" + this.filePath + ");");
-            retriever.setDataSource(this.filePath);
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            String time = null;
+            try {
+                retriever.setDataSource(this.filePath);
+                time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            } catch (RuntimeException re) {
+                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + this.filePath + " -> " + re.getMessage());
+            }
             long timeMs = 0;
             if (time != null) {
                 timeMs = Long.parseLong(time);
@@ -68,8 +73,13 @@ public class FullMetadata implements Parcelable {
 
         if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(this.filePath);
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            String time = null;
+            try {
+                retriever.setDataSource(this.filePath);
+                time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            } catch (RuntimeException re) {
+                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + this.filePath + " -> " + re.getMessage());
+            }
             long timeMs = 0;
             if (time != null) {
                 timeMs = Long.parseLong(time);
