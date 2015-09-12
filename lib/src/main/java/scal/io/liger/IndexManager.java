@@ -381,7 +381,7 @@ public class IndexManager {
                 return indexList;
             }
 
-            if ((indexJson != null) && (indexJson.length() > 0)) {
+            if ((indexJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -531,7 +531,7 @@ public class IndexManager {
             jsonStream.close();
             contentJson = new String(buffer);
 
-            if ((contentJson != null) && (contentJson.length() > 0)) {
+            if ((contentJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -576,7 +576,7 @@ public class IndexManager {
             jsonStream.close();
             contentJson = new String(buffer);
 
-            if ((contentJson != null) && (contentJson.length() > 0)) {
+            if ((contentJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -614,7 +614,7 @@ public class IndexManager {
             jsonStream.close();
             metadataJson = new String(buffer);
 
-            if ((metadataJson != null) && (metadataJson.length() > 0)) {
+            if ((metadataJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
