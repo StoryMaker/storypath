@@ -37,6 +37,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -184,7 +185,7 @@ public abstract class APEZProvider extends ContentProvider {
 
 	@Override
 	public ContentProviderResult[] applyBatch(
-			ArrayList<ContentProviderOperation> operations)
+			@NonNull ArrayList<ContentProviderOperation> operations)
 			throws OperationApplicationException {
         initIfNecessary();
 		return super.applyBatch(operations);

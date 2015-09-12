@@ -1,5 +1,6 @@
 package scal.io.liger.model;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class BaseIndexItem  implements Comparable {
     }
 
     @Override
-    public int compareTo(Object another) {
+    public int compareTo(@NonNull Object another) {
         return 0; // no basis for comparison
     }
 }

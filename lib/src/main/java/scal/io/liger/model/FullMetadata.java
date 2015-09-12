@@ -167,11 +167,12 @@ public class FullMetadata implements Parcelable {
         this.medium = medium;
     }
 
+    @NonNull
     public String getFilePath() {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(@NonNull String filePath) {
         this.filePath = filePath;
     }
 }

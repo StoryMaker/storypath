@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import android.support.annotation.NonNull;
+
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
@@ -65,7 +67,7 @@ public class BaseIndexItem implements Comparable {
     }
 
     @Override
-    public int compareTo(Object another) {
+    public int compareTo(@NonNull Object another) {
         return 0; // no basis for comparison
     }
 }

@@ -3,6 +3,7 @@ package scal.io.liger;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -649,7 +650,7 @@ public class JsonHelper {
 
     // NEW
 
-    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
+    public static StoryPathLibrary loadStoryPathLibraryFromZip(@NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
 
@@ -719,7 +720,7 @@ public class JsonHelper {
         return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
     }
 
-    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
+    public static @NonNull StoryPathLibrary deserializeStoryPathLibrary(@NonNull String storyPathLibraryJson, @NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 

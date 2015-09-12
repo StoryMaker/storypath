@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Binder;
 import android.os.Parcel;
+import android.support.annotation.NonNull;
+
 public interface ILicensingService extends android.os.IInterface
 {
 /** Local-side IPC implementation stub class. */
@@ -39,7 +41,7 @@ public android.os.IBinder asBinder()
 {
 return this;
 }
-public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException
+public boolean onTransact(int code, @NonNull android.os.Parcel data, @NonNull android.os.Parcel reply, int flags) throws android.os.RemoteException
 {
 switch (code)
 {

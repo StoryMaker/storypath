@@ -1,5 +1,6 @@
 package scal.io.liger.model;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -240,7 +241,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     }
 
     @Override
-    public int compareTo(Object another) {
+    public int compareTo(@NonNull Object another) {
         if (another instanceof InstanceIndexItem) {
             //Log.d("COMPARE", title + " COMPARED TO INSTANCE ITEM: -1");
             return -1; // should always appear below instance index items
