@@ -104,4 +104,7 @@ public class Constants {
 
     public static final String AVAILABLE = "available";
     public static final String INSTALLED = "installed";
+
+    // mime type ("photo" is not a valid mime type)
+    public static final String IMAGE = "image"; // FIXME rename MIME_IMAGE and add its compadres here too
 }

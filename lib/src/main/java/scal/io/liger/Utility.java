@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.io.File;
@@ -46,64 +47,6 @@ public class Utility {
         return (s == null) || (s.length() == 0);
     }
 
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
-        if (contentUri == null) {
-            return null;
-        }
-
-        // work-around to handle normal paths
-        if (contentUri.toString().startsWith(File.separator)) {
-            return contentUri.toString();
-        }
-
-        // work-around to handle normal paths
-        if (contentUri.toString().startsWith("file://")) {
-            return contentUri.toString().split("file://")[1];
-        }
-
-        // TODO deal with document providers
-        // path of form : content://com.android.providers.media.documents/document/video:183
-
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    /*
-
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        // work-around to handle normal paths
-        if (contentUri.toString().startsWith(File.separator)) {
-            return contentUri.toString();
-        }
-
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-     */
     public static void toastOnUiThread(Activity activity, String message) {
         toastOnUiThread(activity, message, false);
     }
@@ -156,5 +99,80 @@ public class Utility {
         }
 
         return source.subSequence(0, i+1);
+    }
+
+    public static String getIntentMediaType(String mediaType) {
+        String intentType = null;
+
+        if (TextUtils.equals(mediaType, Constants.PHOTO)) {
+            intentType = "image/*";
+        } else if (TextUtils.equals(mediaType, Constants.VIDEO)){
+            intentType = "video/*";
+        } else if (TextUtils.equals(mediaType, Constants.AUDIO)){
+            intentType = "audio/*";
+        }
+
+        return intentType;
+    }
+
+    // https://gist.github.com/vitriolix/5c50439d49ac188c2d31
+    public static @Nullable Matrix getExifTranspositionMatrix(@NonNull String src) {
+        Matrix matrix = null;
+        try {
+            ExifInterface ei = new ExifInterface(src);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            if (orientation == 1) {
+                return null;
+            }
+
+            matrix = new Matrix();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    matrix.setScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.setRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSPOSE:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.setRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_TRANSVERSE:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return matrix;
+    }
+
+    public static @NonNull Bitmap rotateBitmapForExifData(@NonNull String src, @NonNull Bitmap bitmap) {
+        Matrix matrix = getExifTranspositionMatrix(src);
+        if (matrix == null) {
+            return bitmap;
+        }
+        try {
+            Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return oriented;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return bitmap;
+        }
     }
 }

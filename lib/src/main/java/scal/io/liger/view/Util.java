@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
@@ -24,6 +25,7 @@ import java.util.List;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.AudioClipFull;
@@ -52,6 +54,22 @@ public class Util {
 
         try {
             ArrayList<FullMetadata> exportMetadata = storyPath.exportSelectedFullMetadata(); // TODO : Place in AsyncTask?
+
+            // check for audio/video clips with no duration
+            int num = 1;
+            String message = "";
+            for (FullMetadata fm : exportMetadata) {
+                if ((fm.getMedium().equals(Constants.VIDEO) || fm.getMedium().equals(Constants.AUDIO)) && fm.getDuration() == 0) {
+                    message = message + num + " ";
+                }
+                num++;
+            }
+            if (message.length() > 0) {
+                Toast.makeText(host, "Clips " + message + "have a duration of 0", Toast.LENGTH_LONG).show();
+                Log.e("Util", "Clips " + message + "have a duration of 0");
+                return;
+            }
+
             ArrayList<AudioClipFull> exportAudioClipsMetadata = storyPath.exportAudioClips();
             if (exportMetadata.size() > 0) {
                 Intent i = new Intent();
