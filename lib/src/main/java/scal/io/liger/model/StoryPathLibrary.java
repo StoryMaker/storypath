@@ -39,7 +39,7 @@ public class StoryPathLibrary extends StoryPath {
     @Expose private String currentStoryPathFile;
     private StoryPath currentStoryPath; // not serialized
     /** Map of MediaFile UUIDs to MediaFile */
-    @Expose private HashMap<String, MediaFile> mediaFiles;
+    @Nullable @Expose private HashMap<String, MediaFile> mediaFiles;
     @Expose private ArrayList<AudioClip> audioClips;
 
     // additional metadata for publishing

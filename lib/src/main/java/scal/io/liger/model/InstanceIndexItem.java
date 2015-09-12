@@ -145,26 +145,24 @@ public class InstanceIndexItem extends BaseIndexItem {
                 HashMap<String, MediaFile> mediaMap = spl.getMediaFiles();
                 if (mediaMap != null) {
                     Collection<MediaFile> mediaFiles = mediaMap.values();
-                    if (mediaFiles != null) {
-                        for (MediaFile mediaFile : mediaFiles) {
-                            File f1 = new File(mediaFile.getPath());
+                    for (MediaFile mediaFile : mediaFiles) {
+                        File f1 = new File(mediaFile.getPath());
 
-                            if (f1.exists()) {
-                                Log.d("INDEX", "DELETING STORY MEDIA FILE " + f1.getPath());
-                                f1.delete();
-                            }
-
-                            if (mediaFile.getThumbnailFilePath() != null) {
-
-                                File f2 = new File(mediaFile.getThumbnailFilePath());
-
-                                if (f2.exists()) {
-                                    Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getPath());
-                                    f2.delete();
-                                }
-                            }
-
+                        if (f1.exists()) {
+                            Log.d("INDEX", "DELETING STORY MEDIA FILE " + f1.getPath());
+                            f1.delete();
                         }
+
+                        if (mediaFile.getThumbnailFilePath() != null) {
+
+                            File f2 = new File(mediaFile.getThumbnailFilePath());
+
+                            if (f2.exists()) {
+                                Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getPath());
+                                f2.delete();
+                            }
+                        }
+
                     }
                 }
 
