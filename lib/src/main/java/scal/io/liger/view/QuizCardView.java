@@ -148,17 +148,17 @@ public class QuizCardView extends ExampleCardView {
 
         quizChoiceView.setSelected(isSelected);
         Choice choice = (Choice) quizChoiceView.getTag(R.id.view_tag_quiz_choice);
-        StringBuilder logString = new StringBuilder();
-        logString.append(choice.text);
+//        StringBuilder logString = new StringBuilder();
+//        logString.append(choice.text);
         if (isSelected) {
-            logString.append(" Selected ");
+//            logString.append(" Selected ");
             if (!mSelectedChoices.contains(choice.getId())) {
                 mCardModel.addValue(VALUES_CHOICE_TAG, choice.getId(), doNotify);
                 mSelectedChoices.add(choice.getId());
                 mLastSelectedChoiceTitle = choice.getText();
             }
         } else {
-            logString.append(" Unselected ");
+//            logString.append(" Unselected ");
             mSelectedChoices.remove(choice.getId());
             mCardModel.addValue(VALUES_CHOICE_TAG, "", doNotify);
         }
@@ -172,15 +172,15 @@ public class QuizCardView extends ExampleCardView {
                     Choice childChoice = (Choice) child.getTag(R.id.view_tag_quiz_choice);
                     child.setSelected(false);
                     mSelectedChoices.remove(childChoice.getId());
-                    logString.append(" (Unselected " + childChoice.getText() + ") ");
+//                    logString.append(" (Unselected " + childChoice.getText() + ") ");
                     // TODO When the QuizCard supports multiple selections, remember to remove
                     // TODO the just-unselected value from its collection
                     //mCardModel.addValue(VALUES_CHOICE_TAG, "", doNotify);
                 }
             }
         }
-        logString.append(" . Total selected " + mSelectedChoices.size() + " correctRequired " + mCardModel.getCorrectRequired());
-        logString.append(" passed: " + quizIsPassed());
+//        logString.append(" . Total selected " + mSelectedChoices.size() + " correctRequired " + mCardModel.getCorrectRequired());
+//        logString.append(" passed: " + quizIsPassed());
 //        Log.i(TAG, logString.toString());
     }
 
