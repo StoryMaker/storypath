@@ -231,7 +231,7 @@ public class LigerAltDownloadManager implements Runnable {
             // not found
             foundInQueue = false;
 
-        } else if (queueId == QueueManager.DUPLICATE_QUERY) {
+        } else if (queueId.equals(QueueManager.DUPLICATE_QUERY)) {
 
             // not exactly in queue, but someone is already looking for this item, so avoid collision
             foundInQueue = true;
