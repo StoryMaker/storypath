@@ -38,24 +38,7 @@ public class FullMetadata implements Parcelable {
         this.medium = mf.getMedium();
         this.filePath = mf.getPath();
 
-        if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            Log.d(TAG, "retriever.setDataSource(" + this.filePath + ");");
-            String time = null;
-            try {
-                retriever.setDataSource(this.filePath);
-                time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            } catch (RuntimeException re) {
-                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + this.filePath + " -> " + re.getMessage());
-            }
-            long timeMs = 0;
-            if (time != null) {
-                timeMs = Long.parseLong(time);
-            }
-            this.duration = Util.safeLongToInt(timeMs);
-        } else {
-            this.duration = 0;
-        }
+        this.duration = calculateDuration();
     }
 
     public FullMetadata(Parcel in) {
@@ -71,22 +54,26 @@ public class FullMetadata implements Parcelable {
         this.medium = data[5];
         this.filePath = data[6];
 
-        if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
+        this.duration = calculateDuration();
+    }
+
+    private int calculateDuration () {
+        if (medium.equals(Constants.VIDEO) || medium.equals(Constants.AUDIO)) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             String time = null;
             try {
-                retriever.setDataSource(this.filePath);
+                retriever.setDataSource(filePath);
                 time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             } catch (RuntimeException re) {
-                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + this.filePath + " -> " + re.getMessage());
+                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + filePath + " -> " + re.getMessage());
             }
             long timeMs = 0;
             if (time != null) {
                 timeMs = Long.parseLong(time);
             }
-            this.duration = Util.safeLongToInt(timeMs);
+            return Util.safeLongToInt(timeMs);
         } else {
-            this.duration = 0;
+            return 0;
         }
     }
 

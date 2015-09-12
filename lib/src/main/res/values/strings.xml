@@ -162,6 +162,8 @@
     <string name="trim_clip">Trim Clip</string>
     <string name="narration">Narration</string>
     <string name="this_story_has_no_clips_to_publish">This story has no clips to publish!</string>
+    <string name="clip_with_no_duration">Clip %1$shas a duration of 0</string>
+    <string name="clips_with_no_duration">Clips %1$shave a duration of 0</string>
 
     <!-- add for libra end -->
 </resources>

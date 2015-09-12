@@ -65,12 +65,14 @@ public class Util {
                 num++;
             }
             if (message.length() > 3) {
-                Toast.makeText(host, "Clips " + message + "have a duration of 0", Toast.LENGTH_LONG).show();
-                Log.e("Util", "Clips " + message + "have a duration of 0");
+                String toastMessage = host.getString(R.string.clips_with_no_duration, message);
+                Toast.makeText(host, toastMessage, Toast.LENGTH_LONG).show();
+                Log.e("Util", toastMessage);
                 return;
             } else if (message.length() > 0) {
-                Toast.makeText(host, "Clip " + message + "has a duration of 0", Toast.LENGTH_LONG).show();
-                Log.e("Util", "Clip " + message + "has a duration of 0");
+                String toastMessage = host.getString(R.string.clip_with_no_duration, message);
+                Toast.makeText(host, toastMessage, Toast.LENGTH_LONG).show();
+                Log.e("Util", toastMessage);
                 return;
             }
 
