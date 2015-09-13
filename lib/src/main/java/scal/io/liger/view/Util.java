@@ -62,6 +62,7 @@ public class Util {
                 if ((fm.getMedium().equals(Constants.VIDEO) || fm.getMedium().equals(Constants.AUDIO)) && fm.getDuration() == 0) {
                     message = message + num + " ";
                 }
+                message = message.trim();
                 num++;
             }
             if (message.length() > 3) {
