@@ -694,6 +694,14 @@ public class IndexManager {
                 InstanceIndexItem newItem = new InstanceIndexItem(f.getAbsolutePath(), date.getTime());
 
                 String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
+
+                // if no string was loaded, cannot continue
+                if (jsonString == null) {
+                    Log.e("INDEX", "json could not be loaded from " + f.getPath());
+                    // handle the same way as null spl case below
+                    return indexList;
+                }
+
                 ArrayList<String> referencedFiles = new ArrayList<String>(); // should not need to insert dependencies to check metadata
                 StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context, language);
 

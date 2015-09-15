@@ -136,6 +136,16 @@ public class InstanceIndexItem extends BaseIndexItem {
 
             // open library to get associated file(s) to delete
             String jsonString = JsonHelper.loadJSON(libraryToDelete, language);
+
+            // if no string was loaded, cannot continue
+            if (jsonString == null) {
+                Log.e("INDEX", "json could not be loaded from " + libraryToDelete.getPath());
+                // delete existing file anyway
+                Log.d("INDEX", "DELETING STORY LIBRARY INSTANCE " + libraryToDelete.getName());
+                libraryToDelete.delete();
+                return;
+            }
+
             ArrayList<String> referencedFiles = new ArrayList<String>(); // no need to insert dependencies to open for checking file path
             StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, libraryToDelete.getAbsolutePath(), referencedFiles, context, language);
 
