@@ -46,21 +46,25 @@ public class JsonHelper {
     //private static String language = null; // TEMP
 
     // TEMP - for gathering insance files to test references
-    public static ArrayList<String> getInstancePaths(Context context) {
+    @NonNull
+    public static ArrayList<String> getInstancePaths(@NonNull Context context) {
 
         ArrayList<String> results = new ArrayList<String>();
 
-        File jsonFolder = new File(getSdLigerFilePath(context));
-        // check for nulls (uncertain as to cause of nulls)
-        if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
-            for (File jsonFile : jsonFolder.listFiles()) {
-                if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                    Log.d("FILES", "FOUND INSTANCE PATH: " + jsonFile.getPath());
-                    results.add(jsonFile.getPath());
+        String path = getSdLigerFilePath(context);
+        if (path != null) {
+            File jsonFolder = new File(path);
+            // check for nulls (uncertain as to cause of nulls)
+            if ((jsonFolder.listFiles() != null)) {
+                for (File jsonFile : jsonFolder.listFiles()) {
+                    if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
+                        Log.d("FILES", "FOUND INSTANCE PATH: " + jsonFile.getPath());
+                        results.add(jsonFile.getPath());
+                    }
                 }
+            } else {
+                Log.d("FILES", getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
             }
-        } else {
-            Log.d("FILES", getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
         }
 
         return results;
@@ -88,7 +92,7 @@ public class JsonHelper {
     }
     */
 
-    public static String loadJSONFromPath(String jsonPath, String language) {
+    public static String loadJSONFromPath(@NonNull String jsonPath, @NonNull String language) {
 
         String jsonString = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -254,25 +258,31 @@ public class JsonHelper {
         return jsonString;
     }
 
-    public static String getSdLigerFilePath(Context context) {
+    @Nullable
+    public static String getSdLigerFilePath(@NonNull Context context) {
         // this only works until the class is garbage collected
         // return sdLigerFilePath;
 
         // String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
-        String sdCardFolderPath = StorageHelper.getActualStorageDirectory(context).getPath();
+        File storageDirectory = StorageHelper.getActualStorageDirectory(context);
+        if (storageDirectory != null) {
+            String sdCardFolderPath = storageDirectory.getPath();
 
-        String sdLigerFilePath = sdCardFolderPath + File.separator;
+            String sdLigerFilePath = sdCardFolderPath + File.separator;
 
-        Log.d("NOT_STATIC", "CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
+            Log.d("NOT_STATIC", "CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
 
-        return sdLigerFilePath;
+            return sdLigerFilePath;
+        } else {
+            return null;
+        }
     }
 
-    private static void copyFilesToSdCard(Context context, String basePath) {
+    private static void copyFilesToSdCard(@NonNull Context context, @NonNull String basePath) {
         copyFileOrDir(context, basePath, ""); // copy all files in assets folder in my project
     }
 
-    private static void copyFileOrDir(Context context, String assetFromPath, String baseToPath) {
+    private static void copyFileOrDir(@NonNull Context context, @NonNull String assetFromPath, @NonNull String baseToPath) {
         AssetManager assetManager = context.getAssets();
         String assets[] = null;
         try {
@@ -303,7 +313,7 @@ public class JsonHelper {
         }
     }
 
-    private static void copyFile(Context context, String fromFilename, String baseToPath) {
+    private static void copyFile(@NonNull Context context, @NonNull String fromFilename, @NonNull String baseToPath) {
         AssetManager assetManager = context.getAssets();
 
         if (fromFilename.endsWith(".obb"))
@@ -338,7 +348,7 @@ public class JsonHelper {
 
     }
 
-    private static void copyObbFile(Context context, String mainOrPatch, int version, String toPath) {
+    private static void copyObbFile(@NonNull Context context, @NonNull String mainOrPatch, int version, @NonNull String toPath) {
         AssetManager assetManager = context.getAssets();
 
         String obbFileName = mainOrPatch + "." + version + ".obb";
@@ -370,7 +380,7 @@ public class JsonHelper {
         }
     }
     // FIXME this seems to be required to have been run to use any of the static methods like getLibraryInstanceFiles, we shouldn't have black magic like this
-    public static void setupFileStructure(Context context) {
+    public static void setupFileStructure(@NonNull Context context) {
         String sdCardState = Environment.getExternalStorageState();
         String sdLigerFilePath;
 
@@ -592,7 +602,8 @@ public class JsonHelper {
     }
     */
 
-    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
+    @Nullable
+    public static StoryPathLibrary loadStoryPathLibrary(@NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
