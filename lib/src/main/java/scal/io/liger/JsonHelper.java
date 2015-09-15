@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -720,7 +721,8 @@ public class JsonHelper {
         return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
     }
 
-    public static @NonNull StoryPathLibrary deserializeStoryPathLibrary(@NonNull String storyPathLibraryJson, @NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
+    @Nullable
+    public static StoryPathLibrary deserializeStoryPathLibrary(@NonNull String storyPathLibraryJson, @NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -728,6 +730,8 @@ public class JsonHelper {
         gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
+        // fromJson has a bug where it will return null if storyPathLibraryJson is "", therefore this method is @Nullable
+        // https://github.com/google/gson/issues/457
         StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
 
          if (jsonFilePath.contains("instance")) {
