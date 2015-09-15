@@ -153,6 +153,7 @@ public class JsonHelper {
         }
     }
 
+    @Nullable
     public static String loadJSON(File file, String language) {
         if(null == file) {
             return null;
@@ -208,7 +209,7 @@ public class JsonHelper {
         return loadJSONFromZip(selectedJSONPath, context, language);
     }
     */
-
+    @Nullable
     public static String loadJSONFromZip(String jsonFilePath, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
@@ -491,6 +492,7 @@ public class JsonHelper {
     }
     */
 
+    @NonNull
     public static ArrayList<File> getLibraryInstanceFiles(Context context) {
 
         ArrayList<File> results = new ArrayList<File>();
@@ -514,6 +516,7 @@ public class JsonHelper {
         return results;
     }
 
+    @Nullable
     public static String[] getJSONFileList(Context context) {
         //ensure path has been set
         if(null == getSdLigerFilePath(context)) {
@@ -547,6 +550,7 @@ public class JsonHelper {
         return jsonFileNamesList.toArray(new String[jsonFileNamesList.size()]);
     }
 
+    @Nullable
     public static String getJsonPathByKey(Context context, String key) {
         setupJSONFileList(context);
         if (jsonKeyToPath.containsKey(key)) {
@@ -876,6 +880,7 @@ public class JsonHelper {
         }
     }
 
+    @NonNull
     public static String getStoryPathLibrarySaveFileName(StoryPathLibrary storyPathLibrary) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
@@ -928,6 +933,7 @@ public class JsonHelper {
         return true;
     }
 
+    @Nullable
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
@@ -940,6 +946,7 @@ public class JsonHelper {
         return storyPathLibraryJson;
     }
 
+    @Nullable
     public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
@@ -998,6 +1005,7 @@ public class JsonHelper {
 
     // NEW
 
+    @Nullable
     public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
@@ -1257,6 +1265,7 @@ public class JsonHelper {
         return true;
     }
 
+    @Nullable
     public static String serializeStoryPath(StoryPath storyPath) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
