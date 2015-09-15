@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -156,6 +157,7 @@ public class StoryPath {
     }
 
     // TODO : This should be named getCardByFullPath
+    @Nullable
     public Card getCardById(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
@@ -177,6 +179,7 @@ public class StoryPath {
     }
 
     // TOOD : This should be named getCardById
+    @Nullable
     public Card getCardByIdOnly(String idOnly) {
         for (Card card : cards) {
             if (card.getId().equals(idOnly)) {
@@ -189,6 +192,7 @@ public class StoryPath {
     }
 
     // new method to get batches of cards while preserving card order
+    @NonNull
     public ArrayList<Card> getCardsByIds(ArrayList<String> fullPaths) {
         ArrayList<String> cardIds = new ArrayList<String>();
         for (String fullPath : fullPaths) {
@@ -213,6 +217,7 @@ public class StoryPath {
      * Note this method only needs to be called once. Updates to this list can be received
      * by calling {@link StoryPathLibrary#setStoryPathLibraryListener(scal.io.liger.model.StoryPathLibrary.StoryPathLibraryListener)}
      */
+    @NonNull
     public ArrayList<Card> getValidCards() {
         /*
         if (visibleCards == null) {
@@ -352,6 +357,7 @@ public class StoryPath {
     /** Return the value corresponding to the fully qualified Id or null if it could not be found.
      * e.g: "default_library::quiz_card_topic::choice"
     */
+    @Nullable
     public String getReferencedValue(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
@@ -371,6 +377,7 @@ public class StoryPath {
         }
     }
 
+    @Nullable
     public String getExternalReferencedValue(String fullPath) {
         // assumes the format story::card::field::value
         String[] pathParts = fullPath.split("::");
@@ -445,7 +452,7 @@ public class StoryPath {
         }
     }
 
-    public String buildZipPath(String originalPath) {
+    public String buildZipPath(@NonNull String originalPath) {
         if (originalPath.startsWith(File.separator)) {
             return originalPath;
         }
@@ -475,7 +482,7 @@ public class StoryPath {
         }
     }
 
-    public String buildFilePath(String originalPath) {
+    public String buildFilePath(@NonNull String originalPath) {
         if (originalPath.startsWith(File.separator)) {
             return originalPath;
         }
@@ -502,7 +509,8 @@ public class StoryPath {
      * e.g: method called with path 'org.storymaker.app/burundi/00105/1.png' will return
      * '/storage/emulated/0/Android/data/org.storymaker.app/files/org.storymaker.app_burundi_00105_1.png'
      */
-    public String buildTargetPath(String originalPath) {
+    @NonNull
+    public String buildTargetPath(@NonNull String originalPath) {
         if (originalPath.startsWith(File.separator)) {
             return originalPath;
         }
@@ -653,6 +661,7 @@ public class StoryPath {
         return getValidCards().indexOf(cardModel);
     }
 
+    @Nullable
     public Card getCardFromIndex(int index) {
         if(index >= cards.size()) {
             return null;
@@ -661,6 +670,7 @@ public class StoryPath {
         return cards.get(index);
     }
 
+    @Nullable
     public Card getValidCardFromIndex(int index) {
         ArrayList<Card> validCards = getValidCards();
 
@@ -711,6 +721,7 @@ public class StoryPath {
      * {@link ClipMetadata#getUuid()}
      */
     // FIXME doesn't this belong in SPL?
+    @NonNull
     public ArrayList<ClipMetadata> exportMetadata() {
         ArrayList<ClipMetadata> metadata = new ArrayList<>();
         ArrayList<String> classReference = new ArrayList<>();
@@ -739,6 +750,7 @@ public class StoryPath {
      * {@link ClipMetadata#getUuid()}
      */
     // FIXME doesn't this belong in SPL?
+    @NonNull
     public ArrayList<ClipMetadata> exportSelectedClipMetadata() {
         ArrayList<ClipMetadata> metadata = new ArrayList<>();
         ArrayList<String> classReference = new ArrayList<>();
@@ -771,7 +783,8 @@ public class StoryPath {
         }
     }
 
-    public ArrayList<FullMetadata> adaptClipMetadataToFullMetadata(ArrayList<ClipMetadata> metadata) throws MediaException {
+    @NonNull
+    public ArrayList<FullMetadata> adaptClipMetadataToFullMetadata(@NonNull ArrayList<ClipMetadata> metadata) throws MediaException {
         ArrayList<FullMetadata> allMetadata = new ArrayList<FullMetadata>();
         for (ClipMetadata cm : metadata) {
             MediaFile mf = loadMediaFile(cm.getUuid());
@@ -823,6 +836,7 @@ public class StoryPath {
         return adaptClipMetadataToFullMetadata(metadata);
     }
 
+    @Nullable
     public ArrayList<AudioClipFull> exportAudioClips() {
         ArrayList<AudioClip> acs = getStoryPathLibrary().getAudioClips();
         if (acs != null) {
@@ -846,6 +860,7 @@ public class StoryPath {
      * @author paulburke
      */
     @SuppressLint("NewApi")
+    @Nullable
     public static String getPath(final Context context, final Uri uri) throws MediaException {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -921,6 +936,7 @@ public class StoryPath {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
+    @Nullable
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
@@ -969,6 +985,7 @@ public class StoryPath {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    @Nullable
     public ArrayList<MediaFile> getExternalMediaFile(String reference) {
 
         Log.d("CLIPS", "NEW METHOD getExternalMediaFile() CALLED FOR REFERENCE " + reference);
@@ -1085,8 +1102,7 @@ public class StoryPath {
         return results;
     }
 
-
-
+    @NonNull
     public ArrayList<Card> getCards(ArrayList<String> references) {
         ArrayList<Card> results = new ArrayList<Card>();
 
@@ -1124,6 +1140,7 @@ public class StoryPath {
         return results;
     }
 
+    @NonNull
     public ArrayList<String> getValues(ArrayList<String> references) {
         HashMap<String, String> resultMap = new HashMap<String, String>();
 
@@ -1174,6 +1191,7 @@ public class StoryPath {
      *                   Example id query: "clip_card_1"
      * @return
      */
+    @NonNull
     public ArrayList<Card> gatherCards(String cardTarget) {
         ArrayList<Card> results = new ArrayList<>();
 
@@ -1203,7 +1221,7 @@ public class StoryPath {
         return results;
     }
 
-
+    @NonNull
     public <T> ArrayList<T> gatherCardsOfClass(Class<T> clazz) {
         String simpleName = clazz.getSimpleName();
         ArrayList<T> results = new ArrayList<>();
@@ -1216,7 +1234,8 @@ public class StoryPath {
         return results;
     }
 
-    public ArrayList<Card> gatherExternalCards(String pathTarget, String cardTarget) {
+    @Nullable
+    public ArrayList<Card> gatherExternalCards(@NonNull String pathTarget, @NonNull String cardTarget) {
 
         StoryPath story = null;
 
@@ -1268,6 +1287,7 @@ public class StoryPath {
     /**
      * Returns the List of ClipCards with attached media within the current StoryPath
      */
+    @NonNull
     public ArrayList<ClipCard> getClipCardsWithAttachedMedia() {
 
         ArrayList<ClipCard> mediaCards = gatherCardsOfClass(ClipCard.class);
@@ -1294,6 +1314,7 @@ public class StoryPath {
 
     }
 
+    @Nullable
     public String getCoverImageThumbnailPath() {
         ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
         for (ClipCard card: cards) {
@@ -1305,6 +1326,7 @@ public class StoryPath {
         return null;
     }
 
+    @Nullable
     public String getMedium() {
         ArrayList<ClipCard> cards = getClipCardsWithAttachedMedia();
         for (ClipCard card: cards) {
