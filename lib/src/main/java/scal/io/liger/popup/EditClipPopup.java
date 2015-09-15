@@ -105,15 +105,17 @@ public class EditClipPopup {
         });
 
         // Seek MediaPlayer when playbackBar dragged
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+            playbackBar.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         playbackBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     boolean rightToLeft = false;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-                        rightToLeft = true;
-                    }
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+//                            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+//                        rightToLeft = true;
+//                    }
 
                     int seekPointMs = getMsFromRangeBarIndex(progress,
                             tickCount,
@@ -176,17 +178,17 @@ public class EditClipPopup {
                 int startIdx, endIdx;
                 boolean rightToLeft = false;
                 // Adjust for RTL layouts if necessary
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                        mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-
-                    rightToLeft = true;
-                    startIdx = rightIdx;
-                    endIdx = leftIdx;
-
-                } else {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+//                        mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+//
+//                    rightToLeft = true;
+//                    startIdx = rightIdx;
+//                    endIdx = leftIdx;
+//
+//                } else {
                     startIdx = leftIdx;
                     endIdx = rightIdx;
-                }
+//                }
 
                 if (lastStartIdx != startIdx) {
                     // Start seek was adjusted, seek to it
@@ -289,9 +291,9 @@ public class EditClipPopup {
 
                     // Setup initial views requiring knowledge of clip media
 
-                    boolean rightToLeft = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-                            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
-
+//                    boolean rightToLeft = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+//                            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+                    boolean rightToLeft = false;
                     if (mSelectedClip.getStopTime() == 0) mSelectedClip.setStopTime(clipDurationMs.get());
                     player.seekTo(mSelectedClip.getStartTime());
                     rangeBar.setThumbIndices(getRangeBarIndexForMs(mSelectedClip.getStartTime(), tickCount, clipMediaDurationMs.get(), rightToLeft),
