@@ -159,7 +159,7 @@ public class JsonHelper {
             return null;
         }
 
-        String jsonString = "";
+        String jsonString = null;
         String sdCardState = Environment.getExternalStorageState();
 
         String localizedFilePath = file.getPath();
@@ -218,7 +218,7 @@ public class JsonHelper {
             return null;
         }
 
-        String jsonString = "";
+        String jsonString = null;
 
 //        String localizedFilePath = jsonFilePath;
 
