@@ -70,6 +70,12 @@ public class EditClipPopup {
         final SeekBar volumeSeek = (SeekBar) v.findViewById(R.id.volumeSeekbar);
         final int tickCount = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
 
+        /** initialize Right-to-left states **/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
+                            mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+            volumeSeek.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);z
+        }
+
         /** Media player and media */
         final MediaPlayer player = new MediaPlayer();
         //final ClipMetadata selectedClip = mCardModel.getSelectedClip();

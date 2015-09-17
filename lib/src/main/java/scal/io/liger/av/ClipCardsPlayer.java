@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -339,6 +340,9 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         alignBottomParams.gravity = Gravity.BOTTOM;
         mPlaybackProgress = new SeekBar(context);
         mPlaybackProgress.setLayoutParams(alignBottomParams);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mPlaybackProgress.setLayoutDirection(View.LAYOUT_DIRECTION_LTR); // Hard code to LTR as video progress shouldn't ever be RTL
+        }
         mPlaybackProgress.setEnabled(false);
 
         /* Timecode label */
