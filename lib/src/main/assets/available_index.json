@@ -79,5 +79,20 @@
         "expansionFileVersion": "2",
         "expansionFileSize": "3553131",
         "expansionFileChecksum": "588ec689615f4adff659a71cd7267581bf69d5f65ee083e48b0e312e0e74dd9b"
+    },
+    {
+        "expansionId": "citizen_journalism_pack",
+        "patchOrder": "6",
+        "contentType": "GUIDE",
+        "title": "Citizen Journalism Pack",
+        "packageName": "org.storymaker.app",
+        "contentType": "guide",
+        "description": "Beta StoryPaths for use in a workshop",
+        "thumbnailPath": "images/content_packs/citizen_journalism_pack_cover.jpg",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "1",
+        "expansionFileSize": "389169",
+        "expansionFileChecksum": "e830f000725f6c42a726650a2e3f02f97563ca600087051489985992247d1920"
     }
 ]
