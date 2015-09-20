@@ -73,7 +73,7 @@ public class EditClipPopup {
         /** initialize Right-to-left states **/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
                             mContext.getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-            volumeSeek.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);z
+            volumeSeek.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
         /** Media player and media */
