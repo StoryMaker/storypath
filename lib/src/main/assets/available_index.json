@@ -76,9 +76,9 @@
         "thumbnailPath": "images/content_packs/mobile_photo_101_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "2",
-        "expansionFileSize": "3553131",
-        "expansionFileChecksum": "588ec689615f4adff659a71cd7267581bf69d5f65ee083e48b0e312e0e74dd9b"
+        "expansionFileVersion": "3",
+        "expansionFileSize": "3684543",
+        "expansionFileChecksum": "148ff2bdd4bb6ae380780ebcdef520b98cfd7da4eeb0f8ce9ab31fe21f3a570b"
     },
     {
         "expansionId": "citizen_journalism_pack",
