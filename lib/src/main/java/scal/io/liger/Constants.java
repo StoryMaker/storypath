@@ -91,7 +91,7 @@ public class Constants {
 
     public static final int AVAILABLE_INDEX_VERSION = 15;
 
-    public final static String TOR_PROXY_HOST = "localhost"; // FIMXE these Orbot host/ports should be pulled from Netcipher instead of hard coded
+    public final static String TOR_PROXY_HOST = "localhost"; // FIXME these Orbot host/ports should be pulled from Netcipher instead of hard coded
     public final static int TOR_PROXY_PORT = 8118;
 
     public static final String EXTRA_STORY_TITLE = "story_title";
