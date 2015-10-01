@@ -552,9 +552,6 @@ public class StoryPath {
         if (action.equals("DELETE")) {
             storyPathLibrary.mListener.onCardRemoved(firstCard);
         }
-
-        // SEEMS LIKE A REASONABLE TIME TO SAVE
-        getStoryPathLibrary().save(true);
     }
 
     /**

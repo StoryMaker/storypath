@@ -101,6 +101,8 @@ public class EditClipPopup {
                 float newVolume = progress / (float) seekBar.getMax();
                 mSelectedClip.setVolume(newVolume);
                 player.setVolume(newVolume, newVolume);
+                Log.d(TAG, "SAVING UPDATED VOLUME");
+                mStoryPath.getStoryPathLibrary().save(true);
             }
 
             @Override
