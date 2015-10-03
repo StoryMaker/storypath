@@ -25,6 +25,19 @@ public class ClipMetadata {
         this.volume = 1f;
     }
 
+    public ClipMetadata(ClipMetadata right) {
+        this.startTime = right.startTime;
+        this.stopTime = right.stopTime;
+        this.volume = right.volume;
+        this.effect = right.effect;
+        this.type = right.type;
+        this.uuid = right.uuid;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return new ClipMetadata( this );
+    }
+
     /**
      * @return the Clip start time in milliseconds
      */

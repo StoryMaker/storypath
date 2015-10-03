@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
+import com.hannesdorfmann.sqlbrite.dao.DaoManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +21,10 @@ import java.util.HashMap;
 import java.util.Set;
 
 import scal.io.liger.model.ExpansionIndexItem;
+import scal.io.liger.model.sqlbrite.AvailableIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
+import scal.io.liger.model.sqlbrite.QueueItemDao;
 
 /**
  * @author Matt Bogner
@@ -28,12 +33,13 @@ import scal.io.liger.model.ExpansionIndexItem;
 public class ZipHelper {
     public static final String TAG = "ZipHelper";
 
+    @NonNull
     public static String getExpansionZipFilename(Context ctx, String mainOrPatch, int version) {
         String packageName = ctx.getPackageName();
-        String filename = mainOrPatch + "." + version + "." + packageName + ".obb";
-        return filename;
+        return mainOrPatch + "." + version + "." + packageName + ".obb";
     }
 
+    @Nullable
     public static String getExpansionZipDirectory(Context ctx, String mainOrPatch, int version) {
         // basically a wrapper for getExpansionFileFolder, but defaults to files directory
         String filePath = getExpansionFileFolder(ctx, mainOrPatch, version);
@@ -45,6 +51,7 @@ public class ZipHelper {
         }
     }
 
+    @NonNull
     public static String getObbFolderName(Context ctx) {
         String packageName = ctx.getPackageName();
         File root = Environment.getExternalStorageDirectory();
@@ -53,9 +60,11 @@ public class ZipHelper {
 
     public static String getFileFolderName(Context ctx) {
         // TODO Why doesn't this use ctx.getExternalFilesDir(null) (like JsonHelper)?
-        String packageName = ctx.getPackageName();
-        File root = Environment.getExternalStorageDirectory();
-        return root.toString() + "/Android/data/" + packageName + "/files/";
+
+        // String packageName = ctx.getPackageName();
+        // File root = Environment.getExternalStorageDirectory();
+        // return root.toString() + "/Android/data/" + packageName + "/files/";
+        return StorageHelper.getActualStorageDirectory(ctx).getPath() + "/";
     }
 
     public static String getFileFolderName(Context context, String fileName) {
@@ -72,8 +81,10 @@ public class ZipHelper {
             return null;
         }
 
-        File root = Environment.getExternalStorageDirectory();
-        return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
+        // TODO - switching to the new storage method ignores the value set in the expansion index item
+        // File root = Environment.getExternalStorageDirectory();
+        // return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
+        return StorageHelper.getActualStorageDirectory(context).getPath() + "/";
     }
 
     public static String getFileFolderName(Context context, String fileName, ExpansionIndexItem item) {
@@ -83,11 +94,14 @@ public class ZipHelper {
             fileName.replace(Constants.PATCH, Constants.MAIN);
         }
 
-        File root = Environment.getExternalStorageDirectory();
-        return root.toString() + File.separator + item.getExpansionFilePath();
+        // TODO - switching to the new storage method ignores the value set in the expansion index item
+        // File root = Environment.getExternalStorageDirectory();
+        // return root.toString() + File.separator + item.getExpansionFilePath();
+        return StorageHelper.getActualStorageDirectory(context).getPath() + "/";
     }
 
     // supressing messages for less text during polling
+    @Nullable
     public static String getExpansionFileFolder(Context ctx, String mainOrPatch, int version) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create obb folder
@@ -118,6 +132,7 @@ public class ZipHelper {
     }
 
     // for additional expansion files, check files folder for specified file
+    @Nullable
     public static String getExpansionFileFolder(Context ctx, String fileName) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create files folder
@@ -141,6 +156,7 @@ public class ZipHelper {
         return null;
     }
 
+    @Nullable
     public static String getExpansionFileFolder(Context ctx, String fileName, ExpansionIndexItem item) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // check and/or attempt to create files folder
@@ -164,6 +180,7 @@ public class ZipHelper {
         return null;
     }
 
+    @Nullable
     public static ZipResourceFile getResourceFile(Context context) {
         try {
             // resource file contains main file and patch file
@@ -179,6 +196,7 @@ public class ZipHelper {
         }
     }
 
+    @Nullable
     public static InputStream getFileInputStream(String path, Context context, String language) {
 
         String localizedFilePath = path;
@@ -224,17 +242,19 @@ public class ZipHelper {
         return null;
     }
 
-    public static @Nullable InputStream getFileInputStreamForExpansionAndPath(@NonNull ExpansionIndexItem expansion,
+    @Nullable
+    public static InputStream getFileInputStreamForExpansionAndPath(@NonNull ExpansionIndexItem expansion,
                                                                               @NonNull String path,
                                                                               @NonNull Context context) {
 
-        return getFileInputStreamFromFile(IndexManager.buildFileAbsolutePath(expansion, Constants.MAIN), path, context);
+        return getFileInputStreamFromFile(IndexManager.buildFileAbsolutePath(expansion, Constants.MAIN, context), path, context);
     }
 
-    public static InputStream getThumbnailInputStreamForItem(ExpansionIndexItem item, Context context) {
+    @Nullable
+    public static InputStream getThumbnailInputStreamForItem(@NonNull ExpansionIndexItem item, @NonNull Context context) {
         ZipResourceFile resourceFile = null;
         try {
-            resourceFile = APKExpansionSupport.getResourceZipFile(new String[]{IndexManager.buildFileAbsolutePath(item, Constants.MAIN)});
+            resourceFile = APKExpansionSupport.getResourceZipFile(new String[]{IndexManager.buildFileAbsolutePath(item, Constants.MAIN, context)});
             return resourceFile.getInputStream(item.getThumbnailPath());
 
         } catch (IOException e) {
@@ -249,6 +269,8 @@ public class ZipHelper {
      * @return an absolute path to an expansion file with the given expansionId, or null if no
      * match could be made.
      */
+    // unused, removing for now
+    /*
     public static @Nullable String getExpansionPathForExpansionId(Context context, String expansionId) {
         String targetExpansionPath = null;
         ArrayList<String> expansionPaths = getExpansionPaths(context);
@@ -260,6 +282,7 @@ public class ZipHelper {
         }
         return targetExpansionPath;
     }
+    */
 
     public static void clearCache() {
         expansionPaths = null;
@@ -268,7 +291,8 @@ public class ZipHelper {
     /**
      * @return a list of absolute paths to all available expansion files.
      */
-    private static  ArrayList<String> getExpansionPaths(Context context) {
+    @NonNull
+    private static ArrayList<String> getExpansionPaths(@NonNull Context context) {
         if (expansionPaths == null) {
             expansionPaths = new ArrayList<>();
 
@@ -297,22 +321,31 @@ public class ZipHelper {
 
             }
 
+            // need db access to get installed files
+            InstalledIndexItemDao dao = null;
+
+            if (context instanceof MainActivity) {
+                dao = ((MainActivity)context).getInstalledIndexItemDao(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+            } else {
+                Log.e(TAG, "NO DAO IN getExpansionPaths");
+            }
+
             // add 3rd party stuff
-            HashMap<String, ExpansionIndexItem> expansionIndex = IndexManager.loadInstalledOrderIndex(context);
+            HashMap<String, scal.io.liger.model.sqlbrite.ExpansionIndexItem> expansionIndex = StorymakerIndexManager.loadInstalledOrderIndex(context, dao);
 
             // need to sort patch order keys, numbers may not be consecutive
             ArrayList<String> orderNumbers = new ArrayList<String>(expansionIndex.keySet());
             Collections.sort(orderNumbers);
 
             for (String orderNumber : orderNumbers) {
-                ExpansionIndexItem item = expansionIndex.get(orderNumber);
+                scal.io.liger.model.sqlbrite.ExpansionIndexItem item = expansionIndex.get(orderNumber);
                 if (item == null) {
                     Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
 
                     // construct name
-                    String pathName = IndexManager.buildFilePath(item);
-                    String fileName = IndexManager.buildFileName(item, Constants.MAIN);
+                    String pathName = StorymakerIndexManager.buildFilePath(item, context);
+                    String fileName = StorymakerIndexManager.buildFileName(item, Constants.MAIN);
 
                     File checkFile = new File(pathName + fileName);
 
@@ -327,7 +360,7 @@ public class ZipHelper {
                                 (Integer.parseInt(item.getPatchFileVersion()) > 0) &&
                                 (Integer.parseInt(item.getPatchFileVersion()) >= Integer.parseInt(item.getExpansionFileVersion()))) {
                             // construct name
-                            String patchName = IndexManager.buildFileName(item, Constants.PATCH);
+                            String patchName = StorymakerIndexManager.buildFileName(item, Constants.PATCH);
 
                             checkFile = new File(pathName + patchName);
 
@@ -360,7 +393,8 @@ public class ZipHelper {
      * each ExpansionIndexItem.
      *
      */
-    public static @Nullable ExpansionIndexItem guessExpansionIndexItemForPath(String path, Context context) {
+    @Nullable
+    public static ExpansionIndexItem guessExpansionIndexItemForPath(@NonNull String path, @NonNull Context context) {
         HashMap<String, ExpansionIndexItem> expansions = IndexManager.loadInstalledIdIndex(context);
 
         Set<String> expansionIds = expansions.keySet();
@@ -378,7 +412,8 @@ public class ZipHelper {
      *
      */
     @Deprecated
-    public static InputStream getFileInputStream(String path, Context context) {
+    @Nullable
+    public static InputStream getFileInputStream(@NonNull String path, @NonNull Context context) {
 
         // resource file contains main file and patch file
         ArrayList<String> allExpansionPaths = getExpansionPaths(context);
@@ -412,6 +447,7 @@ public class ZipHelper {
         return getFileInputStreamFromFiles(targetExpansionPaths, path, context);
     }
 
+    @Nullable
     public static InputStream getFileInputStreamFromFile(String zipPath, String filePath, Context context) {
 
         ArrayList<String> zipPaths = new ArrayList<String>();
@@ -420,6 +456,7 @@ public class ZipHelper {
         return getFileInputStreamFromFiles(zipPaths, filePath, context);
     }
 
+    @Nullable
     public static InputStream getFileInputStreamFromFiles(ArrayList<String> zipPaths, String filePath, Context context) {
         try {
             ZipResourceFile resourceFile = APKExpansionSupport.getResourceZipFile(zipPaths.toArray(new String[zipPaths.size()]));
@@ -448,6 +485,7 @@ public class ZipHelper {
      * a temp file exists for the given arguments it will be deleted and remade.
      */
     @Deprecated
+    @Nullable
     public static File getTempFile(String path, String tempPath, Context context) {
 
         String extension = path.substring(path.lastIndexOf("."));

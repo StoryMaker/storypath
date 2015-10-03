@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
@@ -24,6 +25,7 @@ import java.util.List;
 import scal.io.liger.Constants;
 import scal.io.liger.MainActivity;
 import scal.io.liger.R;
+import scal.io.liger.Utility;
 import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.AudioClip;
 import scal.io.liger.model.AudioClipFull;
@@ -49,24 +51,52 @@ public class Util {
     }
 
     public static void startPublishActivity(Activity host, StoryPath storyPath) {
-        ArrayList<FullMetadata> exportMetadata = storyPath.exportAllMetadata(); // TODO : Place in AsyncTask?
-        ArrayList<AudioClipFull> exportAudioClipsMetadata = storyPath.exportAudioClips();
-        if (exportMetadata.size() > 0) {
-            Intent i = new Intent();
-            i.setAction(Constants.ACTION_PUBLISH);
-            i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
-            i.putExtra(Constants.EXTRA_STORY_INSTANCE_PATH, storyPath.getStoryPathLibraryFile());
+
+        try {
+            ArrayList<FullMetadata> exportMetadata = storyPath.exportSelectedFullMetadata(); // TODO : Place in AsyncTask?
+
+            // check for audio/video clips with no duration
+            int num = 1;
+            String message = "";
+            for (FullMetadata fm : exportMetadata) {
+                if ((fm.getMedium().equals(Constants.VIDEO) || fm.getMedium().equals(Constants.AUDIO)) && fm.getDuration() == 0) {
+                    message = message + num + " ";
+                }
+                message = message.trim();
+                num++;
+            }
+            if (message.length() > 3) {
+                String toastMessage = host.getString(R.string.clips_with_no_duration, message);
+                Toast.makeText(host, toastMessage, Toast.LENGTH_LONG).show();
+                Log.e("Util", toastMessage);
+                return;
+            } else if (message.length() > 0) {
+                String toastMessage = host.getString(R.string.clip_with_no_duration, message);
+                Toast.makeText(host, toastMessage, Toast.LENGTH_LONG).show();
+                Log.e("Util", toastMessage);
+                return;
+            }
+
+            ArrayList<AudioClipFull> exportAudioClipsMetadata = storyPath.exportAudioClips();
+            if (exportMetadata.size() > 0) {
+                Intent i = new Intent();
+                i.setAction(Constants.ACTION_PUBLISH);
+                i.putExtra(Constants.EXTRA_STORY_TITLE, storyPath.getTitle());
+                i.putExtra(Constants.EXTRA_STORY_INSTANCE_PATH, storyPath.getStoryPathLibraryFile());
 //            i.putExtra(Constants.EXTRA_REQUIRED_UPLOAD_TARGETS, storyPath.getRequiredUploadTargets());
 //            i.putExtra(Constants.EXTRA_REQUIRED_PUBLISH_TARGETS, storyPath.getRequiredPublishTargets());
 //            i.putExtra(Constants.EXTRA_REQUIRED_TAGS, storyPath.getRequiredTags());
-            i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
-            if (exportAudioClipsMetadata != null) {
-                i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_AUDIOCLIPS, exportAudioClipsMetadata);
+                i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_CLIPS, exportMetadata);
+                if (exportAudioClipsMetadata != null) {
+                    i.putParcelableArrayListExtra(Constants.EXTRA_EXPORT_AUDIOCLIPS, exportAudioClipsMetadata);
+                }
+                host.startActivity(i);
+                host.finish(); // Do we definitely want to finish the host Activity?
+            } else {
+                Toast.makeText(host, host.getString(R.string.this_story_has_no_clips_to_publish), Toast.LENGTH_LONG).show();
             }
-            host.startActivity(i);
-            host.finish(); // Do we definitely want to finish the host Activity?
-        } else {
-            Toast.makeText(host, host.getString(R.string.this_story_has_no_clips_to_publish), Toast.LENGTH_LONG).show();
+        } catch (StoryPath.MediaException me) {
+            Toast.makeText(host, me.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

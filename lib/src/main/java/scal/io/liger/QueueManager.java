@@ -138,7 +138,7 @@ public class QueueManager {
             return cachedQueue;
         }
 
-        if ((queueJson != null) && (queueJson.length() > 0)) {
+        if ((queueJson.length() > 0)) {
             GsonBuilder gBuild = new GsonBuilder();
             Gson gson = gBuild.create();
 

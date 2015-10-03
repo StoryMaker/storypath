@@ -37,7 +37,6 @@ public class QuizCard extends Card {
         return new QuizCardView(context, this); //TODO
     }
 
-    @Nullable
     public int getCorrectRequired() {
         return correctRequired;
     }

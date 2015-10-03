@@ -8,13 +8,13 @@
     <TextureView
         android:id="@+id/textureView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/clip_thumb_height"
+        android:layout_height="@dimen/clip_trim_thumb_height"
         android:layout_alignParentTop="true" />
 
     <ImageView
         android:id="@+id/thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/clip_thumb_height"
+        android:layout_height="@dimen/clip_trim_thumb_height"
         android:layout_alignParentTop="true"
         android:scaleType="fitCenter" />
 

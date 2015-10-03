@@ -14,6 +14,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.animation.AlphaAnimation;
@@ -92,7 +93,7 @@ public class DraggableGridView extends ViewGroup implements View.OnTouchListener
     
     //OVERRIDES
     @Override
-    public void addView(View child) {
+    public void addView(@NonNull View child) {
     	super.addView(child);
     	newPositions.add(-1);
     };

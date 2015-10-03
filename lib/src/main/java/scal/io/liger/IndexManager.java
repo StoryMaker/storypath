@@ -9,6 +9,7 @@ import android.util.Log;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.FileUtils;
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import scal.io.liger.model.BaseIndexItem;
 import scal.io.liger.model.ContentPackMetadata;
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.InstanceIndexItem;
@@ -53,10 +55,11 @@ public class IndexManager {
     public static HashMap<String, ArrayList<ExpansionIndexItem>> cachedIndexes = new HashMap<>();
 
     public static String buildFileAbsolutePath(ExpansionIndexItem item,
-                                               @Constants.ObbType String mainOrPatch) {
+                                               @Constants.ObbType String mainOrPatch,
+                                               Context context) {
 
         // Use File constructor to avoid duplicate or missing file path separators after concatenation
-        return new File(buildFilePath(item) + buildFileName(item, mainOrPatch)).getAbsolutePath();
+        return new File(buildFilePath(item, context) + buildFileName(item, mainOrPatch)).getAbsolutePath();
 
     }
 
@@ -80,9 +83,41 @@ public class IndexManager {
         }
     }
 
-    public static String buildFilePath(ExpansionIndexItem item) {
 
-        String checkPath = Environment.getExternalStorageDirectory().toString() + File.separator + item.getExpansionFilePath();
+
+    // adding these to smooth transition to storymaker ExpansionIndexItem class
+
+    public static String buildFileAbsolutePath(String expansionId,
+                                               String mainOrPatch,
+                                               String version,
+                                               Context context) {
+
+        String filePath = buildFilePath(context);
+
+        String fileName = buildFileName(expansionId, mainOrPatch, version);
+
+        return new File(filePath, fileName).getAbsolutePath();
+    }
+
+    public static String buildFilePath(Context context) {
+
+        return StorageHelper.getActualStorageDirectory(context).getPath();
+    }
+
+    public static String buildFileName(String expansionId,
+                                       String mainOrPatch,
+                                       String version) {
+
+        return expansionId + "." + mainOrPatch + "." + version + ".obb";
+    }
+
+
+
+    public static String buildFilePath(ExpansionIndexItem item, Context context) {
+
+        // TODO - switching to the new storage method ignores the value set in the expansion index item
+        // String checkPath = Environment.getExternalStorageDirectory().toString() + File.separator + item.getExpansionFilePath();
+        String checkPath = StorageHelper.getActualStorageDirectory(context).getPath() + File.separator;
 
         File checkDir = new File(checkPath);
         if (checkDir.isDirectory() || checkDir.mkdirs()) {
@@ -95,7 +130,7 @@ public class IndexManager {
 
     // only available index should be copied, so collapsing methods
 
-    public static void copyAvailableIndex(Context context) {
+    public static void copyAvailableIndex(Context context, boolean forceCopy) {
 
         AssetManager assetManager = context.getAssets();
 
@@ -105,7 +140,7 @@ public class IndexManager {
 
         // only replace file if version is different
         File jsonFile = new File(jsonFilePath + getAvailableVersionName());
-        if (jsonFile.exists()) {
+        if (jsonFile.exists() && !forceCopy) {
             Log.d("INDEX", "JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
             return;
         } else {
@@ -346,7 +381,7 @@ public class IndexManager {
                 return indexList;
             }
 
-            if ((indexJson != null) && (indexJson.length() > 0)) {
+            if ((indexJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -404,8 +439,13 @@ public class IndexManager {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
-                indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
-                }.getType());
+                try {
+                    indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
+                    }.getType());
+                } catch (Exception e) {
+                    Log.e("IndexManager", indexJson);
+                    throw e;
+                }
             }
 
             for (InstanceIndexItem item : indexList) {
@@ -491,7 +531,7 @@ public class IndexManager {
             jsonStream.close();
             contentJson = new String(buffer);
 
-            if ((contentJson != null) && (contentJson.length() > 0)) {
+            if ((contentJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -536,7 +576,7 @@ public class IndexManager {
             jsonStream.close();
             contentJson = new String(buffer);
 
-            if ((contentJson != null) && (contentJson.length() > 0)) {
+            if ((contentJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -574,7 +614,7 @@ public class IndexManager {
             jsonStream.close();
             metadataJson = new String(buffer);
 
-            if ((metadataJson != null) && (metadataJson.length() > 0)) {
+            if ((metadataJson.length() > 0)) {
                 GsonBuilder gBuild = new GsonBuilder();
                 Gson gson = gBuild.create();
 
@@ -611,6 +651,34 @@ public class IndexManager {
 
         int initialSize = indexList.size();
 
+        // make a pass to remove deleted files from the index
+
+        ArrayList<String> keys = new ArrayList<String>();
+
+        for (String key : indexList.keySet()) {
+            InstanceIndexItem item = indexList.get(key);
+            File checkFile = new File(item.getInstanceFilePath());
+            if (!checkFile.exists()) {
+                Log.d("INDEX", "REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
+                keys.add(key);
+            }
+        }
+
+        for (String key: keys) {
+            indexList.remove(key);
+        }
+
+        // check for changes
+        if (indexList.size() != initialSize) {
+            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS REMOVED FROM INSTANCE INDEX, FORCING SAVE");
+            // update flag
+            forceSave = true;
+            // update initial size
+            initialSize = indexList.size();
+        }
+
+        // make a pass to add non-indexed files
+
         for (final File f : instanceFiles) {
             if (indexList.containsKey(f.getAbsolutePath()) && language.equals(indexList.get(f.getAbsolutePath()).getLanguage())) {
                 Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
@@ -626,6 +694,14 @@ public class IndexManager {
                 InstanceIndexItem newItem = new InstanceIndexItem(f.getAbsolutePath(), date.getTime());
 
                 String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
+
+                // if no string was loaded, cannot continue
+                if (jsonString == null) {
+                    Log.e("INDEX", "json could not be loaded from " + f.getPath());
+                    // handle the same way as null spl case below
+                    return indexList;
+                }
+
                 ArrayList<String> referencedFiles = new ArrayList<String>(); // should not need to insert dependencies to check metadata
                 StoryPathLibrary spl = JsonHelper.deserializeStoryPathLibrary(jsonString, f.getAbsolutePath(), referencedFiles, context, language);
 
@@ -675,13 +751,21 @@ public class IndexManager {
             }
         }
 
+        // check for changes again
+        if (indexList.size() != initialSize) {
+            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, FORCING SAVE");
+            // update flag
+            forceSave = true;
+            // update initial size
+            initialSize = indexList.size();
+        }
+
         // persist updated index (if necessary)
-        if ((indexList.size() == initialSize) && !forceSave) {
-            Log.d("INDEX", "NOTHING ADDED TO INSTANCE INDEX, NO SAVE");
-        } else {
-            Log.d("INDEX", (indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, SAVING");
+        if (forceSave) {
             ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
             saveInstanceIndex(context, indexArray, instanceIndexName);
+        } else {
+            Log.d("INDEX", "NOTHING ADDED TO/REMOVED FROM INSTANCE INDEX, NO SAVE");
         }
 
         return indexList;
@@ -768,15 +852,12 @@ public class IndexManager {
     }
     */
 
-    // unused
-    /*
     public static void saveAvailableIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 
         saveIndex(context, new ArrayList(indexMap.values()), getAvailableVersionName());
 
         return;
     }
-    */
 
     public static void saveInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> indexMap) {
 
@@ -837,14 +918,27 @@ public class IndexManager {
         }
     }
 
-    public static void updateInstanceIndex(Context context, InstanceIndexItem newItem, HashMap<String, InstanceIndexItem> indexList) {
+    public static void instanceIndexAdd(Context context, InstanceIndexItem addItem, HashMap<String, InstanceIndexItem> indexList) {
 
-        indexList.put(newItem.getInstanceFilePath(), newItem);
+        indexList.put(addItem.getInstanceFilePath(), addItem);
 
         ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
 
         saveInstanceIndex(context, indexArray, instanceIndexName);
 
+    }
+
+    public static void instanceIndexRemove(Context context, InstanceIndexItem removeItem, HashMap<String, InstanceIndexItem> indexList, boolean deleteFiles, boolean deleteMedia) {
+
+        indexList.remove(removeItem.getInstanceFilePath());
+
+        ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
+
+        saveInstanceIndex(context, indexArray, instanceIndexName);
+
+        if (deleteFiles) {
+            removeItem.deleteAssociatedFiles(context, deleteMedia);
+        }
     }
 
     public static void saveInstanceIndex(Context context, ArrayList<InstanceIndexItem> indexList, String jsonFileName) {

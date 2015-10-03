@@ -3,6 +3,7 @@ package scal.io.liger;
 
 import android.content.Context;
 import android.support.annotation.StringDef;
+import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -44,7 +45,10 @@ public class Constants {
     public static final String NARRATION = "narration";
 
     public static String getClipTypeLocalized(Context context, String clipType) {
-        if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
+        if (clipType == null) {
+            // replace with empty string to prevent null pointer exceptions
+            clipType = "";
+        } else if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
             return context.getString(R.string.cliptype_character);
         } else if (clipType.equalsIgnoreCase(Constants.ACTION)) {
             return context.getString(R.string.cliptype_action);
@@ -85,9 +89,9 @@ public class Constants {
     public static final String MAIN_CHECKSUM = "4248a1dd806071d9fa837c6c7cd25be07d1d76aacef9d4801ec42e37c9c9c6c3";
     public static final String PATCH_CHECKSUM = "1114d9db9c1dded087bd8ced87ed86c34528fb62d069f26638d5ac2f23320623";
 
-    public static final int AVAILABLE_INDEX_VERSION = 8;
+    public static final int AVAILABLE_INDEX_VERSION = 16;
 
-    public final static String TOR_PROXY_HOST = "localhost"; // FIMXE these Orbot host/ports should be pulled from Netcipher instead of hard coded
+    public final static String TOR_PROXY_HOST = "localhost"; // FIXME these Orbot host/ports should be pulled from Netcipher instead of hard coded
     public final static int TOR_PROXY_PORT = 8118;
 
     public static final String EXTRA_STORY_TITLE = "story_title";
@@ -97,4 +101,10 @@ public class Constants {
     public static final String EXTRA_REQUIRED_UPLOAD_TARGETS = "extra_required_upload_targets";
     public static final String EXTRA_REQUIRED_PUBLISH_TARGETS = "extra_required_publish_targets";
     public static final String EXTRA_REQUIRED_TAGS = "extra_required_tags";
+
+    public static final String AVAILABLE = "available";
+    public static final String INSTALLED = "installed";
+
+    // mime type ("photo" is not a valid mime type)
+    public static final String IMAGE = "image"; // FIXME rename MIME_IMAGE and add its compadres here too
 }

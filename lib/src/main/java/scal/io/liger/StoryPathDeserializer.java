@@ -10,6 +10,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -99,9 +100,17 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath> {
         if (jEle != null) {
             JsonArray jArr = jEle.getAsJsonArray();
             for (int i = 0; i < jArr.size(); i++) {
-                JsonObject arrObj = jArr.get(i).getAsJsonObject();
-                Dependency dependency = (gson.fromJson(arrObj, Dependency.class));
-                spm.addDependency(dependency);
+                try {
+                    JsonObject arrObj = jArr.get(i).getAsJsonObject();
+                    Dependency dependency = (gson.fromJson(arrObj, Dependency.class));
+                    spm.addDependency(dependency);
+                } catch (IllegalStateException ise) {
+                    System.err.println("ILLEGAL STATE WHILE PROCESSING \"dependencies\" (#" + i + ") -> " + ise.getMessage());
+                    errorFlag = true;
+                } catch (JsonSyntaxException jse) {
+                    System.err.println("JSON SYNTAX ERROR WHILE PROCESSING \"dependencies\" (#" + i + ") -> " + jse.getMessage());
+                    errorFlag = true;
+                }
             }
         }
 
@@ -124,6 +133,12 @@ public class StoryPathDeserializer implements JsonDeserializer<StoryPath> {
                     spm.addCard(card);
                 } catch (ClassNotFoundException e) {
                     System.err.println("MODEL CLASS NOT FOUND FOR CARD TYPE: " + fqCardType);
+                    errorFlag = true;
+                } catch (IllegalStateException ise) {
+                    System.err.println("ILLEGAL STATE WHILE PROCESSING CARD TYPE: " + fqCardType + " -> " + ise.getMessage());
+                    errorFlag = true;
+                } catch (JsonSyntaxException jse) {
+                    System.err.println("JSON SYNTAX ERROR WHILE PROCESSING CARD TYPE: " + fqCardType + " -> " + jse.getMessage());
                     errorFlag = true;
                 }
             }

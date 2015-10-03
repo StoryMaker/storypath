@@ -3,10 +3,15 @@ package scal.io.liger;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,21 +46,25 @@ public class JsonHelper {
     //private static String language = null; // TEMP
 
     // TEMP - for gathering insance files to test references
-    public static ArrayList<String> getInstancePaths(Context context) {
+    @NonNull
+    public static ArrayList<String> getInstancePaths(@NonNull Context context) {
 
         ArrayList<String> results = new ArrayList<String>();
 
-        File jsonFolder = new File(getSdLigerFilePath(context));
-        // check for nulls (uncertain as to cause of nulls)
-        if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
-            for (File jsonFile : jsonFolder.listFiles()) {
-                if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                    Log.d("FILES", "FOUND INSTANCE PATH: " + jsonFile.getPath());
-                    results.add(jsonFile.getPath());
+        String path = getSdLigerFilePath(context);
+        if (path != null) {
+            File jsonFolder = new File(path);
+            // check for nulls (uncertain as to cause of nulls)
+            if ((jsonFolder.listFiles() != null)) {
+                for (File jsonFile : jsonFolder.listFiles()) {
+                    if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
+                        Log.d("FILES", "FOUND INSTANCE PATH: " + jsonFile.getPath());
+                        results.add(jsonFile.getPath());
+                    }
                 }
+            } else {
+                Log.d("FILES", getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
             }
-        } else {
-            Log.d("FILES", getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
         }
 
         return results;
@@ -83,7 +92,7 @@ public class JsonHelper {
     }
     */
 
-    public static String loadJSONFromPath(String jsonPath, String language) {
+    public static String loadJSONFromPath(@NonNull String jsonPath, @NonNull String language) {
 
         String jsonString = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -144,12 +153,13 @@ public class JsonHelper {
         }
     }
 
+    @Nullable
     public static String loadJSON(File file, String language) {
         if(null == file) {
             return null;
         }
 
-        String jsonString = "";
+        String jsonString = null;
         String sdCardState = Environment.getExternalStorageState();
 
         String localizedFilePath = file.getPath();
@@ -199,7 +209,7 @@ public class JsonHelper {
         return loadJSONFromZip(selectedJSONPath, context, language);
     }
     */
-
+    @Nullable
     public static String loadJSONFromZip(String jsonFilePath, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
@@ -208,7 +218,7 @@ public class JsonHelper {
             return null;
         }
 
-        String jsonString = "";
+        String jsonString = null;
 
 //        String localizedFilePath = jsonFilePath;
 
@@ -249,23 +259,31 @@ public class JsonHelper {
         return jsonString;
     }
 
-    public static String getSdLigerFilePath(Context context) {
+    @Nullable
+    public static String getSdLigerFilePath(@NonNull Context context) {
         // this only works until the class is garbage collected
         // return sdLigerFilePath;
 
-        String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
-        String sdLigerFilePath = sdCardFolderPath + File.separator;
+        // String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+        File storageDirectory = StorageHelper.getActualStorageDirectory(context);
+        if (storageDirectory != null) {
+            String sdCardFolderPath = storageDirectory.getPath();
 
-        Log.d("NOT_STATIC", "CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
+            String sdLigerFilePath = sdCardFolderPath + File.separator;
 
-        return sdLigerFilePath;
+            Log.d("NOT_STATIC", "CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
+
+            return sdLigerFilePath;
+        } else {
+            return null;
+        }
     }
 
-    private static void copyFilesToSdCard(Context context, String basePath) {
+    private static void copyFilesToSdCard(@NonNull Context context, @NonNull String basePath) {
         copyFileOrDir(context, basePath, ""); // copy all files in assets folder in my project
     }
 
-    private static void copyFileOrDir(Context context, String assetFromPath, String baseToPath) {
+    private static void copyFileOrDir(@NonNull Context context, @NonNull String assetFromPath, @NonNull String baseToPath) {
         AssetManager assetManager = context.getAssets();
         String assets[] = null;
         try {
@@ -296,7 +314,7 @@ public class JsonHelper {
         }
     }
 
-    private static void copyFile(Context context, String fromFilename, String baseToPath) {
+    private static void copyFile(@NonNull Context context, @NonNull String fromFilename, @NonNull String baseToPath) {
         AssetManager assetManager = context.getAssets();
 
         if (fromFilename.endsWith(".obb"))
@@ -331,7 +349,7 @@ public class JsonHelper {
 
     }
 
-    private static void copyObbFile(Context context, String mainOrPatch, int version, String toPath) {
+    private static void copyObbFile(@NonNull Context context, @NonNull String mainOrPatch, int version, @NonNull String toPath) {
         AssetManager assetManager = context.getAssets();
 
         String obbFileName = mainOrPatch + "." + version + ".obb";
@@ -363,18 +381,16 @@ public class JsonHelper {
         }
     }
     // FIXME this seems to be required to have been run to use any of the static methods like getLibraryInstanceFiles, we shouldn't have black magic like this
-    public static void setupFileStructure(Context context) {
+    public static void setupFileStructure(@NonNull Context context) {
         String sdCardState = Environment.getExternalStorageState();
         String sdLigerFilePath;
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             // FIXME we need to remove this, it seems like the popup stuff requires it even though we acutally read files from .obb not the Liger folder
 
-            // need to switch to context-based external directory
-            // String sdCardFolderPath = Environment.getExternalStorageDirectory().getPath();
-            String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+            // String sdCardFolderPath = context.getExternalFilesDir(null).getPath();
+            String sdCardFolderPath = StorageHelper.getActualStorageDirectory(context).getPath();
 
-            // sdLigerFilePath = sdCardFolderPath + File.separator + LIGER_DIR + File.separator;
             sdLigerFilePath = sdCardFolderPath + File.separator;
             Log.d("FILES", "NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
 
@@ -476,6 +492,7 @@ public class JsonHelper {
     }
     */
 
+    @NonNull
     public static ArrayList<File> getLibraryInstanceFiles(Context context) {
 
         ArrayList<File> results = new ArrayList<File>();
@@ -484,7 +501,9 @@ public class JsonHelper {
         // check for nulls (uncertain as to cause of nulls)
         if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
             for (File jsonFile : jsonFolder.listFiles()) {
-                if (jsonFile.getName().contains("-library-instance") && !jsonFile.isDirectory()) {
+                if (jsonFile.getName().contains("-library-instance") &&
+                        jsonFile.getName().endsWith(".json") &&
+                        !jsonFile.isDirectory()) {
                     Log.d("FILES", "FOUND LIBRARY INSTANCE FILE: " + jsonFile.getName());
                     File localFile = new File(jsonFile.getPath());
                     results.add(localFile);
@@ -497,6 +516,7 @@ public class JsonHelper {
         return results;
     }
 
+    @Nullable
     public static String[] getJSONFileList(Context context) {
         //ensure path has been set
         if(null == getSdLigerFilePath(context)) {
@@ -530,6 +550,7 @@ public class JsonHelper {
         return jsonFileNamesList.toArray(new String[jsonFileNamesList.size()]);
     }
 
+    @Nullable
     public static String getJsonPathByKey(Context context, String key) {
         setupJSONFileList(context);
         if (jsonKeyToPath.containsKey(key)) {
@@ -585,7 +606,8 @@ public class JsonHelper {
     }
     */
 
-    public static StoryPathLibrary loadStoryPathLibrary(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
+    @Nullable
+    public static StoryPathLibrary loadStoryPathLibrary(@NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -644,7 +666,8 @@ public class JsonHelper {
 
     // NEW
 
-    public static StoryPathLibrary loadStoryPathLibraryFromZip(String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
+    @Nullable
+    public static StoryPathLibrary loadStoryPathLibraryFromZip(@NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
 
@@ -714,7 +737,8 @@ public class JsonHelper {
         return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
     }
 
-    public static StoryPathLibrary deserializeStoryPathLibrary(String storyPathLibraryJson, String jsonFilePath, ArrayList<String> referencedFiles, Context context, String language) {
+    @Nullable
+    public static StoryPathLibrary deserializeStoryPathLibrary(@NonNull String storyPathLibraryJson, @NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
@@ -722,6 +746,8 @@ public class JsonHelper {
         gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
 
+        // fromJson has a bug where it will return null if storyPathLibraryJson is "", therefore this method is @Nullable
+        // https://github.com/google/gson/issues/457
         StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
 
          if (jsonFilePath.contains("instance")) {
@@ -854,6 +880,7 @@ public class JsonHelper {
         }
     }
 
+    @NonNull
     public static String getStoryPathLibrarySaveFileName(StoryPathLibrary storyPathLibrary) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
@@ -906,6 +933,7 @@ public class JsonHelper {
         return true;
     }
 
+    @Nullable
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
@@ -918,6 +946,7 @@ public class JsonHelper {
         return storyPathLibraryJson;
     }
 
+    @Nullable
     public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
@@ -976,6 +1005,7 @@ public class JsonHelper {
 
     // NEW
 
+    @Nullable
     public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
@@ -1235,6 +1265,7 @@ public class JsonHelper {
         return true;
     }
 
+    @Nullable
     public static String serializeStoryPath(StoryPath storyPath) {
 
         //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
@@ -1264,6 +1295,20 @@ public class JsonHelper {
         */
 
         return storyPathJson;
+    }
+
+    public static void cleanup (String swapFilePath) {
+        // delete lingering .swap files from failed saves
+        String swapFilter = "*.swap";
+
+        Log.d(TAG, "CLEANUP: DELETING " + swapFilter + " FROM " + swapFilePath);
+
+        WildcardFileFilter swapFileFilter = new WildcardFileFilter(swapFilter);
+        File swapDirectory = new File(swapFilePath);
+        for (File swapFile : FileUtils.listFiles(swapDirectory, swapFileFilter, null)) {
+            Log.d(TAG, "CLEANUP: FOUND " + swapFile.getPath() + ", DELETING");
+            FileUtils.deleteQuietly(swapFile);
+        }
     }
 
 }

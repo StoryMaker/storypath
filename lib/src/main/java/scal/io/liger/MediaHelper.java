@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import hugo.weaving.DebugLog;
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.view.AudioWaveform;
 
@@ -46,7 +47,7 @@ public class MediaHelper {
 
     private static File selectedFile = null;
     private static ArrayList<File> fileList = null;
-    private static String sdLigerFilePath = null;
+    // private static String sdLigerFilePath = null;
 
     /** Use @MediaType annotation to limit String argument to one of
      * Constants.VIDEO / AUDIO / PHOTO
@@ -55,9 +56,11 @@ public class MediaHelper {
     @StringDef({Constants.VIDEO, Constants.AUDIO, Constants.PHOTO})
     public @interface MediaType {}
 
+    /*
     static {
         setupFileStructure();
     }
+    */
 
     /**
      * Callback to report when thumbnail requests resolve, as well as
@@ -65,13 +68,13 @@ public class MediaHelper {
      */
     public static abstract class ThumbnailCallback {
         /** Called when a thumbnail request requires generation of a new thumbnail */
-        public void newThumbnailGenerated(File thumbnail) {}
+        public abstract void newThumbnailGenerated(File thumbnail);
 
         /** Called when a thumbnail request successfully resolves to a thumbnail file */
-        public void thumbnailLoaded(File thumbnail) {}
+        public abstract void thumbnailLoaded(File thumbnail);
     }
 
-    public static File loadFileFromPath(String filePath) {
+    public static File loadFileFromPath(String filePath, Context context) {
 
         // assume initial / indicates a non-relative path
         // (a relative path starting with / will break the code anyway)
@@ -80,6 +83,9 @@ public class MediaHelper {
             return mediaFile;
         }
 
+        // file location now handled by helper class
+
+        /*
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -91,6 +97,11 @@ public class MediaHelper {
         }
 
         return null;
+        */
+
+        String sdLigerFilePath = getLigerFilePath(context);
+        File mediaFile = new File(sdLigerFilePath + filePath);
+        return mediaFile;
     }
 
     public static File loadFile() {
@@ -109,7 +120,11 @@ public class MediaHelper {
         return null;
     }
 
-    private static void setupFileStructure() {
+    private static String getLigerFilePath(Context context) {
+
+        // file location now handled by helper class
+
+        /*
         String sdCardState = Environment.getExternalStorageState();
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -118,19 +133,28 @@ public class MediaHelper {
         } else {
             System.err.println("SD CARD NOT FOUND");
         }
+        */
+
+        return StorageHelper.getActualStorageDirectory(context).getPath() + File.separator + LIGER_DIR + File.separator;
     }
 
-    public static String[] getMediaFileList() {
+    public static String[] getMediaFileList(Context context) {
+
         //ensure path has been set
+        /*
         if(null == sdLigerFilePath) {
             return null;
         }
+        */
 
         ArrayList<String> fileNamesList = new ArrayList<String>();
         fileList = new ArrayList<File>();
 
         // revisit this, perhaps take media type and return corresponding files?
-        File ligerDir = new File(sdLigerFilePath);
+
+        // File ligerDir = new File(sdLigerFilePath);
+        File ligerDir = new File(getLigerFilePath(context));
+
         if (ligerDir != null) {
             for (File file : ligerDir.listFiles()) {
                 if (file.getName().endsWith(".mp4")) {
@@ -140,7 +164,9 @@ public class MediaHelper {
             }
         }
 
-        File defaultLigerDir = new File(sdLigerFilePath + "/default/");
+        // File defaultLigerDir = new File(sdLigerFilePath + "/default/");
+        File defaultLigerDir = new File(getLigerFilePath(context) + "/default/");
+
         if (defaultLigerDir != null) {
             for (File file : defaultLigerDir.listFiles()) {
                 if (file.getName().endsWith(".json")) {
@@ -162,8 +188,8 @@ public class MediaHelper {
      * @throws IOException
      * TODO Allow this to be configured by Liger client application
      */
-    public static @Nullable File getAudioDirectory() throws IOException {
-        File storageDirectory = new File(sdLigerFilePath, "audio");
+    public static @Nullable File getAudioDirectory(Context context) throws IOException {
+        File storageDirectory = new File(getLigerFilePath(context), "audio");
         recursiveCreateDirectory(storageDirectory);
 
         return storageDirectory;
@@ -173,8 +199,8 @@ public class MediaHelper {
      * Return a directory where media thumbnails will be stored
      * @throws IOException
      */
-    public static @NonNull File getThumbnailDirectory() throws IOException {
-        File thumbDirectory = new File(sdLigerFilePath, "thumbs");
+    public static @NonNull File getThumbnailDirectory(Context context) throws IOException {
+        File thumbDirectory = new File(getLigerFilePath(context), "thumbs");
         recursiveCreateDirectory(thumbDirectory);
 
         return thumbDirectory;
@@ -201,7 +227,7 @@ public class MediaHelper {
         }
 
         try {
-            File thumbnail = getThumbnailFileForPathInExpansion(relativeExpansionPath, targetExpansion);
+            File thumbnail = getThumbnailFileForPathInExpansion(relativeExpansionPath, targetExpansion, target.getContext());
             if (thumbnail.exists()) displayImage(thumbnail, target);
             else {
                 new AsyncTask<File, Void, File>() {
@@ -219,7 +245,10 @@ public class MediaHelper {
                                 // not FileInputStream, from the zip archive. FileInputStream would
                                 // give us access to a FileDescriptor, which we could use to generate
                                 // a video / audio thumbnail without first copying the stream to file.
-                                File tempDirectory = context.getExternalFilesDir(null);
+
+                                //File tempDirectory = context.getExternalFilesDir(null);
+                                File tempDirectory = StorageHelper.getActualStorageDirectory(context);
+
                                 File tempFile = ZipHelper.getTempFile(relativeExpansionPath,
                                                                       tempDirectory.getAbsolutePath(),
                                                                       context);
@@ -280,7 +309,7 @@ public class MediaHelper {
                                                           @NonNull ImageView target) {
 
         try {
-            File thumbnail = getThumbnailFileForExpansionItem(item);
+            File thumbnail = getThumbnailFileForExpansionItem(item, target.getContext());
             if (!thumbnail.exists()) {
 
                 // get inpustream efficiently for ExpansionIndexItem thumbnail
@@ -322,6 +351,7 @@ public class MediaHelper {
      *
      * Safe to call from the UI thread.
      */
+    @DebugLog
     public static void displayMediaThumbnail(@NonNull @MediaType final String mediaType,
                                              @NonNull final String path,
                                              @NonNull final ImageView target,
@@ -390,7 +420,7 @@ public class MediaHelper {
                                                    @NonNull final ImageView target,
                                                    @Nullable final ThumbnailCallback callback) {
         try {
-            final File thumbnailFile = getThumbnailFileForMediaFile(media);
+            final File thumbnailFile = getThumbnailFileForMediaFile(media, target.getContext());
             if (thumbnailFile.exists()) {
                 if (callback != null) {
                     target.post(new Runnable() {
@@ -403,7 +433,10 @@ public class MediaHelper {
                 return thumbnailFile;
             } else {
                 final File newThumbnail = generateMediaThumbnail(target.getContext(), media, null, mediaType);
-                if (callback != null) {
+
+                // some errors may cause generateMediaThumbnail to return a null value which should not be passed to the callback
+
+                if ((callback != null) && (newThumbnail != null)) {
                     target.post(new Runnable() {
                         @Override
                         public void run() {
@@ -425,7 +458,7 @@ public class MediaHelper {
      * @throws IOException
      */
     private static File getWaveformForAudioFile(@NonNull Context context, @NonNull File audio) throws IOException {
-        File waveFormFile = getThumbnailFileForMediaFile(audio);
+        File waveFormFile = getThumbnailFileForMediaFile(audio, context);
         if (!waveFormFile.exists()) {
             Bitmap waveform = AudioWaveform.createBitmap(context, audio.getAbsolutePath());
 
@@ -460,26 +493,27 @@ public class MediaHelper {
         }
     }
 
-    public static File getThumbnailFileForMediaFile(@NonNull File media) throws IOException {
-        return new File(getThumbnailDirectory(), media.getName() + ".thumb");
+    public static File getThumbnailFileForMediaFile(@NonNull File media, @NonNull Context context) throws IOException {
+        return new File(getThumbnailDirectory(context), media.getName() + ".thumb");
     }
 
-    public static File getThumbnailFileForExpansionItem(@NonNull ExpansionIndexItem item) throws IOException {
-        return new File(getThumbnailDirectory(),
+    public static File getThumbnailFileForExpansionItem(@NonNull ExpansionIndexItem item, @NonNull Context context) throws IOException {
+        return new File(getThumbnailDirectory(context),
                         item.getExpansionId() + '_' + item.getExpansionFileVersion() + '_' +
                                 item.getThumbnailPath().replace(File.separatorChar, '_') + ".thumb");
     }
 
     public static File getThumbnailFileForPathInExpansion(@NonNull String path,
-                                                          @NonNull ExpansionIndexItem item) throws IOException {
-        return new File(getThumbnailDirectory(),
+                                                          @NonNull ExpansionIndexItem item,
+                                                          @NonNull Context context) throws IOException {
+        return new File(getThumbnailDirectory(context),
                 item.getExpansionId() + '_' + item.getExpansionFileVersion() + '_' +
                         path.replace(File.separatorChar, '_') + ".thumb");
     }
 
-    public static File getThumbnailFileForMediaUri(@NonNull Uri media) throws IOException {
+    public static File getThumbnailFileForMediaUri(@NonNull Uri media, Context context) throws IOException {
         // Convert last Uri path segmenet to file name, allowing only alphanumeric and underscores.
-        return new File(getThumbnailDirectory(), media.getLastPathSegment().replaceAll("\\W+", "") + ".thumb");
+        return new File(getThumbnailDirectory(context), media.getLastPathSegment().replaceAll("\\W+", "") + ".thumb");
     }
 
     /**
@@ -523,6 +557,9 @@ public class MediaHelper {
         Bitmap thumbnail = null;
 
         switch (mediaType) {
+
+            // mediaType appears to be set based on story type, which may cause an error if a different type of media file is imported
+
             case Constants.AUDIO:
                 return getWaveformForAudioFile(context, media);
             case Constants.VIDEO:
@@ -535,7 +572,7 @@ public class MediaHelper {
         }
 
         if (thumbnail != null) {
-            if (thumbnailFile == null) thumbnailFile = getThumbnailFileForMediaFile(media);
+            if (thumbnailFile == null) thumbnailFile = getThumbnailFileForMediaFile(media, context);
             FileOutputStream thumbnailStream = new FileOutputStream(thumbnailFile);
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 75, thumbnailStream); // FIXME make compression level configurable
             thumbnailStream.flush();
@@ -543,7 +580,7 @@ public class MediaHelper {
             Log.d(TAG, "Generated thumbnail at " + thumbnailFile.getAbsolutePath());
             return thumbnailFile;
         } else {
-            Log.w(TAG, "Unable to generate thumbnail for " + media.getAbsolutePath());
+            Log.e(TAG, "Unable to generate thumbnail for " + media.getAbsolutePath() + " (expected media type: " + mediaType + ")");
         }
         return null;
     }
@@ -565,7 +602,8 @@ public class MediaHelper {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(media.getAbsolutePath(), options);
+        Bitmap bitmap = BitmapFactory.decodeFile(media.getAbsolutePath(), options);
+        return Utility.rotateBitmapForExifData(media.getAbsolutePath(), bitmap);
     }
 
     private static @Nullable Bitmap decodeSampledBitmapFromInputStream(@NonNull InputStream media,

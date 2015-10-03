@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,7 +42,7 @@ import scal.io.liger.model.StoryPath;
  */
 public class NarrationPopup {
 
-    private Activity mActivity;
+    @NonNull private Activity mActivity;
     private ViewGroup mVuLayout;
     private ClipCardsNarrator mNarrator;
     private Handler mHandler;
@@ -50,7 +51,7 @@ public class NarrationPopup {
     /**
      * Create a new NarrationPopup.
      */
-    public NarrationPopup(Activity host) {
+    public NarrationPopup(@NonNull Activity host) {
         mActivity = host;
         host.runOnUiThread(new Runnable() {
             @Override
@@ -133,7 +134,7 @@ public class NarrationPopup {
                 display.getSize(size);
                 int width = size.x;
                 int height = size.y;
-                int actionBarHeight = mActivity.getActionBar().getHeight();
+                int actionBarHeight = (mActivity.getActionBar() != null) ? mActivity.getActionBar().getHeight() : 0;
 
                 Rect rectangle = new Rect();
                 Window window = mActivity.getWindow();

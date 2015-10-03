@@ -52,7 +52,7 @@ public class PreviewCardView implements DisplayableCard {
         loadClips(mCardModel.getClipPaths());
 
         //TODO find better way of checking file is valid
-        File mediaFile = MediaHelper.loadFileFromPath(paths.get(0)); // preview will play clips in sequence, but thumbnail is taken from first clip
+        File mediaFile = MediaHelper.loadFileFromPath(paths.get(0), mContext); // preview will play clips in sequence, but thumbnail is taken from first clip
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
 
             Uri video = Uri.parse(mediaFile.getPath());
@@ -93,7 +93,7 @@ public class PreviewCardView implements DisplayableCard {
                     return; // don't loop
                 }
 
-                File mediaFile = MediaHelper.loadFileFromPath(paths.get(videoIndex));
+                File mediaFile = MediaHelper.loadFileFromPath(paths.get(videoIndex), mContext);
                 if (mediaFile.exists() && !mediaFile.isDirectory()) {
                     Uri video = Uri.parse(mediaFile.getPath());
                     vvCardVideo.setVideoURI(video);

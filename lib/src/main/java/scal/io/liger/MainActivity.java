@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,8 +19,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.stream.MalformedJsonException;
+import com.hannesdorfmann.sqlbrite.dao.DaoManager;
+import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,6 +35,10 @@ import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
+import scal.io.liger.model.sqlbrite.AvailableIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
+import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
+import scal.io.liger.model.sqlbrite.QueueItemDao;
 import scal.io.liger.view.ScrollLockRecyclerView;
 
 
@@ -55,12 +63,44 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
     // new, store info to minimize file access
     public HashMap<String, InstanceIndexItem> instanceIndex;
 
+    // new stuff
+    private InstanceIndexItemDao instanceIndexItemDao;
+    private AvailableIndexItemDao availableIndexItemDao;
+    private InstalledIndexItemDao installedIndexItemDao;
+    private QueueItemDao queueItemDao;
+    private DaoManager daoManager;
+    private int dbVersion = 1;
+
+    // must set dao stuff in constructor?
+    public MainActivity() {
+
+        instanceIndexItemDao = new InstanceIndexItemDao();
+        availableIndexItemDao = new AvailableIndexItemDao();
+        installedIndexItemDao = new InstalledIndexItemDao();
+        queueItemDao = new QueueItemDao();
+
+        daoManager = new DaoManager(MainActivity.this, "Storymaker.db", dbVersion, instanceIndexItemDao, availableIndexItemDao, installedIndexItemDao, queueItemDao);
+        daoManager.setLogging(false);
+
+    }
+
+    public InstalledIndexItemDao getInstalledIndexItemDao () {
+        return installedIndexItemDao;
+    }
+
     public String getLanguage() {
         return language;
     }
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    // added for testing
+    public void scroll(int position) {
+        Log.d("TEST", "Scrolling to index item " + position);
+        mRecyclerView.setCanScroll(true); // is this required?
+        mRecyclerView.scrollToPosition(position);
     }
 
     @Override
@@ -199,7 +239,7 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         Log.d(TAG, "onSaveInstanceState called");
 
         if (mStoryPathLibrary == null) {
@@ -522,7 +562,7 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
             if(requestCode == Constants.REQUEST_VIDEO_CAPTURE) {
 
                 Uri uri = intent.getData();
-                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
+                String path = FileUtils.getPath(getApplicationContext(), uri);
 
                 if (Utility.isNullOrEmpty(path)) {
                     Log.e(TAG, "onActivityResult got null path");
@@ -546,14 +586,29 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(path, Constants.VIDEO);
-                    cc.saveMediaFile(mf);
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // confirm mime type
+                    String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(Constants.VIDEO)) {
+
+                        MediaFile mf = new MediaFile(path, Constants.VIDEO);
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.VIDEO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.VIDEO + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     if (c != null) {
                         Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
@@ -581,14 +636,29 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(path, Constants.PHOTO);
-                    cc.saveMediaFile(mf);
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // confirm mime type
+                    String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(Constants.IMAGE)) {
+
+                        MediaFile mf = new MediaFile(path, Constants.PHOTO);
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.PHOTO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.IMAGE + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
                 }
@@ -596,7 +666,7 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
             } else if(requestCode == Constants.REQUEST_AUDIO_CAPTURE) {
 
                 Uri uri = intent.getData();
-                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
+                String path = FileUtils.getPath(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, audio path:" + path);
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
@@ -614,14 +684,29 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
 
                 if (c instanceof ClipCard) {
                     ClipCard cc = (ClipCard)c;
-                    MediaFile mf = new MediaFile(path, Constants.AUDIO);
-                    cc.saveMediaFile(mf);
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // confirm mime type
+                    String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(Constants.AUDIO)) {
+
+                        MediaFile mf = new MediaFile(path, Constants.AUDIO);
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + Constants.AUDIO + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + Constants.AUDIO + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
                 }
@@ -632,25 +717,51 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
                 if (Build.VERSION.SDK_INT >= 19) {
                     getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
+                
+                String path = FileUtils.getPath(getApplicationContext(), uri);
 
-                // FIXME this can get a file:// uri, e.g. from facebook: https://rink.hockeyapp.net/manage/apps/30627/app_versions/62/crash_reasons/24334871
-                String path = Utility.getRealPathFromURI(getApplicationContext(), uri);
                 Log.d(TAG, "onActivityResult, imported file path:" + path);
+
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 Card c = mStoryPathLibrary.getCurrentStoryPath().getCardById(pathId);
 
                 if (c instanceof ClipCard) {
-                    ClipCard cc = (ClipCard)c;
+                    ClipCard cc = (ClipCard) c;
 
-                    MediaFile mf = new MediaFile(uri.toString(), cc.getMedium());
-                    cc.saveMediaFile(mf);
+                    String checkType = cc.getMedium();
 
-                    // SEEMS LIKE A REASONABLE TIME TO SAVE
-                    mStoryPathLibrary.save(true);
+                    // adjust target value if needed
+                    if (checkType.equals(Constants.PHOTO)) {
+                        checkType = Constants.IMAGE;
+                    }
 
-                    mCardAdapter.changeCard(cc);
-                    scrollRecyclerViewToCard(cc);
+                    // confirm mime type
+                    String mimeType = "";
+
+                    if (path != null) {
+                        mimeType = URLConnection.guessContentTypeFromName(path); // TODO: a null path causes failure, is that ok?
+                    }
+                    
+                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+
+                    if (mimeType.startsWith(checkType)) {
+
+                        MediaFile mf = new MediaFile(uri.toString(), cc.getMedium());
+                        cc.saveMediaFile(mf);
+
+                        // SEEMS LIKE A REASONABLE TIME TO SAVE
+                        mStoryPathLibrary.save(true);
+
+                        mCardAdapter.changeCard(cc);
+                        scrollRecyclerViewToCard(cc);
+                    } else {
+
+                        Utility.toastOnUiThread(this, "Expecting " + cc.getMedium() + " file but found " + mimeType, true);
+
+                        Log.e(TAG, "onActivityResult, expecting " + checkType + " file but found " + mimeType);
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
@@ -670,11 +781,15 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
         Cursor imageCursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
         String imagePath = null;
 
-        if(imageCursor.moveToFirst()){
-            int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
-            imagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            imageCursor.close();
-            imageCursor = null;
+        try {
+            if (imageCursor.moveToFirst()) {
+                int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
+                imagePath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+        } finally {
+            if (imageCursor != null) {
+                imageCursor.close();
+            }
         }
 
         return imagePath;

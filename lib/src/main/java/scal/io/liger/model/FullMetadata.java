@@ -3,6 +3,7 @@ package scal.io.liger.model;
 import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import scal.io.liger.Constants;
@@ -26,7 +27,7 @@ public class FullMetadata implements Parcelable {
     private String effect;
     private String type;
     private String medium;
-    private String filePath;
+    @NonNull private String filePath;
 
     public FullMetadata (ClipMetadata cm, MediaFile mf) {
         this.startTime = cm.getStartTime();
@@ -37,19 +38,7 @@ public class FullMetadata implements Parcelable {
         this.medium = mf.getMedium();
         this.filePath = mf.getPath();
 
-        if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            Log.d(TAG, "retriever.setDataSource(" + this.filePath + ");");
-            retriever.setDataSource(this.filePath);
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeMs = 0;
-            if (time != null) {
-                timeMs = Long.parseLong(time);
-            }
-            this.duration = Util.safeLongToInt(timeMs);
-        } else {
-            this.duration = 0;
-        }
+        this.duration = calculateDuration();
     }
 
     public FullMetadata(Parcel in) {
@@ -65,14 +54,26 @@ public class FullMetadata implements Parcelable {
         this.medium = data[5];
         this.filePath = data[6];
 
-        if (this.medium.equals(Constants.VIDEO) || this.medium.equals(Constants.AUDIO)) {
+        this.duration = calculateDuration();
+    }
+
+    private int calculateDuration () {
+        if (medium.equals(Constants.VIDEO) || medium.equals(Constants.AUDIO)) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(this.filePath);
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeInmillisec = Long.parseLong( time );
-            this.duration = Util.safeLongToInt(timeInmillisec);
+            String time = null;
+            try {
+                retriever.setDataSource(filePath);
+                time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            } catch (RuntimeException re) {
+                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + filePath + " -> " + re.getMessage());
+            }
+            long timeMs = 0;
+            if (time != null) {
+                timeMs = Long.parseLong(time);
+            }
+            return Util.safeLongToInt(timeMs);
         } else {
-            this.duration = 0;
+            return 0;
         }
     }
 
@@ -163,11 +164,12 @@ public class FullMetadata implements Parcelable {
         this.medium = medium;
     }
 
+    @NonNull
     public String getFilePath() {
         return filePath;
     }
 
-    public void setFilePath(String filePath) {
+    public void setFilePath(@NonNull String filePath) {
         this.filePath = filePath;
     }
 }

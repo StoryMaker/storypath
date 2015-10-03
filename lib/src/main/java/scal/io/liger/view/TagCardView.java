@@ -94,7 +94,7 @@ public class TagCardView implements DisplayableCard {
 
 
         //TODO find better way of checking file is valid
-        final File mediaFile = MediaHelper.loadFileFromPath(mediaPath);
+        final File mediaFile = MediaHelper.loadFileFromPath(mediaPath, mContext);
         if(mediaFile.exists() && !mediaFile.isDirectory()) {
 
             //TODO check media type

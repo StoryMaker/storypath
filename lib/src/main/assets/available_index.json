@@ -2,8 +2,10 @@
     {
         "expansionId": "learning_guide",
         "patchOrder": "1",
+        "contentType": "GUIDE",
         "title": "Learning Guide",
         "packageName": "org.storymaker.app",
+        "contentType": "guide",
         "description": "Learn the Basic Elements of a Story",
         "thumbnailPath": "images/content_packs/learningguide_cover.jpg",
         "expansionFileVersion": "1",
@@ -18,8 +20,10 @@
     {
         "expansionId": "burundi",
         "patchOrder": "2",
+        "contentType": "LESSON",
         "title": "Burundi Content",
         "packageName": "org.storymaker.app",
+        "contentType": "lesson",
         "description": "Lesson Pack for Burundi",
         "thumbnailPath": "images/content_packs/burundipack_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
@@ -34,8 +38,10 @@
     {
         "expansionId": "persian",
         "patchOrder": "3",
+        "contentType": "LESSON",
         "title": "Persian Content",
         "packageName": "org.storymaker.app",
+        "contentType": "lesson",
         "description": "Lesson Pack for Iranian Diaspora",
         "thumbnailPath": "images/content_packs/persianpack_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
@@ -47,14 +53,46 @@
     {
         "expansionId": "beta",
         "patchOrder": "4",
+        "contentType": "TEMPLATE",
         "title": "Beta Content",
         "packageName": "org.storymaker.app",
+        "contentType": "template",
         "description": "Beta Content Pack for Testing",
         "thumbnailPath": "images/content_packs/beta_cover.png",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "3",
-        "expansionFileSize": "1808405",
-        "expansionFileChecksum": "f0d21d4e6feb2dabdc15e9b98405f1fb6924b636a5a162e4dc80516c906e3504"
+        "expansionFileVersion": "5",
+        "expansionFileSize": "1212050",
+        "expansionFileChecksum": "c8579074960aa46cfba26e57504b2c1524cf65032f895d6d7f33acbc2fb26e9a"
+    },
+    {
+        "expansionId": "mobile_photo_101",
+        "patchOrder": "5",
+        "contentType": "GUIDE",
+        "title": "Mobile Photo 101",
+        "packageName": "org.storymaker.app",
+        "contentType": "guide",
+        "description": "Beta Pack of Mobile Photo Lessons",
+        "thumbnailPath": "images/content_packs/mobile_photo_101_cover.jpg",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "4",
+        "expansionFileSize": "3684997",
+        "expansionFileChecksum": "f7c507bd33549bdbd4d739fb0cfd4d935ade65a6f7e78670d07419b5ddc14a63"
+    },
+    {
+        "expansionId": "citizen_journalism_pack",
+        "patchOrder": "6",
+        "contentType": "GUIDE",
+        "title": "Citizen Journalism Pack",
+        "packageName": "org.storymaker.app",
+        "contentType": "guide",
+        "description": "Beta StoryPaths for use in a workshop",
+        "thumbnailPath": "images/content_packs/citizen_journalism_pack_cover.jpg",
+        "expansionFilePath": "Android/data/org.storymaker.app/files/",
+        "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
+        "expansionFileVersion": "1",
+        "expansionFileSize": "389512",
+        "expansionFileChecksum": "4f2471ffa2474a08b4ff3264406b5cb1ef94394d82a4b9d71cc06bc7dfc08aa7"
     }
 ]

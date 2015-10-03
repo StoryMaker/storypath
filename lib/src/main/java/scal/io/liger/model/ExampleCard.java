@@ -45,12 +45,23 @@ public class ExampleCard extends Card implements Cloneable {
     public void setExampleMediaPath(String example_media_path) { this.exampleMediaPath = example_media_path; }
 
     public ExampleMediaFile getExampleMediaFile() {
+
+        // clarification: this object is loaded from json with only a value for exampleMediaPath
+        // therefore it is assumed that if exampleMediaPath is null there will be no exampleMediaFile
+
         if (exampleMediaPath == null) {
             Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
             return null;
         }
 
         if (exampleMediaFile == null) {
+
+            // do not attempt to create files for media file urls
+            if (exampleMediaPath.startsWith("http")) {
+                Log.d(this.getClass().getName(), "example media path for card " + this.getId() + " is a URL: " + exampleMediaPath);
+                return null;
+            }
+
             exampleMediaFile = new ExampleMediaFile(storyPath.buildZipPath(exampleMediaPath), medium);
         }
 

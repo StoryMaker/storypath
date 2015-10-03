@@ -79,7 +79,7 @@ public class AudioRecorder {
     }
 
     private void init() throws IOException {
-        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory());
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory(mContext));
         inflateViews(mContainer);
     }
 
