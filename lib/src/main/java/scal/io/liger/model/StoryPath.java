@@ -174,7 +174,7 @@ public class StoryPath {
             }
         }
 
-        Log.e(TAG, "CARD ID " + pathParts[1] + " WAS NOT FOUND");
+        Log.e(TAG, "CARD ID (full path) " + pathParts[1] + " WAS NOT FOUND");
         return null;
     }
 
@@ -187,7 +187,7 @@ public class StoryPath {
             }
         }
 
-        Log.e(TAG, "CARD ID " + idOnly + " WAS NOT FOUND");
+        Log.e(TAG, "CARD ID (id only) " + idOnly + " WAS NOT FOUND");
         return null;
     }
 
@@ -537,7 +537,12 @@ public class StoryPath {
      */
     public void notifyCardChanged(@NonNull Card firstCard) {
         Log.i(TAG, "notifyCardChanged of update to card " + firstCard.getId());
-        if (storyPathLibrary == null || storyPathLibrary.mListener == null) {
+        if (storyPathLibrary == null) {
+            Log.i(TAG, "story path library is null for story path " + id);
+            return;
+        }
+        if (storyPathLibrary.mListener == null) {
+            Log.i(TAG, "story path library listener is null for story path " + id);
             return;
         }
 

@@ -521,9 +521,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         Card card = null;
 
         if ((storyPathLibrary != null) && storyPathLibrary.getId().equals(pathParts[0])) {
+            Log.d("REFERENCES", "LOOKING FOR CARD ID " + pathParts[1] + " IN LIBRARY");
             card = storyPathLibrary.getCardById(cardPath);
         }
         if ((storyPath != null) && storyPath.getId().equals(pathParts[0])) {
+            Log.d("REFERENCES", "LOOKING FOR CARD ID " + pathParts[1] + " IN PATH");
             card = storyPath.getCardById(cardPath);
         }
 
@@ -540,6 +542,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             // add to story path files
 
             mStoryPathLibrary = storyPathLibrary;
+
+            // this is done for normal loads so it should be done here too
+            configureStoryPathLibrary();
+            mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
+
             refreshCardViewXXX();
         }
 
