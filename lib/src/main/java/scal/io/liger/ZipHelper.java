@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
-import com.hannesdorfmann.sqlbrite.dao.DaoManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,10 +20,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import scal.io.liger.model.ExpansionIndexItem;
-import scal.io.liger.model.sqlbrite.AvailableIndexItemDao;
 import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
-import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
-import scal.io.liger.model.sqlbrite.QueueItemDao;
 
 /**
  * @author Matt Bogner
@@ -395,14 +391,27 @@ public class ZipHelper {
      */
     @Nullable
     public static ExpansionIndexItem guessExpansionIndexItemForPath(@NonNull String path, @NonNull Context context) {
-        HashMap<String, ExpansionIndexItem> expansions = IndexManager.loadInstalledIdIndex(context);
 
-        Set<String> expansionIds = expansions.keySet();
-        for(String expansionId : expansionIds) {
-            if (path.contains(expansionId)) {
-                return expansions.get(expansionId);
+        // need db access to get list of installed content packs
+        if (context instanceof MainActivity) {
+            InstalledIndexItemDao dao = ((MainActivity)context).getInstalledIndexItemDao(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+
+            HashMap<String, scal.io.liger.model.sqlbrite.ExpansionIndexItem> expansions = StorymakerIndexManager.loadInstalledIdIndex(context, dao);
+
+            Set<String> expansionIds = expansions.keySet();
+            for(String expansionId : expansionIds) {
+                if (path.contains(expansionId)) {
+
+                    // turning this into an instance of the non sql-brite class to minimize impact
+                    ExpansionIndexItem eii = new ExpansionIndexItem((expansions.get(expansionId)));
+
+                    return eii;
+                }
             }
+        } else {
+            Log.e(TAG, "could not find a dao to access the installed item list in the db");
         }
+
         return null;
     }
 
