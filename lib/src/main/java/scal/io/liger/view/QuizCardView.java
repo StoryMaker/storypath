@@ -19,6 +19,8 @@ import scal.io.liger.R;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.Choice;
 import scal.io.liger.model.QuizCard;
+import scal.io.liger.model.StoryPath;
+import scal.io.liger.model.StoryPathLibrary;
 
 // TODO:
 public class QuizCardView extends ExampleCardView {
@@ -100,6 +102,17 @@ public class QuizCardView extends ExampleCardView {
             public void onClick(View v) {
                 Choice choice = (Choice) v.getTag(R.id.view_tag_quiz_choice);
                 markQuizChoiceSelected(choiceContainer, v, !v.isSelected(), true);
+
+                // cards no longer saved on any change so need to initiate save if a selection is made
+                // not sure if these cards can appear in either libraries or paths, so check first
+                StoryPath sp = mCardModel.getStoryPath();
+                if (sp instanceof StoryPathLibrary) {
+                    StoryPathLibrary spl = (StoryPathLibrary)sp;
+                    spl.save(false);
+                } else {
+                    sp.getStoryPathLibrary().save(true);
+                }
+
                 if (quizIsPassed()) {
                     // We're done!
                     toggleQuizResponseExpansion(breadCrumb, choiceContainer, true);
