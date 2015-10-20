@@ -98,9 +98,6 @@ public class StoryPathLibrary extends StoryPath {
         if (action.equals("DELETE")) {
             mListener.onCardRemoved(firstCard);
         }
-
-        // SEEMS LIKE A REASONABLE TIME TO SAVE
-        save(true);
     }
 
     public PublishProfile getPublishProfile() {
