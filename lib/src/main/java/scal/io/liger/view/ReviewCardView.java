@@ -180,6 +180,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
     @Override
     public void onReorder(int firstIndex, int secondIndex) {
+        mCardModel.getStoryPath().getStoryPathLibrary().save(true);
         mCardModel.getStoryPath().notifyCardChanged(mCardModel);
     }
 }

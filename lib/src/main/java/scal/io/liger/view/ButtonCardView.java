@@ -46,6 +46,7 @@ public class ButtonCardView implements DisplayableCard{
                 mCardModel.clearValues();
                 mCardModel.addValue("value", "true");
                 // moveToNextCard();
+                moveToThisCard();
 
                 // currently broken in several places
                 //String linkPath = spm.getId() + "::" + cm.getId();
@@ -67,4 +68,10 @@ public class ButtonCardView implements DisplayableCard{
         spm.linkNotification(linkPath);
     }
     */
+
+    private void moveToThisCard() {
+        StoryPath sp = mCardModel.getStoryPath();
+        String linkPath = sp.getId() + "::" + mCardModel.getId();
+        sp.linkNotification(linkPath);
+    }
 }

@@ -51,6 +51,7 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
     public static final String INTENT_KEY_STORYPATH_INSTANCE_PATH = "storypath_instance_path";
 
     ScrollLockRecyclerView mRecyclerView;
+    LinearLayoutManager mLayoutManager;
     StoryPathLibrary mStoryPathLibrary;
     public CardAdapter mCardAdapter = null;
     String language = null;
@@ -116,7 +117,8 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
 
         setContentView(R.layout.activity_main);
         mRecyclerView = (ScrollLockRecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
 ////        if (DEVELOPER_MODE) {
 //            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -521,9 +523,11 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
         Card card = null;
 
         if ((storyPathLibrary != null) && storyPathLibrary.getId().equals(pathParts[0])) {
+            Log.d("REFERENCES", "LOOKING FOR CARD ID " + pathParts[1] + " IN LIBRARY");
             card = storyPathLibrary.getCardById(cardPath);
         }
         if ((storyPath != null) && storyPath.getId().equals(pathParts[0])) {
+            Log.d("REFERENCES", "LOOKING FOR CARD ID " + pathParts[1] + " IN PATH");
             card = storyPath.getCardById(cardPath);
         }
 
@@ -540,6 +544,11 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
             // add to story path files
 
             mStoryPathLibrary = storyPathLibrary;
+
+            // this is done for normal loads so it should be done here too
+            configureStoryPathLibrary();
+            mStoryPathLibrary.setStoryPathLibraryListener(MainActivity.this);
+
             refreshCardViewXXX();
         }
 
@@ -550,7 +559,7 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
             return;
         }
 
-        mRecyclerView.scrollToPosition(cardIndex);
+        mLayoutManager.scrollToPositionWithOffset(cardIndex, 0);
     }
 
     @Override

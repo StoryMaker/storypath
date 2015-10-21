@@ -45,6 +45,16 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     }
 
+    public ExpansionIndexItem(scal.io.liger.model.sqlbrite.ExpansionIndexItem eii) {
+        this.packageName = eii.packageName;
+        this.expansionId = eii.expansionId;
+        this.patchOrder = eii.patchOrder;
+        this.contentType = eii.contentType;
+        this.expansionFileVersion = eii.expansionFileVersion;
+        this.expansionFilePath = eii.expansionFilePath;
+        this.expansionFileUrl = eii.expansionFileUrl;
+    }
+
     public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String contentType, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
         this.packageName = packageName;
         this.expansionId = expansionId;
