@@ -51,6 +51,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     public static final String INTENT_KEY_STORYPATH_INSTANCE_PATH = "storypath_instance_path";
 
     ScrollLockRecyclerView mRecyclerView;
+    LinearLayoutManager mLayoutManager;
     StoryPathLibrary mStoryPathLibrary;
     public CardAdapter mCardAdapter = null;
     String language = null;
@@ -116,7 +117,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
         setContentView(R.layout.activity_main);
         mRecyclerView = (ScrollLockRecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
 ////        if (DEVELOPER_MODE) {
 //            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -557,7 +559,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
             return;
         }
 
-        mRecyclerView.scrollToPosition(cardIndex);
+        mLayoutManager.scrollToPositionWithOffset(cardIndex, 0);
     }
 
     @Override
