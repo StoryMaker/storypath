@@ -63,4 +63,7 @@ dependencies {
     compile 'com.hannesdorfmann.sqlbrite:dao:0.2.2'
     compile 'com.hannesdorfmann.sqlbrite:annotations:0.2.2'
     apt 'com.hannesdorfmann.sqlbrite:object-mapper:0.2.2'
+
+    // iocipher
+    compile files('libs/IOCipher-v0.3-debug.jar')
 }

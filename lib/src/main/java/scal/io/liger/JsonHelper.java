@@ -1,8 +1,10 @@
 package scal.io.liger;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -33,6 +35,9 @@ import scal.io.liger.model.StoryPathLibrary;
  * @author Josh Steiner
  */
 public class JsonHelper {
+
+    public static final String KEY_USE_IOCIPHER = "p_use_iocipher_storage";
+
     private static final String TAG = "JsonHelper";
     private static final String LIGER_DIR = "Liger";
     private static File selectedJSONFile = null;
@@ -147,39 +152,73 @@ public class JsonHelper {
         //    return loadJSON(selectedJSONFile, language);
         //} else {
         if (checkFile.exists()) {
-            return loadJSON(checkFile, language);
+            return loadJSON(checkFile.getPath(), context, language);
         } else {
             return loadJSONFromZip(selectedJSONPath, context, language);
         }
     }
 
     @Nullable
-    public static String loadJSON(File file, String language) {
-        if(null == file) {
+    public static String loadJSON(String jsonFilePath, Context context, String language) {
+
+        if(null == jsonFilePath) {
             return null;
         }
 
         String jsonString = null;
         String sdCardState = Environment.getExternalStorageState();
 
-        String localizedFilePath = file.getPath();
+        String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
         if (language != null) {
             // just in case, check whether country code has already been inserted
-            if (file.getPath().lastIndexOf("-" + language + file.getPath().substring(file.getPath().lastIndexOf("."))) < 0) {
-                localizedFilePath = file.getPath().substring(0, file.getPath().lastIndexOf(".")) + "-" + language + file.getPath().substring(file.getPath().lastIndexOf("."));
+            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
+                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
             }
             Log.d("LANGUAGE", "loadJSON() - LOCALIZED PATH: " + localizedFilePath);
         }
 
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context); // hopefully context is valid?
+        boolean useIOCipher = settings.getBoolean(KEY_USE_IOCIPHER, false);
+
+        // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
+        if (useIOCipher) {
+
+            Log.d("IOCIPHER", "LOADING JSON FROM FILE " + jsonFilePath);
+
+            // info.guardianproject.iocipher.File
+            // info.guardianproject.iocipher.FileInputStream
+
             try {
-                InputStream jsonStream = new FileInputStream(file);
+                info.guardianproject.iocipher.File jsonFile = new info.guardianproject.iocipher.File(jsonFilePath);
+                info.guardianproject.iocipher.FileInputStream jsonStream = new info.guardianproject.iocipher.FileInputStream(jsonFile);
+
+                info.guardianproject.iocipher.File localizedFile = new info.guardianproject.iocipher.File(localizedFilePath);
+                // if there is a file at the localized path, use that instead
+                if ((localizedFile.exists()) && (!jsonFilePath.equals(localizedFilePath))) {
+                    Log.d("IOCIPHER", "loadJSON() - USING LOCALIZED VIRTUAL FILE: " + localizedFilePath);
+                    jsonStream = new info.guardianproject.iocipher.FileInputStream(localizedFile);
+                }
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                jsonString = new String(buffer);
+            } catch (IOException e) {
+                Log.e(TAG, "READING JSON FILE FRON VIRTUAL STORAGE FAILED: " + e.getMessage());
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "READING JSON FILE FROM VIRTUAL STORAGE FAILED (STREAM WAS NULL): " + npe.getMessage());
+            }
+        } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File jsonFile = new File(jsonFilePath);
+                InputStream jsonStream = new FileInputStream(jsonFile);
 
                 File localizedFile = new File(localizedFilePath);
                 // if there is a file at the localized path, use that instead
-                if ((localizedFile.exists()) && (!file.getPath().equals(localizedFilePath))) {
+                if ((localizedFile.exists()) && (!jsonFilePath.equals(localizedFilePath))) {
                     Log.d("LANGUAGE", "loadJSON() - USING LOCALIZED FILE: " + localizedFilePath);
                     jsonStream = new FileInputStream(localizedFile);
                 }
@@ -635,9 +674,40 @@ public class JsonHelper {
         }
         */
 
-        File f = new File(jsonFilePath);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context); // hopefully context is valid?
+        boolean useIOCipher = settings.getBoolean(KEY_USE_IOCIPHER, false);
 
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+        // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
+        if (useIOCipher) {
+
+            Log.d("IOCIPHER", "LOADING STORY PATH LIBRARY " + jsonFilePath);
+
+            // info.guardianproject.iocipher.File
+            // info.guardianproject.iocipher.FileInputStream
+
+            info.guardianproject.iocipher.File f = new info.guardianproject.iocipher.File(jsonFilePath);
+
+            try {
+                info.guardianproject.iocipher.FileInputStream jsonStream = new info.guardianproject.iocipher.FileInputStream(f);
+
+                if (jsonStream == null) {
+                    Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from from virtual failed (stream was null)");
+                    return null;
+                }
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                storyPathLibraryJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from virtual file failed: " + ioe.getMessage());
+                return null;
+            }
+        } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+
+            File f = new File(jsonFilePath);
+
             try {
                 InputStream jsonStream = new FileInputStream(f);
 
@@ -660,7 +730,7 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPathLibrary(storyPathLibraryJson, f.getPath(), referencedFiles, context, language);
+        return deserializeStoryPathLibrary(storyPathLibraryJson, jsonFilePath, referencedFiles, context, language);
 
     }
 
@@ -899,7 +969,43 @@ public class JsonHelper {
 
         String sdCardState = Environment.getExternalStorageState();
 
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(storyPathLibrary.getContext()); // hopefully context is valid?
+        boolean useIOCipher = settings.getBoolean(KEY_USE_IOCIPHER, false);
+
+        // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
+        if (useIOCipher) {
+
+            Log.d("IOCIPHER", "SAVING STORY PATH LIBRARY " + jsonFilePath);
+
+            // info.guardianproject.iocipher.File
+            // info.guardianproject.iocipher.FileOutputStream
+
+            try {
+                // can't use .swap file, i don't think there's a way to do cp/mv on virtual files
+                info.guardianproject.iocipher.File storyPathLibraryFile = new info.guardianproject.iocipher.File(jsonFilePath);
+                if (storyPathLibraryFile.exists()) {
+                    storyPathLibraryFile.delete();
+                }
+                storyPathLibraryFile.createNewFile();
+                info.guardianproject.iocipher.FileOutputStream storyPathLibraryStream = new info.guardianproject.iocipher.FileOutputStream(storyPathLibraryFile);
+
+                Log.d("IOCIPHER", "VIRTUAL FILE READY, STREAM OPENED");
+
+                String storyPathLibraryJson = serializeStoryPathLibrary(storyPathLibrary);
+
+                byte storyPathLibraryData[] = storyPathLibraryJson.getBytes();
+                storyPathLibraryStream.write(storyPathLibraryData);
+                storyPathLibraryStream.flush();
+                storyPathLibraryStream.close();
+
+                Log.d("IOCIPHER", "SUCCESS?");
+
+            } catch (IOException ioe) {
+                Log.e("IOCIPHER", "writing json file " + jsonFilePath + " to virtual file failed: " + ioe.getMessage());
+                return false;
+            }
+
+        } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
                 File storyPathLibraryFile = new File(jsonFilePath + ".swap"); // NEED TO WRITE TO SWAP AND COPY
                 if (storyPathLibraryFile.exists()) {
@@ -975,9 +1081,40 @@ public class JsonHelper {
         }
         */
 
-        File f = new File(jsonFilePath);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context); // hopefully context is valid?
+        boolean useIOCipher = settings.getBoolean(KEY_USE_IOCIPHER, false);
 
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+        // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
+        if (useIOCipher) {
+
+            Log.d("IOCIPHER", "LOADING STORY PATH " + jsonFilePath);
+
+            // info.guardianproject.iocipher.File
+            // info.guardianproject.iocipher.FileInputStream
+
+            info.guardianproject.iocipher.File f = new info.guardianproject.iocipher.File(jsonFilePath);
+
+            try {
+                info.guardianproject.iocipher.FileInputStream jsonStream = new info.guardianproject.iocipher.FileInputStream(f);
+
+                if (jsonStream == null) {
+                    Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from from virtual failed (stream was null)");
+                    return null;
+                }
+
+                int size = jsonStream.available();
+                byte[] buffer = new byte[size];
+                jsonStream.read(buffer);
+                jsonStream.close();
+                storyPathJson = new String(buffer);
+            } catch (IOException ioe) {
+                Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from virtual file failed: " + ioe.getMessage());
+                return null;
+            }
+        } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+
+            File f = new File(jsonFilePath);
+
             try {
                 InputStream jsonStream = new FileInputStream(f);
 
@@ -1000,7 +1137,7 @@ public class JsonHelper {
             return null;
         }
 
-        return deserializeStoryPath(storyPathJson, f.getPath(), storyPathLibrary, referencedFiles, context, language);
+        return deserializeStoryPath(storyPathJson, jsonFilePath, storyPathLibrary, referencedFiles, context, language);
     }
 
     // NEW
@@ -1231,7 +1368,43 @@ public class JsonHelper {
 
         String sdCardState = Environment.getExternalStorageState();
 
-        if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(storyPath.getContext()); // hopefully context is valid?
+        boolean useIOCipher = settings.getBoolean(KEY_USE_IOCIPHER, false);
+
+        // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
+        if (useIOCipher) {
+
+            Log.d("IOCIPHER", "SAVING STORY PATH " + jsonFilePath);
+
+            // info.guardianproject.iocipher.File
+            // info.guardianproject.iocipher.FileOutputStream
+
+            try {
+                // can't use .swap file, i don't think there's a way to do cp/mv on virtual files
+                info.guardianproject.iocipher.File storyPathFile = new info.guardianproject.iocipher.File(jsonFilePath);
+                if (storyPathFile.exists()) {
+                    storyPathFile.delete();
+                }
+                storyPathFile.createNewFile();
+                info.guardianproject.iocipher.FileOutputStream storyPathStream = new info.guardianproject.iocipher.FileOutputStream(storyPathFile);
+
+                Log.d("IOCIPHER", "VIRTUAL FILE READY, STREAM OPENED");
+
+                String storyPathJson = serializeStoryPath(storyPath);
+
+                byte storyPathData[] = storyPathJson.getBytes();
+                storyPathStream.write(storyPathData);
+                storyPathStream.flush();
+                storyPathStream.close();
+
+                Log.d("IOCIPHER", "SUCCESS?");
+
+            } catch (IOException ioe) {
+                Log.e("IOCIPHER", "writing json file " + jsonFilePath + " to virtual file failed: " + ioe.getMessage());
+                return false;
+            }
+
+        } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
                 File storyPathFile = new File(jsonFilePath + ".swap"); // NEED TO WRITE TO SWAP AND COPY
                 if (storyPathFile.exists()) {

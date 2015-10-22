@@ -62,6 +62,12 @@ public class InstanceIndexItem extends BaseIndexItem {
         this.storyCompletionDate = storyCompletionDate;
     }
 
+    // added to maintain parity with original InstanceIndexItem
+    public InstanceIndexItem(String instanceFilePath, long storyCreationDate) {
+        this.instanceFilePath = instanceFilePath;
+        this.storyCreationDate = storyCreationDate;
+    }
+
     public String getInstanceFilePath() {
         return instanceFilePath;
     }
@@ -133,7 +139,7 @@ public class InstanceIndexItem extends BaseIndexItem {
         if (libraryToDelete.exists()) {
 
             // open library to get associated file(s) to delete
-            String jsonString = JsonHelper.loadJSON(libraryToDelete, language);
+            String jsonString = JsonHelper.loadJSON(libraryToDelete.getPath(), context, language);
 
             // if no string was loaded, cannot continue
             if (jsonString == null) {

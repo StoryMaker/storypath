@@ -23,9 +23,10 @@ import java.util.List;
 import java.util.UUID;
 
 import scal.io.liger.Constants;
-import scal.io.liger.IndexManager;
+//import scal.io.liger.IndexManager;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.MainActivity;
+import scal.io.liger.StorymakerIndexManager;
 
 /**
  * Created by mnbogner on 9/29/14.
@@ -296,7 +297,7 @@ public class StoryPathLibrary extends StoryPath {
         // update instance index with thumbnail in case thumbnail has changed
         if ((context instanceof MainActivity) && (((MainActivity)context).instanceIndex.containsKey(getSavedFileName())))  {
 
-            InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
+            scal.io.liger.model.sqlbrite.InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
 
             // item.setStoryThumbnailPath(file.getThumbnailFilePath()); <- use existing method instead
 
@@ -309,7 +310,7 @@ public class StoryPathLibrary extends StoryPath {
                 item.setThumbnailPath(this.getCoverImageThumbnailPath());
                 item.setStoryType(this.getMedium());
 
-                IndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex);
+                StorymakerIndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
                 Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
             }
         } else if (!(context instanceof MainActivity)) {
@@ -530,7 +531,7 @@ public class StoryPathLibrary extends StoryPath {
             }
 
             StoryPath story = null;
-            if (checkFile.exists()) {
+            if (checkFile.exists() || checkFile.getPath().contains("instance")) { // need to handle virtual files, also instance files should never be in a zip
                 story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, lang);
                 Log.d(TAG, "Loaded StoryPath from file: " + checkPath);
             } else {
@@ -548,7 +549,7 @@ public class StoryPathLibrary extends StoryPath {
 
             // update instance index with title
             if ((context instanceof MainActivity) && (((MainActivity)context).instanceIndex.containsKey(getSavedFileName())))  {
-                InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
+                scal.io.liger.model.sqlbrite.InstanceIndexItem item = ((MainActivity)context).instanceIndex.get(getSavedFileName());
 
                 // check current title to minimize file access
                 if ((item.getTitle() != null) && (item.getTitle().equals(story.getTitle()))) {
@@ -556,7 +557,7 @@ public class StoryPathLibrary extends StoryPath {
                 } else {
                     item.setTitle(story.getTitle());
 
-                    IndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex);
+                    StorymakerIndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
                     Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
                 }
             } else if (!(context instanceof MainActivity)) {
@@ -615,11 +616,11 @@ public class StoryPathLibrary extends StoryPath {
 
             // create new item for instance index
             Date now = new Date();
-            InstanceIndexItem newItem = new InstanceIndexItem(savedStoryPathLibraryFile, now.getTime());
+            scal.io.liger.model.sqlbrite.InstanceIndexItem newItem = new scal.io.liger.model.sqlbrite.InstanceIndexItem(savedStoryPathLibraryFile, now.getTime());
 
             // need source for title/description/type
 
-            IndexManager.instanceIndexAdd(context, newItem, ((MainActivity)context).instanceIndex);
+            StorymakerIndexManager.instanceIndexAdd(context, newItem, ((MainActivity)context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
 
             Log.d(TAG, "Added index item for new instance file : " + savedStoryPathLibraryFile);
 

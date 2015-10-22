@@ -13,6 +13,8 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.io.File;
 import java.io.IOException;
 
+import info.guardianproject.iocipher.VirtualFileSystem;
+
 /**
  * Created by mnbogner on 8/6/15.
  */
@@ -209,5 +211,59 @@ public class StorageHelper {
         }
 
         return true;
+    }
+
+    // new iocipher mount/unmount methods
+
+    private final static String DEFAULT_PATH = "storymaker_vfs.db";
+
+    public static boolean isStorageMounted() {
+        return VirtualFileSystem.get().isMounted();
+    }
+
+    public static boolean mountStorage(Context context, String storagePath, byte[] passphrase) {
+        File vfsFile = null;
+
+        if (storagePath == null) {
+            vfsFile = new File(context.getDir("vfs", Context.MODE_PRIVATE), DEFAULT_PATH);
+            // PROBABLY SHOULD BE -> dbFile = new File(getActualStorageDirectory(context), DEFAULT_PATH);
+        } else {
+            vfsFile = new File(storagePath);
+        }
+
+        vfsFile.getParentFile().mkdirs();
+
+        Log.d("IOCIPHER", "VFS FILE IS " + vfsFile.getAbsolutePath());
+
+        if (!vfsFile.exists()) {
+            VirtualFileSystem.get().createNewContainer(vfsFile.getAbsolutePath(), passphrase);
+            Log.d("IOCIPHER", "CREATED NEW VFS FILE");
+        } else {
+            Log.d("IOCIPHER", "USING EXISTING VFS FILE");
+        }
+
+        if (!VirtualFileSystem.get().isMounted()) {
+            VirtualFileSystem.get().mount(vfsFile.getAbsolutePath(), passphrase);
+            Log.d("IOCIPHER", "MOUNTED VIRTUAL FILE SYSTEM");
+        } else {
+            Log.d("IOCIPHER", "VIRTUAL FILE SYSTEM ALREADY MOUNTED");
+        }
+
+        return true;
+    }
+
+    public static boolean unmountStorage() {
+        try {
+            VirtualFileSystem.get().unmount();
+            Log.d("IOCIPHER", "UNMOUNTED VIRTUAL FILE SYSTEM");
+            return true;
+        } catch (IllegalStateException ise) {
+            Log.e("IOCIPHER", "EXCEPTION WHILE UNMOUNTING VIRTUAL SYSTEM: " + ise.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean saveVirtualFile() {
+return false;
     }
 }

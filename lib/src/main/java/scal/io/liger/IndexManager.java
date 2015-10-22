@@ -693,7 +693,7 @@ public class IndexManager {
 
                 InstanceIndexItem newItem = new InstanceIndexItem(f.getAbsolutePath(), date.getTime());
 
-                String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
+                String jsonString = JsonHelper.loadJSON(f.getPath(), context, "en"); // FIXME don't hardcode "en"
 
                 // if no string was loaded, cannot continue
                 if (jsonString == null) {

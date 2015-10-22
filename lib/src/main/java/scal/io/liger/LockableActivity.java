@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -30,7 +31,7 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
     public String CACHEWORD_FIRST_LOCK;
     public String CACHEWORD_SET;
 
-    protected VirtualFileSystem vfs;
+    // protected VirtualFileSystem vfs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
 
         // TEST
 
+        /*
         String path = StorageHelper.getActualStorageDirectory(this).getPath() + "/" + "FOO" + ".db";
         java.io.File db = new java.io.File(path);
         if (db.exists()) {
@@ -65,6 +67,7 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
             Log.d("IOCIPHER", "vfs is NOT mounted");
         }
         vfs.unmount();
+        */
 
         //TEST
 
@@ -174,6 +177,23 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
     public void onCacheWordOpened() {
 
         // mount vfs file (if a pin has been set)
+
+        // NEW ATTEMPT, USES MANAGER
+
+        SharedPreferences sp = getSharedPreferences("appPrefs", MODE_PRIVATE);
+        String cachewordStatus = sp.getString("cacheword_status", "default");
+        if (cachewordStatus.equals(CACHEWORD_SET)) {
+            if (mCacheWordHandler.isLocked()) {
+                Log.d("IOCIPHER", "onCacheWordOpened - pin set but cacheword locked, cannot mount vfs");
+            } else {
+                Log.d("IOCIPHER", "onCacheWordOpened - pin set and cacheword unlocked, mounting vfs");
+
+                StorageHelper.mountStorage(this, null, mCacheWordHandler.getEncryptionKey());
+            }
+        } else {
+            Log.d("IOCIPHER", "onCacheWordOpened - no pin set, cannot mount vfs");
+        }
+
         /*
         SharedPreferences sp = getSharedPreferences("appPrefs", MODE_PRIVATE);
         String cachewordStatus = sp.getString("cacheword_status", "default");
