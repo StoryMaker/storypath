@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -94,6 +93,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
     private PlayerState mState = PlayerState.PREPARING;
     private boolean mPlaySecondaryTracks = true;
     private boolean mAudioTracksDirty = true;
+    private boolean mMuteChecked = false;
 
     public static enum PlayerState {
 
@@ -154,6 +154,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mMuteChecked = isChecked;
             setVolume(isChecked ? MUTE_VOLUME : FULL_VOLUME);
         }
     };
@@ -757,7 +758,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             if (metaData != null) {
                 player.seekTo(metaData.getStartTime());
                 // Specified clip volume is set unless player is muted
-                if (mRequestedVolume != MUTE_VOLUME) mRequestedVolume = metaData.getVolume();
+                if (!mMuteChecked) mRequestedVolume = metaData.getVolume();
             }
 
             player.setVolume(mRequestedVolume, mRequestedVolume);
