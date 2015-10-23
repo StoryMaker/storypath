@@ -2,6 +2,8 @@ package scal.io.liger;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.util.Log;
 
@@ -44,7 +46,8 @@ public class Constants {
     public static final String SIGNATURE = "signature";
     public static final String NARRATION = "narration";
 
-    public static String getClipTypeLocalized(Context context, String clipType) {
+    @NonNull
+    public static String getClipTypeLocalized(@NonNull Context context, @Nullable String clipType) {
         if (clipType == null) {
             // replace with empty string to prevent null pointer exceptions
             clipType = "";
