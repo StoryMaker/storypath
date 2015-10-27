@@ -164,6 +164,7 @@
     <string name="this_story_has_no_clips_to_publish">This story has no clips to publish!</string>
     <string name="clip_with_no_duration">Unable to publish! Clip %1$s has a duration of 0. Is it blank or an image?</string>
     <string name="clips_with_no_duration">Unable to publish! Clips %1$s have a duration of 0. Is it blank or an image?</string>
+    <string name="clip_audio_tracks">Clip Audio Tracks</string>
 
     <!-- add for libra end -->
 </resources>

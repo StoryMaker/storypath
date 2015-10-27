@@ -25,7 +25,7 @@
         android:paddingLeft="@dimen/padding_small"
         android:paddingStart="@dimen/padding_small"
         android:textSize="@dimen/text_medium"
-        android:text="Clip Audio Tracks"/>
+        android:text="@string/clip_audio_tracks"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
