@@ -8,10 +8,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import info.guardianproject.iocipher.VirtualFileSystem;
 
@@ -265,5 +268,121 @@ public class StorageHelper {
 
     public static boolean saveVirtualFile() {
 return false;
+    }
+
+    public static void migrateToIOCipher(Context context) {
+        ArrayList<File> filesToMigrate = getActualFiles(context);
+
+        for (File sourceFile : filesToMigrate) {
+            try {
+                info.guardianproject.iocipher.File targetFile = new info.guardianproject.iocipher.File(sourceFile.getPath());
+                if (targetFile.exists()) {
+                    targetFile.delete();
+                }
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+                FileInputStream fis = new FileInputStream(sourceFile);
+                info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(targetFile);
+                byte[] buffer = new byte[4096];
+                int len;
+                while ((len = fis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fis.close();
+                fos.close();
+                Log.d("IOCIPHER", "MIGRATED ACTUAL FILE " + sourceFile.getPath());
+                sourceFile.delete();
+                Log.d("IOCIPHER", "DELETED ACTUAL FILE " + sourceFile.getPath());
+            } catch (FileNotFoundException fnfe) {
+                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
+            } catch (IOException ioe) {
+                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
+            }
+        }
+    }
+
+    public static void migrateFromIOCipher(Context context) {
+        ArrayList<info.guardianproject.iocipher.File> filesToMigrate = getVirtualFiles(context);
+
+        for (info.guardianproject.iocipher.File sourceFile : filesToMigrate) {
+            try {
+                File targetFile = new File(sourceFile.getPath());
+                if (targetFile.exists()) {
+                    targetFile.delete();
+                }
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+                info.guardianproject.iocipher.FileInputStream fis = new info.guardianproject.iocipher.FileInputStream(sourceFile);
+                FileOutputStream fos = new FileOutputStream(targetFile);
+                byte[] buffer = new byte[4096];
+                int len;
+                while ((len = fis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fis.close();
+                fos.close();
+                Log.d("IOCIPHER", "MIGRATED VIRTUAL FILE " + sourceFile.getPath());
+                sourceFile.delete();
+                Log.d("IOCIPHER", "DELETED VIRTUAL FILE " + sourceFile.getPath());
+            } catch (FileNotFoundException fnfe) {
+                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
+            } catch (IOException ioe) {
+                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
+            }
+        }
+    }
+
+    public static ArrayList<File> getActualFiles(Context context) {
+        ArrayList<File> results = new ArrayList<File>();
+
+        File instanceFolder = StorageHelper.getActualStorageDirectory(context);
+        if (instanceFolder == null) {
+            Log.d("IOCIPHER", "getActualStorageDirectory() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
+            return results;
+        } else if (instanceFolder.listFiles() == null) {
+            Log.d("IOCIPHER", "listFiles() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
+            return results;
+        } else {
+            for (File instanceFile : instanceFolder.listFiles()) {
+                if (instanceFile.getName().contains("-instance") &&
+                        instanceFile.getName().endsWith(".json") &&
+                        !instanceFile.isDirectory()) {
+                    Log.d("IOCIPHER", "FOUND ACTUAL INSTANCE FILE: " + instanceFile.getName());
+                    File foundFile = new File(instanceFile.getPath());
+                    results.add(foundFile);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public static ArrayList<info.guardianproject.iocipher.File> getVirtualFiles(Context context) {
+        ArrayList<info.guardianproject.iocipher.File> results = new ArrayList<info.guardianproject.iocipher.File>();
+
+        File actualFolder = StorageHelper.getActualStorageDirectory(context);
+        if (actualFolder == null) {
+            Log.d("IOCIPHER", "getActualStorageDirectory() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
+            return results;
+        }
+
+        info.guardianproject.iocipher.File instanceFolder = new info.guardianproject.iocipher.File(actualFolder.getPath());
+
+        if (instanceFolder.listFiles() == null) {
+            Log.d("IOCIPHER", "listFiles() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
+            return results;
+        } else {
+            for (info.guardianproject.iocipher.File instanceFile : instanceFolder.listFiles()) {
+                if (instanceFile.getName().contains("-instance") &&
+                        instanceFile.getName().endsWith(".json") &&
+                        !instanceFile.isDirectory()) {
+                    Log.d("IOCIPHER", "FOUND VIRTUAL INSTANCE FILE: " + instanceFile.getName());
+                    info.guardianproject.iocipher.File foundFile = new info.guardianproject.iocipher.File(instanceFile.getPath());
+                    results.add(foundFile);
+                }
+            }
+        }
+
+        return results;
     }
 }
