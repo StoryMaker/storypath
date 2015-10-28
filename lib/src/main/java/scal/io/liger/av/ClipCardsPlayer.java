@@ -555,14 +555,14 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
      * Advance player to the next clip.
      * If autoPlay, player will be playing after this call completes, else prepared to play.
      */
-    protected void _advanceToClip(MediaPlayer player, ClipCard targetClip, boolean autoPlay) {
-        if (mClipCards.indexOf(targetClip) == -1) {
+    protected void _advanceToClip(MediaPlayer player, ClipCard targetClipCard, boolean autoPlay) {
+        if (mClipCards.indexOf(targetClipCard) == -1) {
             Log.e(TAG, "Invalid Card passed to _advanceToClip");
             return;
         }
 
         mAdvancingClips = true;
-        mCurrentlyPlayingCard = targetClip;
+        mCurrentlyPlayingCard = targetClipCard;
 
         Uri media;
         boolean isVideo = false;
