@@ -42,7 +42,9 @@ android {
 }
 
 dependencies {
-    compile project(':external:NetCipher:libnetcipher')
+    compile 'info.guardianproject.netcipher:netcipher:1.2'
+    compile 'info.guardianproject.cacheword:cachewordlib:0.1'
+
     compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:support-v4:23.1.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'
@@ -57,7 +59,7 @@ dependencies {
     compile project(':android-iconify')
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
-    compile project(':external:cacheword:cachewordlib')
+
 
     // new db stuff
     compile 'com.hannesdorfmann.sqlbrite:dao:0.2.2'
