@@ -46,8 +46,8 @@ import ch.boye.httpclientandroidlib.impl.client.DefaultHttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
-import info.guardianproject.onionkit.trust.StrongHttpsClient;
-import info.guardianproject.onionkit.ui.OrbotHelper;
+import info.guardianproject.netcipher.client.StrongHttpsClient;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 import scal.io.liger.model.QueueItem;
 
 /**
@@ -482,9 +482,8 @@ public class LigerDownloadManager implements Runnable {
     }
 
     public static boolean checkTor(Context mContext) {
-        OrbotHelper orbotHelper = new OrbotHelper(mContext);
 
-        if(orbotHelper.isOrbotRunning()) {
+        if(OrbotHelper.isOrbotRunning(mContext)) {
             Log.d("DOWNLOAD/TOR", "ORBOT RUNNING, USE TOR");
             return true;
         } else {

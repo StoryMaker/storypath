@@ -42,7 +42,11 @@ android {
 }
 
 dependencies {
-    compile project(':external:NetCipher:libnetcipher')
+    compile files('libs/httpclientandroidlib-1.2.1.jar')
+    compile 'info.guardianproject.netcipher:netcipher:1.2'
+    compile 'info.guardianproject.cacheword:cachewordlib:0.1'
+    compile 'info.guardianproject.iocipher:IOCipher:0.3'
+
     compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:support-v4:23.1.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'
@@ -57,13 +61,11 @@ dependencies {
     compile project(':android-iconify')
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
-    compile project(':external:cacheword:cachewordlib')
+
 
     // new db stuff
     compile 'com.hannesdorfmann.sqlbrite:dao:0.2.2'
     compile 'com.hannesdorfmann.sqlbrite:annotations:0.2.2'
     apt 'com.hannesdorfmann.sqlbrite:object-mapper:0.2.2'
 
-    // iocipher
-    compile files('libs/IOCipher-v0.3-debug.jar')
 }
