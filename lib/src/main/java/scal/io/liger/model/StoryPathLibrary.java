@@ -179,9 +179,9 @@ public class StoryPathLibrary extends StoryPath {
      * @param audioClip the audio whose span currently includes clipCard
      * @param clipCard the target ClipCard to remove audioClip from
      */
-    public void removeAudioClipFromClipCard(List<ClipCard> clipCards,
-                                            AudioClip audioClip,
-                                            ClipCard clipCard) {
+    public void removeAudioClipFromClipCard(@NonNull List<ClipCard> clipCards,
+                                            @NonNull AudioClip audioClip,
+                                            @NonNull ClipCard clipCard) {
 
         // Find span of ClipCards
         ClipCard firstCard = getFirstClipCardForAudioClip(audioClip, clipCards);
@@ -223,6 +223,7 @@ public class StoryPathLibrary extends StoryPath {
      * clipCards serves merely as an optional optimization
      * around calling {@link #getClipCardsWithAttachedMedia()} on every call
      */
+    @Nullable
     public ClipCard getFirstClipCardForAudioClip(@NonNull AudioClip audioClip,
                                                  @Nullable List<ClipCard> clipCards) {
 
@@ -288,7 +289,7 @@ public class StoryPathLibrary extends StoryPath {
     }
 
     @Override
-    public void saveMediaFile(String uuid, MediaFile file) {
+    public void saveMediaFile(@NonNull String uuid, @NonNull MediaFile file) {
         if (mediaFiles == null) {
             mediaFiles = new HashMap<>();
         }
@@ -324,7 +325,8 @@ public class StoryPathLibrary extends StoryPath {
     }
 
     @Override
-    public MediaFile loadMediaFile(String uuid) {
+    @Nullable
+    public MediaFile loadMediaFile(@NonNull String uuid) {
         return mediaFiles.get(uuid);
     }
 

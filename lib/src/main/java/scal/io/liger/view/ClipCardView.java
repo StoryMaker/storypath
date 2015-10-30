@@ -211,7 +211,7 @@ public class ClipCardView extends ExampleCardView {
         }
     };
 
-    public ClipCardView(Context context, Card cardModel) {
+    public ClipCardView(@NonNull Context context, @NonNull Card cardModel) {
         super();
         mContext = context;
         mCardModel = (ClipCard) cardModel;
@@ -223,7 +223,8 @@ public class ClipCardView extends ExampleCardView {
 
     @SuppressLint("NewApi")
     @Override
-    public View getCardView(final Context context) {
+    @Nullable
+    public View getCardView(@NonNull final Context context) {
         if (mCardModel == null) {
             return null;
         }
