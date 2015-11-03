@@ -70,7 +70,7 @@ public class LigerAltDownloadManager implements Runnable {
     private NotificationManager nManager;
     private long lastDownload = -1L;
 
-    StrongHttpsClient mClient = null;
+    //StrongHttpsClient mClient = null;
 
     //boolean useManager = true;
     //boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
