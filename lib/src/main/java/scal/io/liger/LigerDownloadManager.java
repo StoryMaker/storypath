@@ -29,8 +29,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.URI;
+import java.security.KeyStore;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Queue;
@@ -638,7 +640,15 @@ public class LigerDownloadManager implements Runnable {
 
     private synchronized StrongHttpsClient getHttpClientInstance() {
         if (mClient == null) {
-            mClient = new StrongHttpsClient(context);
+            try {
+
+                mClient = new StrongHttpsClient(context,R.raw.debiancacerts,null);
+
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return mClient;
