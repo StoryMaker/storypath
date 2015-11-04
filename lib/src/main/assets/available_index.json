@@ -61,9 +61,9 @@
         "thumbnailPath": "images/content_packs/beta_cover.png",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "5",
-        "expansionFileSize": "1212050",
-        "expansionFileChecksum": "c8579074960aa46cfba26e57504b2c1524cf65032f895d6d7f33acbc2fb26e9a"
+        "expansionFileVersion": "6",
+        "expansionFileSize": "1170438",
+        "expansionFileChecksum": "9e30294612bdf163d6d3c3a5dd20424258e44f63498e6bdf41c5e556fd739ccc"
     },
     {
         "expansionId": "mobile_photo_101",
@@ -91,8 +91,8 @@
         "thumbnailPath": "images/content_packs/citizen_journalism_pack_cover.jpg",
         "expansionFilePath": "Android/data/org.storymaker.app/files/",
         "expansionFileUrl": "https://s3-us-west-1.amazonaws.com/storymakerorg/appdata/obb/org.storymaker.app/",
-        "expansionFileVersion": "1",
-        "expansionFileSize": "389512",
-        "expansionFileChecksum": "4f2471ffa2474a08b4ff3264406b5cb1ef94394d82a4b9d71cc06bc7dfc08aa7"
+        "expansionFileVersion": "2",
+        "expansionFileSize": "470755",
+        "expansionFileChecksum": "7d650aefe2d2d0d1e49d84a75909c96bed1f618b773f3222ccf16f6221213ce6"
     }
 ]
