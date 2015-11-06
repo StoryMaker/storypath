@@ -1,6 +1,8 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 
@@ -28,6 +30,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
     }
 
     @Override
+    @NonNull
     public DisplayableCard getDisplayableCard(Context context) {
         // before displaying card, check for references and import clips if necessary
         if ((clips == null) && (references != null)) {
@@ -51,14 +54,17 @@ public class ClipCard extends ExampleCard implements Cloneable {
         return new ClipCardView(context, this);
     }
 
+    @Nullable
     public String getClipType() {
         return fillReferences(clipType);
     }
 
+    @NonNull
     public String getClipTypeLocalized() {
         return Constants.getClipTypeLocalized(getStoryPath().getContext(), getClipType());
     }
 
+    @Nullable
     public String getFirstGoal() {
         if (goals != null) {
             return goals.get(0);
@@ -114,7 +120,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
         }
     }
 
-    public void removeClip(ClipMetadata clip) {
+    public void removeClip(@NonNull ClipMetadata clip) {
         if (this.clips == null || this.clips.size() == 0) {
             Log.w(TAG, "removeClip called, but no clips exist");
             return;
@@ -141,7 +147,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
         return getStoryPath().loadMediaFile(cmd.getUuid());
     }
 
-    public void selectMediaFile(ClipMetadata clip) {
+    public void selectMediaFile(@Nullable ClipMetadata clip) {
         if ((clips == null) || (clips.size() < 1)) {
             Log.e(this.getClass().getName(), "no clip metadata was found, cannot select a file");
             return;
@@ -163,25 +169,27 @@ public class ClipCard extends ExampleCard implements Cloneable {
         }
 
         ClipMetadata cmd = clips.remove(index);
-        clips.add(0, cmd);
+        clips.add(0, cmd); // FIXME "selected" is hardcoded as 0th item which will fall apart if we move to selection not rearranging list
     }
 
+    @Nullable
     public MediaFile getSelectedMediaFile() {
         if ((clips == null) || (clips.size() < 1)) {
             Log.e(this.getClass().getName(), "no clip metadata was found, cannot get a selected file");
             return null;
         }
 
-        return loadMediaFile(clips.get(0));
+        return loadMediaFile(clips.get(0)); // FIXME "selected" is hardcoded as 0th item which will fall apart if we move to selection not rearranging list
     }
 
+    @Nullable
     public ClipMetadata getSelectedClip() {
         if ((clips == null) || (clips.size() < 1)) {
             Log.e(this.getClass().getName(), "no clip metadata was found, cannot get a selected file");
             return null;
         }
 
-        return clips.get(0);
+        return clips.get(0); // FIXME "selected" is hardcoded as 0th item which will fall apart if we move to selection not rearranging list
     }
 
     // the card-level delete method only deletes the local reference, not the actual media file
@@ -228,7 +236,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
 
 
     @Override
-    public void copyText(Card card) {
+    public void copyText(@NonNull Card card) {
         if (!(card instanceof ClipCard)) {
             Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ClipCard");
             return;

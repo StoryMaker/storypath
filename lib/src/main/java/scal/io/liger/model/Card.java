@@ -1,6 +1,8 @@
 package scal.io.liger.model;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.annotations.Expose;
@@ -180,6 +182,7 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
      * @return the {@link scal.io.liger.model.StoryPath} this card belongs to. The value returned
      * by {@link #getId()} is unique to this StoryPath.
      */
+    @Nullable
     public StoryPath getStoryPath() {
         return storyPath;
     }
@@ -366,7 +369,8 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
      * @param fullPath e.g: "thispath::<<scal.io.liger.model.TipCollectionHeadlessCard>>"
      * @return a collection of cards matching fullPath within this cards StoryPath
      */
-    public ArrayList<Card> getCardsByClass (String fullPath) {
+    @NonNull
+    public ArrayList<Card> getCardsByClass(@NonNull String fullPath) {
         // helper method takes a collection of references
         StoryPath storyPath = getStoryPath();
         ArrayList<String> pathArray = new ArrayList<>();
@@ -405,7 +409,8 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
      *                       e.g: "Your choice of {{default_library::quiz_card_topic::choice}} is a great one!"
      * @return originalString with ids replaced for values. e.g "Your choice of cake is a great one!"
      */
-    public String fillReferences(String originalString) { // <- need to integrate with observer/update process
+    @Nullable
+    public String fillReferences(@Nullable String originalString) { // <- need to integrate with observer/update process
         if (originalString == null) {
             return originalString;
         }

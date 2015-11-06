@@ -214,7 +214,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
                        List<AudioClip> audioClipsToRemove = adapter.getSelectedClips();
 
                        for (AudioClip audioClip : audioClipsToRemove) {
-                           mClipCards.get(0)
+                           mClipCards.get(0)    // FIXME sloppy way to get the SPL, nothing to do with the 0th clipcard
                                    .getStoryPath()
                                    .getStoryPathLibrary()
                                    .removeAudioClipFromClipCard(mClipCards,

@@ -188,7 +188,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         // Unmute volume in anticipation of the user immediately previewing the recording
         // by touching the play button. If recording is initiated again, the volume will be muted
         // appropriately on _startRecordingNarration
-        setVolume(FULL_VOLUME);
+        setVolume(FULL_VOLUME); // FIXME we should respect the users manual mute state they expressed via the button
         setPlaySecondaryTracks(true);
         _changeRecordNarrationState(RecordNarrationState.STOPPED);
         MediaFile mf = mRecorder.stopRecording();
