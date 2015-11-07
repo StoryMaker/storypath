@@ -561,13 +561,8 @@ public class StoryPathLibrary extends StoryPath {
                 } else {
                     item.setTitle(story.getTitle());
 
-<<<<<<< HEAD
                     StorymakerIndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
-                    Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
-=======
-                    IndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex);
                     Timber.d("updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
->>>>>>> dev
                 }
             } else if (!(context instanceof MainActivity)) {
                 Timber.d("can't update index item with title outside the context of liger main activity");
