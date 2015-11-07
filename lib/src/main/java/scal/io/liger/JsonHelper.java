@@ -187,7 +187,7 @@ public class JsonHelper {
         // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
         if (useIOCipher) {
 
-            Log.d("IOCIPHER", "LOADING JSON FROM FILE " + jsonFilePath);
+            Timber.d("LOADING JSON FROM FILE " + jsonFilePath);
 
             // info.guardianproject.iocipher.File
             // info.guardianproject.iocipher.FileInputStream
@@ -199,7 +199,7 @@ public class JsonHelper {
                 info.guardianproject.iocipher.File localizedFile = new info.guardianproject.iocipher.File(localizedFilePath);
                 // if there is a file at the localized path, use that instead
                 if ((localizedFile.exists()) && (!jsonFilePath.equals(localizedFilePath))) {
-                    Log.d("IOCIPHER", "loadJSON() - USING LOCALIZED VIRTUAL FILE: " + localizedFilePath);
+                    Timber.d("loadJSON() - USING LOCALIZED VIRTUAL FILE: " + localizedFilePath);
                     jsonStream = new info.guardianproject.iocipher.FileInputStream(localizedFile);
                 }
 
@@ -209,9 +209,9 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException e) {
-                Log.e(TAG, "READING JSON FILE FRON VIRTUAL STORAGE FAILED: " + e.getMessage());
+                Timber.e("READING JSON FILE FRON VIRTUAL STORAGE FAILED: " + e.getMessage());
             } catch (NullPointerException npe) {
-                Log.e(TAG, "READING JSON FILE FROM VIRTUAL STORAGE FAILED (STREAM WAS NULL): " + npe.getMessage());
+                Timber.e("READING JSON FILE FROM VIRTUAL STORAGE FAILED (STREAM WAS NULL): " + npe.getMessage());
             }
         } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
             try {
@@ -682,7 +682,7 @@ public class JsonHelper {
         // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
         if (useIOCipher) {
 
-            Log.d("IOCIPHER", "LOADING STORY PATH LIBRARY " + jsonFilePath);
+            Timber.d("LOADING STORY PATH LIBRARY " + jsonFilePath);
 
             // info.guardianproject.iocipher.File
             // info.guardianproject.iocipher.FileInputStream
@@ -693,7 +693,7 @@ public class JsonHelper {
                 info.guardianproject.iocipher.FileInputStream jsonStream = new info.guardianproject.iocipher.FileInputStream(f);
 
                 if (jsonStream == null) {
-                    Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from from virtual failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from from virtual failed (stream was null)");
                     return null;
                 }
 
@@ -703,7 +703,7 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathLibraryJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from virtual file failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from virtual file failed: " + ioe.getMessage());
                 return null;
             }
         } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -977,7 +977,7 @@ public class JsonHelper {
         // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
         if (useIOCipher) {
 
-            Log.d("IOCIPHER", "SAVING STORY PATH LIBRARY " + jsonFilePath);
+            Timber.d("SAVING STORY PATH LIBRARY " + jsonFilePath);
 
             // info.guardianproject.iocipher.File
             // info.guardianproject.iocipher.FileOutputStream
@@ -991,7 +991,7 @@ public class JsonHelper {
                 storyPathLibraryFile.createNewFile();
                 info.guardianproject.iocipher.FileOutputStream storyPathLibraryStream = new info.guardianproject.iocipher.FileOutputStream(storyPathLibraryFile);
 
-                Log.d("IOCIPHER", "VIRTUAL FILE READY, STREAM OPENED");
+                Timber.d("VIRTUAL FILE READY, STREAM OPENED");
 
                 String storyPathLibraryJson = serializeStoryPathLibrary(storyPathLibrary);
 
@@ -1000,10 +1000,10 @@ public class JsonHelper {
                 storyPathLibraryStream.flush();
                 storyPathLibraryStream.close();
 
-                Log.d("IOCIPHER", "SUCCESS?");
+                Timber.d("SUCCESS?");
 
             } catch (IOException ioe) {
-                Log.e("IOCIPHER", "writing json file " + jsonFilePath + " to virtual file failed: " + ioe.getMessage());
+                Timber.e("writing json file " + jsonFilePath + " to virtual file failed: " + ioe.getMessage());
                 return false;
             }
 
@@ -1089,7 +1089,7 @@ public class JsonHelper {
         // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
         if (useIOCipher) {
 
-            Log.d("IOCIPHER", "LOADING STORY PATH " + jsonFilePath);
+            Timber.d("LOADING STORY PATH " + jsonFilePath);
 
             // info.guardianproject.iocipher.File
             // info.guardianproject.iocipher.FileInputStream
@@ -1100,7 +1100,7 @@ public class JsonHelper {
                 info.guardianproject.iocipher.FileInputStream jsonStream = new info.guardianproject.iocipher.FileInputStream(f);
 
                 if (jsonStream == null) {
-                    Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from from virtual failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from from virtual failed (stream was null)");
                     return null;
                 }
 
@@ -1110,7 +1110,7 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e("IOCIPHER", "reading json file " + jsonFilePath + " from virtual file failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from virtual file failed: " + ioe.getMessage());
                 return null;
             }
         } else if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -1376,7 +1376,7 @@ public class JsonHelper {
         // use iocipher if specified, vfs should have been mounted when cacheword was unlocked
         if (useIOCipher) {
 
-            Log.d("IOCIPHER", "SAVING STORY PATH " + jsonFilePath);
+            Timber.d("SAVING STORY PATH " + jsonFilePath);
 
             // info.guardianproject.iocipher.File
             // info.guardianproject.iocipher.FileOutputStream
@@ -1390,7 +1390,7 @@ public class JsonHelper {
                 storyPathFile.createNewFile();
                 info.guardianproject.iocipher.FileOutputStream storyPathStream = new info.guardianproject.iocipher.FileOutputStream(storyPathFile);
 
-                Log.d("IOCIPHER", "VIRTUAL FILE READY, STREAM OPENED");
+                Timber.d("VIRTUAL FILE READY, STREAM OPENED");
 
                 String storyPathJson = serializeStoryPath(storyPath);
 
@@ -1399,10 +1399,10 @@ public class JsonHelper {
                 storyPathStream.flush();
                 storyPathStream.close();
 
-                Log.d("IOCIPHER", "SUCCESS?");
+                Timber.d("SUCCESS?");
 
             } catch (IOException ioe) {
-                Log.e("IOCIPHER", "writing json file " + jsonFilePath + " to virtual file failed: " + ioe.getMessage());
+                Timber.e("writing json file " + jsonFilePath + " to virtual file failed: " + ioe.getMessage());
                 return false;
             }
 

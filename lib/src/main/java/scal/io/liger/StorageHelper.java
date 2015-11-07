@@ -238,20 +238,20 @@ public class StorageHelper {
 
         vfsFile.getParentFile().mkdirs();
 
-        Log.d("IOCIPHER", "VFS FILE IS " + vfsFile.getAbsolutePath());
+        Timber.d("VFS FILE IS " + vfsFile.getAbsolutePath());
 
         if (!vfsFile.exists()) {
             VirtualFileSystem.get().createNewContainer(vfsFile.getAbsolutePath(), passphrase);
-            Log.d("IOCIPHER", "CREATED NEW VFS FILE");
+            Timber.d("CREATED NEW VFS FILE");
         } else {
-            Log.d("IOCIPHER", "USING EXISTING VFS FILE");
+            Timber.d("USING EXISTING VFS FILE");
         }
 
         if (!VirtualFileSystem.get().isMounted()) {
             VirtualFileSystem.get().mount(vfsFile.getAbsolutePath(), passphrase);
-            Log.d("IOCIPHER", "MOUNTED VIRTUAL FILE SYSTEM");
+            Timber.d("MOUNTED VIRTUAL FILE SYSTEM");
         } else {
-            Log.d("IOCIPHER", "VIRTUAL FILE SYSTEM ALREADY MOUNTED");
+            Timber.d("VIRTUAL FILE SYSTEM ALREADY MOUNTED");
         }
 
         return true;
@@ -260,10 +260,10 @@ public class StorageHelper {
     public static boolean unmountStorage() {
         try {
             VirtualFileSystem.get().unmount();
-            Log.d("IOCIPHER", "UNMOUNTED VIRTUAL FILE SYSTEM");
+            Timber.d("UNMOUNTED VIRTUAL FILE SYSTEM");
             return true;
         } catch (IllegalStateException ise) {
-            Log.e("IOCIPHER", "EXCEPTION WHILE UNMOUNTING VIRTUAL SYSTEM: " + ise.getMessage());
+            Timber.e("EXCEPTION WHILE UNMOUNTING VIRTUAL SYSTEM: " + ise.getMessage());
             return false;
         }
     }
@@ -292,13 +292,13 @@ return false;
                 }
                 fis.close();
                 fos.close();
-                Log.d("IOCIPHER", "MIGRATED ACTUAL FILE " + sourceFile.getPath());
+                Timber.d("MIGRATED ACTUAL FILE " + sourceFile.getPath());
                 sourceFile.delete();
-                Log.d("IOCIPHER", "DELETED ACTUAL FILE " + sourceFile.getPath());
+                Timber.d("DELETED ACTUAL FILE " + sourceFile.getPath());
             } catch (FileNotFoundException fnfe) {
-                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
+                Timber.e("EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
             } catch (IOException ioe) {
-                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
+                Timber.e("EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
             }
         }
     }
@@ -323,13 +323,13 @@ return false;
                 }
                 fis.close();
                 fos.close();
-                Log.d("IOCIPHER", "MIGRATED VIRTUAL FILE " + sourceFile.getPath());
+                Timber.d("MIGRATED VIRTUAL FILE " + sourceFile.getPath());
                 sourceFile.delete();
-                Log.d("IOCIPHER", "DELETED VIRTUAL FILE " + sourceFile.getPath());
+                Timber.d("DELETED VIRTUAL FILE " + sourceFile.getPath());
             } catch (FileNotFoundException fnfe) {
-                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
+                Timber.e("EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
             } catch (IOException ioe) {
-                Log.e("IOCIPHER", "EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
+                Timber.e("EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
             }
         }
     }
@@ -339,17 +339,17 @@ return false;
 
         File instanceFolder = StorageHelper.getActualStorageDirectory(context);
         if (instanceFolder == null) {
-            Log.d("IOCIPHER", "getActualStorageDirectory() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
+            Timber.d("getActualStorageDirectory() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
             return results;
         } else if (instanceFolder.listFiles() == null) {
-            Log.d("IOCIPHER", "listFiles() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
+            Timber.d("listFiles() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
             return results;
         } else {
             for (File instanceFile : instanceFolder.listFiles()) {
                 if (instanceFile.getName().contains("-instance") &&
                         instanceFile.getName().endsWith(".json") &&
                         !instanceFile.isDirectory()) {
-                    Log.d("IOCIPHER", "FOUND ACTUAL INSTANCE FILE: " + instanceFile.getName());
+                    Timber.d("FOUND ACTUAL INSTANCE FILE: " + instanceFile.getName());
                     File foundFile = new File(instanceFile.getPath());
                     results.add(foundFile);
                 }
@@ -364,21 +364,21 @@ return false;
 
         File actualFolder = StorageHelper.getActualStorageDirectory(context);
         if (actualFolder == null) {
-            Log.d("IOCIPHER", "getActualStorageDirectory() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
+            Timber.d("getActualStorageDirectory() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
             return results;
         }
 
         info.guardianproject.iocipher.File instanceFolder = new info.guardianproject.iocipher.File(actualFolder.getPath());
 
         if (instanceFolder.listFiles() == null) {
-            Log.d("IOCIPHER", "listFiles() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
+            Timber.d("listFiles() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
             return results;
         } else {
             for (info.guardianproject.iocipher.File instanceFile : instanceFolder.listFiles()) {
                 if (instanceFile.getName().contains("-instance") &&
                         instanceFile.getName().endsWith(".json") &&
                         !instanceFile.isDirectory()) {
-                    Log.d("IOCIPHER", "FOUND VIRTUAL INSTANCE FILE: " + instanceFile.getName());
+                    Timber.d("FOUND VIRTUAL INSTANCE FILE: " + instanceFile.getName());
                     info.guardianproject.iocipher.File foundFile = new info.guardianproject.iocipher.File(instanceFile.getPath());
                     results.add(foundFile);
                 }

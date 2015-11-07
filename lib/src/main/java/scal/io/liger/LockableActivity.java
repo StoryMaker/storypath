@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
@@ -52,19 +54,19 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         String path = StorageHelper.getActualStorageDirectory(this).getPath() + "/" + "FOO" + ".db";
         java.io.File db = new java.io.File(path);
         if (db.exists()) {
-            Log.d("IOCIPHER", "delete existing file " + db.getAbsolutePath());
+            Timber.d("delete existing file " + db.getAbsolutePath());
             db.delete();
         } else {
-            Log.d("IOCIPHER", "no existing file " + db.getAbsolutePath());
+            Timber.d("no existing file " + db.getAbsolutePath());
         }
         vfs = VirtualFileSystem.get();
         vfs.setContainerPath(path);
 
         vfs.mount("PASSWORD");
         if (vfs.isMounted()) {
-            Log.d("IOCIPHER", "vfs is mounted");
+            Timber.d("vfs is mounted");
         } else {
-            Log.d("IOCIPHER", "vfs is NOT mounted");
+            Timber.d("vfs is NOT mounted");
         }
         vfs.unmount();
         */
@@ -74,20 +76,20 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
 
         /*
         vfs = VirtualFileSystem.get();
-        Log.d("IOCIPHER", "onCreate - got vfs singleton");
+        Timber.d("onCreate - got vfs singleton");
         // vfs.setContainerPath(getDir("vfs", MODE_PRIVATE).getAbsolutePath() + File.separator + "liger.db");
-        // Log.d("IOCIPHER", "onCreate - set path to " + getDir("vfs", MODE_PRIVATE).getAbsolutePath() + File.separator + "liger.db");
+        // Timber.d("onCreate - set path to " + getDir("vfs", MODE_PRIVATE).getAbsolutePath() + File.separator + "liger.db");
         /*
         File checkFile = new File(getDir("vfs", MODE_PRIVATE).getAbsolutePath() + File.separator + "liger.db");
         if (checkFile.exists()) {
-            Log.d("IOCIPHER", "found iocipher file");
+            Timber.d("found iocipher file");
         } else {
             try {
                 checkFile.createNewFile();
-                Log.d("IOCIPHER", "created iocipher file");
+                Timber.d("created iocipher file");
             } catch (IOException ioe) {
                 ioe.printStackTrace();
-                Log.d("IOCIPHER", "could not create iocipher file");
+                Timber.d("could not create iocipher file");
             }
         }
         */
@@ -107,10 +109,10 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         SharedPreferences sp = getSharedPreferences("appPrefs", MODE_PRIVATE);
         String cachewordStatus = sp.getString("cacheword_status", "default");
         if (cachewordStatus.equals(CACHEWORD_SET)) {
-            Log.d("CACHEWORD", "pin set, so display notification (lockable)");
+            Timber.d("pin set, so display notification (lockable)");
             mCacheWordHandler.setNotification(buildNotification(this));
         } else {
-            Log.d("CACHEWORD", "no pin set, so no notification (lockable)");
+            Timber.d("no pin set, so no notification (lockable)");
         }
 
         mCacheWordHandler.connectToService();
@@ -123,16 +125,16 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         /*
         if (vfs.isMounted()) {
             vfs.unmount();
-            Log.d("IOCIPHER", "onDestroy - vfs un-mounted");
+            Timber.d("onDestroy - vfs un-mounted");
         } else {
-            Log.d("IOCIPHER", "onDestroy - vfs not mounted");
+            Timber.d("onDestroy - vfs not mounted");
         }
         */
     }
 
     protected Notification buildNotification(Context c) {
 
-        Log.d("CACHEWORD", "buildNotification (lockable)");
+        Timber.d("buildNotification (lockable)");
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(c);
         b.setSmallIcon(android.R.drawable.ic_menu_info_details);
@@ -149,7 +151,7 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
     public void onCacheWordUninitialized() {
 
         // if we're uninitialized, default behavior should be to stop
-        Log.d("CACHEWORD", "cacheword uninitialized, activity will not continue");
+        Timber.d("cacheword uninitialized, activity will not continue");
         finish();
 
     }
@@ -161,14 +163,14 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         /*
         if (vfs.isMounted()) {
             vfs.unmount();
-            Log.d("IOCIPHER", "onCacheWordLocked - vfs un-mounted");
+            Timber.d("onCacheWordLocked - vfs un-mounted");
         } else {
-            Log.d("IOCIPHER", "onCacheWordLocked - vfs not mounted");
+            Timber.d("onCacheWordLocked - vfs not mounted");
         }
         */
 
         // if we're locked, default behavior should be to stop
-        Log.d("CACHEWORD", "cacheword locked, activity will not continue");
+        Timber.d("cacheword locked, activity will not continue");
         finish();
 
     }
@@ -184,14 +186,14 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         String cachewordStatus = sp.getString("cacheword_status", "default");
         if (cachewordStatus.equals(CACHEWORD_SET)) {
             if (mCacheWordHandler.isLocked()) {
-                Log.d("IOCIPHER", "onCacheWordOpened - pin set but cacheword locked, cannot mount vfs");
+                Timber.d("onCacheWordOpened - pin set but cacheword locked, cannot mount vfs");
             } else {
-                Log.d("IOCIPHER", "onCacheWordOpened - pin set and cacheword unlocked, mounting vfs");
+                Timber.d("onCacheWordOpened - pin set and cacheword unlocked, mounting vfs");
 
                 StorageHelper.mountStorage(this, null, mCacheWordHandler.getEncryptionKey());
             }
         } else {
-            Log.d("IOCIPHER", "onCacheWordOpened - no pin set, cannot mount vfs");
+            Timber.d("onCacheWordOpened - no pin set, cannot mount vfs");
         }
 
         /*
@@ -199,52 +201,52 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         String cachewordStatus = sp.getString("cacheword_status", "default");
         if (cachewordStatus.equals(CACHEWORD_SET)) {
             if (mCacheWordHandler.isLocked()) {
-                Log.d("IOCIPHER", "onResume - pin set but cacheword locked, cannot mount vfs");
+                Timber.d("onResume - pin set but cacheword locked, cannot mount vfs");
             } else {
-                Log.d("IOCIPHER", "onResume - pin set and cacheword unlocked, mounting vfs");
+                Timber.d("onResume - pin set and cacheword unlocked, mounting vfs");
 
                 if (vfs.isMounted()) {
-                    Log.d("IOCIPHER", "onResume - vfs already mounted?");
+                    Timber.d("onResume - vfs already mounted?");
                 } else {
-                    Log.d("IOCIPHER", "onResume - vfs not mounted");
+                    Timber.d("onResume - vfs not mounted");
 
                     // create file?
                     String vfsPath = getDir("vfs", MODE_PRIVATE).getAbsolutePath() + File.separator + "liger.db";
                     File checkFile = new File(vfsPath);
                     if (checkFile.exists()) {
-                        Log.d("IOCIPHER", "onResume - iocipher file found, setting path to " + vfsPath);
+                        Timber.d("onResume - iocipher file found, setting path to " + vfsPath);
                         vfs.setContainerPath(vfsPath);
-                        Log.d("IOCIPHER", "onResume - done");
+                        Timber.d("onResume - done");
 
                         // this was the same "password" used for getWritableDatabase() in StoryMakerDBWrapper
                         vfs.mount(encodeRawKey(mCacheWordHandler.getEncryptionKey()));
-                        Log.d("IOCIPHER", "onResume - vfs mounted");
+                        Timber.d("onResume - vfs mounted");
                     } else {
                         //checkFile.createNewFile();
-                        Log.d("IOCIPHER", "onResume - iocipher file not found, creating new file at " + vfsPath);
+                        Timber.d("onResume - iocipher file not found, creating new file at " + vfsPath);
 
                         vfs.unmount();
 
                         // this was the same "password" used for getWritableDatabase() in StoryMakerDBWrapper
                         vfs.createNewContainer(vfsPath, mCacheWordHandler.getEncryptionKey());
-                        Log.d("IOCIPHER", "onResume - done");
+                        Timber.d("onResume - done");
 
                         // createNewContainer also seems to mount the file?
-                        Log.d("IOCIPHER", "onResume - vfs mounted (?)");
+                        Timber.d("onResume - vfs mounted (?)");
                     }
 
                     // this was the same "password" used for getWritableDatabase() in StoryMakerDBWrapper
                     // vfs.mount(encodeRawKey(mCacheWordHandler.getEncryptionKey()));
-                    // Log.d("IOCIPHER", "onResume - vfs mounted");
+                    // Timber.d("onResume - vfs mounted");
                 }
             }
         } else {
-            Log.d("IOCIPHER", "onResume - no pin set, cannot mount vfs");
+            Timber.d("onResume - no pin set, cannot mount vfs");
         }
         */
 
         // if we're opened, check db and update menu status
-        Log.d("CACHEWORD", "cacheword opened (liger), activity will continue");
+        Timber.d("cacheword opened (liger), activity will continue");
 
     }
 
@@ -257,11 +259,11 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         final String kSuffix;
 
         if (check_sqlcipher_uses_native_key()) {
-            Log.d("IOCIPHER", "sqlcipher uses native method to set key");
+            Timber.d("sqlcipher uses native method to set key");
             kPrefix = "x'";
             kSuffix = "'";
         } else {
-            Log.d("IOCIPHER", "sqlcipher uses PRAGMA to set key - SPECIAL HACK IN PROGRESS");
+            Timber.d("sqlcipher uses PRAGMA to set key - SPECIAL HACK IN PROGRESS");
             kPrefix = "x''";
             kSuffix = "''";
         }
