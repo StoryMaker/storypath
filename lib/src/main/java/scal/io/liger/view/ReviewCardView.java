@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -50,7 +52,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
     private String mMedium;
 
     public ReviewCardView(Context context, Card cardModel) {
-        Log.d(TAG, "constructor");
+        Timber.d("constructor");
         mContext = context;
         mCardModel = (ReviewCard) cardModel;
         mAudioClips = mCardModel.getStoryPath().getStoryPathLibrary().getAudioClips();
@@ -59,7 +61,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
     @Override
     public View getCardView(final Context context) {
-        Log.d(TAG, "getCardView");
+        Timber.d("getCardView");
         if (mCardModel == null) {
             return null;
         }

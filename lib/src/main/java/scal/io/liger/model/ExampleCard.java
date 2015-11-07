@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -50,7 +52,7 @@ public class ExampleCard extends Card implements Cloneable {
         // therefore it is assumed that if exampleMediaPath is null there will be no exampleMediaFile
 
         if (exampleMediaPath == null) {
-            Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
+            Timber.d("no example media path for card " + this.getId());
             return null;
         }
 
@@ -58,7 +60,7 @@ public class ExampleCard extends Card implements Cloneable {
 
             // do not attempt to create files for media file urls
             if (exampleMediaPath.startsWith("http")) {
-                Log.d(this.getClass().getName(), "example media path for card " + this.getId() + " is a URL: " + exampleMediaPath);
+                Timber.d("example media path for card " + this.getId() + " is a URL: " + exampleMediaPath);
                 return null;
             }
 
@@ -86,10 +88,10 @@ public class ExampleCard extends Card implements Cloneable {
     @Override
     public void copyText(Card card) {
         if (!(card instanceof ExampleCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ExampleCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF ExampleCard");
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

@@ -1,5 +1,7 @@
 package scal.io.liger.tests;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -77,9 +79,9 @@ public class EndToEndTest extends ActivityInstrumentationTestCase2<MainActivity>
     public void testClickClickClick() {
         // stall for loading?
         try {
-            Log.d("AUTOMATION", "SLEEP 10");
+            Timber.d("SLEEP 10");
             Thread.sleep(10000);
-            Log.d("AUTOMATION", "SLEEP 10, done");
+            Timber.d("SLEEP 10, done");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -92,9 +94,9 @@ public class EndToEndTest extends ActivityInstrumentationTestCase2<MainActivity>
 
         // stall?
         try {
-            Log.d("AUTOMATION", "SLEEP 1a");
+            Timber.d("SLEEP 1a");
             Thread.sleep(1000);
-            Log.d("AUTOMATION", "SLEEP 1a, done");
+            Timber.d("SLEEP 1a, done");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -102,27 +104,27 @@ public class EndToEndTest extends ActivityInstrumentationTestCase2<MainActivity>
         onView(withText("An Event")).perform(click());
         // stall?
         try {
-            Log.d("AUTOMATION", "SLEEP 1b");
+            Timber.d("SLEEP 1b");
             Thread.sleep(1000);
-            Log.d("AUTOMATION", "SLEEP 1b, done");
+            Timber.d("SLEEP 1b, done");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         onView(withText("Show the best moments.")).perform(click());
         // stall?
         try {
-            Log.d("AUTOMATION", "SLEEP 1c");
+            Timber.d("SLEEP 1c");
             Thread.sleep(1000);
-            Log.d("AUTOMATION", "SLEEP 1c, done");
+            Timber.d("SLEEP 1c, done");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         onView(withText("Video")).perform(click());
         // stall?
         try {
-            Log.d("AUTOMATION", "SLEEP 1d");
+            Timber.d("SLEEP 1d");
             Thread.sleep(1000);
-            Log.d("AUTOMATION", "SLEEP 1d, done");
+            Timber.d("SLEEP 1d, done");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -131,9 +133,9 @@ public class EndToEndTest extends ActivityInstrumentationTestCase2<MainActivity>
 
         // stall for loading?
         try {
-            Log.d("AUTOMATION", "SLEEP 10");
+            Timber.d("SLEEP 10");
             Thread.sleep(10000);
-            Log.d("AUTOMATION", "SLEEP 10, done");
+            Timber.d("SLEEP 10, done");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +19,7 @@ public class LigerAlarmReceiver extends BroadcastReceiver {
         try {
             DownloaderClientMarshaller.startDownloadServiceIfRequired(context, intent, LigerDownloaderService.class);
         } catch (NameNotFoundException nnfe) {
-            Log.d("DOWNLOAD", "FAILED TO START DOWNLOAD SERVICE: " + nnfe.getMessage());
+            Timber.d("FAILED TO START DOWNLOAD SERVICE: " + nnfe.getMessage());
         }
     }
 }

@@ -1,5 +1,7 @@
 package scal.io.liger.tests;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,11 +46,11 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
         // precondition test
         assertTrue(mMainActivity != null);
         assertTrue(mRecyclerView != null);
-        Log.d("AUTOMATION", "ACTIVITY & VIEW EXIST");
+        Timber.d("ACTIVITY & VIEW EXIST");
 
         // view test
         assertOnScreen(mMainActivity.getWindow().getDecorView(), mRecyclerView);
-        Log.d("AUTOMATION", "VIEW ON SCREEN");
+        Timber.d("VIEW ON SCREEN");
 
         // setup
         String testFilePath = ZipHelper.getFileFolderName(mMainActivity);
@@ -65,25 +67,25 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
 
         // verify index file existence
         assertTrue(indexFile.exists());
-        Log.d("AUTOMATION", "INDEX FILE EXISTS");
+        Timber.d("INDEX FILE EXISTS");
 
         // verify test file existence
         assertTrue(testFile1.exists());
         assertTrue(testFile2a.exists());
         assertTrue(testFile2b.exists());
-        Log.d("AUTOMATION", "EXPANSION FILES EXIST");
+        Timber.d("EXPANSION FILES EXIST");
 
         // verify test file size
         assertTrue(testFile1.length() > 0);
         assertTrue(testFile2a.length() > 0);
         assertTrue(testFile2b.length() > 0);
-        Log.d("AUTOMATION", "EXPANSION FILES NON-ZERO");
+        Timber.d("EXPANSION FILES NON-ZERO");
 
         // verify test file cleanup
         assertTrue(!tempFile1.exists());
         assertTrue(!tempFile2a.exists());
         assertTrue(!tempFile2b.exists());
-        Log.d("AUTOMATION", "TEMP EXPANSION FILES DELETED");
+        Timber.d("TEMP EXPANSION FILES DELETED");
 
         // verify test file contents
         String testString1 = "";
@@ -98,10 +100,10 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
                 testString1 = new String(buffer);
             }
         } catch (IOException ioe) {
-            Log.e("AUTOMATION", "READING JSON FILE " + "test_file_1.txt" + " FROM ZIP FILE FAILED");
+            Timber.e("READING JSON FILE " + "test_file_1.txt" + " FROM ZIP FILE FAILED");
         }
         assertTrue(testString1.contains("THIS IS TEST FILE 1"));
-        Log.d("AUTOMATION", "TEST FILE 1 FOUND");
+        Timber.d("TEST FILE 1 FOUND");
 
         // contents of file 2b should override contents of file 2a
         String testString2 = "";
@@ -116,10 +118,10 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
                 testString2 = new String(buffer);
             }
         } catch (IOException ioe) {
-            Log.e("AUTOMATION", "READING JSON FILE " + "test_file_2.txt" + " FROM ZIP FILE FAILED");
+            Timber.e("READING JSON FILE " + "test_file_2.txt" + " FROM ZIP FILE FAILED");
         }
         assertTrue(testString2.contains("THIS IS TEST FILE 2B"));
-        Log.d("AUTOMATION", "TEST FILE 2 FOUND, CONTENTS CORRECT");
+        Timber.d("TEST FILE 2 FOUND, CONTENTS CORRECT");
 
         // delete test files so test can be re-run
         if (indexFile.exists()) {
@@ -144,12 +146,12 @@ public class DownloadTest extends ActivityInstrumentationTestCase2<MainActivity>
             tempFile2b.delete();
         }
 
-        Log.d("AUTOMATION", "FINISHED CLEANUP, TEST COMPLETE");
+        Timber.d("FINISHED CLEANUP, TEST COMPLETE");
     }
 
     private void stall(long milliseconds, String message) {
         try {
-            Log.d("AUTOMATION", "SLEEP " + (milliseconds / 1000) + " (" + message + ")");
+            Timber.d("SLEEP " + (milliseconds / 1000) + " (" + message + ")");
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             e.printStackTrace();

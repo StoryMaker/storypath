@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.util.Log;
 
 import com.google.gson.annotations.Expose;
@@ -64,11 +66,11 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
     @Override
     public void update(Observable observable, Object o) {
         if (!(observable instanceof Card)) {
-            Log.e(this.getClass().getName(), "update notification received from non-card observable");
+            Timber.e("update notification received from non-card observable");
             return;
         }
         if (storyPath == null) {
-            Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            Timber.e("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
 
@@ -80,11 +82,11 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
 //                stateVisiblity = true;
 //
 //                if (action.equals("LOAD")) {
-//                    Log.d(this.getClass().getName(), "LOADING FILE: " + target);
+//                    Timber.d("LOADING FILE: " + target);
 //
 //                    loadStoryPath(target);
 //                } else {
-//                    Log.e(this.getClass().getName(), "UNSUPPORTED ACTION: " + action);
+//                    Timber.e("UNSUPPORTED ACTION: " + action);
 //                }
 //            }
 //        }
@@ -93,10 +95,10 @@ public class TipCollectionHeadlessCard extends HeadlessCard {
     @Override
     public void copyText(Card card) {
         if (!(card instanceof TipCollectionHeadlessCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCollectionHeadlessCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCollectionHeadlessCard");
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

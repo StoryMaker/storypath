@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -93,7 +95,7 @@ public class OrderMediaCardView implements DisplayableCard {
             MediaFile mf = ccm.getSelectedMediaFile();
 
             if (mf == null) {
-                Log.e(TAG, "no media file was found");
+                Timber.e("no media file was found");
             } else {
                 mediaPath = mf.getPath();
             }

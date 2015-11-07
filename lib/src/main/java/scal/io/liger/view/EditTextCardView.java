@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -48,7 +50,7 @@ public class EditTextCardView implements DisplayableCard {
 
                     mCardModel.clearValues();
                     mCardModel.addValue("value", v.getText().toString()); // what was intended key?
-                    Log.d("EditTextCardView", "editing done: " + v.getText().toString());
+                    Timber.d("editing done: " + v.getText().toString());
                     return true;
                 }
                 return false;
@@ -61,7 +63,7 @@ public class EditTextCardView implements DisplayableCard {
             public void onClick(View v) {
                 mCardModel.clearValues();
                 mCardModel.addValue("value", button.getText().toString()); // what was intended key?
-                Log.d("EditTextCardView", "editing done: " + button.getText().toString());
+                Timber.d("editing done: " + button.getText().toString());
             }
         });
 

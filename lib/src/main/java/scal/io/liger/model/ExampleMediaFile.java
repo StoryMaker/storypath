@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -82,7 +84,7 @@ public class ExampleMediaFile extends MediaFile implements Cloneable {
         if (exampleUri == null) {
             File media = null;
 
-            Log.d(" *** TESTING *** ", "CREATING TEMP FILE FOR " + path);
+            Timber.d("CREATING TEMP FILE FOR " + path);
 
             // local path will be relative
             // need to create a temp file with content from zip file to pass to ThumbnailUtils
@@ -90,12 +92,12 @@ public class ExampleMediaFile extends MediaFile implements Cloneable {
             String tempMediaFile = card.getStoryPath().buildTargetPath(path);
             String tempMediaPath = tempMediaFile.substring(0, tempMediaFile.lastIndexOf(File.separator));
 
-            Log.d(" *** TESTING *** ", "Temp file path " + tempMediaPath);
+            Timber.d("Temp file path " + tempMediaPath);
 
             media = ZipHelper.getTempFile(path, tempMediaPath, card.getStoryPath().getContext());
 
             if (media == null) {
-                Log.e(" *** TESTING *** ", "No temp file for " + path);
+                Timber.e("No temp file for " + path);
                 return null;
             } else {
                 exampleUri = media.getPath();

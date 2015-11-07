@@ -1,5 +1,7 @@
 package scal.io.liger.adapter;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;

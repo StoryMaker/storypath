@@ -1,5 +1,7 @@
 package scal.io.liger.av;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -186,7 +188,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
             ClipCardsPlayer player = mWeakPlayer.get();
             if (player == null) {
-                Log.w(getClass().getSimpleName(), "ClipCardsPlayer.handleMessage: player is null!");
+                Timber.w("ClipCardsPlayer.handleMessage: player is null!");
                 return;
             }
 
@@ -248,7 +250,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
     public void notifyAudioClipsChanged() {
         mAudioTracksDirty = true;
-        Log.d(TAG, "Audio track changed");
+        Timber.d("Audio track changed");
     }
 
     /**
@@ -558,7 +560,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
      */
     protected void _advanceToClip(MediaPlayer player, ClipCard targetClipCard, boolean autoPlay) {
         if (mClipCards.indexOf(targetClipCard) == -1) {
-            Log.e(TAG, "Invalid Card passed to _advanceToClip");
+            Timber.e("Invalid Card passed to _advanceToClip");
             return;
         }
 
@@ -672,11 +674,11 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 if (!audioPlayer.isPlaying()) {
                     audioPlayer.setVolume(mRequestedVolume, mRequestedVolume);
                     audioPlayer.start();
-                    Log.d(TAG, String.format("Starting audio player for media %s with volume %f",
+                    Timber.d(String.format("Starting audio player for media %s with volume %f",
                             mMediaPlayerToAudioClip.get(audioPlayer).getUuid().substring(0,3), mRequestedVolume));
-                } else Log.d(TAG, "audioPlayer is already playing on resumePlayback!");
+                } else Timber.d("audioPlayer is already playing on resumePlayback!");
             }
-        } else Log.d(TAG, "mAudioClipPlayers is null on resumePlayback!");
+        } else Timber.d("mAudioClipPlayers is null on resumePlayback!");
     }
 
     protected void _stopPlayback() {
@@ -744,7 +746,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                                       boolean isVideo)
                                       throws IOException {
         try {
-            Log.d(TAG, "Preparing " + (isVideo ? "video" : "audio") + " media player for file " + mediaFile.getPath());
+            Timber.d("Preparing " + (isVideo ? "video" : "audio") + " media player for file " + mediaFile.getPath());
             Uri media = Uri.parse(mediaFile.getPath());
             player.reset();
             player.setDataSource(mContext, media);
@@ -763,7 +765,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
 
             player.setVolume(mRequestedVolume, mRequestedVolume);
         } catch (IOException e) {
-            Log.e(TAG, "Error preparing mediaplayer for media " + mediaFile.getPath());
+            Timber.e("Error preparing mediaplayer for media " + mediaFile.getPath());
             e.printStackTrace();
             throw e;
         }
@@ -790,7 +792,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 thumbnail.setVisibility(View.VISIBLE);
                 break;
             default:
-                Log.w(TAG, "Cannot fetch thumbnail. Unknown clipcard medium.");
+                Timber.w("Cannot fetch thumbnail. Unknown clipcard medium.");
                 break;
         }
     }
@@ -819,7 +821,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 drawable = new IconDrawable(mContext, Iconify.IconValue.fa_clip_ex_place);
                 break;
             default:
-                Log.d(TAG, "No clipType matching '" + clipType + "' found.");
+                Timber.d("No clipType matching '" + clipType + "' found.");
                 drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
         }
         imageView.setImageDrawable(drawable);
@@ -861,7 +863,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             @Override
             protected void onPostExecute(Integer result) {
                 if (result == -1) {
-                    Log.e(TAG, "Unable to calculate ClipCard list duration! ClipCardsPlayer will not properly function");
+                    Timber.e("Unable to calculate ClipCard list duration! ClipCardsPlayer will not properly function");
                 } else {
                     mClipCollectionDurationMs = result;
                     changeUiState(PlayerState.READY);
@@ -916,7 +918,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
      */
     protected boolean changeUiState(PlayerState newState) {
         if (!isNewStateValid(newState)) {
-            Log.e(TAG, String.format("Cannot advance to state %s from %s", newState, mState));
+            Timber.e(String.format("Cannot advance to state %s from %s", newState, mState));
             return false;
         }
 
@@ -984,7 +986,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 AudioClip audioClip = mAudioClips.get(x);
 
                 if (spl.getFirstClipCardForAudioClip(audioClip, mClipCards).equals(mCurrentlyPlayingCard)) {
-                    Log.d(TAG, "Found AudioTrack matching ClipCard at pos " + mClipCards.indexOf(mCurrentlyPlayingCard));
+                    Timber.d("Found AudioTrack matching ClipCard at pos " + mClipCards.indexOf(mCurrentlyPlayingCard));
                     MediaPlayer audioPlayer = fetchAudioMediaPlayer();
                     mAudioClipToMediaPlayer.put(audioClip, audioPlayer);
                     mMediaPlayerToAudioClip.put(audioPlayer, audioClip);
@@ -1014,13 +1016,13 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 AudioClip audioToRemove = mMediaPlayerToAudioClip.remove(player);
                 mAudioClipToMediaPlayer.remove(audioToRemove);
 
-                Log.d(TAG, "Recycling audio MediaPlayer at index " + mAudioClipPlayers.indexOf(player));
+                Timber.d("Recycling audio MediaPlayer at index " + mAudioClipPlayers.indexOf(player));
                 return player;
             }
 
         }
 
-        Log.d(TAG, "Initializing new audio MediaPlayer");
+        Timber.d("Initializing new audio MediaPlayer");
         MediaPlayer newPlayer = new MediaPlayer();
         mAudioClipPlayers.add(newPlayer);
         return newPlayer;
@@ -1039,7 +1041,7 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
             if (!library.isClipCardWithinAudioClipRange(mCurrentlyPlayingCard,
                                                        audioClip,
                                                        mClipCards)) {
-                Log.d(TAG, "Stopping finished AudioClip " + audioClip.getUuid());
+                Timber.d("Stopping finished AudioClip " + audioClip.getUuid());
                 player.stop();
             }
         }

@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -63,12 +65,12 @@ public class JsonHelper {
             if ((jsonFolder.listFiles() != null)) {
                 for (File jsonFile : jsonFolder.listFiles()) {
                     if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                        Log.d("FILES", "FOUND INSTANCE PATH: " + jsonFile.getPath());
+                        Timber.d("FOUND INSTANCE PATH: " + jsonFile.getPath());
                         results.add(jsonFile.getPath());
                     }
                 }
             } else {
-                Log.d("FILES", getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
+                Timber.d(getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
             }
         }
 
@@ -85,12 +87,12 @@ public class JsonHelper {
         if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
             for (File jsonFile : jsonFolder.listFiles()) {
                 if (jsonFile.getName().contains("-library-instance") && !jsonFile.isDirectory()) {
-                    Log.d("FILES", "FOUND LIBRARY INSTANCE PATH: " + jsonFile.getPath());
+                    Timber.d("FOUND LIBRARY INSTANCE PATH: " + jsonFile.getPath());
                     results.add(jsonFile.getPath());
                 }
             }
         } else {
-            Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
+            Timber.d(getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE PATHS");
         }
 
         return results;
@@ -110,7 +112,7 @@ public class JsonHelper {
             if (jsonPath.lastIndexOf("-" + language + jsonPath.substring(jsonPath.lastIndexOf("."))) < 0) {
                 localizedFilePath = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + "-" + language + jsonPath.substring(jsonPath.lastIndexOf("."));
             }
-            Log.d("LANGUAGE", "loadJSONFromPath() - LOCALIZED PATH: " + localizedFilePath);
+            Timber.d("loadJSONFromPath() - LOCALIZED PATH: " + localizedFilePath);
         }
 
         if (sdCardState.equals(Environment.MEDIA_MOUNTED)) {
@@ -121,7 +123,7 @@ public class JsonHelper {
                 File localizedFile = new File(localizedFilePath);
                 // if there is a file at the localized path, use that instead
                 if ((localizedFile.exists()) && (!jsonPath.equals(localizedFilePath))) {
-                    Log.d("LANGUAGE", "loadJSONFromPath() - USING LOCALIZED FILE: " + localizedFilePath);
+                    Timber.d("loadJSONFromPath() - USING LOCALIZED FILE: " + localizedFilePath);
                     jsonStream = new FileInputStream(localizedFile);
                 }
 
@@ -131,9 +133,9 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException e) {
-                Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED: " + e.getMessage());
+                Timber.e("READING JSON FILE FROM SD CARD FAILED: " + e.getMessage());
             } catch (NullPointerException npe) {
-                Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED (STREAM WAS NULL): " + npe.getMessage());
+                Timber.e("READING JSON FILE FROM SD CARD FAILED (STREAM WAS NULL): " + npe.getMessage());
             }
         } else {
             System.err.println("SD CARD NOT FOUND");
@@ -176,7 +178,7 @@ public class JsonHelper {
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
                 localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
             }
-            Log.d("LANGUAGE", "loadJSON() - LOCALIZED PATH: " + localizedFilePath);
+            Timber.d("loadJSON() - LOCALIZED PATH: " + localizedFilePath);
         }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context); // hopefully context is valid?
@@ -219,7 +221,7 @@ public class JsonHelper {
                 File localizedFile = new File(localizedFilePath);
                 // if there is a file at the localized path, use that instead
                 if ((localizedFile.exists()) && (!jsonFilePath.equals(localizedFilePath))) {
-                    Log.d("LANGUAGE", "loadJSON() - USING LOCALIZED FILE: " + localizedFilePath);
+                    Timber.d("loadJSON() - USING LOCALIZED FILE: " + localizedFilePath);
                     jsonStream = new FileInputStream(localizedFile);
                 }
 
@@ -229,12 +231,12 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException e) {
-                Log.e(TAG, "READING JSON FILE FRON SD CARD FAILED: " + e.getMessage());
+                Timber.e("READING JSON FILE FRON SD CARD FAILED: " + e.getMessage());
             } catch (NullPointerException npe) {
-                Log.e(TAG, "READING JSON FILE FROM SD CARD FAILED (STREAM WAS NULL): " + npe.getMessage());
+                Timber.e("READING JSON FILE FROM SD CARD FAILED (STREAM WAS NULL): " + npe.getMessage());
             }
         } else {
-            Log.e(TAG, "SD CARD NOT FOUND");
+            Timber.e("SD CARD NOT FOUND");
         }
 
         return jsonString;
@@ -251,7 +253,7 @@ public class JsonHelper {
     @Nullable
     public static String loadJSONFromZip(String jsonFilePath, Context context, String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD loadJSONFromZip CALLED FOR " + jsonFilePath);
 
         if(null == jsonFilePath) {
             return null;
@@ -267,7 +269,7 @@ public class JsonHelper {
 //            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
 //                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
 //            }
-//            Log.d("LANGUAGE", "loadJSONFromZip() - LOCALIZED PATH: " + localizedFilePath);
+//            Timber.d("loadJSONFromZip() - LOCALIZED PATH: " + localizedFilePath);
 //        }
 
         // removed sd card check as expansion file should not be located on sd card
@@ -278,11 +280,11 @@ public class JsonHelper {
 //                if ((jsonStream == null) && (!jsonFilePath.equals(localizedFilePath))) {
 //                    jsonStream = ZipHelper.getFileInputStream(jsonFilePath, context);
 //                } else {
-//                    Log.d("LANGUAGE", "loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+//                    Timber.d("loadJSONFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
 //                }
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
                     return null;
                 }
 
@@ -292,7 +294,7 @@ public class JsonHelper {
                 jsonStream.close();
                 jsonString = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
             }
 
         return jsonString;
@@ -310,7 +312,7 @@ public class JsonHelper {
 
             String sdLigerFilePath = sdCardFolderPath + File.separator;
 
-            Log.d("NOT_STATIC", "CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
+            Timber.d("CONSTRUCTED LIGER FILE PATH: " + sdLigerFilePath);
 
             return sdLigerFilePath;
         } else {
@@ -349,7 +351,7 @@ public class JsonHelper {
                 }
             }
         } catch (IOException ex) {
-            Log.e("tag", "I/O Exception", ex);
+            Timber.e("I/O Exception", ex);
         }
     }
 
@@ -382,8 +384,8 @@ public class JsonHelper {
             out.close();
             out = null;
         } catch (Exception e) {
-            Log.e("tag", "Exception in copyFile() of "+newFileName);
-            Log.e("tag", "Exception in copyFile() "+e.toString());
+            Timber.e("Exception in copyFile() of "+newFileName);
+            Timber.e("Exception in copyFile() "+e.toString());
         }
 
     }
@@ -414,8 +416,8 @@ public class JsonHelper {
                 out.close();
                 out = null;
             } catch (Exception e) {
-                Log.e("tag", "Exception in copyObbFile() of " + toPath);
-                Log.e("tag", "Exception in copyObbFile() " + e.toString());
+                Timber.e("Exception in copyObbFile() of " + toPath);
+                Timber.e("Exception in copyObbFile() " + e.toString());
             }
         }
     }
@@ -431,11 +433,11 @@ public class JsonHelper {
             String sdCardFolderPath = StorageHelper.getActualStorageDirectory(context).getPath();
 
             sdLigerFilePath = sdCardFolderPath + File.separator;
-            Log.d("FILES", "NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
+            Timber.d("NEW EXTERNAL DIRECTORY: " + sdLigerFilePath);
 
             new File(sdLigerFilePath).mkdirs();
         } else {
-            Log.e(TAG, "SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
+            Timber.e("SD CARD NOT FOUND"); // FIXME don't bury errors in logs, we should let this crash
         }
     }
 
@@ -518,13 +520,13 @@ public class JsonHelper {
         if ((jsonFolder != null) && (jsonFolder.listFiles() != null)) {
             for (File jsonFile : jsonFolder.listFiles()) {
                 if (jsonFile.getName().contains("-instance") && !jsonFile.isDirectory()) {
-                    Log.d("FILES", "FOUND INSTANCE FILE: " + jsonFile.getName());
+                    Timber.d("FOUND INSTANCE FILE: " + jsonFile.getName());
                     File localFile = new File(jsonFile.getPath());
                     results.add(localFile);
                 }
             }
         } else {
-            Log.d("FILES", getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
+            Timber.d(getSdLigerFilePath() + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
         }
 
         return results;
@@ -543,13 +545,13 @@ public class JsonHelper {
                 if (jsonFile.getName().contains("-library-instance") &&
                         jsonFile.getName().endsWith(".json") &&
                         !jsonFile.isDirectory()) {
-                    Log.d("FILES", "FOUND LIBRARY INSTANCE FILE: " + jsonFile.getName());
+                    Timber.d("FOUND LIBRARY INSTANCE FILE: " + jsonFile.getName());
                     File localFile = new File(jsonFile.getPath());
                     results.add(localFile);
                 }
             }
         } else {
-            Log.d("FILES", getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
+            Timber.d(getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
         }
 
         return results;
@@ -648,7 +650,7 @@ public class JsonHelper {
     @Nullable
     public static StoryPathLibrary loadStoryPathLibrary(@NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD loadStoryPathLibrary CALLED FOR " + jsonFilePath);
 
         String storyPathLibraryJson = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -663,14 +665,14 @@ public class JsonHelper {
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
                 localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
             }
-            Log.d("LANGUAGE", "loadStoryPathLibrary() - LOCALIZED PATH: " + localizedFilePath);
+            Timber.d("loadStoryPathLibrary() - LOCALIZED PATH: " + localizedFilePath);
         }
 
         File f = new File(localizedFilePath);
         if ((!f.exists()) && (!localizedFilePath.equals(jsonFilePath))) {
             f = new File(jsonFilePath);
         } else {
-            Log.d("LANGUAGE", "loadStoryPathLibrary() - USING LOCALIZED FILE: " + localizedFilePath);
+            Timber.d("loadStoryPathLibrary() - USING LOCALIZED FILE: " + localizedFilePath);
         }
         */
 
@@ -712,7 +714,7 @@ public class JsonHelper {
                 InputStream jsonStream = new FileInputStream(f);
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from SD card failed (stream was null)");
                     return null;
                 }
 
@@ -722,11 +724,11 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathLibraryJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from SD card failed: " + ioe.getMessage());
                 return null;
             }
         } else {
-            Log.e(TAG, "SD card not found");
+            Timber.e("SD card not found");
             return null;
         }
 
@@ -739,7 +741,7 @@ public class JsonHelper {
     @Nullable
     public static StoryPathLibrary loadStoryPathLibraryFromZip(@NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD loadStoryPathLibraryFromZip CALLED FOR " + jsonFilePath);
 
         String storyPathLibraryJson = "";
 
@@ -752,7 +754,7 @@ public class JsonHelper {
 //            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
 //                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
 //            }
-//            Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
+//            Timber.d("loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
 //        }
 
         // removed sd card check as expansion file should not be located on sd card
@@ -763,13 +765,13 @@ public class JsonHelper {
 //                if ((jsonStream == null) && localizedFilePath.contains("-")) {
 //                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
 //                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
-//                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
+//                    Timber.d("loadStoryPathLibraryFromZip() - USING DEFAULT FILE: " + localizedFilePath);
 //                } else {
-//                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+//                    Timber.d("loadStoryPathLibraryFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
 //                }
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
                     return null;
                 }
 
@@ -779,7 +781,7 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathLibraryJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
                 return null;
             }
 
@@ -793,15 +795,15 @@ public class JsonHelper {
                 // if not already appended, don't bother to append -en
                 if (!"en".equals(language)) {
                     localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
-                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
+                    Timber.d("loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
                 } else {
-                    Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - PATH: " + localizedFilePath);
+                    Timber.d("loadStoryPathLibraryFromZip() - PATH: " + localizedFilePath);
                 }
             } else {
-                Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
+                Timber.d("loadStoryPathLibraryFromZip() - LOCALIZED PATH: " + localizedFilePath);
             }
         } else {
-            Log.d("LANGUAGE", "loadStoryPathLibraryFromZip() - PATH: " + localizedFilePath);
+            Timber.d("loadStoryPathLibraryFromZip() - PATH: " + localizedFilePath);
         }
 
         return deserializeStoryPathLibrary(storyPathLibraryJson, localizedFilePath, referencedFiles, context, language);
@@ -810,7 +812,7 @@ public class JsonHelper {
     @Nullable
     public static StoryPathLibrary deserializeStoryPathLibrary(@NonNull String storyPathLibraryJson, @NonNull String jsonFilePath, @NonNull ArrayList<String> referencedFiles, @NonNull Context context, @NonNull String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD deserializeStoryPathLibrary CALLED FOR " + jsonFilePath);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPathLibrary.class, new StoryPathLibraryDeserializer());
@@ -821,7 +823,7 @@ public class JsonHelper {
         StoryPathLibrary storyPathLibrary = gson.fromJson(storyPathLibraryJson, StoryPathLibrary.class);
 
          if (jsonFilePath.contains("instance")) {
-            Log.d("LANGUAGE", "LOCALIZING AN INSTANCE: " + jsonFilePath);
+            Timber.d("LOCALIZING AN INSTANCE: " + jsonFilePath);
 
             // if an instance has been loaded:
             // - jsonFilePath will not be localized
@@ -834,29 +836,29 @@ public class JsonHelper {
                 storyPathLibrary.setLanguage("en");
             }
             if (storyPathLibrary.getLanguage().equals(language)) {
-                Log.d("LANGUAGE", "LANGUAGE MATCHES: " + storyPathLibrary.getLanguage() + "/" + language);
+                Timber.d("LANGUAGE MATCHES: " + storyPathLibrary.getLanguage() + "/" + language);
                 // language matches, all is well
             } else {
-                Log.d("LANGUAGE", "LANGUAGE DOESN'T MATCH: " + storyPathLibrary.getLanguage() + "/" + language);
+                Timber.d("LANGUAGE DOESN'T MATCH: " + storyPathLibrary.getLanguage() + "/" + language);
                 // language mis-match, need to load template
                 String instanceTemplate = storyPathLibrary.getTemplatePath();
                 if (instanceTemplate == null) {
-                    Log.d("LANGUAGE", "NO TEMPLATE, TRYING SOMETHING ELSE");
+                    Timber.d("NO TEMPLATE, TRYING SOMETHING ELSE");
                     // can't identify template, can't fix language
 
                     HashMap<String, String> templateMap = IndexManager.loadTempateIndex(context);
 
                     String templateString = jsonFilePath.substring(jsonFilePath.lastIndexOf(File.separator) + 1, jsonFilePath.indexOf("-")) + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
 
-                    Log.d("LANGUAGE", "TRYING TO LOOK UP TEMPLATE FOR " + templateString);
+                    Timber.d("TRYING TO LOOK UP TEMPLATE FOR " + templateString);
 
                     instanceTemplate = templateMap.get(templateString);
 
-                    Log.d("LANGUAGE", "FOUND TEMPLATE: " + instanceTemplate);
+                    Timber.d("FOUND TEMPLATE: " + instanceTemplate);
                 }
 
                 if (instanceTemplate == null) {
-                    Log.d("LANGUAGE", "STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
+                    Timber.d("STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
                 } else {
                     // re-construct template name
                     String newTemplate = instanceTemplate.substring(0, instanceTemplate.lastIndexOf('.'));
@@ -868,7 +870,7 @@ public class JsonHelper {
                         newTemplate = newTemplate + '-' + language;
                     }
                     newTemplate = newTemplate + instanceTemplate.substring(instanceTemplate.lastIndexOf('.'));
-                    Log.d("LANGUAGE", "GETTING STRINGS FROM TEMPLATE: " + newTemplate);
+                    Timber.d("GETTING STRINGS FROM TEMPLATE: " + newTemplate);
 
                     StoryPathLibrary newStoryPathLibrary = loadStoryPathLibraryFromZip(newTemplate, referencedFiles, context, language);
 
@@ -882,7 +884,7 @@ public class JsonHelper {
         } else if (jsonFilePath.equals("SAVED_STATE")) {
             // this method gets called to de-serialize saved states, but no localization should be required in that context
         } else {
-            Log.d("LANGUAGE", "LOCALIZING A TEMPLATE: " + jsonFilePath);
+            Timber.d("LOCALIZING A TEMPLATE: " + jsonFilePath);
 
             // if a template has been loaded:
             // - jsonFilePath should include the localized file name
@@ -892,17 +894,17 @@ public class JsonHelper {
             // - version?
             storyPathLibrary.setLanguage(language);
             storyPathLibrary.setTemplatePath(jsonFilePath);
-            Log.d("LANGUAGE", "SET LANGUAGE/TEMPLATE: " + language + ", " + jsonFilePath);
+            Timber.d("SET LANGUAGE/TEMPLATE: " + language + ", " + jsonFilePath);
         }
 
         // a story path library model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
         if ((jsonFilePath == null) || (jsonFilePath.length() == 0) || (jsonFilePath.equals("SAVED_STATE"))) {
             if ((storyPathLibrary.getFileLocation() == null) || (storyPathLibrary.getFileLocation().length() == 0)) {
-                Log.e(TAG, "file location for story path library " + storyPathLibrary.getId() + " could not be determined");
+                Timber.e("file location for story path library " + storyPathLibrary.getId() + " could not be determined");
                 return null;
             } else {
-                Log.d(TAG, "incoming path is <" + jsonFilePath + ">, using existing file location: " + storyPathLibrary.getFileLocation());
+                Timber.d("incoming path is <" + jsonFilePath + ">, using existing file location: " + storyPathLibrary.getFileLocation());
             }
         } else {
             File checkFile = new File(jsonFilePath);
@@ -923,7 +925,7 @@ public class JsonHelper {
             derivedId = derivedId.substring(0, derivedId.indexOf("-"));
             dependency.setDependencyId(derivedId);
             storyPathLibrary.addDependency(dependency);
-            Log.d("FILES", "DEPENDENCY: " + derivedId + " -> " + referencedFile);
+            Timber.d("DEPENDENCY: " + derivedId + " -> " + referencedFile);
         }
 
         storyPathLibrary.setCardReferences();
@@ -936,16 +938,16 @@ public class JsonHelper {
     public static void updateStoryPathLibraryStrings(StoryPathLibrary storyPathLibrary, StoryPathLibrary storyPathLibraryTemplate) {
 
         if (storyPathLibraryTemplate == null) {
-            Log.e("LANGUAGE", "TEMPLATE WAS NULL, CAN'T UPDATE STRINGS");
+            Timber.e("TEMPLATE WAS NULL, CAN'T UPDATE STRINGS");
             return;
         }
 
         for (Card card : storyPathLibraryTemplate.getCards()) {
             try {
                 storyPathLibrary.getCardByIdOnly(card.getId()).copyText(card);
-                // Log.d("LANGUAGE", "FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
+                // Timber.d("FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
             } catch (NullPointerException npe) {
-                Log.e("LANGUAGE", "COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
+                Timber.e("COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
             }
         }
     }
@@ -953,7 +955,7 @@ public class JsonHelper {
     @NonNull
     public static String getStoryPathLibrarySaveFileName(StoryPathLibrary storyPathLibrary) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
+        //Timber.d("NEW METHOD getStoryPathLibrarySaveFileName CALLED FOR " + storyPathLibrary.getId());
 
         Date timeStamp = new Date();
         //String jsonFilePath = storyPathLibrary.buildZipPath(storyPathLibrary.getId() + "_" + timeStamp.getTime() + ".json");
@@ -965,7 +967,7 @@ public class JsonHelper {
 
     public static boolean saveStoryPathLibrary(StoryPathLibrary storyPathLibrary, String jsonFilePath) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId() + " -> " + jsonFilePath);
+        //Timber.d("NEW METHOD saveStoryPathLibrary CALLED FOR " + storyPathLibrary.getId() + " -> " + jsonFilePath);
 
         String sdCardState = Environment.getExternalStorageState();
 
@@ -1024,11 +1026,11 @@ public class JsonHelper {
                 Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + ".swap " + jsonFilePath);
 
             } catch (IOException ioe) {
-                Log.e(TAG, "writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
+                Timber.e("writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
                 return false;
             }
         } else {
-            Log.e(TAG, "SD card not found");
+            Timber.e("SD card not found");
             return false;
         }
 
@@ -1042,7 +1044,7 @@ public class JsonHelper {
     @Nullable
     public static String serializeStoryPathLibrary(StoryPathLibrary storyPathLibrary) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
+        //Timber.d("NEW METHOD serializeStoryPathLibrary CALLED FOR " + storyPathLibrary.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
@@ -1055,7 +1057,7 @@ public class JsonHelper {
     @Nullable
     public static StoryPath loadStoryPath(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD loadStoryPath CALLED FOR " + jsonFilePath);
 
         String storyPathJson = "";
         String sdCardState = Environment.getExternalStorageState();
@@ -1070,14 +1072,14 @@ public class JsonHelper {
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
                 localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
             }
-            Log.d("LANGUAGE", "loadStoryPath() - LOCALIZED PATH: " + localizedFilePath);
+            Timber.d("loadStoryPath() - LOCALIZED PATH: " + localizedFilePath);
         }
 
         File f = new File(localizedFilePath);
         if ((!f.exists()) && (!localizedFilePath.equals(jsonFilePath))) {
             f = new File(jsonFilePath);
         } else {
-            Log.d("LANGUAGE", "loadStoryPath() - USING LOCALIZED FILE: " + localizedFilePath);
+            Timber.d("loadStoryPath() - USING LOCALIZED FILE: " + localizedFilePath);
         }
         */
 
@@ -1119,7 +1121,7 @@ public class JsonHelper {
                 InputStream jsonStream = new FileInputStream(f);
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from SD card failed (stream was null)");
                     return null;
                 }
 
@@ -1129,11 +1131,11 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from SD card failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from SD card failed: " + ioe.getMessage());
                 return null;
             }
         } else {
-            Log.e(TAG, "SD card not found");
+            Timber.e("SD card not found");
             return null;
         }
 
@@ -1145,7 +1147,7 @@ public class JsonHelper {
     @Nullable
     public static StoryPath loadStoryPathFromZip(String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD loadStoryPathFromZip CALLED FOR " + jsonFilePath);
 
         String storyPathJson = "";
 
@@ -1158,7 +1160,7 @@ public class JsonHelper {
 //            if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
 //                localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
 //            }
-//            Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+//            Timber.d("loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
 //        }
 
         // removed sd card check as expansion file should not be located on sd card
@@ -1169,13 +1171,13 @@ public class JsonHelper {
 //                if ((jsonStream == null) && localizedFilePath.contains("-")) {
 //                    localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
 //                    jsonStream = ZipHelper.getFileInputStream(localizedFilePath, context);
-//                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING DEFAULT FILE: " + localizedFilePath);
+//                    Timber.d("loadStoryPathFromZip() - USING DEFAULT FILE: " + localizedFilePath);
 //                } else {
-//                    Log.d("LANGUAGE", "loadStoryPathFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
+//                    Timber.d("loadStoryPathFromZip() - USING LOCALIZED FILE: " + localizedFilePath);
 //                }
 
                 if (jsonStream == null) {
-                    Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
+                    Timber.e("reading json file " + jsonFilePath + " from ZIP file failed (stream was null)");
                     return null;
                 }
 
@@ -1185,7 +1187,7 @@ public class JsonHelper {
                 jsonStream.close();
                 storyPathJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e(TAG, "reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
+                Timber.e("reading json file " + jsonFilePath + " from ZIP file failed: " + ioe.getMessage());
                 return null;
             }
 
@@ -1198,15 +1200,15 @@ public class JsonHelper {
             if (jsonFilePath.lastIndexOf("-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."))) < 0) {
                 if (!"en".equals(language)) {
                     localizedFilePath = jsonFilePath.substring(0, jsonFilePath.lastIndexOf(".")) + "-" + language + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
-                    Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+                    Timber.d("loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
                 } else {
-                    Log.d("LANGUAGE", "loadStoryPathFromZip() - PATH: " + localizedFilePath);
+                    Timber.d("loadStoryPathFromZip() - PATH: " + localizedFilePath);
                 }
             } else {
-                Log.d("LANGUAGE", "loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
+                Timber.d("loadStoryPathFromZip() - LOCALIZED PATH: " + localizedFilePath);
             }
         } else {
-            Log.d("LANGUAGE", "loadStoryPathFromZip() - PATH: " + localizedFilePath);
+            Timber.d("loadStoryPathFromZip() - PATH: " + localizedFilePath);
         }
 
         return deserializeStoryPath(storyPathJson, localizedFilePath, storyPathLibrary, referencedFiles, context, language);
@@ -1214,7 +1216,7 @@ public class JsonHelper {
 
     public static StoryPath deserializeStoryPath(String storyPathJson, String jsonFilePath, StoryPathLibrary storyPathLibrary, ArrayList<String> referencedFiles, Context context, String language) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
+        //Timber.d("NEW METHOD deserializeStoryPath CALLED FOR " + jsonFilePath);
 
         GsonBuilder gBuild = new GsonBuilder();
         gBuild.registerTypeAdapter(StoryPath.class, new StoryPathDeserializer());
@@ -1223,7 +1225,7 @@ public class JsonHelper {
         StoryPath storyPath = gson.fromJson(storyPathJson, StoryPath.class);
 
         if (jsonFilePath.contains("instance")) {
-            Log.d("LANGUAGE", "LOCALIZING AN INSTANCE: " + jsonFilePath);
+            Timber.d("LOCALIZING AN INSTANCE: " + jsonFilePath);
 
             // if an instance has been loaded:
             // - jsonFilePath will not be localized
@@ -1236,29 +1238,29 @@ public class JsonHelper {
                 storyPath.setLanguage("en");
             }
             if (storyPath.getLanguage().equals(language)) {
-                Log.d("LANGUAGE", "LANGUAGE MATCHES: " + storyPath.getLanguage() + "/" + language);
+                Timber.d("LANGUAGE MATCHES: " + storyPath.getLanguage() + "/" + language);
                 // language matches, all is well
             } else {
                 // language mis-match, need to load template
-                Log.d("LANGUAGE", "LANGUAGE DOESN'T MATCH: " + storyPath.getLanguage() + "/" + language);
+                Timber.d("LANGUAGE DOESN'T MATCH: " + storyPath.getLanguage() + "/" + language);
                 String instanceTemplate = storyPath.getTemplatePath();
                 if (instanceTemplate == null) {
-                    Log.d("LANGUAGE", "NO TEMPLATE, TRYING SOMETHING ELSE");
+                    Timber.d("NO TEMPLATE, TRYING SOMETHING ELSE");
                     // can't identify template, can't fix language
 
                     HashMap<String, String> templateMap = IndexManager.loadTempateIndex(context);
 
                     String templateString = jsonFilePath.substring(jsonFilePath.lastIndexOf(File.separator) + 1, jsonFilePath.indexOf("-")) + jsonFilePath.substring(jsonFilePath.lastIndexOf("."));
 
-                    Log.d("LANGUAGE", "TRYING TO LOOK UP TEMPLATE FOR " + templateString);
+                    Timber.d("TRYING TO LOOK UP TEMPLATE FOR " + templateString);
 
                     instanceTemplate = templateMap.get(templateString);
 
-                    Log.d("LANGUAGE", "FOUND TEMPLATE: " + instanceTemplate);
+                    Timber.d("FOUND TEMPLATE: " + instanceTemplate);
                 }
 
                 if (instanceTemplate == null) {
-                    Log.d("LANGUAGE", "STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
+                    Timber.d("STILL NO TEMPLATE, CAN'T UPDATE STRINGS");
                 } else {
                     // re-construct template name
                     String newTemplate = instanceTemplate.substring(0, instanceTemplate.lastIndexOf('.'));
@@ -1273,10 +1275,10 @@ public class JsonHelper {
                     StoryPath newStoryPath = loadStoryPathFromZip(newTemplate, storyPathLibrary, referencedFiles, context, language);
 
                     if (newStoryPath == null) {
-                        Log.d("LANGUAGE", "TEMPLATE " + newTemplate + " FAILED TO LOAD, CAN'T UPDATE STRINGS");
+                        Timber.d("TEMPLATE " + newTemplate + " FAILED TO LOAD, CAN'T UPDATE STRINGS");
                         // can't load template, can't fix language
                     } else {
-                        Log.d("LANGUAGE", "GETTING STRINGS FROM TEMPLATE: " + newTemplate);
+                        Timber.d("GETTING STRINGS FROM TEMPLATE: " + newTemplate);
                         updateStoryPathStrings(storyPath, newStoryPath);
                         storyPath.setLanguage(language);
                         storyPath.setTemplatePath(newTemplate);
@@ -1284,7 +1286,7 @@ public class JsonHelper {
                 }
             }
         }  else {
-            Log.d("LANGUAGE", "LOCALIZING A TEMPLATE: " + jsonFilePath);
+            Timber.d("LOCALIZING A TEMPLATE: " + jsonFilePath);
 
             // if a template has been loaded:
             // - jsonFilePath should include the localized file name
@@ -1294,14 +1296,14 @@ public class JsonHelper {
             // - version?
             storyPath.setLanguage(language);
             storyPath.setTemplatePath(jsonFilePath);
-            Log.d("LANGUAGE", "SET LANGUAGE/TEMPLATE: " + language + ", " + jsonFilePath);
+            Timber.d("SET LANGUAGE/TEMPLATE: " + language + ", " + jsonFilePath);
         }
 
         // a story path model must have a file location to manage relative paths
         // if it is loaded from a saved state, the location should already be set
         if ((jsonFilePath == null) || (jsonFilePath.length() == 0)) {
             if ((storyPath.getFileLocation() == null) || (storyPath.getFileLocation().length() == 0)) {
-                Log.e(TAG, "file location for story path " + storyPath.getId() + " could not be determined");
+                Timber.e("file location for story path " + storyPath.getId() + " could not be determined");
             }
         } else {
             File checkFile = new File(jsonFilePath);
@@ -1331,7 +1333,7 @@ public class JsonHelper {
             derivedId = derivedId.substring(0, derivedId.indexOf("-"));
             dependency.setDependencyId(derivedId);
             storyPath.addDependency(dependency);
-            Log.d("FILES", "DEPENDENCY: " + derivedId + " -> " + referencedFile);
+            Timber.d("DEPENDENCY: " + derivedId + " -> " + referencedFile);
         }
 
         storyPath.setContext(context);
@@ -1343,16 +1345,16 @@ public class JsonHelper {
         for (Card card : storyPathTemplate.getCards()) {
             try {
                 storyPath.getCardByIdOnly(card.getId()).copyText(card);
-                Log.d("LANGUAGE", "FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
+                Timber.d("FOUND CARD " + card.getId() + " AND UPDATED STRINGS");
             } catch (NullPointerException npe) {
-                Log.e("LANGUAGE", "COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
+                Timber.e("COULD NOT FIND CARD " + card.getId() + " TO UPDATE STRINGS");
             }
         }
     }
 
     public static String getStoryPathSaveFileName(StoryPath storyPath) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId());
+        //Timber.d("NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId());
 
         Date timeStamp = new Date();
         //String jsonFilePath = storyPath.buildZipPath(storyPath.getId() + "_" + timeStamp.getTime() + ".json");
@@ -1364,7 +1366,7 @@ public class JsonHelper {
 
     public static boolean saveStoryPath(StoryPath storyPath, String jsonFilePath) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId() + " -> " + jsonFilePath);
+        //Timber.d("NEW METHOD getStoryPathSaveFileName CALLED FOR " + storyPath.getId() + " -> " + jsonFilePath);
 
         String sdCardState = Environment.getExternalStorageState();
 
@@ -1423,11 +1425,11 @@ public class JsonHelper {
                 Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + ".swap " + jsonFilePath);
 
             } catch (IOException ioe) {
-                Log.e(TAG, "writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
+                Timber.e("writing json file " + jsonFilePath + " to SD card failed: " + ioe.getMessage());
                 return false;
             }
         } else {
-            Log.e(TAG, "SD card not found");
+            Timber.e("SD card not found");
             return false;
         }
 
@@ -1441,7 +1443,7 @@ public class JsonHelper {
     @Nullable
     public static String serializeStoryPath(StoryPath storyPath) {
 
-        //Log.d(" *** TESTING *** ", "NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
+        //Timber.d("NEW METHOD serializeStoryPath CALLED FOR " + storyPath.getId());
 
         GsonBuilder gBuild = new GsonBuilder();
         Gson gson = gBuild.excludeFieldsWithoutExposeAnnotation().create();
@@ -1474,12 +1476,12 @@ public class JsonHelper {
         // delete lingering .swap files from failed saves
         String swapFilter = "*.swap";
 
-        Log.d(TAG, "CLEANUP: DELETING " + swapFilter + " FROM " + swapFilePath);
+        Timber.d("CLEANUP: DELETING " + swapFilter + " FROM " + swapFilePath);
 
         WildcardFileFilter swapFileFilter = new WildcardFileFilter(swapFilter);
         File swapDirectory = new File(swapFilePath);
         for (File swapFile : FileUtils.listFiles(swapDirectory, swapFileFilter, null)) {
-            Log.d(TAG, "CLEANUP: FOUND " + swapFile.getPath() + ", DELETING");
+            Timber.d("CLEANUP: FOUND " + swapFile.getPath() + ", DELETING");
             FileUtils.deleteQuietly(swapFile);
         }
     }

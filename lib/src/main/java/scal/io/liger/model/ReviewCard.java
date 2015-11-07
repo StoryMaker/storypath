@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -38,7 +40,7 @@ public class ReviewCard extends GenericCard {
                 references.add(
                         String.format("%s::%s::%s", getStoryPath().getId(),
                                                     card.getId(), "clips"));
-                //Log.d(TAG, "Adding reference to clipcard: " + references.get(references.size()-1));
+                //Timber.d("Adding reference to clipcard: " + references.get(references.size()-1));
             }
         }
         super.registerObservers();
@@ -47,11 +49,11 @@ public class ReviewCard extends GenericCard {
     @Override
     public void update(Observable observable, Object o) {
         if (!(observable instanceof Card)) {
-            Log.e(TAG, "update notification received from non-card observable");
+            Timber.e("update notification received from non-card observable");
             return;
         }
         if (storyPath == null) {
-            Log.e(TAG, "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            Timber.e("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
 
@@ -121,7 +123,7 @@ public class ReviewCard extends GenericCard {
     @Deprecated
     public MediaFile getSelectedNarrationFile(){
         if (narration == null) {
-            Log.e(this.getClass().getName(), "no narration metadata was found, cannot get file");
+            Timber.e("no narration metadata was found, cannot get file");
             return null;
         }
         return loadMediaFile(narration);
@@ -134,7 +136,7 @@ public class ReviewCard extends GenericCard {
     @Deprecated
     public ClipMetadata getSelectedNarrationClip() {
         if (narration == null) {
-            Log.e(this.getClass().getName(), "no narration metadata was found, cannot get file");
+            Timber.e("no narration metadata was found, cannot get file");
             return null;
         }
 
@@ -148,10 +150,10 @@ public class ReviewCard extends GenericCard {
     @Override
     public void copyText(Card card) {
         if (!(card instanceof ReviewCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ReviewCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF ReviewCard");
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

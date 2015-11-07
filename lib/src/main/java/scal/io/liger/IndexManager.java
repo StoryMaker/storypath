@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
@@ -70,13 +72,13 @@ public class IndexManager {
         } else if (Constants.PATCH.equals(mainOrPatch)) {
             if (item.getPatchFileVersion() == null) {
                 // not really an error, removing message
-                // Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
+                // Timber.d("CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
                 return noPatchFile;
             } else {
                 return item.getExpansionId() + "." + mainOrPatch + "." + item.getPatchFileVersion() + ".obb";
             }
         } else {
-            Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", DON'T UNDERSTAND " + mainOrPatch);
+            Timber.d("CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", DON'T UNDERSTAND " + mainOrPatch);
             // this is not the same as having no patch
             // return noPatchFile;
             return "FOO";
@@ -123,7 +125,7 @@ public class IndexManager {
         if (checkDir.isDirectory() || checkDir.mkdirs()) {
             return checkPath;
         } else {
-            Log.d("INDEX", "CAN'T CONSTRUCT PATH FOR " + item.getExpansionId() + ", PATH " + item.getExpansionFilePath() + " DOES NOT EXIST AND COULD NOT BE CREATED");
+            Timber.d("CAN'T CONSTRUCT PATH FOR " + item.getExpansionId() + ", PATH " + item.getExpansionFilePath() + " DOES NOT EXIST AND COULD NOT BE CREATED");
             return null;
         }
     }
@@ -136,31 +138,31 @@ public class IndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath);
+        Timber.d("COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath);
 
         // only replace file if version is different
         File jsonFile = new File(jsonFilePath + getAvailableVersionName());
         if (jsonFile.exists() && !forceCopy) {
-            Log.d("INDEX", "JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
+            Timber.d("JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
             return;
         } else {
 
             // delete old patch versions
             String nameFilter = availableIndexName + "." + "*" + ".json";
 
-            Log.d("INDEX", "CLEANUP: DELETING " + nameFilter + " FROM " + jsonFilePath);
+            Timber.d("CLEANUP: DELETING " + nameFilter + " FROM " + jsonFilePath);
 
             WildcardFileFilter indexFileFilter = new WildcardFileFilter(nameFilter);
             File indexDirectory = new File(jsonFilePath);
             for (File indexFile : FileUtils.listFiles(indexDirectory, indexFileFilter, null)) {
-                Log.d("INDEX", "CLEANUP: FOUND " + indexFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + indexFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(indexFile);
             }
 
             // delete old un-numbered files
             File oldFile = new File(jsonFilePath + availableIndexName + ".json");
             if (oldFile.exists()) {
-                Log.d("INDEX", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(oldFile);
             }
         }
@@ -184,13 +186,13 @@ public class IndexManager {
             assetOut.close();
             assetOut = null;
         } catch (IOException ioe) {
-            Log.e("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED");
+            Timber.e("COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED");
             return;
         }
 
         // check for zero-byte files
         if (jsonFile.exists() && (jsonFile.length() == 0)) {
-            Log.e("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            Timber.e("COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
             jsonFile.delete();
         }
 
@@ -204,12 +206,12 @@ public class IndexManager {
 
         String thumbnailFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath);
+        Timber.d("COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath);
 
         File thumbnailFile = new File(thumbnailFilePath + thumbnailFileName);
 
         if (thumbnailFile.exists()) {
-            Log.d("INDEX", "THUMBNAIL FILE " + thumbnailFileName + " ALREADY EXISTS IN " + thumbnailFilePath + ", DELETING");
+            Timber.d("THUMBNAIL FILE " + thumbnailFileName + " ALREADY EXISTS IN " + thumbnailFilePath + ", DELETING");
             thumbnailFile.delete();
         }
 
@@ -237,13 +239,13 @@ public class IndexManager {
             assetOut.close();
             assetOut = null;
         } catch (IOException ioe) {
-            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED: " + ioe.getLocalizedMessage());
+            Timber.e("COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED: " + ioe.getLocalizedMessage());
             return null;
         }
 
         // check for zero-byte files
         if (thumbnailFile.exists() && (thumbnailFile.length() == 0)) {
-            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            Timber.e("COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED (FILE WAS ZERO BYTES)");
             thumbnailFile.delete();
             return null;
         }
@@ -352,11 +354,11 @@ public class IndexManager {
 
             String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-            // Log.d("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD");
+            // Timber.d("READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD");
 
             File jsonFile = new File(jsonFilePath + jsonFileName);
             if (!jsonFile.exists()) {
-                Log.e("INDEX", jsonFilePath + jsonFileName + " WAS NOT FOUND");
+                Timber.e(jsonFilePath + jsonFileName + " WAS NOT FOUND");
                 return indexList;
             }
 
@@ -373,11 +375,11 @@ public class IndexManager {
                     jsonStream = null;
                     indexJson = new String(buffer);
                 } catch (IOException ioe) {
-                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD FAILED");
+                    Timber.e("READING JSON FILE " + jsonFilePath + jsonFileName + " FROM SD CARD FAILED");
                     return indexList;
                 }
             } else {
-                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                Timber.e("SD CARD WAS NOT FOUND");
                 return indexList;
             }
 
@@ -394,7 +396,7 @@ public class IndexManager {
             indexList = cachedIndexes.get(jsonFileName);
         }
 
-        //Log.d("loadIndex", String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
+        //Timber.d(String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return indexList;
     }
 
@@ -408,11 +410,11 @@ public class IndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
+        Timber.d("READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
 
         File jsonFile = new File(jsonFilePath + instanceIndexName);
         if (!jsonFile.exists()) {
-            Log.d("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
+            Timber.d(jsonFilePath + instanceIndexName + " WAS NOT FOUND");
         } else {
 
             String sdCardState = Environment.getExternalStorageState();
@@ -428,10 +430,10 @@ public class IndexManager {
                     jsonStream = null;
                     indexJson = new String(buffer);
                 } catch (IOException ioe) {
-                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
+                    Timber.e("READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
                 }
             } else {
-                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                Timber.e("SD CARD WAS NOT FOUND");
                 return indexMap; // if there's no card, there's nowhere to read instance files from, so just stop here
             }
 
@@ -443,7 +445,7 @@ public class IndexManager {
                     indexList = gson.fromJson(indexJson, new TypeToken<ArrayList<InstanceIndexItem>>() {
                     }.getType());
                 } catch (Exception e) {
-                    Log.e("IndexManager", indexJson);
+                    Timber.e(indexJson);
                     throw e;
                 }
             }
@@ -464,11 +466,11 @@ public class IndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
+        Timber.d("READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD");
 
         File jsonFile = new File(jsonFilePath + instanceIndexName);
         if (!jsonFile.exists()) {
-            Log.d("INDEX", jsonFilePath + instanceIndexName + " WAS NOT FOUND");
+            Timber.d(jsonFilePath + instanceIndexName + " WAS NOT FOUND");
         } else {
 
             String sdCardState = Environment.getExternalStorageState();
@@ -485,10 +487,10 @@ public class IndexManager {
                     indexJson = new String(buffer);
                 } catch (IOException ioe) {
                     // FIXME we need to centralize the path finding logic so we can have a single place with sensible degredation (fallback to internal if there's no SD, deal well with SD beign removed temporarily)
-                    Log.e("INDEX", "READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
+                    Timber.e("READING JSON FILE " + jsonFilePath + instanceIndexName + " FROM SD CARD FAILED");
                 }
             } else {
-                Log.e("INDEX", "SD CARD WAS NOT FOUND");
+                Timber.e("SD CARD WAS NOT FOUND");
                 return indexList; // if there's no card, there's nowhere to read instance files from, so just stop here
             }
 
@@ -515,13 +517,13 @@ public class IndexManager {
 
         String contentPath = packageName + File.separator + expansionId + File.separator + contentIndexName;
 
-        Log.d("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE");
+        Timber.d("READING JSON FILE " + contentPath + " FROM ZIP FILE");
 
         try {
             InputStream jsonStream = ZipHelper.getFileInputStream(contentPath, context, language);
 
             if (jsonStream == null) {
-                Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
+                Timber.e("READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
                 return contentMap;
             }
 
@@ -543,7 +545,7 @@ public class IndexManager {
                 contentMap.put(item.getInstanceFilePath(), item);
             }
         } catch (IOException ioe) {
-            Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
+            Timber.e("READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
             return contentMap;
         }
 
@@ -560,13 +562,13 @@ public class IndexManager {
 
         String contentPath = packageName + File.separator + expansionId + File.separator + contentIndexName;
 
-        Log.d("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE");
+        Timber.d("READING JSON FILE " + contentPath + " FROM ZIP FILE");
 
         try {
             InputStream jsonStream = ZipHelper.getFileInputStream(contentPath, context, language);
 
             if (jsonStream == null) {
-                Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
+                Timber.e("READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
                 return contentList;
             }
 
@@ -584,7 +586,7 @@ public class IndexManager {
                 }.getType());
             }
         } catch (IOException ioe) {
-            Log.e("INDEX", "READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
+            Timber.e("READING JSON FILE " + contentPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
         }
 
         return contentList;
@@ -598,13 +600,13 @@ public class IndexManager {
 
         String metadataPath = packageName + File.separator + expansionId + File.separator + contentMetadataName;
 
-        Log.d("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE");
+        Timber.d("READING JSON FILE " + metadataPath + " FROM ZIP FILE");
 
         try {
             InputStream jsonStream = ZipHelper.getFileInputStream(metadataPath, context, language);
 
             if (jsonStream == null) {
-                Log.e("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
+                Timber.e("READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED (STREAM WAS NULL)");
                 return null;
             }
 
@@ -622,7 +624,7 @@ public class IndexManager {
                 }.getType());
             }
         } catch (IOException ioe) {
-            Log.e("INDEX", "READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
+            Timber.e("READING JSON FILE " + metadataPath + " FROM ZIP FILE FAILED: " + ioe.getMessage());
             return null;
         }
 
@@ -636,7 +638,7 @@ public class IndexManager {
         ZipResourceFile zrf = ZipHelper.getResourceFile(context);
         ArrayList<ZipResourceFile.ZipEntryRO> zipEntries = new ArrayList<ZipResourceFile.ZipEntryRO>(Arrays.asList(zrf.getAllEntries()));
         for (ZipResourceFile.ZipEntryRO zipEntry : zipEntries) {
-            // Log.d("INDEX", "GOT ITEM: " + zipEntry.mFileName);
+            // Timber.d("GOT ITEM: " + zipEntry.mFileName);
             templateMap.put(zipEntry.mFileName.substring(zipEntry.mFileName.lastIndexOf(File.separator) + 1), zipEntry.mFileName);
         }
 
@@ -659,7 +661,7 @@ public class IndexManager {
             InstanceIndexItem item = indexList.get(key);
             File checkFile = new File(item.getInstanceFilePath());
             if (!checkFile.exists()) {
-                Log.d("INDEX", "REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
+                Timber.d("REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
                 keys.add(key);
             }
         }
@@ -670,7 +672,7 @@ public class IndexManager {
 
         // check for changes
         if (indexList.size() != initialSize) {
-            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS REMOVED FROM INSTANCE INDEX, FORCING SAVE");
+            Timber.d(Math.abs(indexList.size() - initialSize) + " ITEMS REMOVED FROM INSTANCE INDEX, FORCING SAVE");
             // update flag
             forceSave = true;
             // update initial size
@@ -681,9 +683,9 @@ public class IndexManager {
 
         for (final File f : instanceFiles) {
             if (indexList.containsKey(f.getAbsolutePath()) && language.equals(indexList.get(f.getAbsolutePath()).getLanguage())) {
-                Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+                Timber.d("FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
             } else {
-                Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+                Timber.d("ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
 
                 forceSave = true;
 
@@ -697,7 +699,7 @@ public class IndexManager {
 
                 // if no string was loaded, cannot continue
                 if (jsonString == null) {
-                    Log.e("INDEX", "json could not be loaded from " + f.getPath());
+                    Timber.e("json could not be loaded from " + f.getPath());
                     // handle the same way as null spl case below
                     return indexList;
                 }
@@ -723,7 +725,7 @@ public class IndexManager {
                 if ((newItem.getTitle() == null) ||
                     (newItem.getStoryType() == null) ||
                     (newItem.getThumbnailPath() == null)) {
-                    Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
+                    Timber.d("MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
 
                     if (spl.getCurrentStoryPathFile() != null) {
                         spl.loadStoryPathTemplate("CURRENT", false);
@@ -744,7 +746,7 @@ public class IndexManager {
                         }
                     }
                 } else {
-                    Log.d("INDEX", "METADATA COMPLETE FOR INSTANCE FILE " + f.getAbsolutePath());
+                    Timber.d("METADATA COMPLETE FOR INSTANCE FILE " + f.getAbsolutePath());
                 }
 
                 indexList.put(newItem.getInstanceFilePath(), newItem);
@@ -753,7 +755,7 @@ public class IndexManager {
 
         // check for changes again
         if (indexList.size() != initialSize) {
-            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, FORCING SAVE");
+            Timber.d(Math.abs(indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, FORCING SAVE");
             // update flag
             forceSave = true;
             // update initial size
@@ -765,7 +767,7 @@ public class IndexManager {
             ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
             saveInstanceIndex(context, indexArray, instanceIndexName);
         } else {
-            Log.d("INDEX", "NOTHING ADDED TO/REMOVED FROM INSTANCE INDEX, NO SAVE");
+            Timber.d("NOTHING ADDED TO/REMOVED FROM INSTANCE INDEX, NO SAVE");
         }
 
         return indexList;
@@ -880,7 +882,7 @@ public class IndexManager {
         // need to purge ZipHelper cache to force update
         ZipHelper.clearCache();
 
-        Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
+        Timber.d("WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
 
         File jsonFile = new File(jsonFilePath + jsonFileName + ".tmp"); // write to temp and rename
         if (jsonFile.exists()) {
@@ -909,11 +911,11 @@ public class IndexManager {
                 Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + jsonFileName + ".tmp " + jsonFilePath + jsonFileName);
 
             } catch (IOException ioe) {
-                Log.e("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
+                Timber.e("WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
                 return;
             }
         } else {
-            Log.e("INDEX", "SD CARD WAS NOT FOUND");
+            Timber.e("SD CARD WAS NOT FOUND");
             return;
         }
     }
@@ -947,7 +949,7 @@ public class IndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
+        Timber.d("WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
 
         File jsonFile = new File(jsonFilePath + jsonFileName + ".tmp"); // write to temp and rename
         if (jsonFile.exists()) {
@@ -976,11 +978,11 @@ public class IndexManager {
                 Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + jsonFileName + ".tmp " + jsonFilePath + jsonFileName);
 
             } catch (IOException ioe) {
-                Log.e("INDEX", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
+                Timber.e("WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
                 return;
             }
         } else {
-            Log.e("INDEX", "SD CARD WAS NOT FOUND");
+            Timber.e("SD CARD WAS NOT FOUND");
             return;
         }
     }

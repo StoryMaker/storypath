@@ -5,6 +5,8 @@
 
 package scal.io.liger.touch;
 
+import timber.log.Timber;
+
 import java.util.Collections;
 import java.util.ArrayList;
 

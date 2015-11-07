@@ -1,5 +1,7 @@
 package scal.io.liger.tests;
 
+import timber.log.Timber;
+
 import android.support.v7.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 

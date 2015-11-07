@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import timber.log.Timber;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
@@ -236,7 +238,7 @@ public class AvailableIndexItemDao extends Dao {
 
     public Observable<Long> addAvailableIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag, boolean replace) {
 
-        Log.d("DB_ADD", "ADDING ROW FOR " + expansionId + "(MAIN " + mainDownloadFlag + ", PATCH " + patchDownloadFlag + ", REPLACE? " + replace + ")");
+        Timber.d("ADDING ROW FOR " + expansionId + "(MAIN " + mainDownloadFlag + ", PATCH " + patchDownloadFlag + ", REPLACE? " + replace + ")");
 
         Observable<Long> rowId = null;
 
@@ -274,7 +276,7 @@ public class AvailableIndexItemDao extends Dao {
                 rowId = insert(AvailableIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_IGNORE);
             }
         } catch (SQLiteConstraintException sce) {
-            Log.d("RX_DB", "INSERT FAILED: " + sce.getMessage());
+            Timber.d("INSERT FAILED: " + sce.getMessage());
         }
 
         return rowId;
@@ -287,11 +289,11 @@ public class AvailableIndexItemDao extends Dao {
 
         if (item.getLanguages() != null) {
             languageString = item.getLanguages().toString();
-            Log.d("RX_DB", "WHAT DOES THIS LOOK LIKE? " + languageString);
+            Timber.d("WHAT DOES THIS LOOK LIKE? " + languageString);
         }
         if (item.getTags() != null) {
             tagString = item.getTags().toString();
-            Log.d("RX_DB", "WHAT DOES THIS LOOK LIKE? " + tagString);
+            Timber.d("WHAT DOES THIS LOOK LIKE? " + tagString);
         }
 
         return addAvailableIndexItem(r.nextLong(),
@@ -361,7 +363,7 @@ public class AvailableIndexItemDao extends Dao {
 
         // remove an existing record with a matching key
 
-        Log.d("DB_REMOVE", "REMOVE ROW FOR " + key);
+        Timber.d("REMOVE ROW FOR " + key);
 
         return delete(AvailableIndexItem.TABLE_NAME,
                 AvailableIndexItem.COLUMN_EXPANSIONID + " = ? ",

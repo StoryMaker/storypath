@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -63,11 +65,11 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
     @Override
     public void update(Observable observable, Object o) {
         if (!(observable instanceof Card)) {
-            Log.e(TAG, "update notification received from non-card observable");
+            Timber.e("update notification received from non-card observable");
             return;
         }
         if (storyPath == null) {
-            Log.e(TAG, "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            Timber.e("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
 
@@ -330,10 +332,10 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
             return f.get(this).toString(); // not the best solution, but somehow int fields come back with Integer values
                                            // NEEDS REVISION TO HANDLE NON-STRING FIELDS (IE: CLIPS)
         } catch (Exception e) {
-            //Log.d("TESTING", "EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
+            //Timber.d("EXCEPTION THROWN WHILE SEARCHING CLASS PROPERTIES FOR VALUE: " + e.getMessage());
         }
 
-        //Log.e("TESTING", "VALUE " + key + " WAS NOT FOUND");
+        //Timber.e("VALUE " + key + " WAS NOT FOUND");
         return null;
     }
 
@@ -384,7 +386,7 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
             String libraryPath = storyPath.getStoryPathLibrary().getId() + fullPath.substring(fullPath.indexOf(":"));
             pathArray.clear();
             pathArray.add(libraryPath);
-            Log.d("CARDS", "LIBRARY REFERENCE: " + libraryPath);
+            Timber.d("LIBRARY REFERENCE: " + libraryPath);
             matchingCards.addAll(storyPath.getStoryPathLibrary().getCards(pathArray));
         }
         if (storyPath instanceof StoryPathLibrary) {
@@ -393,7 +395,7 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
                 String path = storyPathLibrary.getCurrentStoryPath().getId() + fullPath.substring(fullPath.indexOf(":"));
                 pathArray.clear();
                 pathArray.add(path);
-                Log.d("CARDS", "PATH REFERENCE: " + path);
+                Timber.d("PATH REFERENCE: " + path);
                 matchingCards.addAll(storyPathLibrary.getCurrentStoryPath().getCards(pathArray));
             }
         }
@@ -442,11 +444,11 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
     }
 
     public void loadStoryPath(String storyPathTemplateKey) {
-        Log.d(TAG, "loading " + storyPathTemplateKey);
+        Timber.d("loading " + storyPathTemplateKey);
         if (storyPath instanceof StoryPathLibrary) {
             ((StoryPathLibrary) storyPath).loadStoryPathTemplate(storyPathTemplateKey, true);
         } else {
-            Log.e(TAG, "cannot initiate a story path load from a story path card (use a link card)");
+            Timber.e("cannot initiate a story path load from a story path card (use a link card)");
         }
     }
 
@@ -467,7 +469,7 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
             return clone;
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
                 SecurityException | IllegalArgumentException | IllegalAccessException e) {
-            Log.e("Card#clone", "Failed to clone Card");
+            Timber.e("Failed to clone Card");
             e.printStackTrace();
         }
         return null;
@@ -475,6 +477,6 @@ public abstract class Card extends Observable implements Observer, Cloneable {  
 
     // need a method to import text strings from a matching card to support translation/versioning
     public void copyText(Card card) {
-        Log.e(TAG, "copyText() METHOD SHOULD NOT BE CALLED FROM THE BASE CLASS");
+        Timber.e("copyText() METHOD SHOULD NOT BE CALLED FROM THE BASE CLASS");
     }
 }

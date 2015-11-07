@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
@@ -188,7 +190,7 @@ public class StoryPathLibrary extends StoryPath {
         ClipCard firstCard = getFirstClipCardForAudioClip(audioClip, clipCards);
 
         if (firstCard == null) {
-            Log.e(TAG, "Unable to remove AudioClip from ClipCard. Could not find audioClip's first ClipCard");
+            Timber.e("Unable to remove AudioClip from ClipCard. Could not find audioClip's first ClipCard");
             return;
         }
 
@@ -200,7 +202,7 @@ public class StoryPathLibrary extends StoryPath {
 
         for (int idx = firstIdx; idx < audioClip.getClipSpan(); idx++) {
             if (clipCards.get(idx).getId().equals(clipCard.getId())) {
-                Log.d(TAG, "Found ClipCard to remove from AudioClip with uuid " + audioClip.getUuid());
+                Timber.d("Found ClipCard to remove from AudioClip with uuid " + audioClip.getUuid());
                 // We found the ClipCard to remove from this AudioClip
                 if (idx == firstIdx) {
                     // The ClipCard leads the AudioClip. Advance head to
@@ -238,7 +240,7 @@ public class StoryPathLibrary extends StoryPath {
         }
 
         if (firstCard == null) {
-            Log.e(TAG, "Could not find audioClip's first ClipCard");
+            Timber.e("Could not find audioClip's first ClipCard");
         }
         return firstCard;
     }
@@ -284,7 +286,7 @@ public class StoryPathLibrary extends StoryPath {
             audioClips = new ArrayList<>();
         }
 
-        Log.d(TAG, String.format("Added %s to audioClips. Total audio clips %d", audioClip.getUuid().substring(0,3), audioClips.size()));
+        Timber.d(String.format("Added %s to audioClips. Total audio clips %d", audioClip.getUuid().substring(0,3), audioClips.size()));
         audioClips.add(audioClip);
         saveMediaFile(audioClip.getUuid(), mediaFile);
     }
@@ -304,7 +306,7 @@ public class StoryPathLibrary extends StoryPath {
 
             // check current thumbnail to minimize file access
             if ((item.getThumbnailPath() != null) && (item.getThumbnailPath().equals(this.getCoverImageThumbnailPath()))) {
-                Log.d(TAG, "can't update index item with thumbnail path (index item found for " + getSavedFileName() + " already has the same path)");
+                Timber.d("can't update index item with thumbnail path (index item found for " + getSavedFileName() + " already has the same path)");
             } else {
                 // thumbnail path method only checks story path, will return null if media is somehow
                 // captured by a library card, index items with null thumbnail paths shouldn't be an issue
@@ -312,16 +314,16 @@ public class StoryPathLibrary extends StoryPath {
                 item.setStoryType(this.getMedium());
 
                 StorymakerIndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
-                Log.d(TAG, "updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
+                Timber.d("updated index item with thumbnail path " + file.getThumbnailFilePath() + " (index item found for " + getSavedFileName() + ")");
             }
         } else if (!(context instanceof MainActivity)) {
-            Log.d(TAG, "can't update index item with thumbnail path outside the context of liger main activity");
+            Timber.d("can't update index item with thumbnail path outside the context of liger main activity");
         } else {
             // index item must be initialized by a save action
-            Log.e(TAG, "can't update index item with thumbnail path (no index item found for " + getSavedFileName() + ")");
+            Timber.e("can't update index item with thumbnail path (no index item found for " + getSavedFileName() + ")");
         }
 
-        Log.d(TAG, String.format("Added %s to mediaFiles", uuid.substring(0,3)));
+        Timber.d(String.format("Added %s to mediaFiles", uuid.substring(0,3)));
         this.mediaFiles.put(uuid, file);
     }
 
@@ -335,7 +337,7 @@ public class StoryPathLibrary extends StoryPath {
     // need to determine whether to automatically delete files when they are no longer referenced
     public void deleteMediaFile(String uuid) {
         if ((mediaFiles == null) || (!mediaFiles.keySet().contains(uuid))) {
-            Log.e(TAG, "key was not found, cannot delete file");
+            Timber.e("key was not found, cannot delete file");
             return;
         }
 
@@ -351,7 +353,7 @@ public class StoryPathLibrary extends StoryPath {
      */
     public void deleteAudioClip(String uuid) {
         if (audioClips == null) {
-            Log.e(TAG, "No AudioClips to delete");
+            Timber.e("No AudioClips to delete");
             return;
         }
 
@@ -365,7 +367,7 @@ public class StoryPathLibrary extends StoryPath {
         if (toDelete != null) {
             audioClips.remove(toDelete);
         } else
-            Log.d(TAG, "Could not Delete AudioClip with uuid " + uuid);
+            Timber.d("Could not Delete AudioClip with uuid " + uuid);
 
         deleteMediaFile(uuid);
     }
@@ -452,9 +454,9 @@ public class StoryPathLibrary extends StoryPath {
             // NOT YET SURE HOW TO HANDLE VERSIONS OR DUPLICATES
             this.addStoryPathInstanceFile(oldPathFile.getPath());
         } catch (FileNotFoundException fnfe) {
-            Log.e(TAG, "could not file file: " + fnfe.getMessage());
+            Timber.e("could not file file: " + fnfe.getMessage());
         } catch (Exception e) {
-            Log.e(TAG, "other exception: " + e.getMessage());
+            Timber.e("other exception: " + e.getMessage());
         }
 
         // import clip metadata
@@ -477,14 +479,14 @@ public class StoryPathLibrary extends StoryPath {
 
         if (storyPathTemplateKey.equals("CURRENT")) { // ADD TO CONSTANTS
             storyPathTemplateFile = getCurrentStoryPathFile();
-            Log.d(TAG, "Loading current StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
+            Timber.d("Loading current StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
         } else {
             storyPathTemplateFile = storyPathTemplateFiles.get(storyPathTemplateKey);
-            Log.d(TAG, "Loading template StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
+            Timber.d("Loading template StoryPath: " + storyPathTemplateFile); // FIXME at least toast the user
         }
 
         if (storyPathTemplateFile == null) {
-            Log.e(TAG, "Loading failed. Could not find file: " + storyPathTemplateKey); // FIXME at least toast the user
+            Timber.e("Loading failed. Could not find file: " + storyPathTemplateKey); // FIXME at least toast the user
             return;
         }
 
@@ -511,34 +513,34 @@ public class StoryPathLibrary extends StoryPath {
 
             // should not need to insert dependencies into a saved instance file
             if (checkPath.contains("instance")) {
-                Log.d(TAG, "Load from saved instance");
+                Timber.d("Load from saved instance");
                 referencedFiles = new ArrayList<String>();
             } else {
-                Log.d(TAG, "Load from template");
+                Timber.d("Load from template");
                 referencedFiles = new ArrayList<String>();
                 // pass through files referenced by library (which were pulled from intent)
                 // does there need to be a way to select references when loading a path?
                 // referencedFiles = JsonHelper.getInstancePaths();
                 if ((dependencies != null) && (dependencies.size() > 0)) {
                     // support multiple referenced files?
-                    Log.d(TAG, "Found " + dependencies.size() + " referenced files in library");
+                    Timber.d("Found " + dependencies.size() + " referenced files in library");
                     for (Dependency dependency : dependencies) {
                         if(dependency.getDependencyFile().contains("-instance")) {
                             referencedFiles.add(dependency.getDependencyFile());
                         }
                     }
                 } else {
-                    Log.d(TAG, "Found no referenced files in library");
+                    Timber.d("Found no referenced files in library");
                 }
             }
 
             StoryPath story = null;
             if (checkFile.exists() || checkFile.getPath().contains("instance")) { // need to handle virtual files, also instance files should never be in a zip
                 story = JsonHelper.loadStoryPath(checkPath, this, referencedFiles, context, lang);
-                Log.d(TAG, "Loaded StoryPath from file: " + checkPath);
+                Timber.d("Loaded StoryPath from file: " + checkPath);
             } else {
                 story = JsonHelper.loadStoryPathFromZip(checkPath, this, referencedFiles, context, lang);
-                Log.d(TAG, "Loaded StoryPath from zip: " + checkPath);
+                Timber.d("Loaded StoryPath from zip: " + checkPath);
             }
 
             setCurrentStoryPath(story);
@@ -555,24 +557,29 @@ public class StoryPathLibrary extends StoryPath {
 
                 // check current title to minimize file access
                 if ((item.getTitle() != null) && (item.getTitle().equals(story.getTitle()))) {
-                    Log.d(TAG, "can't update index item with title (index item found for " + getSavedFileName() + " already has the same title)");
+                    Timber.d("can't update index item with title (index item found for " + getSavedFileName() + " already has the same title)");
                 } else {
                     item.setTitle(story.getTitle());
 
+<<<<<<< HEAD
                     StorymakerIndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
                     Log.d(TAG, "updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
+=======
+                    IndexManager.instanceIndexAdd(context, item, ((MainActivity) context).instanceIndex);
+                    Timber.d("updated index item with title " + story.getTitle() + " (index item found for " + getSavedFileName() + ")");
+>>>>>>> dev
                 }
             } else if (!(context instanceof MainActivity)) {
-                Log.d(TAG, "can't update index item with title outside the context of liger main activity");
+                Timber.d("can't update index item with title outside the context of liger main activity");
             } else {
                 // index item must be initialized by a save action
-                Log.e(TAG, "can't update index item with title (no index item found for " + getSavedFileName() + ")");
+                Timber.e("can't update index item with title (no index item found for " + getSavedFileName() + ")");
             }
 
             if (mListener != null) mListener.onStoryPathLoaded();
 
         } else {
-            Log.e(TAG, "app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
+            Timber.e("app context reference not found, cannot initialize card list for " + storyPathTemplateFile); // FIXME at least toast the user
         }
     }
 
@@ -614,7 +621,7 @@ public class StoryPathLibrary extends StoryPath {
         if (savedStoryPathLibraryFile == null) {
             savedStoryPathLibraryFile = JsonHelper.getStoryPathLibrarySaveFileName(this);
             setSavedFileName(savedStoryPathLibraryFile);
-            Log.d(TAG, "Saving to new file: " + savedStoryPathLibraryFile);
+            Timber.d("Saving to new file: " + savedStoryPathLibraryFile);
 
             // create new item for instance index
             Date now = new Date();
@@ -624,10 +631,10 @@ public class StoryPathLibrary extends StoryPath {
 
             StorymakerIndexManager.instanceIndexAdd(context, newItem, ((MainActivity)context).instanceIndex, ((MainActivity) context).getInstanceIndexItemDao());
 
-            Log.d(TAG, "Added index item for new instance file : " + savedStoryPathLibraryFile);
+            Timber.d("Added index item for new instance file : " + savedStoryPathLibraryFile);
 
         } else {
-            Log.d(TAG, "Saving to existing file: " + savedStoryPathLibraryFile);
+            Timber.d("Saving to existing file: " + savedStoryPathLibraryFile);
         }
 
         if (saveCurrentStoryPath && (getCurrentStoryPath() != null)) {
@@ -636,19 +643,19 @@ public class StoryPathLibrary extends StoryPath {
             if (savedStoryPathFile == null) {
                 savedStoryPathFile = JsonHelper.getStoryPathSaveFileName(getCurrentStoryPath());
                 getCurrentStoryPath().setSavedFileName(savedStoryPathFile);
-                Log.d(TAG, "Saving current StoryPath to new file: " + savedStoryPathFile);
+                Timber.d("Saving current StoryPath to new file: " + savedStoryPathFile);
             } else {
-                Log.d(TAG, "Saving current StoryPath to existing file: " + savedStoryPathFile);
+                Timber.d("Saving current StoryPath to existing file: " + savedStoryPathFile);
             }
             setCurrentStoryPathFile(savedStoryPathFile);
             JsonHelper.saveStoryPath(getCurrentStoryPath(), savedStoryPathFile);
-            Log.d(TAG, "Current StoryPath with id " + getCurrentStoryPath().getId() + " was saved to file " + savedStoryPathFile);
+            Timber.d("Current StoryPath with id " + getCurrentStoryPath().getId() + " was saved to file " + savedStoryPathFile);
         } else {
-            Log.d(TAG, "Id " + getId() + " has no current StoryPath, but save was explicitly requested. Ignoring.");
+            Timber.d("Id " + getId() + " has no current StoryPath, but save was explicitly requested. Ignoring.");
         }
 
         JsonHelper.saveStoryPathLibrary(this, savedStoryPathLibraryFile);
-        Log.d(TAG, "Id " + getId() + " was saved to file " + savedStoryPathLibraryFile);
+        Timber.d("Id " + getId() + " was saved to file " + savedStoryPathLibraryFile);
 
         //String savedFilePath = JsonHelper.saveStoryPath(mStoryPathLibrary.getCurrentStoryPath());
         //mStoryPathLibrary.setCurrentStoryPathFile(savedFilePath);
@@ -672,7 +679,7 @@ public class StoryPathLibrary extends StoryPath {
             mStory.setStoryPathLibrary(null);
             mStory.setStoryPathLibraryFile(storyPathLibraryFile.getPath());
         } catch (IOException ioe) {
-            Log.e(TAG, ioe.getMessage());
+            Timber.e(ioe.getMessage());
         }
         */
 
@@ -700,7 +707,7 @@ public class StoryPathLibrary extends StoryPath {
             mStoryPathLibrary.setCurrentStoryPath(null);
             mStoryPathLibrary.setCurrentStoryPathFile(currentStoryPathFile.getPath());
         } catch (IOException ioe) {
-            Log.e(TAG, ioe.getMessage());
+            Timber.e(ioe.getMessage());
         }
 
         // prep and serialize top level story
@@ -718,7 +725,7 @@ public class StoryPathLibrary extends StoryPath {
             fos.flush();
             fos.close();
         } catch (IOException ioe) {
-            Log.e(TAG, ioe.getMessage());
+            Timber.e(ioe.getMessage());
         }
 
         // restore links and continue

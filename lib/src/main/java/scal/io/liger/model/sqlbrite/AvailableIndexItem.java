@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import timber.log.Timber;
+
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
 /**

@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -60,7 +62,7 @@ public class IntroCard extends Card {
 
     public ExampleMediaFile getExampleMediaFile() {
         if (exampleMediaPath == null) {
-            Log.d(this.getClass().getName(), "no example media path for card " + this.getId());
+            Timber.d("no example media path for card " + this.getId());
             return null;
         }
 
@@ -79,10 +81,10 @@ public class IntroCard extends Card {
     @Override
     public void copyText(Card card) {
         if (!(card instanceof IntroCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF IntroCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF IntroCard");
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

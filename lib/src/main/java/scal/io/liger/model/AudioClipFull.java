@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 

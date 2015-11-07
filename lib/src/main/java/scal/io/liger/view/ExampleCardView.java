@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -80,13 +82,13 @@ public class ExampleCardView implements DisplayableCard {
             switch(medium) {
                 case Constants.VIDEO:
 
-                    Log.d(TAG, "currently unable to generate thumbnails for video files");
+                    Timber.d("currently unable to generate thumbnails for video files");
 
                     ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
 
                 case Constants.AUDIO:
 
-                    Log.d(TAG, "currently unable to generate thumbnails for audio files");
+                    Timber.d("currently unable to generate thumbnails for audio files");
 
                     ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
 
@@ -94,14 +96,14 @@ public class ExampleCardView implements DisplayableCard {
 
                     if ((mCardModel.getExampleMediaPath() != null) && (mCardModel.getExampleMediaPath().startsWith("http"))) {
 
-                        Log.d(TAG, "generating " + medium + " thumbnail from path " + mCardModel.getExampleMediaPath());
+                        Timber.d("generating " + medium + " thumbnail from path " + mCardModel.getExampleMediaPath());
 
                         Picasso.with(context)
                                 .load(mCardModel.getExampleMediaPath())
                                 .into(ivCardPhoto);
                     } else {
 
-                        Log.d(TAG, "unable to generate " + medium + " thumbnail from path " + mCardModel.getExampleMediaPath());
+                        Timber.d("unable to generate " + medium + " thumbnail from path " + mCardModel.getExampleMediaPath());
 
                         ivCardPhoto.setImageDrawable(mContext.getResources().getDrawable(R.drawable.cliptype_medium));
                     }
@@ -184,7 +186,7 @@ public class ExampleCardView implements DisplayableCard {
                     break;
 
                 default:
-                    Log.w(TAG, "Unknown medium " + medium);
+                    Timber.w("Unknown medium " + medium);
                     break;
             }
         }

@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

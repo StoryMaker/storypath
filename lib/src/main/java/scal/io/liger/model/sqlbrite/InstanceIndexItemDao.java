@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import timber.log.Timber;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
@@ -102,7 +104,7 @@ public class InstanceIndexItemDao extends Dao {
                 rowId = insert(InstanceIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_IGNORE);
             }
         } catch (SQLiteConstraintException sce) {
-            Log.d("RX_DB", "INSERT FAILED: " + sce.getMessage());
+            Timber.d("INSERT FAILED: " + sce.getMessage());
         }
 
         return rowId;
@@ -114,7 +116,7 @@ public class InstanceIndexItemDao extends Dao {
 
         if (item.getStoryPathPrerequisites() != null) {
             sppString = item.getStoryPathPrerequisites().toString();
-            Log.d("RX_DB", "WHAT DOES THIS LOOK LIKE? " + sppString);
+            Timber.d("WHAT DOES THIS LOOK LIKE? " + sppString);
         }
 
         return addInstanceIndexItem(r.nextLong(),

@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 /**
  * Created by mnbogner on 2/19/15.
  */

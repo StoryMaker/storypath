@@ -1,5 +1,7 @@
 package scal.io.liger.adapter;
 
+import timber.log.Timber;
+
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -95,7 +97,7 @@ public class AudioSelectAdapter extends RecyclerView.Adapter<AudioSelectAdapter.
 
         MediaFile mf = mStoryPathLibrary.getMediaFile(audio.getUuid());
         if (mf == null) {
-            Log.e(this.getClass().getName(), "no media file was found");
+            Timber.e("no media file was found");
         } else {
             mf.loadThumbnail(viewHolder.thumbnail);
         }
