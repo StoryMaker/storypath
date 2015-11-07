@@ -1,5 +1,7 @@
 package scal.io.liger.adapter;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
@@ -130,7 +132,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
         MediaFile mf = ccm.getSelectedMediaFile();
         if (mf == null) {
-            Log.e(this.getClass().getName(), "no media file was found");
+            Timber.e("no media file was found");
         } else {
             mf.loadThumbnail(viewHolder.thumbnail);
         }

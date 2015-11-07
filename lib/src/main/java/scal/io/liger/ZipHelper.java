@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 
 import android.content.Context;
 import android.os.Environment;
@@ -73,7 +75,7 @@ public class ZipHelper {
         ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(fileName);
 
         if (expansionIndexItem == null) {
-            Log.e("DIRECTORIES", "FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + fileName);
+            Timber.e("FAILED TO LOCATE EXPANSION INDEX ITEM FOR " + fileName);
             return null;
         }
 
@@ -106,7 +108,7 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + getExpansionZipFilename(ctx, mainOrPatch, version));
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND " + mainOrPatch + " " + version + " IN OBB DIRECTORY: " + checkFile.getPath());
+                    Timber.d("FOUND " + mainOrPatch + " " + version + " IN OBB DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
@@ -117,13 +119,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + getExpansionZipFilename(ctx, mainOrPatch, version));
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND " + mainOrPatch + " " + version + " IN FILES DIRECTORY: " + checkFile.getPath());
+                    Timber.d("FOUND " + mainOrPatch + " " + version + " IN FILES DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        Log.e("DIRECTORIES", mainOrPatch + " " + version + " NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
+        Timber.e(mainOrPatch + " " + version + " NOT FOUND IN OBB DIRECTORY OR FILES DIRECTORY");
         return null;
     }
 
@@ -142,13 +144,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + fileName);
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND " + fileName + " IN DIRECTORY: " + checkFile.getPath());
+                    Timber.d("FOUND " + fileName + " IN DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        Log.e("DIRECTORIES", fileName + " NOT FOUND");
+        Timber.e(fileName + " NOT FOUND");
         return null;
     }
 
@@ -166,13 +168,13 @@ public class ZipHelper {
             if (checkDir.isDirectory() || checkDir.mkdirs()) {
                 File checkFile = new File(checkPath + fileName);
                 if (checkFile.exists()) {
-                    Log.d("DIRECTORIES", "FOUND " + fileName + " IN DIRECTORY: " + checkFile.getPath());
+                    Timber.d("FOUND " + fileName + " IN DIRECTORY: " + checkFile.getPath());
                     return checkPath;
                 }
             }
         }
 
-        Log.e("DIRECTORIES", fileName + " NOT FOUND");
+        Timber.e(fileName + " NOT FOUND");
         return null;
     }
 
@@ -187,7 +189,7 @@ public class ZipHelper {
 
             return resourceFile;
         } catch (IOException ioe) {
-            Log.e(" *** TESTING *** ", "Could not open resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+            Timber.e("Could not open resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             return null;
         }
     }
@@ -205,15 +207,15 @@ public class ZipHelper {
                 // if not already appended, don't bother to append -en
                 if (!"en".equals(language)) {
                     localizedFilePath = path.substring(0, path.lastIndexOf(".")) + "-" + language + path.substring(path.lastIndexOf("."));
-                    Log.d("LANGUAGE", "getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
+                    Timber.d("getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
                 } else {
-                    Log.d("LANGUAGE", "getFileInputStream() - TRYING PATH: " + localizedFilePath);
+                    Timber.d("getFileInputStream() - TRYING PATH: " + localizedFilePath);
                 }
             } else {
-                Log.d("LANGUAGE", "getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
+                Timber.d("getFileInputStream() - TRYING LOCALIZED PATH: " + localizedFilePath);
             }
         } else {
-            Log.d("LANGUAGE", "getFileInputStream() - TRYING PATH: " + localizedFilePath);
+            Timber.d("getFileInputStream() - TRYING PATH: " + localizedFilePath);
         }
 
         InputStream fileStream = getFileInputStream(localizedFilePath, context);
@@ -222,7 +224,7 @@ public class ZipHelper {
         if (fileStream == null) {
             if (localizedFilePath.contains("-")) {
                 localizedFilePath = localizedFilePath.substring(0, localizedFilePath.lastIndexOf("-")) + localizedFilePath.substring(localizedFilePath.lastIndexOf("."));
-                Log.d("LANGUAGE", "getFileInputStream() - NO RESULT WITH LOCALIZED PATH, TRYING DEFAULT PATH: " + localizedFilePath);
+                Timber.d("getFileInputStream() - NO RESULT WITH LOCALIZED PATH, TRYING DEFAULT PATH: " + localizedFilePath);
                 fileStream = ZipHelper.getFileInputStream(localizedFilePath, context);
             }
         } else {
@@ -230,7 +232,7 @@ public class ZipHelper {
         }
 
         if (fileStream == null) {
-            Log.d("LANGUAGE", "getFileInputStream() - NO RESULT WITH DEFAULT PATH: " + localizedFilePath);
+            Timber.d("getFileInputStream() - NO RESULT WITH DEFAULT PATH: " + localizedFilePath);
         } else {
             return fileStream;
         }
@@ -296,22 +298,22 @@ public class ZipHelper {
             if (mainFile.exists() && (mainFile.length() > 0)) {
                 expansionPaths.add(mainFile.getPath());
             } else {
-                Log.e("ZIP", mainFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
+                Timber.e(mainFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
             }
 
             if (Constants.PATCH_VERSION > 0) {
 
                 // if the main file is newer than the patch file, do not apply a patch file
                 if (Constants.PATCH_VERSION < Constants.MAIN_VERSION) {
-                    Log.d("ZIP", "PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                    Timber.d("PATCH VERSION " + Constants.PATCH_VERSION + " IS OUT OF DATE (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
                 } else {
-                    Log.d("ZIP", "APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
+                    Timber.d("APPLYING PATCH VERSION " + Constants.PATCH_VERSION + " (MAIN VERSION IS " + Constants.MAIN_VERSION + ")");
 
                     File patchFile = new File(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
                     if (patchFile.exists() && (patchFile.length() > 0)) {
                         expansionPaths.add(patchFile.getPath());
                     }else {
-                        Log.e("ZIP", patchFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
+                        Timber.e(patchFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
                     }
                 }
 
@@ -323,7 +325,7 @@ public class ZipHelper {
             if (context instanceof MainActivity) {
                 dao = ((MainActivity)context).getInstalledIndexItemDao(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
             } else {
-                Log.e(TAG, "NO DAO IN getExpansionPaths");
+                Timber.e("NO DAO IN getExpansionPaths");
             }
 
             // add 3rd party stuff
@@ -336,7 +338,7 @@ public class ZipHelper {
             for (String orderNumber : orderNumbers) {
                 scal.io.liger.model.sqlbrite.ExpansionIndexItem item = expansionIndex.get(orderNumber);
                 if (item == null) {
-                    Log.d("ZIP", "EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
+                    Timber.d("EXPANSION FILE ENTRY MISSING AT PATCH ORDER NUMBER " + orderNumber);
                 } else {
 
                     // construct name
@@ -348,7 +350,7 @@ public class ZipHelper {
                     // should be able to do this locally
                     // if (DownloadHelper.checkExpansionFiles(context, fileName)) {
                     if (checkFile.exists() && (checkFile.length() > 0)) {
-                        Log.d("ZIP", "EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
+                        Timber.d("EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
                         expansionPaths.add(checkFile.getPath());
 
                         if ((item.getPatchFileVersion() != null) &&
@@ -363,14 +365,14 @@ public class ZipHelper {
                             // should be able to do this locally
                             // if (DownloadHelper.checkExpansionFiles(context, patchName)) {
                             if (checkFile.exists() && (checkFile.length() > 0)) {
-                                Log.d("ZIP", "EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
+                                Timber.d("EXPANSION FILE " + checkFile.getPath() + " FOUND, ADDING TO ZIP");
                                 expansionPaths.add(checkFile.getPath());
                             } else {
-                                Log.e("ZIP", checkFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
+                                Timber.e(checkFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
                             }
                         }
                     } else {
-                        Log.e("ZIP", checkFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
+                        Timber.e(checkFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
                     }
                 }
             }
@@ -409,7 +411,7 @@ public class ZipHelper {
                 }
             }
         } else {
-            Log.e(TAG, "could not find a dao to access the installed item list in the db");
+            Timber.e("could not find a dao to access the installed item list in the db");
         }
 
         return null;
@@ -434,14 +436,14 @@ public class ZipHelper {
 
         for (String expansionPath : allExpansionPaths) {
             if (expansionPath.contains(parts[1])) {
-                Log.d("PATCHING", "FOUND MATCH FOR " + parts[1] + " IN PATH " + expansionPath);
+                Timber.d("FOUND MATCH FOR " + parts[1] + " IN PATH " + expansionPath);
                 targetExpansionPaths.add(expansionPath);
             }
         }
 
         // this shouldn't happen...
         if (targetExpansionPaths.size() == 0) {
-            Log.d("PATCHING", "NO MATCHES FOR " + parts[1] + ", USING ALL PATHS");
+            Timber.d("NO MATCHES FOR " + parts[1] + ", USING ALL PATHS");
             targetExpansionPaths = allExpansionPaths;
         }
 
@@ -451,7 +453,7 @@ public class ZipHelper {
             paths.append(", ");
         }
         paths.delete(paths.length()-2, paths.length());
-        Log.d(TAG, String.format("Searching for %s in %s", path, paths));
+        Timber.d(String.format("Searching for %s in %s", path, paths));
 
         return getFileInputStreamFromFiles(targetExpansionPaths, path, context);
     }
@@ -478,13 +480,13 @@ public class ZipHelper {
             InputStream resourceStream = resourceFile.getInputStream(filePath);
 
             if (resourceStream == null) {
-                Log.d(" *** TESTING *** ", "Could not find file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+                Timber.d("Could not find file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             } else {
-                Log.d(" *** TESTING *** ", "Found file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+                Timber.d("Found file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             }
             return resourceStream;
         } catch (IOException ioe) {
-            Log.e(" *** TESTING *** ", "Could not find file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
+            Timber.e("Could not find file " + filePath + " within resource file (main version " + Constants.MAIN_VERSION + ", patch version " + Constants.PATCH_VERSION + ")");
             return null;
         }
     }
@@ -504,19 +506,19 @@ public class ZipHelper {
         try {
             if (tempFile.exists()) {
                 tempFile.delete();
-                Log.d(" *** TESTING *** ", "Deleted temp file " + tempFile.getPath());
+                Timber.d("Deleted temp file " + tempFile.getPath());
             }
             tempFile.createNewFile();
-            Log.d(" *** TESTING *** ", "Made temp file " + tempFile.getPath());
+            Timber.d("Made temp file " + tempFile.getPath());
         } catch (IOException ioe) {
-            Log.e(" *** TESTING *** ", "Failed to clean up existing temp file " + tempFile.getPath() + ", " + ioe.getMessage());
+            Timber.e("Failed to clean up existing temp file " + tempFile.getPath() + ", " + ioe.getMessage());
             return null;
         }
 
         InputStream zipInput = getFileInputStream(path, context);
 
         if (zipInput == null) {
-            Log.e(" *** TESTING *** ", "Failed to open input stream for " + path + " in .zip file");
+            Timber.e("Failed to open input stream for " + path + " in .zip file");
             return null;
         }
 
@@ -529,13 +531,13 @@ public class ZipHelper {
             }
             tempOutput.close();
             zipInput.close();
-            Log.d(" *** TESTING *** ", "Wrote temp file " + tempFile.getPath());
+            Timber.d("Wrote temp file " + tempFile.getPath());
         } catch (IOException ioe) {
-            Log.e(" *** TESTING *** ", "Failed to write to temp file " + tempFile.getPath() + ", " + ioe.getMessage());
+            Timber.e("Failed to write to temp file " + tempFile.getPath() + ", " + ioe.getMessage());
             return null;
         }
 
-        Log.e(" *** TESTING *** ", "Created temp file " + tempFile.getPath());
+        Timber.e("Created temp file " + tempFile.getPath());
 
         return tempFile;
     }

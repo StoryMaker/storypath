@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.util.Log;
 
 import com.google.gson.annotations.Expose;
@@ -60,10 +62,10 @@ public class TipCard extends MarkdownCard {
     @Override
     public void copyText(Card card) {
         if (!(card instanceof TipCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF TipCard");
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

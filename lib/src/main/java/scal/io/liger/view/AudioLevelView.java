@@ -16,6 +16,8 @@
 
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -97,7 +99,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
      */
     public void notifyNewAmplitude(int newAmplitude) {
         if (mHandler == null) {
-            Log.w(TAG, "amplitude added but handler is null. Did the containing view get recycled?");
+            Timber.w("amplitude added but handler is null. Did the containing view get recycled?");
             return;
         }
         mHandler.sendMessage(mHandler.obtainMessage(RenderHandler.NOTIFY_NEW_AUDIO_LEVEL, newAmplitude));
@@ -107,7 +109,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
      * For use by mHandler.
      */
     private void _notifyNewAmplitude(int maxAmplitude) {
-        // Log.d(TAG, String.format("_updateAudioData with amplitude %d normalized %f", maxAmplitude, (maxAmplitude / MAX_AMPLITUDE_TO_DRAW)));
+        // Timber.d(String.format("_updateAudioData with amplitude %d normalized %f", maxAmplitude, (maxAmplitude / MAX_AMPLITUDE_TO_DRAW)));
 
         // We want to keep a small amount of history in the view to provide a nice fading effect.
         // We use a linked list that we treat as a queue for this.
@@ -118,7 +120,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
         mAudioData.addLast(maxAmplitude);
 
         final Canvas canvas = lockCanvas();
-        //Log.d(TAG, "Canvas accelerated? " + canvas.isHardwareAccelerated());
+        //Timber.d("Canvas accelerated? " + canvas.isHardwareAccelerated());
         drawWaveform(canvas);
         unlockCanvasAndPost(canvas);
     }
@@ -165,7 +167,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
             brightness += brightDelta;
             lastX += pixelsPerSample;
         }
-        if (VERBOSE) Log.d(TAG, "Drew waveform in " + (System.currentTimeMillis() - startTime) + " ms");
+        if (VERBOSE) Timber.d("Drew waveform in " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override
@@ -209,7 +211,7 @@ public class AudioLevelView extends TextureView implements TextureView.SurfaceTe
         public void handleMessage (Message msg) {
             AudioLevelView view = weakView.get();
             if (view == null) {
-                Log.w(TAG, "RenderHandler.handleMessage: view is null");
+                Timber.w("RenderHandler.handleMessage: view is null");
                 return;
             }
 

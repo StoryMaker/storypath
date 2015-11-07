@@ -1,5 +1,7 @@
 package scal.io.liger.popup;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Rect;

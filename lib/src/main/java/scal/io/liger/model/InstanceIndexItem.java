@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -139,9 +141,9 @@ public class InstanceIndexItem extends BaseIndexItem {
 
             // if no string was loaded, cannot continue
             if (jsonString == null) {
-                Log.e("INDEX", "json could not be loaded from " + libraryToDelete.getPath());
+                Timber.e("json could not be loaded from " + libraryToDelete.getPath());
                 // delete existing file anyway
-                Log.d("INDEX", "DELETING STORY LIBRARY INSTANCE " + libraryToDelete.getName());
+                Timber.d("DELETING STORY LIBRARY INSTANCE " + libraryToDelete.getName());
                 libraryToDelete.delete();
                 return;
             }
@@ -159,7 +161,7 @@ public class InstanceIndexItem extends BaseIndexItem {
                         File f1 = new File(mediaFile.getPath());
 
                         if (f1.exists()) {
-                            Log.d("INDEX", "DELETING STORY MEDIA FILE " + f1.getPath());
+                            Timber.d("DELETING STORY MEDIA FILE " + f1.getPath());
                             f1.delete();
                         }
 
@@ -168,7 +170,7 @@ public class InstanceIndexItem extends BaseIndexItem {
                             File f2 = new File(mediaFile.getThumbnailFilePath());
 
                             if (f2.exists()) {
-                                Log.d("INDEX", "DELETING STORY MEDIA THUMBNAIL " + f2.getPath());
+                                Timber.d("DELETING STORY MEDIA THUMBNAIL " + f2.getPath());
                                 f2.delete();
                             }
                         }
@@ -184,12 +186,12 @@ public class InstanceIndexItem extends BaseIndexItem {
                 File pathToDelete = new File(spl.getCurrentStoryPathFile());
 
                 if (pathToDelete.exists()) {
-                    Log.d("INDEX", "DELETING STORY PATH INSTANCE " + pathToDelete.getName());
+                    Timber.d("DELETING STORY PATH INSTANCE " + pathToDelete.getName());
                     pathToDelete.delete();
                 }
             }
 
-            Log.d("INDEX", "DELETING STORY LIBRARY INSTANCE " + libraryToDelete.getName());
+            Timber.d("DELETING STORY LIBRARY INSTANCE " + libraryToDelete.getName());
             libraryToDelete.delete();
         }
     }

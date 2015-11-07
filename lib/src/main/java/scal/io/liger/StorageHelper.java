@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -35,7 +37,7 @@ public class StorageHelper {
 
             // can't use this method for older versions, just use existing method
 
-            // Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", USING OLD METHOD: " + context.getExternalFilesDir(null).getPath());
+            // Timber.d("VERSION " + Build.VERSION.SDK_INT + ", USING OLD METHOD: " + context.getExternalFilesDir(null).getPath());
 
             storageState = 1;
 
@@ -70,23 +72,23 @@ public class StorageHelper {
         }
 
         if (returnValue == null) {
-            Log.e("STORAGE_ERROR", "EXTERNAL FILES DIRECTORY IS NULL (STORAGE IS UNAVAILABLE)");
+            Timber.e("EXTERNAL FILES DIRECTORY IS NULL (STORAGE IS UNAVAILABLE)");
 
             switch (storageState) {
                 case 1:
-                    Log.e("STORAGE_ERROR", "PRE-JELLYBEAN BUILD " + Build.VERSION.SDK_INT + " FOUND SO INTERNAL STORAGE MUST BE USED");
+                    Timber.e("PRE-JELLYBEAN BUILD " + Build.VERSION.SDK_INT + " FOUND SO INTERNAL STORAGE MUST BE USED");
                     break;
                 case 2:
-                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND BUT USER SELECTED INTERNAL STORAGE");
+                    Timber.e(storageCount + " EXTERNAL STORAGE OPTIONS FOUND BUT USER SELECTED INTERNAL STORAGE");
                     break;
                 case 3:
-                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND AND USER SELECTED EXTERNAL STORAGE");
+                    Timber.e(storageCount + " EXTERNAL STORAGE OPTIONS FOUND AND USER SELECTED EXTERNAL STORAGE");
                     break;
                 case 4:
-                    Log.e("STORAGE_ERROR", storageCount + " EXTERNAL STORAGE OPTIONS FOUND SO INTERNAL STORAGE MUST BE USED");
+                    Timber.e(storageCount + " EXTERNAL STORAGE OPTIONS FOUND SO INTERNAL STORAGE MUST BE USED");
                     break;
                 default:
-                    Log.e("STORAGE_ERROR", "UNEXPECTED STATE");
+                    Timber.e("UNEXPECTED STATE");
                     break;
             }
         }
@@ -102,7 +104,7 @@ public class StorageHelper {
 
         if (!currentPath.contains(actualPath)) {
 
-            Log.d("SDCARD", currentPath + " MUST BE UPDATED -> " + actualPath);
+            Timber.d(currentPath + " MUST BE UPDATED -> " + actualPath);
 
             return actualPath + currentPath.substring(currentPath.lastIndexOf(File.separator));
 
@@ -119,7 +121,7 @@ public class StorageHelper {
 
             // can't use this method for older versions, so no point in migrating
 
-            Log.e("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", CAN'T DETERMINE EXTERNAL PATH FOR MIGRATION");
+            Timber.e("VERSION " + Build.VERSION.SDK_INT + ", CAN'T DETERMINE EXTERNAL PATH FOR MIGRATION");
 
             return false;
 
@@ -131,7 +133,7 @@ public class StorageHelper {
 
             if (externalFilesDirs.length > 1) {
 
-                Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", MIGRATING FILES TO EXTERNAL PATH " + externalFilesDirs[1].getPath());
+                Timber.d("VERSION " + Build.VERSION.SDK_INT + ", MIGRATING FILES TO EXTERNAL PATH " + externalFilesDirs[1].getPath());
 
                 return moveFromHereToThere(externalFilesDirs[0], externalFilesDirs[1]);
 
@@ -139,7 +141,7 @@ public class StorageHelper {
 
                 // no external directories available, so no point in migrating
 
-                Log.e("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", NO EXTERNAL PATH FOR MIGRATION");
+                Timber.e("VERSION " + Build.VERSION.SDK_INT + ", NO EXTERNAL PATH FOR MIGRATION");
 
                 return false;
 
@@ -157,7 +159,7 @@ public class StorageHelper {
 
             // can't use this method for older versions, so no point in migrating
 
-            Log.e("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", CAN'T DETERMINE EXTERNAL PATH FOR MIGRATION");
+            Timber.e("VERSION " + Build.VERSION.SDK_INT + ", CAN'T DETERMINE EXTERNAL PATH FOR MIGRATION");
 
             return false;
 
@@ -171,7 +173,7 @@ public class StorageHelper {
 
                 // TODO: actually migrate files
 
-                Log.d("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", MIGRATING FILES TO INTERNAL PATH " + externalFilesDirs[0].getPath());
+                Timber.d("VERSION " + Build.VERSION.SDK_INT + ", MIGRATING FILES TO INTERNAL PATH " + externalFilesDirs[0].getPath());
 
                 return moveFromHereToThere(externalFilesDirs[1], externalFilesDirs[0]);
 
@@ -179,7 +181,7 @@ public class StorageHelper {
 
                 // no external directories available, so no point in migrating
 
-                Log.e("SDCARD", "VERSION " + Build.VERSION.SDK_INT + ", NO EXTERNAL PATH FOR MIGRATION");
+                Timber.e("VERSION " + Build.VERSION.SDK_INT + ", NO EXTERNAL PATH FOR MIGRATION");
 
                 return false;
 
@@ -190,21 +192,21 @@ public class StorageHelper {
     private static boolean moveFromHereToThere(File source, File destination) {
 
         if (!source.exists()) {
-            Log.e("SDCARD", "SOURCE DIRECTORY " + source.getPath() + " DOES NOT EXIST");
+            Timber.e("SOURCE DIRECTORY " + source.getPath() + " DOES NOT EXIST");
             return false;
         }
 
         try {
             FileUtils.copyDirectory(source, destination, true);
         } catch (IOException ioe) {
-            Log.e("SDCARD", "FAILED TO COPY " + source.getPath() + " - " + ioe.getMessage());
+            Timber.e("FAILED TO COPY " + source.getPath() + " - " + ioe.getMessage());
             return false;
         }
 
         try {
             FileUtils.deleteDirectory(source);
         } catch (IOException ioe) {
-            Log.e("SDCARD", "FAILED TO DELETE " + source.getPath() + " - " + ioe.getMessage());
+            Timber.e("FAILED TO DELETE " + source.getPath() + " - " + ioe.getMessage());
             return false;
         }
 

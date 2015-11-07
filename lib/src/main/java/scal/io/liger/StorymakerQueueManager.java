@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -40,21 +42,21 @@ public class StorymakerQueueManager {
         loadQueue(context, dao); // fills cached queue
 
         if (cachedQueries.contains(queueFile)) {
-            Log.d("QUEUE", "QUEUE ITEM IS " + queueFile + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
+            Timber.d("QUEUE ITEM IS " + queueFile + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
 
             return DUPLICATE_QUERY;
         } else {
-            Log.d("QUEUE", "ADDING CACHED QUERY FOR " + queueFile);
+            Timber.d("ADDING CACHED QUERY FOR " + queueFile);
 
             cachedQueries.add(queueFile);
         }
 
         for (Long queueId : cachedQueue.keySet()) {
 
-            Log.d("QUEUE", "QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile);
+            Timber.d("QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile);
 
             if (queueFile.equals(cachedQueue.get(queueId).getQueueFile())) {
-                Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
+                Timber.d("QUEUE ITEM FOR " + queueFile + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
 
                 cachedQueries.remove(queueFile);
 
@@ -62,7 +64,7 @@ public class StorymakerQueueManager {
             }
         }
 
-        Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile + " NOT FOUND");
+        Timber.d("QUEUE ITEM FOR " + queueFile + " NOT FOUND");
 
         return null;
     }
@@ -73,11 +75,11 @@ public class StorymakerQueueManager {
 
     public static synchronized void checkQueueFinished(Context context, String queueFile) {
 
-        Log.d("QUEUE", "LOOKING FOR CACHED QUERY FOR " + queueFile);
+        Timber.d("LOOKING FOR CACHED QUERY FOR " + queueFile);
 
         // done checking queue for item, remove temp item
         if (cachedQueries.contains(queueFile)) {
-            Log.d("QUEUE", "REMOVING CACHED QUERY FOR " + queueFile);
+            Timber.d("REMOVING CACHED QUERY FOR " + queueFile);
 
             cachedQueries.remove(queueFile);
         }
@@ -122,12 +124,12 @@ public class StorymakerQueueManager {
 
         // we have an actual entry for the item now, remove temp item
         if (cachedQueries.contains(queueFile)) {
-            Log.d("QUEUE", "REMOVING CACHED QUERY FOR " + queueFile);
+            Timber.d("REMOVING CACHED QUERY FOR " + queueFile);
 
             cachedQueries.remove(queueFile);
         }
 
-        Log.d("QUEUE", "PUT " + queueId + " IN QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
+        Timber.d("PUT " + queueId + " IN QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 
         saveQueue(context, cachedQueue, downloadQueueName, dao);
         return;
@@ -148,7 +150,7 @@ public class StorymakerQueueManager {
             // need to actually delete item from db (saving updated list will not remove it)
             dao.removeQueueItem(removedItem);
 
-            Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
+            Timber.d("REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 
             saveQueue(context, cachedQueue, downloadQueueName, dao);
             return true;

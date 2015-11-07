@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -103,7 +105,7 @@ public class Story {
     // need to determine whether to automatically delete files when they are no longer referenced
     public void deleteMediaFile(String uuid) {
         if ((mediaFiles == null) || (!mediaFiles.keySet().contains(uuid))) {
-            Log.e(this.getClass().getName(), "key was not found, cannot delete file");
+            Timber.e("key was not found, cannot delete file");
             return;
         }
 
@@ -134,9 +136,9 @@ public class Story {
             // NOT YET SURE HOW TO HANDLE VERSIONS OR DUPLICATES
             this.addStoryPathInstanceFile(oldPathFile.getPath());
         } catch (FileNotFoundException fnfe) {
-            Log.e(this.getClass().getName(), "could not file file: " + fnfe.getMessage());
+            Timber.e("could not file file: " + fnfe.getMessage());
         } catch (Exception e) {
-            Log.e(this.getClass().getName(), "other exception: " + e.getMessage());
+            Timber.e("other exception: " + e.getMessage());
         }
 
         // import clip metadata

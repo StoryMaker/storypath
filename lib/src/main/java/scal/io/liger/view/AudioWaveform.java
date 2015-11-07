@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -56,10 +58,10 @@ public class AudioWaveform {
 
             short[] audioOuput = decodeToMemory(path, BITMAP_WIDTH);
             drawWaveform(canvas, paint, audioOuput);
-            if (VERBOSE) Log.d(TAG, String.format("Decoded %d audio samples in %d ms", audioOuput.length, System.currentTimeMillis() - startTime));
+            if (VERBOSE) Timber.d(String.format("Decoded %d audio samples in %d ms", audioOuput.length, System.currentTimeMillis() - startTime));
             return bitmap;
         } catch (IOException | IllegalArgumentException e) {
-            Log.w(TAG, String.format("Unable to generate waveform for %s. Is it an Android-friendly audio file with only 1 track?", path));
+            Timber.w(String.format("Unable to generate waveform for %s. Is it an Android-friendly audio file with only 1 track?", path));
             e.printStackTrace();
         }
         return null;
@@ -98,19 +100,19 @@ public class AudioWaveform {
         int shortsPerSample = 1;          // How many shorts to take from each sample to hit targetSamples
         if (format.containsKey(MediaFormat.KEY_SAMPLE_RATE)) {
             sampleRate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
-            if (VERBOSE) Log.d(TAG, "prelim output has sample rate " + sampleRate);
+            if (VERBOSE) Timber.d("prelim output has sample rate " + sampleRate);
         } else {
             throw new IOException("MediaFormat has no sample rate parameter");
         }
         if (format.containsKey(MediaFormat.KEY_DURATION)) {
             usDuration = format.getLong(MediaFormat.KEY_DURATION);
-            if (VERBOSE) Log.d(TAG, "prelim output has duration " + usDuration);
+            if (VERBOSE) Timber.d("prelim output has duration " + usDuration);
         } else {
             throw new IOException("MediaFormat has no duration parameter");
         }
         File f = new File(path);
         fileSize = f.length();
-        if (VERBOSE) Log.d(TAG, "Got audio size " + fileSize);
+        if (VERBOSE) Timber.d("Got audio size " + fileSize);
         codec = MediaCodec.createDecoderByType(mime);
         codec.configure(format, null /* surface */, null /* crypto */, 0 /* flags */);
         codec.start();
@@ -133,26 +135,26 @@ public class AudioWaveform {
                             extractor.readSampleData(dstBuf, 0 /* offset */);
                     long presentationTimeUs = 0;
                     if (sampleSize < 0) {
-                        if (VERBOSE) Log.d(TAG, "saw input EOS.");
+                        if (VERBOSE) Timber.d("saw input EOS.");
                         sawInputEOS = true;
                         sampleSize = 0;
                     } else {
 
                         presentationTimeUs = extractor.getSampleTime();
-                        if (VERBOSE) Log.d(TAG, "Sample size is " + sampleSize);
+                        if (VERBOSE) Timber.d("Sample size is " + sampleSize);
                         if (usSeekInterval == -1) {
-                            if (VERBOSE) Log.d(TAG, "Estimated bit rate : " + sampleSize * sampleRate);
+                            if (VERBOSE) Timber.d("Estimated bit rate : " + sampleSize * sampleRate);
                             int numExpectedSamples = (int) ((.9f * fileSize) / sampleSize);
                             numSamplesToSeek = (int) (((float) numExpectedSamples) / targetSamples);
                             usSeekInterval = (long) (usDuration * (((float)numSamplesToSeek) / numExpectedSamples));
 
                             if (numSamplesToSeek == 0) shortsPerSample = (int) Math.ceil((double) targetSamples / numExpectedSamples);
 
-                            if (VERBOSE) Log.d(TAG, String.format("expected samples %d. usSeekInterval %d us. shortsPerSample %d",
+                            if (VERBOSE) Timber.d(String.format("expected samples %d. usSeekInterval %d us. shortsPerSample %d",
                                                                   numExpectedSamples, usSeekInterval, shortsPerSample));
                         }
                         else if (usSeekInterval > 0) {
-                            if (VERBOSE) Log.d(TAG, "Seeking to " + usSeekInterval * samplesQueuedForDecoding);
+                            if (VERBOSE) Timber.d("Seeking to " + usSeekInterval * samplesQueuedForDecoding);
                             extractor.seekTo(usSeekInterval * samplesQueuedForDecoding, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
                         }
                     }
@@ -170,7 +172,7 @@ public class AudioWaveform {
             }
             int res = codec.dequeueOutputBuffer(info, kTimeOutUs);
             if (res >= 0) {
-                //Log.d(TAG, "got frame, size " + info.size + "/" + info.presentationTimeUs);
+                //Timber.d("got frame, size " + info.size + "/" + info.presentationTimeUs);
                 if (info.size > 0) {
                     noOutputCounter = 0;
                 }
@@ -189,24 +191,24 @@ public class AudioWaveform {
                 }
                 codec.releaseOutputBuffer(outputBufIndex, false /* render */);
                 if ((info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                    if (VERBOSE) Log.d(TAG, "saw output EOS.");
+                    if (VERBOSE) Timber.d("saw output EOS.");
                     sawOutputEOS = true;
                 }
             } else if (res == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
                 codecOutputBuffers = codec.getOutputBuffers();
-                if (VERBOSE) Log.d(TAG, "output buffers have changed.");
+                if (VERBOSE) Timber.d("output buffers have changed.");
             } else if (res == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                 MediaFormat oformat = codec.getOutputFormat();
-                if (VERBOSE) Log.d(TAG, "output format has changed to " + oformat);
+                if (VERBOSE) Timber.d("output format has changed to " + oformat);
             } else {
-                if (VERBOSE) Log.d(TAG, "dequeueOutputBuffer returned " + res);
+                if (VERBOSE) Timber.d("dequeueOutputBuffer returned " + res);
             }
         }
         codec.stop();
         codec.release();
         // trim unused space due to estimation error
         if (decodedIdx < decoded.length) decoded = Arrays.copyOf(decoded, decodedIdx);
-        if (VERBOSE) Log.d(TAG, "Decoded " + decodedIdx + " samples");
+        if (VERBOSE) Timber.d("Decoded " + decodedIdx + " samples");
         return decoded;
     }
 

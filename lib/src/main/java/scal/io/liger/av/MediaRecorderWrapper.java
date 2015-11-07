@@ -1,5 +1,7 @@
 package scal.io.liger.av;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.media.MediaRecorder;
 import android.support.annotation.NonNull;
@@ -56,7 +58,7 @@ public class MediaRecorderWrapper {
 
     public boolean startRecording() {
         if (mRecorder == null || mRecording) {
-            Log.w(TAG, "startRecording called in invalid state");
+            Timber.w("startRecording called in invalid state");
             return false;
         }
         try {
@@ -67,7 +69,7 @@ public class MediaRecorderWrapper {
             mRecorder.start();
             mRecording = true;
         } catch (IOException e) {
-            Log.e(TAG, "prepare() failed");
+            Timber.e("prepare() failed");
             e.printStackTrace();
             return false;
         }
@@ -76,7 +78,7 @@ public class MediaRecorderWrapper {
 
     public @Nullable MediaFile stopRecording() {
         if (mRecorder == null || !mRecording) {
-            Log.w(TAG, "stopRecording called in invalid state");
+            Timber.w("stopRecording called in invalid state");
             return null;
         }
         mRecorder.stop();
@@ -101,7 +103,7 @@ public class MediaRecorderWrapper {
 
     public void release() {
         if (mRecorder == null) {
-            Log.w(TAG, "release called in invalid state");
+            Timber.w("release called in invalid state");
             return;
         }
         mRecorder.release();
@@ -110,7 +112,7 @@ public class MediaRecorderWrapper {
 
     public int getMaxAmplitude() {
         if (mRecorder == null || !mRecording) {
-            if (VERBOSE) Log.w(TAG, "getMaxAmplitude called in invalid state");
+            if (VERBOSE) Timber.w("getMaxAmplitude called in invalid state");
             return 0;
         }
         return mRecorder.getMaxAmplitude();

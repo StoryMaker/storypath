@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -113,7 +115,7 @@ public class ClipCardView extends ExampleCardView {
                 try {
                     photoFile = createImageFile();
                 } catch (IOException ex) {
-                    Log.e(TAG, "Unable to make image file");
+                    Timber.e("Unable to make image file");
                     v.post(new Runnable() {
                         @Override
                         public void run() {
@@ -441,7 +443,7 @@ public class ClipCardView extends ExampleCardView {
     private int getClipTypeColor(String clipType) {
         if (clipType == null) {
             // handle nulls (same as default case)
-            Log.d(TAG, "No value found for clipType. (getClipTypeColor)");
+            Timber.d("No value found for clipType. (getClipTypeColor)");
             return mContext.getResources().getColor(R.color.storymaker_highlight);
         } else if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
             return mContext.getResources().getColor(R.color.storymaker_blue);
@@ -461,7 +463,7 @@ public class ClipCardView extends ExampleCardView {
         Drawable drawable;
         if (clipType == null) {
             // handle nulls (same as failure case)
-            Log.d(TAG, "No value found for clipType. (setClipExampleDrawables)");
+            Timber.d("No value found for clipType. (setClipExampleDrawables)");
             drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
             itvClipTypeIcon.setText("{fa-card_capture_photo}");
         } else if (clipType.equalsIgnoreCase(Constants.CHARACTER)) {
@@ -481,7 +483,7 @@ public class ClipCardView extends ExampleCardView {
             itvClipTypeIcon.setText("{fa-ic_clip_place}");
         } else {
             //TODO handle invalid clip type
-            Log.d(TAG, "No clipType matching '" + clipType + "' found.");
+            Timber.d("No clipType matching '" + clipType + "' found.");
             drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher); // FIXME replace with a sensible placeholder image
             itvClipTypeIcon.setText("{fa-card_capture_photo}");
         }
@@ -498,7 +500,7 @@ public class ClipCardView extends ExampleCardView {
         }
 
         if (mediaFile == null) {
-            Log.e(this.getClass().getName(), "no media file was found");
+            Timber.e("no media file was found");
             // Clip has no attached media. Show generic drawable based on clip type
             String clipType = mCardModel.getClipType(); // FIXME why not media.get
 
@@ -510,7 +512,7 @@ public class ClipCardView extends ExampleCardView {
 
                         @Override
                         public void newThumbnailAssigned(File newThumbnail) {
-                            Log.d(TAG, "Notifying StoryPath of newly assigned thumbnail");
+                            Timber.d("Notifying StoryPath of newly assigned thumbnail");
                             // need to update media file in model now that thumbnail is set
                             // being overly cautious to avoid null pointers
                             if ((mCardModel.getStoryPath() != null) &&
@@ -538,7 +540,7 @@ public class ClipCardView extends ExampleCardView {
                                     // shouldn't need to save story path at this point
                                     mCardModel.getStoryPath().getStoryPathLibrary().save(false);
                                 } else {
-                                    Log.w(TAG, "Could not find MediaFile corresponding to newly assigned thumbnail");
+                                    Timber.w("Could not find MediaFile corresponding to newly assigned thumbnail");
                                 }
                             }
                         }
@@ -680,7 +682,7 @@ public class ClipCardView extends ExampleCardView {
                     try {
                         int thisCardIndex = mCardModel.getStoryPath().getCardIndex(mCardModel);
                         if (thisCardIndex == -1) {
-                            Log.w(TAG, "Could not find index of this card in StoryPath or StoryPathLibrary. Cannot duplicate");
+                            Timber.w("Could not find index of this card in StoryPath or StoryPathLibrary. Cannot duplicate");
                             return true;
                         }
                         Card newCard = (Card) mCardModel.clone();
@@ -689,7 +691,7 @@ public class ClipCardView extends ExampleCardView {
                         ((MainActivity) mContext).refreshCardList(); // FIXME this refreshes the list and jumps to the top, which isn't super friendly
                         // TODO Make Card#stateVisiblity true
                     } catch (CloneNotSupportedException e) {
-                        Log.e(TAG, "Failed to clone this ClipCard");
+                        Timber.e("Failed to clone this ClipCard");
                         e.printStackTrace();
                     }
                 } else if (itemId == R.id.menu_duplicate_clip) {
@@ -789,7 +791,7 @@ public class ClipCardView extends ExampleCardView {
             @Override
             public void onViewDetachedFromWindow(View v) {
                 if (mRecorder != null && mRecorder.isRecording()) {
-                    Log.w(TAG, "ClipCardView detached while recording in progress. Recording will be lost.");
+                    Timber.w("ClipCardView detached while recording in progress. Recording will be lost.");
                     mRecorder.stopRecording();
                     mRecorder.release();
                     mCardModel.getStoryPath().getStoryPathLibrary().notifyScrollLockRequested(false, mCardModel);

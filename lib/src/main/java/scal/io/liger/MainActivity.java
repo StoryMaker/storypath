@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -99,7 +101,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     // added for testing
     public void scroll(int position) {
-        Log.d("TEST", "Scrolling to index item " + position);
+        Timber.d("Scrolling to index item " + position);
         mRecyclerView.setCanScroll(true); // is this required?
         mRecyclerView.scrollToPosition(position);
     }
@@ -138,15 +140,15 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         Intent i = getIntent();
         if (i.hasExtra("lang")) {
             language = i.getExtras().getString("lang");
-            Log.d("LANGUAGE", "Found language code " + language + " in intent");
+            Timber.d("Found language code " + language + " in intent");
         } else {
             language = "en";
-            Log.d("LANGUAGE", "Found no language code in intent, defaulting to en");
+            Timber.d("Found no language code in intent, defaulting to en");
         }
 
-        Log.d("MainActivity", "onCreate");
+        Timber.d("onCreate");
         if (savedInstanceState == null) {
-            Log.d(TAG, "onCreate called with no savedInstanceState");
+            Timber.d("onCreate called with no savedInstanceState");
 
             JsonHelper.setupFileStructure(this);
 
@@ -157,9 +159,9 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             // TEMP
             if (instanceIndex.size() > 0) {
-                Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+                Timber.d("ONCREATE - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
             } else {
-                Log.d(TAG, "ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
+                Timber.d("ONCREATE - FOUND INSTANCE INDEX WITH NO ITEMS");
             }
 
             final ActionBar actionBar = getActionBar();
@@ -182,7 +184,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
             } else if (i.hasExtra(INTENT_KEY_STORYPATH_LIBRARY_PATH)) {
                 jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_LIBRARY_PATH);
-                Log.d(TAG, "ONCREATE(NEW) - LOADING " + jsonFilePath + " FROM ZIP FILE");
+                Timber.d("ONCREATE(NEW) - LOADING " + jsonFilePath + " FROM ZIP FILE");
                 json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
             } else if (i.hasExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH)) {
                 jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH);
@@ -202,13 +204,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             // TEMP
             if (instanceIndex.size() > 0) {
-                Log.d(TAG, "ONCREATE(STATE) - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
+                Timber.d("ONCREATE(STATE) - FOUND INSTANCE INDEX WITH " + instanceIndex.size() + " ITEMS");
             } else {
-                Log.d(TAG, "ONCREATE(STATE) - FOUND INSTANCE INDEX WITH NO ITEMS");
+                Timber.d("ONCREATE(STATE) - FOUND INSTANCE INDEX WITH NO ITEMS");
             }
 
             if (savedInstanceState.containsKey("storyPathLibraryJson")) {
-                Log.d(TAG, "LOAD STORY PATH LIBRARY FROM SAVED INSTANCE STATE");
+                Timber.d("LOAD STORY PATH LIBRARY FROM SAVED INSTANCE STATE");
 
                 String jsonSPL = savedInstanceState.getString("storyPathLibraryJson");
 
@@ -216,10 +218,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // fyi: story path (if any) is restored from saved instance, not saved state
                     initFromJson(jsonSPL, "SAVED_STATE");
                 } else {
-                    Log.e(TAG, "SAVED INSTANCE STATE DOES NOT CONTAIN A VALID STORY PATH LIBRARY");
+                    Timber.e("SAVED INSTANCE STATE DOES NOT CONTAIN A VALID STORY PATH LIBRARY");
                 }
             } else {
-                Log.e(TAG, "SAVED INSTANCE STATE DOES NOT CONTAIN STORY PATH LIBRARY");
+                Timber.e("SAVED INSTANCE STATE DOES NOT CONTAIN STORY PATH LIBRARY");
             }
         }
     }
@@ -242,10 +244,10 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.d(TAG, "onSaveInstanceState called");
+        Timber.d("onSaveInstanceState called");
 
         if (mStoryPathLibrary == null) {
-            Log.d(TAG, "data not yet loaded, no state to save");
+            Timber.d("data not yet loaded, no state to save");
         } else {
             outState.putString("storyPathLibraryJson", JsonHelper.serializeStoryPathLibrary(mStoryPathLibrary));
 
@@ -303,13 +305,13 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
         // should not need to insert dependencies into a saved instance or state
         if (jsonPath.contains("instance")) {
-            Log.d(TAG, "INIT FROM SAVED INSTANCE");
+            Timber.d("INIT FROM SAVED INSTANCE");
             referencedFiles = new ArrayList<String>();
         } else if (jsonPath.equals("SAVED_STATE")) {
-            Log.d(TAG, "INIT FROM SAVED STATE");
+            Timber.d("INIT FROM SAVED STATE");
             referencedFiles = new ArrayList<String>();
         } else {
-            Log.d(TAG, "INIT FROM TEMPLATE");
+            Timber.d("INIT FROM TEMPLATE");
             referencedFiles = new ArrayList<String>();
             // referenced instances should be passed in with the intent somehow
             // referencedFiles = JsonHelper.getInstancePaths();
@@ -318,12 +320,12 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 String referencedFilesString = i.getExtras().getString("referenced_files");
                 // support multiple referenced files?
                 String[] referencedFilesArray = referencedFilesString.split(":");
-                Log.d(TAG, "Found " + referencedFilesArray.length + " referenced files in intent");
+                Timber.d("Found " + referencedFilesArray.length + " referenced files in intent");
                 for (String referencedFile : referencedFilesArray) {
                     referencedFiles.add(referencedFile);
                 }
             } else {
-                Log.d(TAG, "Found no referenced files in intent");
+                Timber.d("Found no referenced files in intent");
             }
         }
 
@@ -339,14 +341,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
         // TEMP METADATA CHECK
         /*
-        Log.d("METADATA", "TITLE: " + mStoryPathLibrary.getMetaTitle());
-        Log.d("METADATA", "DESCRIPTION: " + mStoryPathLibrary.getMetaDescription());
-        Log.d("METADATA", "THUMBNAIL: " + mStoryPathLibrary.getMetaThumbnail());
-        Log.d("METADATA", "SECTION: " + mStoryPathLibrary.getMetaSection());
-        Log.d("METADATA", "LOCATION: " + mStoryPathLibrary.getMetaLocation());
+        Timber.d("TITLE: " + mStoryPathLibrary.getMetaTitle());
+        Timber.d("DESCRIPTION: " + mStoryPathLibrary.getMetaDescription());
+        Timber.d("THUMBNAIL: " + mStoryPathLibrary.getMetaThumbnail());
+        Timber.d("SECTION: " + mStoryPathLibrary.getMetaSection());
+        Timber.d("LOCATION: " + mStoryPathLibrary.getMetaLocation());
         if (mStoryPathLibrary.getMetaTags() != null) {
             for (String metaTag : mStoryPathLibrary.getMetaTags()) {
-                Log.d("METADATA", "TAG: " + metaTag);
+                Timber.d("TAG: " + metaTag);
             }
         }
         */
@@ -354,7 +356,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     // MNB - IS THIS METHOD NEEDED?
     public void refreshCardList() {
-    Log.d(TAG, "refreshCardList called");
+    Timber.d("refreshCardList called");
         if (mRecyclerView == null)
             return;
 
@@ -362,7 +364,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
 
     public void setupCardView () {
-        Log.d(TAG, "setupCardView called");
+        Timber.d("setupCardView called");
         if (mRecyclerView == null)
             return;
 
@@ -384,7 +386,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
 
     public void refreshCardViewXXX () {
-        Log.d(TAG, "refreshCardViewXXX called");
+        Timber.d("refreshCardViewXXX called");
         if (mRecyclerView == null) {
             return;
         }
@@ -409,7 +411,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     }
 
     public void goToCard(StoryPath currentPath, String cardPath) throws MalformedJsonException {
-        Log.d(TAG, "goToCard: " + cardPath);
+        Timber.d("goToCard: " + cardPath);
         // assumes the format story::card::field::value
         String[] pathParts = cardPath.split("::");
 
@@ -442,14 +444,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // (not sure it makes sense to add reference to previous path automatically?)
                     ArrayList<String> referencedFiles = new ArrayList<String>();
                     if (currentPath.getSavedFileName() != null) {
-                        Log.d("DEPENDENCIES", "ADDING REFERENCE TO CURRENT PATH " + currentPath.getSavedFileName());
+                        Timber.d("ADDING REFERENCE TO CURRENT PATH " + currentPath.getSavedFileName());
                         referencedFiles.add(currentPath.getSavedFileName());
                     }
 
                     if (currentPath.getDependencies() != null) {
                         for (Dependency currentDependency : currentPath.getDependencies()) {
                             if (currentDependency.getDependencyId().contains("instance")) {
-                                Log.d("DEPENDENCIES", "ADDING REFERENCE TO CURRENT PATH DEPENDENCY " + currentDependency.getDependencyFile());
+                                Timber.d("ADDING REFERENCE TO CURRENT PATH DEPENDENCY " + currentDependency.getDependencyFile());
                                 referencedFiles.add(currentDependency.getDependencyFile());
                             }
                         }
@@ -461,47 +463,47 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                         } else {
                             storyPath = JsonHelper.loadStoryPath(checkPath, mStoryPathLibrary, referencedFiles, this, language);
                         }
-                        Log.d("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                        Timber.d("LOADED FROM FILE: " + dependency.getDependencyFile());
                     } else {
                         if (dependency.getDependencyFile().contains("-library-instance")) {
                             storyPath = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
                         } else {
                             storyPath = JsonHelper.loadStoryPathFromZip(checkPath, mStoryPathLibrary, referencedFiles, this, language);
                         }
-                        Log.d("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                        Timber.d("LOADED FROM ZIP: " + dependency.getDependencyFile());
                     }
 
                     // need to account for references pointing to either a path or a library
                     if (storyPath instanceof StoryPath) {
-                        Log.d("REFERENCES", "LOADED A PATH, NOW LOADING A LIBRARY");
+                        Timber.d("LOADED A PATH, NOW LOADING A LIBRARY");
 
                         checkPath = storyPath.buildZipPath(storyPath.getStoryPathLibraryFile());
                         checkFile = new File(checkPath);
 
                         if (checkFile.exists()) {
                             storyPathLibrary = JsonHelper.loadStoryPathLibrary(checkPath, referencedFiles, this, language);
-                            Log.d("FILES", "LOADED FROM FILE: " + storyPath.getStoryPathLibraryFile());
+                            Timber.d("LOADED FROM FILE: " + storyPath.getStoryPathLibraryFile());
                         } else {
                             storyPathLibrary = JsonHelper.loadStoryPathLibraryFromZip(checkPath, referencedFiles, this, language);
-                            Log.d("FILES", "LOADED FROM ZIP: " + storyPath.getStoryPathLibraryFile());
+                            Timber.d("LOADED FROM ZIP: " + storyPath.getStoryPathLibraryFile());
                         }
                     } else {
                         storyPathLibrary = (StoryPathLibrary)storyPath;
 
                         if (storyPathLibrary.getCurrentStoryPathFile() == null) {
-                            Log.d("REFERENCES", "LOADED A LIBRARY, NO PATH");
+                            Timber.d("LOADED A LIBRARY, NO PATH");
                             storyPath = null;
                         } else {
-                            Log.d("REFERENCES", "LOADED A LIBRARY, NOW LOADING A PATH");
+                            Timber.d("LOADED A LIBRARY, NOW LOADING A PATH");
                             checkPath = storyPathLibrary.buildZipPath(storyPathLibrary.getCurrentStoryPathFile());
                             checkFile = new File(checkPath);
 
                             if (checkFile.exists()) {
                                 storyPath = JsonHelper.loadStoryPath(checkPath, storyPathLibrary, referencedFiles, this, language);
-                                Log.d("FILES", "LOADED FROM FILE: " + storyPathLibrary.getCurrentStoryPathFile());
+                                Timber.d("LOADED FROM FILE: " + storyPathLibrary.getCurrentStoryPathFile());
                             } else {
                                 storyPath = JsonHelper.loadStoryPathFromZip(checkPath, storyPathLibrary, referencedFiles, this, language);
-                                Log.d("FILES", "LOADED FROM ZIP: " + storyPathLibrary.getCurrentStoryPathFile());
+                                Timber.d("LOADED FROM ZIP: " + storyPathLibrary.getCurrentStoryPathFile());
                             }
                         }
                     }
@@ -523,16 +525,16 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         Card card = null;
 
         if ((storyPathLibrary != null) && storyPathLibrary.getId().equals(pathParts[0])) {
-            Log.d("REFERENCES", "LOOKING FOR CARD ID " + pathParts[1] + " IN LIBRARY");
+            Timber.d("LOOKING FOR CARD ID " + pathParts[1] + " IN LIBRARY");
             card = storyPathLibrary.getCardById(cardPath);
         }
         if ((storyPath != null) && storyPath.getId().equals(pathParts[0])) {
-            Log.d("REFERENCES", "LOOKING FOR CARD ID " + pathParts[1] + " IN PATH");
+            Timber.d("LOOKING FOR CARD ID " + pathParts[1] + " IN PATH");
             card = storyPath.getCardById(cardPath);
         }
 
         if (card == null) {
-            Log.e("REFERENCES", "CARD ID " + pathParts[1] + " WAS NOT FOUND");
+            Timber.e("CARD ID " + pathParts[1] + " WAS NOT FOUND");
             return;
         }
 
@@ -564,7 +566,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.d(TAG, "onActivityResult, requestCode:" + requestCode + ", resultCode: " + resultCode);
+        Timber.d("onActivityResult, requestCode:" + requestCode + ", resultCode: " + resultCode);
         if (resultCode == RESULT_OK) {
             // TODO : Remove this and allow Card View Controllers to be notified of data changes
 
@@ -574,11 +576,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 String path = FileUtils.getPath(getApplicationContext(), uri);
 
                 if (Utility.isNullOrEmpty(path)) {
-                    Log.e(TAG, "onActivityResult got null path");
+                    Timber.e("onActivityResult got null path");
                     return;
                 }
 
-                Log.d(TAG, "onActivityResult, video path:" + path);
+                Timber.d("onActivityResult, video path:" + path);
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
@@ -599,7 +601,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // confirm mime type
                     String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+                    Timber.d("onActivityResult, media type is " + mimeType);
 
                     if (mimeType.startsWith(Constants.VIDEO)) {
 
@@ -615,21 +617,21 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                         Utility.toastOnUiThread(this, "Expecting " + Constants.VIDEO + " file but found " + mimeType, true);
 
-                        Log.e(TAG, "onActivityResult, expecting " + Constants.VIDEO + " file but found " + mimeType);
+                        Timber.e("onActivityResult, expecting " + Constants.VIDEO + " file but found " + mimeType);
                         return;
                     }
                 } else {
                     if (c != null) {
-                        Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
+                        Timber.e("card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                     } else {
-                        Log.e(TAG, "c is null!");
+                        Timber.e("c is null!");
                     }
                 }
 
             } else if(requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
 
                 String path = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.EXTRA_FILE_LOCATION, null);
-                Log.d(TAG, "onActivityResult, path:" + path);
+                Timber.d("onActivityResult, path:" + path);
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
                 if (null == pathId || null == path) {
                     return;
@@ -649,7 +651,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // confirm mime type
                     String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+                    Timber.d("onActivityResult, media type is " + mimeType);
 
                     if (mimeType.startsWith(Constants.IMAGE)) {
 
@@ -665,18 +667,18 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                         Utility.toastOnUiThread(this, "Expecting " + Constants.PHOTO + " file but found " + mimeType, true);
 
-                        Log.e(TAG, "onActivityResult, expecting " + Constants.IMAGE + " file but found " + mimeType);
+                        Timber.e("onActivityResult, expecting " + Constants.IMAGE + " file but found " + mimeType);
                         return;
                     }
                 } else {
-                    Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
+                    Timber.e("card type " + c.getClass().getName() + " has no method to save " + Constants.PHOTO + " files");
                 }
 
             } else if(requestCode == Constants.REQUEST_AUDIO_CAPTURE) {
 
                 Uri uri = intent.getData();
                 String path = FileUtils.getPath(getApplicationContext(), uri);
-                Log.d(TAG, "onActivityResult, audio path:" + path);
+                Timber.d("onActivityResult, audio path:" + path);
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
                 if (null == pathId || null == uri) {
@@ -697,7 +699,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                     // confirm mime type
                     String mimeType = URLConnection.guessContentTypeFromName(path);
 
-                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+                    Timber.d("onActivityResult, media type is " + mimeType);
 
                     if (mimeType.startsWith(Constants.AUDIO)) {
 
@@ -713,11 +715,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                         Utility.toastOnUiThread(this, "Expecting " + Constants.AUDIO + " file but found " + mimeType, true);
 
-                        Log.e(TAG, "onActivityResult, expecting " + Constants.AUDIO + " file but found " + mimeType);
+                        Timber.e("onActivityResult, expecting " + Constants.AUDIO + " file but found " + mimeType);
                         return;
                     }
                 } else {
-                    Log.e(TAG, "card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
+                    Timber.e("card class " + c.getClass().getName() + " has no method to save " + Constants.AUDIO + " files");
                 }
 
             } else if (requestCode == Constants.REQUEST_FILE_IMPORT) {
@@ -729,7 +731,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 
                 String path = FileUtils.getPath(getApplicationContext(), uri);
 
-                Log.d(TAG, "onActivityResult, imported file path:" + path);
+                Timber.d("onActivityResult, imported file path:" + path);
 
                 String pathId = this.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE).getString(Constants.PREFS_CALLING_CARD_ID, null); // FIXME should be done off the ui thread
 
@@ -752,7 +754,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                         mimeType = URLConnection.guessContentTypeFromName(path); // TODO: a null path causes failure, is that ok?
                     }
                     
-                    Log.d(TAG, "onActivityResult, media type is " + mimeType);
+                    Timber.d("onActivityResult, media type is " + mimeType);
 
                     if (mimeType.startsWith(checkType)) {
 
@@ -768,11 +770,11 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
                         Utility.toastOnUiThread(this, "Expecting " + cc.getMedium() + " file but found " + mimeType, true);
 
-                        Log.e(TAG, "onActivityResult, expecting " + checkType + " file but found " + mimeType);
+                        Timber.e("onActivityResult, expecting " + checkType + " file but found " + mimeType);
                         return;
                     }
                 } else {
-                    Log.e(TAG, "card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
+                    Timber.e("card type " + c.getClass().getName() + " has no method to save " + Constants.VIDEO + " files");
                 }
 
             }

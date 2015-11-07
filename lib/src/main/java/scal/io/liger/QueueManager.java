@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
@@ -56,21 +58,21 @@ public class QueueManager {
         loadQueue(context); // fills cached queue
 
         if (cachedQueries.contains(queueFile)) {
-            Log.d("QUEUE", "QUEUE ITEM IS " + queueFile + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
+            Timber.d("QUEUE ITEM IS " + queueFile + " BUT SOMEONE IS ALREADY LOOKING FOR THAT");
 
             return DUPLICATE_QUERY;
         } else {
-            Log.d("QUEUE", "ADDING CACHED QUERY FOR " + queueFile);
+            Timber.d("ADDING CACHED QUERY FOR " + queueFile);
 
             cachedQueries.add(queueFile);
         }
 
         for (Long queueId : cachedQueue.keySet()) {
 
-            Log.d("QUEUE", "QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile);
+            Timber.d("QUEUE ITEM IS " + cachedQueue.get(queueId).getQueueFile() + " LOOKING FOR " + queueFile);
 
             if (queueFile.equals(cachedQueue.get(queueId).getQueueFile())) {
-                Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
+                Timber.d("QUEUE ITEM FOR " + queueFile + " FOUND WITH ID " + queueId + " REMOVING CACHED QUERY ");
 
                 cachedQueries.remove(queueFile);
 
@@ -78,7 +80,7 @@ public class QueueManager {
             }
         }
 
-        Log.d("QUEUE", "QUEUE ITEM FOR " + queueFile + " NOT FOUND");
+        Timber.d("QUEUE ITEM FOR " + queueFile + " NOT FOUND");
 
         return null;
     }
@@ -89,11 +91,11 @@ public class QueueManager {
 
     public static synchronized void checkQueueFinished(Context context, String queueFile) {
 
-        Log.d("QUEUE", "LOOKING FOR CACHED QUERY FOR " + queueFile);
+        Timber.d("LOOKING FOR CACHED QUERY FOR " + queueFile);
 
         // done checking queue for item, remove temp item
         if (cachedQueries.contains(queueFile)) {
-            Log.d("QUEUE", "REMOVING CACHED QUERY FOR " + queueFile);
+            Timber.d("REMOVING CACHED QUERY FOR " + queueFile);
 
             cachedQueries.remove(queueFile);
         }
@@ -109,11 +111,11 @@ public class QueueManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        //Log.d("QUEUE", "READING JSON FILE " + jsonFilePath + downloadQueueName + " FROM SD CARD");
+        //Timber.d("READING JSON FILE " + jsonFilePath + downloadQueueName + " FROM SD CARD");
 
         File jsonFile = new File(jsonFilePath + downloadQueueName);
         if (!jsonFile.exists()) {
-            Log.e("QUEUE", jsonFilePath + downloadQueueName + " WAS NOT FOUND");
+            Timber.e(jsonFilePath + downloadQueueName + " WAS NOT FOUND");
             return cachedQueue;
         }
 
@@ -130,11 +132,11 @@ public class QueueManager {
                 jsonStream = null;
                 queueJson = new String(buffer);
             } catch (IOException ioe) {
-                Log.e("QUEUE", "READING JSON FILE " + jsonFilePath + downloadQueueName + " FROM SD CARD FAILED");
+                Timber.e("READING JSON FILE " + jsonFilePath + downloadQueueName + " FROM SD CARD FAILED");
                 return cachedQueue;
             }
         } else {
-            Log.e("QUEUE", "SD CARD WAS NOT FOUND");
+            Timber.e("SD CARD WAS NOT FOUND");
             return cachedQueue;
         }
 
@@ -149,7 +151,7 @@ public class QueueManager {
             } catch (Exception ise) {
                 // this will hopefully catch existing Long/String queue files
 
-                Log.d("QUEUE", "JSON QUEUE FILE APPEARS CORRUPT, PURGING FILE, RETURNING EMPTY QUEUE");
+                Timber.d("JSON QUEUE FILE APPEARS CORRUPT, PURGING FILE, RETURNING EMPTY QUEUE");
 
                 if (jsonFile.exists()) {
                     jsonFile.delete();
@@ -188,12 +190,12 @@ public class QueueManager {
 
         // we have an actual entry for the item now, remove temp item
         if (cachedQueries.contains(queueFile)) {
-            Log.d("QUEUE", "REMOVING CACHED QUERY FOR " + queueFile);
+            Timber.d("REMOVING CACHED QUERY FOR " + queueFile);
 
             cachedQueries.remove(queueFile);
         }
 
-        Log.d("QUEUE", "PUT " + queueId + " IN QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
+        Timber.d("PUT " + queueId + " IN QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 
         saveQueue(context, cachedQueue, downloadQueueName);
         return;
@@ -211,7 +213,7 @@ public class QueueManager {
             // check for cached queries
             checkQueueFinished(context, removedItem.getQueueFile());
 
-            Log.d("QUEUE", "REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
+            Timber.d("REMOVED " + queueId + " FROM QUEUE, NEW QUEUE " + cachedQueue.keySet().toString());
 
             saveQueue(context, cachedQueue, downloadQueueName);
             return true;
@@ -231,7 +233,7 @@ public class QueueManager {
             String fileToPurge = queueMap.get(queueId).getQueueFile();
             fileToPurge = fileToPurge.substring(fileToPurge.lastIndexOf(File.separator) + 1, fileToPurge.lastIndexOf("."));
 
-            Log.d("QUEUE", "REMOVING " + queueId + " AND PURGING ALL OTHER QUEUE ITEMS FOR " + fileToPurge);
+            Timber.d("REMOVING " + queueId + " AND PURGING ALL OTHER QUEUE ITEMS FOR " + fileToPurge);
 
             queueMap.remove(queueId);
 
@@ -239,7 +241,7 @@ public class QueueManager {
                 if (queueMap.get(queueNumber).getQueueFile().contains(fileToPurge)) {
                     queueMap.remove(queueNumber);
 
-                    Log.d("QUEUE", "REMOVED " + queueNumber + " FROM QUEUE, NEW QUEUE " + queueMap.keySet().toString());
+                    Timber.d("REMOVED " + queueNumber + " FROM QUEUE, NEW QUEUE " + queueMap.keySet().toString());
                 }
             }
 
@@ -257,7 +259,7 @@ public class QueueManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        //Log.d("QUEUE", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
+        //Timber.d("WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD");
 
         File jsonFile = new File(jsonFilePath + jsonFileName + ".tmp"); // write to temp and rename
         if (jsonFile.exists()) {
@@ -286,11 +288,11 @@ public class QueueManager {
                 Process p = Runtime.getRuntime().exec("mv " + jsonFilePath + jsonFileName + ".tmp " + jsonFilePath + jsonFileName);
 
             } catch (IOException ioe) {
-                Log.e("QUEUE", "WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
+                Timber.e("WRITING JSON FILE " + jsonFilePath + jsonFileName + " TO SD CARD FAILED");
                 return;
             }
         } else {
-            Log.e("QUEUE", "SD CARD WAS NOT FOUND");
+            Timber.e("SD CARD WAS NOT FOUND");
             return;
         }
     }

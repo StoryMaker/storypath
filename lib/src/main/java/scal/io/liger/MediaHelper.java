@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -222,7 +224,7 @@ public class MediaHelper {
                 expansionItem;
 
         if (targetExpansion == null) {
-            Log.w(TAG, String.format("Cannot display thumbnail for path %s. No ExpansionIndexItem provided and none could be guessed", relativeExpansionPath));
+            Timber.w(String.format("Cannot display thumbnail for path %s. No ExpansionIndexItem provided and none could be guessed", relativeExpansionPath));
             return;
         }
 
@@ -270,7 +272,7 @@ public class MediaHelper {
                                             DEFAULT_THUMB_HEIGHT);
 
                                     if (newThumbBitmap == null) {
-                                        Log.e(TAG, "Unable to generate thumbnail for " + relativeExpansionPath);
+                                        Timber.e("Unable to generate thumbnail for " + relativeExpansionPath);
                                         return null;
                                     }
 
@@ -316,13 +318,13 @@ public class MediaHelper {
                 // TODO BG thread
                 InputStream inputStream = ZipHelper.getThumbnailInputStreamForItem(item, target.getContext());
                 if (inputStream == null) {
-                    Log.w(TAG, "Unable to get inputstream for expansion item thumb: " + item.getThumbnailPath());
+                    Timber.w("Unable to get inputstream for expansion item thumb: " + item.getThumbnailPath());
                     return;
                 }
 
                 Bitmap bitmap = decodeSampledBitmapFromInputStream(inputStream, DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT);
                 if (bitmap == null) {
-                    Log.w(TAG, "Unable to generate thumbnail for expansion item thumb: " + item.getThumbnailPath());
+                    Timber.w("Unable to generate thumbnail for expansion item thumb: " + item.getThumbnailPath());
                     return;
                 }
 
@@ -372,12 +374,12 @@ public class MediaHelper {
                     Uri uri         = Uri.parse(path);
                     String mimeType = FileUtils.getMimeType(context, uri);
                     filePath        = FileUtils.getPath(context, uri);
-                    if (VERBOSE) Log.d(TAG, String.format("media uri mime type %s path %s", mimeType, filePath));
+                    if (VERBOSE) Timber.d(String.format("media uri mime type %s path %s", mimeType, filePath));
                     // WARNING .mp4 audio files report mimetype video
                     if (!mimeType.contains("image") &&
                             !mimeType.contains("video") &&
                             !mimeType.contains("audio"))
-                        Log.w(TAG, "Cannot display thumbnail. Unknown content url type " + path);
+                        Timber.w("Cannot display thumbnail. Unknown content url type " + path);
 
                 } else {
 
@@ -387,7 +389,7 @@ public class MediaHelper {
                 }
 
                 if (filePath == null) {
-                    Log.e(TAG, "Unable to get file path for " + path);
+                    Timber.e("Unable to get file path for " + path);
                     return null;
                 }
 
@@ -396,7 +398,7 @@ public class MediaHelper {
                 if (mediaFile.exists())
                     return getFileThumbnail(mediaType, mediaFile, target, callback);
                 else
-                    Log.w(TAG, "path appears to be a file, but it cannot be found on disk " + filePath);
+                    Timber.w("path appears to be a file, but it cannot be found on disk " + filePath);
 
                 return null;
             }
@@ -463,14 +465,14 @@ public class MediaHelper {
             Bitmap waveform = AudioWaveform.createBitmap(context, audio.getAbsolutePath());
 
             if (waveform == null) {
-                Log.e(TAG, "Failed to create audio waveform");
+                Timber.e("Failed to create audio waveform");
                 return null;
             }
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(waveFormFile);
                 waveform.compress(Bitmap.CompressFormat.PNG, 100 /* No effect with PNG */, out);
-                Log.d(TAG, "Generated waveform thumb " + waveFormFile.getAbsolutePath());
+                Timber.d("Generated waveform thumb " + waveFormFile.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -577,10 +579,10 @@ public class MediaHelper {
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 75, thumbnailStream); // FIXME make compression level configurable
             thumbnailStream.flush();
             thumbnailStream.close();
-            Log.d(TAG, "Generated thumbnail at " + thumbnailFile.getAbsolutePath());
+            Timber.d("Generated thumbnail at " + thumbnailFile.getAbsolutePath());
             return thumbnailFile;
         } else {
-            Log.e(TAG, "Unable to generate thumbnail for " + media.getAbsolutePath() + " (expected media type: " + mediaType + ")");
+            Timber.e("Unable to generate thumbnail for " + media.getAbsolutePath() + " (expected media type: " + mediaType + ")");
         }
         return null;
     }
@@ -623,11 +625,11 @@ public class MediaHelper {
                 media.reset();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(TAG, "Failed to rewind InputStream. Could not generate thumbnail");
+                Timber.e("Failed to rewind InputStream. Could not generate thumbnail");
                 return null;
             }
         } else {
-            Log.w(TAG, "InputStream does not support marking. Thumbnail will be full size");
+            Timber.w("InputStream does not support marking. Thumbnail will be full size");
         }
 
         // Decode bitmap with inSampleSize set

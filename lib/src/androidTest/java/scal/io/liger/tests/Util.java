@@ -1,5 +1,7 @@
 package scal.io.liger.tests;
 
+import timber.log.Timber;
+
 import com.google.android.apps.common.testing.ui.espresso.ViewAction;
 import com.google.android.apps.common.testing.ui.espresso.action.GeneralLocation;
 import com.google.android.apps.common.testing.ui.espresso.action.GeneralSwipeAction;

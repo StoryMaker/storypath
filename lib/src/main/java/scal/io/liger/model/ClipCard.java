@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,15 +38,15 @@ public class ClipCard extends ExampleCard implements Cloneable {
         if ((clips == null) && (references != null)) {
             for (String reference : references) {
                 if (reference.endsWith("clips")) {
-                    Log.d("CLIPS", "FOUND CLIP REFERENCE IN CLIP CARD " + getId() + ": " + reference);
+                    Timber.d("FOUND CLIP REFERENCE IN CLIP CARD " + getId() + ": " + reference);
                     ArrayList<MediaFile> mediaFiles = storyPath.getExternalMediaFile(reference);
 
                     if (mediaFiles == null) {
-                        Log.e("CLIPS", "UNABLE TO PROCESS CLIP REFERENCE " + reference);
+                        Timber.e("UNABLE TO PROCESS CLIP REFERENCE " + reference);
                     } else {
                         for (MediaFile mediaFile : mediaFiles) {
                             saveMediaFile(mediaFile);
-                            Log.d("CLIPS", "SAVED MEDIA FILE " + mediaFile.getPath() + " LOCALLY");
+                            Timber.d("SAVED MEDIA FILE " + mediaFile.getPath() + " LOCALLY");
                         }
                     }
                 }
@@ -122,7 +124,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
 
     public void removeClip(@NonNull ClipMetadata clip) {
         if (this.clips == null || this.clips.size() == 0) {
-            Log.w(TAG, "removeClip called, but no clips exist");
+            Timber.w("removeClip called, but no clips exist");
             return;
         }
 
@@ -132,7 +134,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
             setChanged();
             notifyObservers();
         } else {
-            Log.w(TAG, "Requested clip could not be removed because it was not found");
+            Timber.w("Requested clip could not be removed because it was not found");
         }
     }
 
@@ -149,14 +151,14 @@ public class ClipCard extends ExampleCard implements Cloneable {
 
     public void selectMediaFile(@Nullable ClipMetadata clip) {
         if ((clips == null) || (clips.size() < 1)) {
-            Log.e(this.getClass().getName(), "no clip metadata was found, cannot select a file");
+            Timber.e("no clip metadata was found, cannot select a file");
             return;
         }
 
         if (clips.indexOf(clip) != -1) {
             selectMediaFile(clips.indexOf(clip));
         } else {
-            Log.e(this.getClass().getName(), "specified clip not found in clips");
+            Timber.e("specified clip not found in clips");
         }
     }
 
@@ -164,7 +166,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
         // unsure if selection should be based on index or object
 
         if ((clips == null) || (clips.size() < 1)) {
-            Log.e(this.getClass().getName(), "no clip metadata was found, cannot select a file");
+            Timber.e("no clip metadata was found, cannot select a file");
             return;
         }
 
@@ -175,7 +177,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
     @Nullable
     public MediaFile getSelectedMediaFile() {
         if ((clips == null) || (clips.size() < 1)) {
-            Log.e(this.getClass().getName(), "no clip metadata was found, cannot get a selected file");
+            Timber.e("no clip metadata was found, cannot get a selected file");
             return null;
         }
 
@@ -185,7 +187,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
     @Nullable
     public ClipMetadata getSelectedClip() {
         if ((clips == null) || (clips.size() < 1)) {
-            Log.e(this.getClass().getName(), "no clip metadata was found, cannot get a selected file");
+            Timber.e("no clip metadata was found, cannot get a selected file");
             return null;
         }
 
@@ -197,7 +199,7 @@ public class ClipCard extends ExampleCard implements Cloneable {
         // unsure if selection should be based on index or object
 
         if ((clips == null) || (index >= clips.size())) {
-            Log.e(this.getClass().getName(), "index out of range, cannot delete file");
+            Timber.e("index out of range, cannot delete file");
             return;
         }
 
@@ -238,11 +240,11 @@ public class ClipCard extends ExampleCard implements Cloneable {
     @Override
     public void copyText(@NonNull Card card) {
         if (!(card instanceof ClipCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF ClipCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF ClipCard");
             return;
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

@@ -1,5 +1,7 @@
 package scal.io.liger.adapter;
 
+import timber.log.Timber;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -149,7 +151,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
 
         MediaFile mf = clipCard.getSelectedMediaFile();
         if (mf == null) {
-            Log.e(this.getClass().getName(), "no media file was found");
+            Timber.e("no media file was found");
         } else {
             mf.loadThumbnail(viewHolder.thumbnail);
         }
@@ -161,7 +163,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();
-                    Log.d(TAG, "Narration dialog selected for position " + position);
+                    Timber.d("Narration dialog selected for position " + position);
                     removeNarrationForClip(position);
                 }
             });
@@ -260,7 +262,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
         ArrayList<AudioClip> result = new ArrayList<>();
 
         if (mAudioClips == null) {
-            Log.d(TAG, "No AudioClips for position " + position);
+            Timber.d("No AudioClips for position " + position);
             return result;
         }
 
@@ -268,10 +270,10 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
             int firstIdx = mClipCards.indexOf(mStoryPathLibrary.getFirstClipCardForAudioClip(audio, mClipCards));
             int lastIdx = mClipCards.indexOf(mStoryPathLibrary.getLastClipCardForAudioClip(audio, mClipCards));
 
-            Log.d(TAG, String.format("Audio %s spans pos %d - %d. Clip is pos %d", audio.getUuid().substring(0,3), firstIdx, lastIdx, position));
+            Timber.d(String.format("Audio %s spans pos %d - %d. Clip is pos %d", audio.getUuid().substring(0,3), firstIdx, lastIdx, position));
             if (firstIdx <= position && position <= lastIdx) {
                 result.add(audio);
-                Log.d(TAG, "Audio spans Clip at pos " + position);
+                Timber.d("Audio spans Clip at pos " + position);
             }
 
 //            if (audio.getPositionClipId() != null) {
@@ -284,7 +286,7 @@ public class NarrationMediaAdapter extends RecyclerView.Adapter<NarrationMediaAd
 //                result.add(audio);
 //            }
         }
-        Log.d(TAG, String.format("Found %d clips for position %d", result.size(), position));
+        Timber.d(String.format("Found %d clips for position %d", result.size(), position));
         return result;
     }
 

@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -290,7 +292,7 @@ public class StoryPathLibraryDeserializer implements JsonDeserializer<StoryPathL
                 String cardType = arrObj.get("type").getAsString();
                 String fqCardType;
                 if (cardType.contains(".")) {
-                    Log.d(TAG, "StoryPathLibrary JSON contains fully qualitfied card type: " + cardType);
+                    Timber.d("StoryPathLibrary JSON contains fully qualitfied card type: " + cardType);
                     fqCardType = cardType;
                 } else {
                     fqCardType = class_package + "." + cardType;

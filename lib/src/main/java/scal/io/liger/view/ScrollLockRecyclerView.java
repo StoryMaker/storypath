@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;

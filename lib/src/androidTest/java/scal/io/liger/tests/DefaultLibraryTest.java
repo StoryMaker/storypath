@@ -1,5 +1,7 @@
 package scal.io.liger.tests;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -102,12 +104,12 @@ public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainAct
     public void testPreConditions() {
         assertTrue(mMainActivity != null);
         assertTrue(mRecyclerView != null);
-        Log.d("AUTOMATION", "testPreConditions() COMPLETE");
+        Timber.d("testPreConditions() COMPLETE");
     }
 
     public void testRecyclerViewExist() {
         assertOnScreen(mMainActivity.getWindow().getDecorView(), mRecyclerView);
-        Log.d("AUTOMATION", "testRecyclerViewExist() COMPLETE");
+        Timber.d("testRecyclerViewExist() COMPLETE");
     }
 
     public void testHookPaths() {
@@ -170,21 +172,21 @@ public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainAct
                                             stall(2000, "INTERMISSION (" + firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection + " COMPLETE)");
                                         } catch (NoMatchingViewException nmve) {
                                             // implies no button was found (failure)
-                                            Log.d("AUTOMATION", "NO PUBLISH BUTTON FOUND AT THE END OF " + firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection);
+                                            Timber.d("NO PUBLISH BUTTON FOUND AT THE END OF " + firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection);
                                             // return;
                                             brokenPaths.add(firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection);
                                         }
                                     } catch (NoMatchingViewException nmve) {
                                         // some options do not support all questions (not a failure state)
-                                        Log.d("AUTOMATION", "SELECTION " + fourthSelection + " NOT AVAILABLE");
+                                        Timber.d("SELECTION " + fourthSelection + " NOT AVAILABLE");
                                     }
                                 } catch (NoMatchingViewException nmve) {
                                     // some options do not support all media types (not a failure state)
-                                    Log.d("AUTOMATION", "SELECTION " + thirdSelection + " NOT AVAILABLE");
+                                    Timber.d("SELECTION " + thirdSelection + " NOT AVAILABLE");
                                 }
                             } catch (NoMatchingViewException nmve) {
                                 // some options do not support all formats (not a failure state???)
-                                Log.d("AUTOMATION", "SELECTION " + secondSelection + " NOT AVAILABLE");
+                                Timber.d("SELECTION " + secondSelection + " NOT AVAILABLE");
                             }
 
                             // restart app
@@ -244,21 +246,21 @@ public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainAct
                                             stall(2000, "INTERMISSION (" + firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection + " COMPLETE)");
                                         } catch (NoMatchingViewException nmve) {
                                             // implies no button was found (failure)
-                                            Log.d("AUTOMATION", "NO PUBLISH BUTTON FOUND AT THE END OF " + firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection);
+                                            Timber.d("NO PUBLISH BUTTON FOUND AT THE END OF " + firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection);
                                             // return;
                                             brokenPaths.add(firstSelection + " > " + secondSelection + " > " + thirdSelection + " > " + fourthSelection);
                                         }
                                     } catch (NoMatchingViewException nmve) {
                                         // some options do not support all questions (not a failure state)
-                                        Log.d("AUTOMATION", "SELECTION " + fourthSelection + " NOT AVAILABLE");
+                                        Timber.d("SELECTION " + fourthSelection + " NOT AVAILABLE");
                                     }
                                 } catch (NoMatchingViewException nmve) {
                                     // some options do not support all media types (not a failure state)
-                                    Log.d("AUTOMATION", "SELECTION " + thirdSelection + " NOT AVAILABLE");
+                                    Timber.d("SELECTION " + thirdSelection + " NOT AVAILABLE");
                                 }
                             } catch (NoMatchingViewException nmve) {
                                 // some options do not support all formats (not a failure state???)
-                                Log.d("AUTOMATION", "SELECTION " + secondSelection + " NOT AVAILABLE");
+                                Timber.d("SELECTION " + secondSelection + " NOT AVAILABLE");
                             }
 
 
@@ -308,17 +310,17 @@ public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainAct
                                 stall(2000, "INTERMISSION (" + firstSelection + " > " + secondSelection + " > " + thirdSelection + " COMPLETE)");
                             } catch (NoMatchingViewException nmve) {
                                 // implies no button was found (failure)
-                                Log.d("AUTOMATION", "NO PUBLISH BUTTON FOUND AT THE END OF " + firstSelection + " > " + secondSelection + " > " + thirdSelection);
+                                Timber.d("NO PUBLISH BUTTON FOUND AT THE END OF " + firstSelection + " > " + secondSelection + " > " + thirdSelection);
                                 // return;
                                 brokenPaths.add(firstSelection + " > " + secondSelection + " > " + thirdSelection);
                             }
                         } catch (NoMatchingViewException nmve) {
                             // some options do not support all media types (not a failure state)
-                            Log.d("AUTOMATION", "SELECTION " + thirdSelection + " NOT AVAILABLE");
+                            Timber.d("SELECTION " + thirdSelection + " NOT AVAILABLE");
                         }
                     } catch (NoMatchingViewException nmve) {
                         // some options do not support all formats (not a failure state???)
-                        Log.d("AUTOMATION", "SELECTION " + secondSelection + " NOT AVAILABLE");
+                        Timber.d("SELECTION " + secondSelection + " NOT AVAILABLE");
                     }
 
                     // restart app
@@ -333,7 +335,7 @@ public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainAct
         }
 
         for (String brokenPath : brokenPaths) {
-            Log.d("AUTOMATION", "BROKEN PATH: " + brokenPath);
+            Timber.d("BROKEN PATH: " + brokenPath);
         }
 
         assertEquals(brokenPaths.size(), 0);
@@ -341,7 +343,7 @@ public class DefaultLibraryTest extends ActivityInstrumentationTestCase2<MainAct
 
     private void stall(long milliseconds, String message) {
         try {
-            Log.d("AUTOMATION", "SLEEP " + (milliseconds / 1000) + " (" + message + ")");
+            Timber.d("SLEEP " + (milliseconds / 1000) + " (" + message + ")");
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             e.printStackTrace();

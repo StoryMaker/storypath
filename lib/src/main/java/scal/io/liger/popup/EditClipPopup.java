@@ -1,5 +1,7 @@
 package scal.io.liger.popup;
 
+import timber.log.Timber;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -101,7 +103,7 @@ public class EditClipPopup {
                 float newVolume = progress / (float) seekBar.getMax();
                 mSelectedClip.setVolume(newVolume);
                 player.setVolume(newVolume, newVolume);
-                Log.d(TAG, "SAVING UPDATED VOLUME");
+                Timber.d("SAVING UPDATED VOLUME");
                 mStoryPath.getStoryPathLibrary().save(true);
             }
 
@@ -130,7 +132,7 @@ public class EditClipPopup {
                             clipMediaDurationMs.get(),
                             rightToLeft);
 
-                    Log.d(TAG, "Seeking to " + seekPointMs);
+                    Timber.d("Seeking to " + seekPointMs);
                     player.seekTo(getMsFromRangeBarIndex(progress,
                             tickCount,
                             clipMediaDurationMs.get(),
@@ -204,7 +206,7 @@ public class EditClipPopup {
                             tickCount,
                             clipMediaDurationMs.get(),
                             rightToLeft));
-                    //Log.d(TAG, String.format("Seeking start to %d / %d ms from %d / %d", clipStartMs.get(), clipMediaDurationMs.get(), startIdx, tickCount));
+                    //Timber.d(String.format("Seeking start to %d / %d ms from %d / %d", clipStartMs.get(), clipMediaDurationMs.get(), startIdx, tickCount));
                     player.seekTo(clipStartMs.get());
                     clipStart.setText(Util.makeTimeString(clipStartMs.get()));
                     //Log.i(TAG, String.format("Start seek to %d ms", clipStartMs.get()));
@@ -218,7 +220,7 @@ public class EditClipPopup {
                             clipMediaDurationMs.get(),
                             rightToLeft));
 
-                    //Log.d(TAG, String.format("Seeking end to %d / %d ms from %d / %d", clipStopMs.get(), clipMediaDurationMs.get(), endIdx, tickCount));
+                    //Timber.d(String.format("Seeking end to %d / %d ms from %d / %d", clipStopMs.get(), clipMediaDurationMs.get(), endIdx, tickCount));
                     player.seekTo(clipStopMs.get());
                     clipEnd.setText(Util.makeTimeString(clipStopMs.get()));
 
@@ -357,7 +359,7 @@ public class EditClipPopup {
                         mSelectedClip.setStopTime(clipStopMs.get());
 
                         // need to save here
-                        Log.d(TAG, "SAVING START/STOP TIME");
+                        Timber.d("SAVING START/STOP TIME");
                         mStoryPath.getStoryPathLibrary().save(true);
                     }
                 })
@@ -370,7 +372,7 @@ public class EditClipPopup {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                Log.d(TAG, "dialog dismissed");
+                Timber.d("dialog dismissed");
                 if (player.isPlaying()) player.stop();
                 player.release();
                 timer.cancel();

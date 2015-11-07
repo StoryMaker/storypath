@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
@@ -26,14 +28,14 @@ public class TagCardView implements DisplayableCard {
     private Context mContext;
 
     public TagCardView(Context context, Card cardModel) {
-        Log.d("TagCardView", "constructor");
+        Timber.d("constructor");
         mContext = context;
         mCardModel = (ReviewCard) cardModel;
     }
 
     @Override
     public View getCardView(Context context) {
-        Log.d("TagCardViews", "getCardView");
+        Timber.d("getCardView");
         if(mCardModel == null) {
             return null;
         }

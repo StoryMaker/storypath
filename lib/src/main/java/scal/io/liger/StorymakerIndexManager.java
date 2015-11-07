@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -64,13 +66,13 @@ public class StorymakerIndexManager {
         } else if (Constants.PATCH.equals(mainOrPatch)) {
             if (item.getPatchFileVersion() == null) {
                 // not really an error, removing message
-                // Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
+                // Timber.d("CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", PATCH VERSION IS NULL");
                 return noPatchFile;
             } else {
                 return item.getExpansionId() + "." + mainOrPatch + "." + item.getPatchFileVersion() + ".obb";
             }
         } else {
-            Log.d("INDEX", "CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", DON'T UNDERSTAND " + mainOrPatch);
+            Timber.d("CAN'T CONSTRUCT FILENAME FOR " + item.getExpansionId() + ", DON'T UNDERSTAND " + mainOrPatch);
             // this is not the same as having no patch
             // return noPatchFile;
             return "FOO";
@@ -117,7 +119,7 @@ public class StorymakerIndexManager {
         if (checkDir.isDirectory() || checkDir.mkdirs()) {
             return checkPath;
         } else {
-            Log.d("INDEX", "CAN'T CONSTRUCT PATH FOR " + item.getExpansionId() + ", PATH " + item.getExpansionFilePath() + " DOES NOT EXIST AND COULD NOT BE CREATED");
+            Timber.d("CAN'T CONSTRUCT PATH FOR " + item.getExpansionId() + ", PATH " + item.getExpansionFilePath() + " DOES NOT EXIST AND COULD NOT BE CREATED");
             return null;
         }
     }
@@ -130,31 +132,31 @@ public class StorymakerIndexManager {
 
         String jsonFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath);
+        Timber.d("COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath);
 
         // only replace file if version is different
         File jsonFile = new File(jsonFilePath + getAvailableVersionName());
         if (jsonFile.exists() && !forceCopy) {
-            Log.d("INDEX", "JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
+            Timber.d("JSON FILE " + jsonFile.getName() + " ALREADY EXISTS IN " + jsonFilePath + ", NOT COPYING");
             return;
         } else {
 
             // delete old patch versions
             String nameFilter = availableIndexName + "." + "*" + ".json";
 
-            Log.d("INDEX", "CLEANUP: DELETING " + nameFilter + " FROM " + jsonFilePath);
+            Timber.d("CLEANUP: DELETING " + nameFilter + " FROM " + jsonFilePath);
 
             WildcardFileFilter indexFileFilter = new WildcardFileFilter(nameFilter);
             File indexDirectory = new File(jsonFilePath);
             for (File indexFile : FileUtils.listFiles(indexDirectory, indexFileFilter, null)) {
-                Log.d("INDEX", "CLEANUP: FOUND " + indexFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + indexFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(indexFile);
             }
 
             // delete old un-numbered files
             File oldFile = new File(jsonFilePath + availableIndexName + ".json");
             if (oldFile.exists()) {
-                Log.d("INDEX", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(oldFile);
             }
         }
@@ -178,13 +180,13 @@ public class StorymakerIndexManager {
             assetOut.close();
             assetOut = null;
         } catch (IOException ioe) {
-            Log.e("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED");
+            Timber.e("COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED");
             return;
         }
 
         // check for zero-byte files
         if (jsonFile.exists() && (jsonFile.length() == 0)) {
-            Log.e("INDEX", "COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            Timber.e("COPYING JSON FILE " + availableIndexName + ".json" + " FROM ASSETS TO " + jsonFilePath + " FAILED (FILE WAS ZERO BYTES)");
             jsonFile.delete();
         }
 
@@ -198,12 +200,12 @@ public class StorymakerIndexManager {
 
         String thumbnailFilePath = ZipHelper.getFileFolderName(context);
 
-        Log.d("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath);
+        Timber.d("COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath);
 
         File thumbnailFile = new File(thumbnailFilePath + thumbnailFileName);
 
         if (thumbnailFile.exists()) {
-            Log.d("INDEX", "THUMBNAIL FILE " + thumbnailFileName + " ALREADY EXISTS IN " + thumbnailFilePath + ", DELETING");
+            Timber.d("THUMBNAIL FILE " + thumbnailFileName + " ALREADY EXISTS IN " + thumbnailFilePath + ", DELETING");
             thumbnailFile.delete();
         }
 
@@ -231,13 +233,13 @@ public class StorymakerIndexManager {
             assetOut.close();
             assetOut = null;
         } catch (IOException ioe) {
-            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED: " + ioe.getLocalizedMessage());
+            Timber.e("COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED: " + ioe.getLocalizedMessage());
             return null;
         }
 
         // check for zero-byte files
         if (thumbnailFile.exists() && (thumbnailFile.length() == 0)) {
-            Log.e("INDEX", "COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED (FILE WAS ZERO BYTES)");
+            Timber.e("COPYING THUMBNAIL FILE " + thumbnailFileName + " FROM ASSETS TO " + thumbnailFilePath + " FAILED (FILE WAS ZERO BYTES)");
             thumbnailFile.delete();
             return null;
         }
@@ -397,7 +399,7 @@ public class StorymakerIndexManager {
             returnList = new ArrayList<ExpansionIndexItem>();
         }
 
-        //Log.d("loadIndex", String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
+        //Timber.d(String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return returnList;
     }
 
@@ -435,7 +437,7 @@ public class StorymakerIndexManager {
             }
         }
 
-        //Log.d("loadIndex", String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
+        //Timber.d(String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return returnMap;
     }
 
@@ -491,7 +493,7 @@ public class StorymakerIndexManager {
             InstanceIndexItem item = indexList.get(key);
             File checkFile = new File(item.getInstanceFilePath());
             if (!checkFile.exists()) {
-                Log.d("INDEX", "REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
+                Timber.d("REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
                 keys.add(key);
             }
         }
@@ -502,7 +504,7 @@ public class StorymakerIndexManager {
 
         // check for changes
         if (indexList.size() != initialSize) {
-            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS REMOVED FROM INSTANCE INDEX, FORCING SAVE");
+            Timber.d(Math.abs(indexList.size() - initialSize) + " ITEMS REMOVED FROM INSTANCE INDEX, FORCING SAVE");
             // update flag
             forceSave = true;
             // update initial size
@@ -513,9 +515,9 @@ public class StorymakerIndexManager {
 
         for (final File f : instanceFiles) {
             if (indexList.containsKey(f.getAbsolutePath()) && language.equals(indexList.get(f.getAbsolutePath()).getLanguage())) {
-                Log.d("INDEX", "FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+                Timber.d("FOUND INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
             } else {
-                Log.d("INDEX", "ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
+                Timber.d("ADDING INDEX ITEM FOR INSTANCE FILE " + f.getAbsolutePath());
 
                 forceSave = true;
 
@@ -531,7 +533,7 @@ public class StorymakerIndexManager {
 
                 // if no string was loaded, cannot continue
                 if (jsonString == null) {
-                    Log.e("INDEX", "json could not be loaded from " + f.getPath());
+                    Timber.e("json could not be loaded from " + f.getPath());
                     // handle the same way as null spl case below
                     return indexList;
                 }
@@ -557,7 +559,7 @@ public class StorymakerIndexManager {
                 if ((newItem.getTitle() == null) ||
                         (newItem.getStoryType() == null) ||
                         (newItem.getThumbnailPath() == null)) {
-                    Log.d("INDEX", "MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
+                    Timber.d("MISSING METADATA, OPENING STORY PATH FOR INSTANCE FILE " + f.getAbsolutePath());
 
                     if (spl.getCurrentStoryPathFile() != null) {
                         spl.loadStoryPathTemplate("CURRENT", false);
@@ -578,7 +580,7 @@ public class StorymakerIndexManager {
                         }
                     }
                 } else {
-                    Log.d("INDEX", "METADATA COMPLETE FOR INSTANCE FILE " + f.getAbsolutePath());
+                    Timber.d("METADATA COMPLETE FOR INSTANCE FILE " + f.getAbsolutePath());
                 }
 
                 indexList.put(newItem.getInstanceFilePath(), newItem);
@@ -587,7 +589,7 @@ public class StorymakerIndexManager {
 
         // check for changes again
         if (indexList.size() != initialSize) {
-            Log.d("INDEX", Math.abs(indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, FORCING SAVE");
+            Timber.d(Math.abs(indexList.size() - initialSize) + " ITEMS ADDED TO INSTANCE INDEX, FORCING SAVE");
             // update flag
             forceSave = true;
             // update initial size
@@ -599,7 +601,7 @@ public class StorymakerIndexManager {
             ArrayList<InstanceIndexItem> indexArray = new ArrayList<InstanceIndexItem>(indexList.values());
             saveInstanceIndex(context, indexArray, instanceIndexName, dao);
         } else {
-            Log.d("INDEX", "NOTHING ADDED TO/REMOVED FROM INSTANCE INDEX, NO SAVE");
+            Timber.d("NOTHING ADDED TO/REMOVED FROM INSTANCE INDEX, NO SAVE");
         }
 
         return indexList;
@@ -635,11 +637,11 @@ public class StorymakerIndexManager {
                 InstalledIndexItemDao installedDao = (InstalledIndexItemDao) dao;
                 installedDao.removeInstalledIndexItem(indexItem);
 
-                Log.d("INDEX", "UN-INSTALLED " + indexItem.getExpansionId() + " FROM INDEX");
+                Timber.d("UN-INSTALLED " + indexItem.getExpansionId() + " FROM INDEX");
 
             } else {
 
-                Log.e("INDEX", "FAILED TO UN-INSTALL " + indexItem.getExpansionId() + " (DAO CASTING ISSUE)");
+                Timber.e("FAILED TO UN-INSTALL " + indexItem.getExpansionId() + " (DAO CASTING ISSUE)");
 
             }
 
@@ -677,7 +679,7 @@ public class StorymakerIndexManager {
         if (jsonFileName.contains(Constants.AVAILABLE)) {
             if (dao instanceof AvailableIndexItemDao) {
 
-                Log.d("INDEX", "SAVING AVAILABLE INDEX");
+                Timber.d("SAVING AVAILABLE INDEX");
 
                 AvailableIndexItemDao availableDao = (AvailableIndexItemDao)dao;
 
@@ -687,20 +689,20 @@ public class StorymakerIndexManager {
                     } else {
                         // error
 
-                        Log.e("INDEX", "ITEM MISMATCH? " + item.getExpansionId());
+                        Timber.e("ITEM MISMATCH? " + item.getExpansionId());
 
                     }
                 }
             } else {
                 //error
 
-                Log.e("INDEX", "DAO MISMATCH? " + jsonFileName);
+                Timber.e("DAO MISMATCH? " + jsonFileName);
 
             }
         } else if (jsonFileName.contains(Constants.INSTALLED)) {
             if (dao instanceof InstalledIndexItemDao) {
 
-                Log.d("INDEX", "SAVING INSTALLED INDEX");
+                Timber.d("SAVING INSTALLED INDEX");
 
                 InstalledIndexItemDao installedDao = (InstalledIndexItemDao)dao;
 
@@ -710,14 +712,14 @@ public class StorymakerIndexManager {
                     } else {
                         // error
 
-                        Log.e("INDEX", "ITEM MISMATCH? " + item.getExpansionId());
+                        Timber.e("ITEM MISMATCH? " + item.getExpansionId());
 
                     }
                 }
             } else {
                 //error
 
-                Log.e("INDEX", "DAO MISMATCH? " + jsonFileName);
+                Timber.e("DAO MISMATCH? " + jsonFileName);
 
             }
         } else {

@@ -1,5 +1,7 @@
 package scal.io.liger.adapter;
 
+import timber.log.Timber;
+
 import android.util.Pair;
 
 /**

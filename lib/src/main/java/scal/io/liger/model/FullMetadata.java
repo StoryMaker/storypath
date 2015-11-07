@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -65,7 +67,7 @@ public class FullMetadata implements Parcelable {
                 retriever.setDataSource(filePath);
                 time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             } catch (RuntimeException re) {
-                Log.e(TAG, "MediaMetadataRetriever cannot deal with " + filePath + " -> " + re.getMessage());
+                Timber.e("MediaMetadataRetriever cannot deal with " + filePath + " -> " + re.getMessage());
             }
             long timeMs = 0;
             if (time != null) {

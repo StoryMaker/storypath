@@ -1,5 +1,9 @@
 package scal.io.liger.av;
 
+import timber.log.Timber;
+
+import timber.log.Timber;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;

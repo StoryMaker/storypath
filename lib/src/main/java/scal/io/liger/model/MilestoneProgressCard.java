@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -139,11 +141,11 @@ public class MilestoneProgressCard extends Card {
     @Override
     public void update(Observable observable, Object o) {
         if (!(observable instanceof Card)) {
-            Log.e(this.getClass().getName(), "update notification received from non-card observable");
+            Timber.e("update notification received from non-card observable");
             return;
         }
         if (storyPath == null) {
-            Log.e(this.getClass().getName(), "STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
+            Timber.e("STORY PATH REFERENCE NOT FOUND, CANNOT SEND NOTIFICATION");
             return;
         }
 
@@ -165,7 +167,7 @@ public class MilestoneProgressCard extends Card {
         if (storyMedium.size() == 1) {
             mediumReference = storyMedium.get(0);
         } else {
-            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
+            Timber.e("unexpected number of story medium references: " + storyMedium.size());
             return false;
         }
 
@@ -317,7 +319,7 @@ public class MilestoneProgressCard extends Card {
             mediumReference = storyMedium.get(0);
         }
         else {
-            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
+            Timber.e("unexpected number of story medium references: " + storyMedium.size());
             return false;
         }
 
@@ -330,7 +332,7 @@ public class MilestoneProgressCard extends Card {
         ArrayList<String> values = new ArrayList<String>();
 
         if ((medium == null) || (medium.length() == 0 )) {
-            Log.e(this.type, "no value found for story medium referenced by " + mediumReference);
+            Timber.e("no value found for story medium referenced by " + mediumReference);
             return false;
         }
         else if (medium.equals(Constants.VIDEO)) {
@@ -361,7 +363,7 @@ public class MilestoneProgressCard extends Card {
             mediumReference = storyMedium.get(0);
         }
         else {
-            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
+            Timber.e("unexpected number of story medium references: " + storyMedium.size());
             return 0;
         }
 
@@ -374,7 +376,7 @@ public class MilestoneProgressCard extends Card {
         ArrayList<String> values = new ArrayList<String>();
 
         if ((medium == null) || (medium.length() == 0 )) {
-            Log.e(this.type, "no value found for story medium referenced by " + mediumReference);
+            Timber.e("no value found for story medium referenced by " + mediumReference);
             return 0;
         }
         else if (medium.equals(Constants.VIDEO)) {
@@ -405,7 +407,7 @@ public class MilestoneProgressCard extends Card {
             mediumReference = storyMedium.get(0);
         }
         else {
-            Log.e(this.type, "unexpected number of story medium references: " + storyMedium.size());
+            Timber.e("unexpected number of story medium references: " + storyMedium.size());
             return 0;
         }
 
@@ -416,7 +418,7 @@ public class MilestoneProgressCard extends Card {
         }
 
         if ((medium == null) || (medium.length() == 0 )) {
-            Log.e(this.type, "no value found for story medium referenced by " + mediumReference);
+            Timber.e("no value found for story medium referenced by " + mediumReference);
             return 0;
         }
         else if (medium.equals(Constants.VIDEO)) {
@@ -435,10 +437,10 @@ public class MilestoneProgressCard extends Card {
     @Override
     public void copyText(Card card) {
         if (!(card instanceof MilestoneProgressCard)) {
-            Log.e(TAG, "CARD " + card.getId() + " IS NOT AN INSTANCE OF MilestoneProgressCard");
+            Timber.e("CARD " + card.getId() + " IS NOT AN INSTANCE OF MilestoneProgressCard");
         }
         if (!(this.getId().equals(card.getId()))) {
-            Log.e(TAG, "CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
+            Timber.e("CAN'T COPY STRINGS FROM " + card.getId() + " TO " + this.getId() + " (CARD ID'S MUST MATCH)");
             return;
         }
 

@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 

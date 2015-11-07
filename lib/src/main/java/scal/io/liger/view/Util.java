@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
@@ -68,12 +70,12 @@ public class Util {
             if (message.length() > 3) {
                 String toastMessage = host.getString(R.string.clips_with_no_duration, message);
                 Toast.makeText(host, toastMessage, Toast.LENGTH_LONG).show();
-                Log.e("Util", toastMessage);
+                Timber.e(toastMessage);
                 return;
             } else if (message.length() > 0) {
                 String toastMessage = host.getString(R.string.clip_with_no_duration, message);
                 Toast.makeText(host, toastMessage, Toast.LENGTH_LONG).show();
-                Log.e("Util", toastMessage);
+                Timber.e(toastMessage);
                 return;
             }
 

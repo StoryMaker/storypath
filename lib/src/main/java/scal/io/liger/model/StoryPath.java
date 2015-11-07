@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
@@ -164,7 +166,7 @@ public class StoryPath {
 
         // sanity check
         if (!this.id.equals(pathParts[0])) {
-            Log.e(TAG, "STORY PATH ID " + pathParts[0] + " DOES NOT MATCH (vs. " + this.id + ")");
+            Timber.e("STORY PATH ID " + pathParts[0] + " DOES NOT MATCH (vs. " + this.id + ")");
             return null;
         }
 
@@ -174,7 +176,7 @@ public class StoryPath {
             }
         }
 
-        Log.e(TAG, "CARD ID (full path) " + pathParts[1] + " WAS NOT FOUND");
+        Timber.e("CARD ID (full path) " + pathParts[1] + " WAS NOT FOUND");
         return null;
     }
 
@@ -187,7 +189,7 @@ public class StoryPath {
             }
         }
 
-        Log.e(TAG, "CARD ID (id only) " + idOnly + " WAS NOT FOUND");
+        Timber.e("CARD ID (id only) " + idOnly + " WAS NOT FOUND");
         return null;
     }
 
@@ -239,7 +241,7 @@ public class StoryPath {
         for (Card card : cards) {
             if (card.checkReferencedValues()) {
                 if (card instanceof HeadlessCard) {
-                    Log.d(TAG, "headless card " + card.getId() + " should not return " + card.checkReferencedValues() + " for checkReferencedValues()");
+                    Timber.d("headless card " + card.getId() + " should not return " + card.checkReferencedValues() + " for checkReferencedValues()");
                 } else {
                     validCards.add(card);
                 }
@@ -385,10 +387,10 @@ public class StoryPath {
         StoryPath story = null;
 
         if (dependencies == null) {
-            Log.e(TAG, "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS NULL");
+            Timber.e("STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS NULL");
             return null;
         } else if (dependencies.size() == 0) {
-            Log.e(TAG, "STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS EMPTY");
+            Timber.e("STORY PATH " + pathParts[0] + " REFERENCED (GET VALUE), BUT DEPENDENCIES IS EMPTY");
             return null;
         }
 
@@ -417,23 +419,23 @@ public class StoryPath {
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
-                    Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                    Timber.e("LOADED FROM FILE: " + dependency.getDependencyFile());
                 } else {
                     story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
-                    Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                    Timber.e("LOADED FROM ZIP: " + dependency.getDependencyFile());
                 }
 
                 //story.context = this.context;
                 //story.setCardReferences();
                 //story.setFileLocation(buildZipPath(dependency.getDependencyFile()));
 
-                Log.d("getExternalReferencedValue", "FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
+                Timber.d("FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
                 break;
             }
         }
 
         if (story == null) {
-            Log.e(TAG, "STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
+            Timber.e("STORY PATH ID " + pathParts[0] + " WAS NOT FOUND");
             return null;
         }
 
@@ -462,22 +464,22 @@ public class StoryPath {
 
 
         while (originalPath.contains("..")) {
-            Log.d("PATHS", "NEED TO DEAL WITH RELATIVE PATHS");
+            Timber.d("NEED TO DEAL WITH RELATIVE PATHS");
             originalPath = originalPath.substring(originalPath.indexOf(File.separator) + 1);
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
-            Log.d("PATHS", "CHECKING... " + relativePath + File.separator + originalPath);
+            Timber.d("CHECKING... " + relativePath + File.separator + originalPath);
         }
 
 
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
 
-            Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
+            Timber.d("ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
 
             relativePath = relativePath + File.separator + originalPath;
             return relativePath;
         } else {
-            Log.e(TAG, "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
+            Timber.e("NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
             return originalPath;
         }
     }
@@ -493,12 +495,12 @@ public class StoryPath {
         if ((relativePath != null) && (relativePath.length() != 0)) {
             relativePath = relativePath.substring(0, relativePath.lastIndexOf(File.separator));
 
-            Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
+            Timber.d("ID: " + this.getId() + " BASE PART: " + relativePath + " OTHER PART: " + originalPath);
 
             relativePath = relativePath + File.separator + originalPath;
             return relativePath;
         } else {
-            Log.e(TAG, "NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
+            Timber.e("NO ROOT TO CONSTRUCT RELATIVE PATH FOR " + originalPath);
             return originalPath;
         }
     }
@@ -521,7 +523,7 @@ public class StoryPath {
         // flatten path
         String flatPath = originalPath.replace(File.separatorChar, '_');
 
-        Log.d("TESTING", "ID: " + this.getId() + " BASE PART: " + basePath + " FLAT PART: " + flatPath);
+        Timber.d("ID: " + this.getId() + " BASE PART: " + basePath + " FLAT PART: " + flatPath);
 
         String relativePath = basePath + flatPath;
         return relativePath;
@@ -572,7 +574,7 @@ public class StoryPath {
 
     /*
     public void notifyCardChanged(Card updatedCard) {
-        Log.d("StoryPathModel", "notifyCardChanged");
+        Timber.d("notifyCardChanged");
 
         if (updatedCard.getStateVisiblity()) {
             // new or updated
@@ -619,20 +621,20 @@ public class StoryPath {
     /*
     public int findSpot(Card card) {
         int baseIndex = cards.indexOf(card);
-        Log.d(" *** FINDSPOT *** ", "CARD " + card.getId() + " - DEFAULT POSITION " + baseIndex);
+        Timber.d("CARD " + card.getId() + " - DEFAULT POSITION " + baseIndex);
         int newIndex = 0;
         for (int i = (baseIndex - 1); i >= 0; i--) {
             Card previousCard = cards.get(i);
-            Log.d(" *** FINDSPOT *** ", "LOOKING FOR " + previousCard.getId());
+            Timber.d("LOOKING FOR " + previousCard.getId());
             if (visibleCards.contains(previousCard)) {
                 newIndex = visibleCards.indexOf(previousCard) + 1;
-                Log.d(" *** FINDSPOT *** ", "CARD " + previousCard.getId() + " FOUND AT POSITION " + visibleCards.indexOf(previousCard));
+                Timber.d("CARD " + previousCard.getId() + " FOUND AT POSITION " + visibleCards.indexOf(previousCard));
 
                 break;
             }
         }
 
-        Log.d(" *** FINDSPOT *** ", "INSERTING " + card.getId() + " AT POSITION " + newIndex);
+        Timber.d("INSERTING " + card.getId() + " AT POSITION " + newIndex);
 
         return newIndex;
     }
@@ -687,7 +689,7 @@ public class StoryPath {
         Card card = cards.remove(currentIndex);
         cards.add(newIndex, card);
 
-        // Log.d(" *** REARRANGE *** ", "MOVED " + card.getId() + " FROM " + currentIndex + " TO " + newIndex);
+        // Timber.d("MOVED " + card.getId() + " FROM " + currentIndex + " TO " + newIndex);
 
         notifyCardChanged(card);
         // We should also notify the other affected card, right?
@@ -792,7 +794,7 @@ public class StoryPath {
             MediaFile mf = loadMediaFile(cm.getUuid());
 
             if (mf == null) {
-                Log.e(TAG, "no media file was found for uuid " + cm.getUuid());
+                Timber.e("no media file was found for uuid " + cm.getUuid());
                 throw new MediaException("Error: missing media file information");
             } else {
                 String path = mf.getPath();
@@ -800,7 +802,7 @@ public class StoryPath {
                 // a null media path causes errors downstream
 
                 if (path == null) {
-                    Log.e(TAG, "no media file path was found for uuid " + cm.getUuid());
+                    Timber.e("no media file path was found for uuid " + cm.getUuid());
                     throw new MediaException("Error: missing media file path");
                 } else {
 
@@ -924,7 +926,7 @@ public class StoryPath {
 
         // need to propogate this error up the stack
 
-        Log.e(TAG, "failed to determine actual file path for " + uri.toString());
+        Timber.e("failed to determine actual file path for " + uri.toString());
         throw new MediaException("Error: could not locate imported media files");
     }
 
@@ -990,7 +992,7 @@ public class StoryPath {
     @Nullable
     public ArrayList<MediaFile> getExternalMediaFile(String reference) {
 
-        Log.d("CLIPS", "NEW METHOD getExternalMediaFile() CALLED FOR REFERENCE " + reference);
+        Timber.d("NEW METHOD getExternalMediaFile() CALLED FOR REFERENCE " + reference);
 
         ArrayList<MediaFile> results = new ArrayList<MediaFile>();
 
@@ -1000,10 +1002,10 @@ public class StoryPath {
         StoryPathLibrary library = null;
 
         if (dependencies == null) {
-            Log.e("CLIPS", "STORY PATH " + parts[0] + " REFERENCED (GET MEDIA), BUT DEPENDENCIES IS NULL");
+            Timber.e("STORY PATH " + parts[0] + " REFERENCED (GET MEDIA), BUT DEPENDENCIES IS NULL");
             return null;
         } else if (dependencies.size() == 0) {
-            Log.e("CLIPS", "STORY PATH " + parts[0] + " REFERENCED (GET MEDIA), BUT DEPENDENCIES IS EMPTY");
+            Timber.e("STORY PATH " + parts[0] + " REFERENCED (GET MEDIA), BUT DEPENDENCIES IS EMPTY");
             return null;
         }
 
@@ -1027,58 +1029,58 @@ public class StoryPath {
                     } else {
                         story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
                     }
-                    Log.d("CLIPS", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                    Timber.d("LOADED FROM FILE: " + dependency.getDependencyFile());
                 } else {
                     if (dependency.getDependencyFile().contains("-library-instance")) {
                         story = JsonHelper.loadStoryPathLibraryFromZip(dependency.getDependencyFile(), referencedFiles, this.context, mainActivity.getLanguage());
                     } else {
                         story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
                     }
-                    Log.d("CLIPS", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                    Timber.d("LOADED FROM ZIP: " + dependency.getDependencyFile());
                 }
 
                 if (story instanceof StoryPathLibrary) {
-                    Log.d("CLIPS", "STORY PATH " + story.getId() + " IS A LIBRARY");
+                    Timber.d("STORY PATH " + story.getId() + " IS A LIBRARY");
                     library = (StoryPathLibrary)story;
                 } else {
-                    Log.d("CLIPS", "NEED TO LOAD STORY PATH LIBRARY CORRESPONDING TO " + story.getId());
+                    Timber.d("NEED TO LOAD STORY PATH LIBRARY CORRESPONDING TO " + story.getId());
 
                     checkPath = story.buildZipPath(story.getStoryPathLibraryFile());
                     checkFile = new File(checkPath);
 
                     if (checkFile.exists()) {
                         library = JsonHelper.loadStoryPathLibrary(story.getStoryPathLibraryFile(), referencedFiles, this.context, mainActivity.getLanguage());
-                        Log.d("CLIPS", "LOADED FROM FILE: " + story.getStoryPathLibraryFile());
+                        Timber.d("LOADED FROM FILE: " + story.getStoryPathLibraryFile());
                     } else {
                         library = JsonHelper.loadStoryPathLibraryFromZip(story.getStoryPathLibraryFile(), referencedFiles, this.context, mainActivity.getLanguage());
-                        Log.d("CLIPS", "LOADED FROM ZIP: " + story.getStoryPathLibraryFile());
+                        Timber.d("LOADED FROM ZIP: " + story.getStoryPathLibraryFile());
                     }
                 }
 
-                Log.d("getExternalMediaFile", "FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
+                Timber.d("FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
                 break;
             }
         }
 
         if (story == null) {
-            Log.e("CLIPS", "STORY PATH ID " + parts[0] + " WAS NOT FOUND");
+            Timber.e("STORY PATH ID " + parts[0] + " WAS NOT FOUND");
             return null;
         }
 
         if (library == null) {
-            Log.e("CLIPS", "STORY PATH LIBRARY CORRESPONDING TO ID " + parts[0] + " WAS NOT FOUND");
+            Timber.e("STORY PATH LIBRARY CORRESPONDING TO ID " + parts[0] + " WAS NOT FOUND");
             return null;
         }
 
         ArrayList<Card> cards = story.gatherCards(parts[1]);
 
         if ((cards.size() > 1) || (cards.size() < 1)) {
-            Log.e("CLIPS", "UNEXPECTED NUMBER OF CARDS FOUND FOR REFERENCE " + reference);
+            Timber.e("UNEXPECTED NUMBER OF CARDS FOUND FOR REFERENCE " + reference);
             return null;
         }
 
         if (!(cards.get(0) instanceof ClipCard)) {
-            Log.e("CLIPS", "CARD FOUND FOR REFERENCE " + reference + " IS NOT A CLIP CARD");
+            Timber.e("CARD FOUND FOR REFERENCE " + reference + " IS NOT A CLIP CARD");
             return null;
         }
 
@@ -1087,16 +1089,16 @@ public class StoryPath {
         ArrayList<ClipMetadata> clips = clipCard.getClips();
 
         if (clips.size() < 1) {
-            Log.e("CLIPS", "NO CLIPS FOUND FOR REFERENCE " + reference);
+            Timber.e("NO CLIPS FOUND FOR REFERENCE " + reference);
             return null;
         }
 
         for (ClipMetadata clip : clips) {
             MediaFile media = library.loadMediaFile(clip.getUuid());
             if (media == null) {
-                Log.d("CLIPS", "NO MEDIA FOUND FOR UUID " + clip.getUuid());
+                Timber.d("NO MEDIA FOUND FOR UUID " + clip.getUuid());
             } else {
-                Log.d("CLIPS", "FOUND MEDIA FOR UUID " + clip.getUuid());
+                Timber.d("FOUND MEDIA FOR UUID " + clip.getUuid());
                 results.add(media);
             }
         }
@@ -1213,7 +1215,7 @@ public class StoryPath {
         } else {
             for (Card card : getCards()) {
                 if (card.getId() == null) {
-                    Log.e("JSON ERROR", "CARD TYPE " + card.getType() + " FOUND WITH NO ID!");
+                    Timber.e("CARD TYPE " + card.getType() + " FOUND WITH NO ID!");
                 } else if (card.getId().equals(cardTarget)) {
                     results.add(card);
                 }
@@ -1242,10 +1244,10 @@ public class StoryPath {
         StoryPath story = null;
 
         if (dependencies == null) {
-            Log.e(TAG, "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS NULL");
+            Timber.e("STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS NULL");
             return null;
         } else if (dependencies.size() == 0) {
-            Log.e(TAG, "STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS EMPTY");
+            Timber.e("STORY PATH " + pathTarget + " REFERENCED (GET CARD), BUT DEPENDENCIES IS EMPTY");
             return null;
         }
 
@@ -1264,19 +1266,19 @@ public class StoryPath {
 
                 if (checkFile.exists()) {
                     story = JsonHelper.loadStoryPath(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
-                    Log.e("FILES", "LOADED FROM FILE: " + dependency.getDependencyFile());
+                    Timber.e("LOADED FROM FILE: " + dependency.getDependencyFile());
                 } else {
                     story = JsonHelper.loadStoryPathFromZip(dependency.getDependencyFile(), this.storyPathLibrary, referencedFiles, this.context, mainActivity.getLanguage());
-                    Log.e("FILES", "LOADED FROM ZIP: " + dependency.getDependencyFile());
+                    Timber.e("LOADED FROM ZIP: " + dependency.getDependencyFile());
                 }
 
-                Log.d("gatherExternalCards", "FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
+                Timber.d("FOUND MATCHING DEPENDENCY FILE " + dependency.getDependencyFile() + ", BREAKING FOR LOOP");
                 break;
             }
         }
 
         if (story == null) {
-            Log.e(TAG, "STORY PATH ID " + pathTarget + " WAS NOT FOUND");
+            Timber.e("STORY PATH ID " + pathTarget + " WAS NOT FOUND");
             return null;
         }
 

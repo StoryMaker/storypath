@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -38,7 +40,7 @@ public class LigerDownloadActivity extends Activity implements IDownloaderClient
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notifierIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Log.d("DOWNLOAD", "CREATED PENDING INTENT");
+        Timber.d("CREATED PENDING INTENT");
 
         try {
             // "Start the download service (if required)"
@@ -52,13 +54,13 @@ public class LigerDownloadActivity extends Activity implements IDownloaderClient
                 // "Inflate layout that shows download progress"
                 // currently no ui for progress/status
                 // setContentView(R.layout.downloader_ui);
-                Log.d("DOWNLOAD", "CLIENT MARSHALLER CREATED STUB");
+                Timber.d("CLIENT MARSHALLER CREATED STUB");
                 return;
             } else {
-                Log.d("DOWNLOAD", "CLIENT MARSHALLER SAYS DOWNLOAD NOT REQUIRED");
+                Timber.d("CLIENT MARSHALLER SAYS DOWNLOAD NOT REQUIRED");
             }
         } catch (PackageManager.NameNotFoundException nnfe) {
-            Log.e("DOWNLOAD", "CLASS PASSED TO DOWNLOAD SERVICE NOT FOUND?");
+            Timber.e("CLASS PASSED TO DOWNLOAD SERVICE NOT FOUND?");
             nnfe.printStackTrace();
         }
 
@@ -70,7 +72,7 @@ public class LigerDownloadActivity extends Activity implements IDownloaderClient
     protected void onResume() {
         if (null != mDownloaderClientStub) {
             mDownloaderClientStub.connect(this);
-            Log.d("DOWNLOAD", "STUB CONNECTED");
+            Timber.d("STUB CONNECTED");
         }
         super.onResume();
     }
@@ -79,29 +81,29 @@ public class LigerDownloadActivity extends Activity implements IDownloaderClient
     protected void onStop() {
         if (null != mDownloaderClientStub) {
             mDownloaderClientStub.disconnect(this);
-            Log.d("DOWNLOAD", "STUB DISCONNECTED");
+            Timber.d("STUB DISCONNECTED");
         }
         super.onStop();
     }
 
     @Override
     public void onServiceConnected(Messenger m) {
-        Log.d("DOWNLOAD", "SERVICE CONNECTED");
+        Timber.d("SERVICE CONNECTED");
 
         mRemoteService = DownloaderServiceMarshaller.CreateProxy(m);
         mRemoteService.onClientUpdated(mDownloaderClientStub.getMessenger());
 
-        Log.d("DOWNLOAD", "PROXY CREATED, GOT MESSENGER");
+        Timber.d("PROXY CREATED, GOT MESSENGER");
     }
 
     @Override
     public void onDownloadStateChanged(int newState) {
         int stateNumber = Helpers.getDownloaderStringResourceIDFromState(newState);
-        Log.d("DOWNLOAD", "DOWNLOAD STATE CHANGED: " + stateNumber);
+        Timber.d("DOWNLOAD STATE CHANGED: " + stateNumber);
     }
 
     @Override
     public void onDownloadProgress(DownloadProgressInfo progress) {
-        Log.d("DOWNLOAD", "DOWNLOAD PROGRESS RECEIVED, TIME REMAINING: " + progress.mTimeRemaining);
+        Timber.d("DOWNLOAD PROGRESS RECEIVED, TIME REMAINING: " + progress.mTimeRemaining);
     }
 }

@@ -1,5 +1,7 @@
 package scal.io.liger.view;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
@@ -31,14 +33,14 @@ public class PreviewCardView implements DisplayableCard {
     public int videoIndex = 0;
 
     public PreviewCardView(Context context, Card cardModel) {
-        Log.d("PreviewCardView", "constructor");
+        Timber.d("constructor");
         mContext = context;
         mCardModel = (PreviewCard) cardModel;
     }
 
     @Override
     public View getCardView(Context context) {
-        Log.d("PreviewCardView", "getCardView");
+        Timber.d("getCardView");
         if(mCardModel == null) {
             return null;
         }
@@ -126,7 +128,7 @@ public class PreviewCardView implements DisplayableCard {
             MediaFile mf = ccm.getSelectedMediaFile();
 
             if (mf == null) {
-                Log.e(this.getClass().getName(), "no media file was found");
+                Timber.e("no media file was found");
             } else {
                 mediaPath = mf.getPath();
                 paths.add(mCardModel.getStoryPath().buildZipPath(mediaPath));

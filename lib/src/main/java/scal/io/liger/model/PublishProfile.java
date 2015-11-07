@@ -1,5 +1,7 @@
 package scal.io.liger.model;
 
+import timber.log.Timber;
+
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import timber.log.Timber;
+
 import android.util.Log;
 
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
@@ -231,14 +233,14 @@ public class ExpansionIndexItem extends BaseIndexItem {
     // methods added for convenience
     public void setDownloadFlag(boolean downloadFlag, String fileName) {
 
-        Log.d("DOWNLOAD", "SETTING FLAG FOR " + fileName + " TO " + downloadFlag);
+        Timber.d("SETTING FLAG FOR " + fileName + " TO " + downloadFlag);
 
         if (fileName.contains(Constants.MAIN)) {
             setMainDownloadFlag(downloadFlag);
         } else if (fileName.contains(Constants.PATCH)) {
             setPatchDownloadFlag(downloadFlag);
         } else {
-            Log.e("ERROR", "CANNOT SET DOWNLOAD FLAG STATE FOR " + fileName);
+            Timber.e("CANNOT SET DOWNLOAD FLAG STATE FOR " + fileName);
         }
     }
 
@@ -248,7 +250,7 @@ public class ExpansionIndexItem extends BaseIndexItem {
         } else if (fileName.contains(Constants.PATCH)) {
             return isDownloadingPatch();
         } else {
-            Log.e("ERROR", "CANNOT DETERMINE DOWNLOAD FLAG STATE FOR " + fileName);
+            Timber.e("CANNOT DETERMINE DOWNLOAD FLAG STATE FOR " + fileName);
             return false;
         }
     }
@@ -283,11 +285,11 @@ public class ExpansionIndexItem extends BaseIndexItem {
 
         if (item.getLanguages() != null) {
             languageString = item.getLanguages().toString();
-            Log.d("RX_DB", "WHAT DOES THIS LOOK LIKE? " + languageString);
+            Timber.d("WHAT DOES THIS LOOK LIKE? " + languageString);
         }
         if (item.getTags() != null) {
             tagString = item.getTags().toString();
-            Log.d("RX_DB", "WHAT DOES THIS LOOK LIKE? " + tagString);
+            Timber.d("WHAT DOES THIS LOOK LIKE? " + tagString);
         }
 
         this.languages = languageString;
@@ -369,7 +371,7 @@ public class ExpansionIndexItem extends BaseIndexItem {
     @Override
     public int compareTo(Object another) {
         if (another instanceof InstanceIndexItem) {
-            //Log.d("COMPARE", title + " COMPARED TO INSTANCE ITEM: -1");
+            //Timber.d(title + " COMPARED TO INSTANCE ITEM: -1");
             return -1; // should always appear below instance index items
         } else if (another instanceof ExpansionIndexItem){
 
@@ -380,20 +382,20 @@ public class ExpansionIndexItem extends BaseIndexItem {
             // 1
 
             if (dateUpdated == null) {
-                //Log.d("COMPARE", title + " HAS NO DATE: -1");
+                //Timber.d(title + " HAS NO DATE: -1");
                 return -1;
             }
 
             if (((ExpansionIndexItem)another).getDateUpdated() == null) {
-                //Log.d("COMPARE", title + " HAS A DATE BUT " + ((ExpansionIndexItem)another).getTitle() + " DOES NOT: 1");
+                //Timber.d(title + " HAS A DATE BUT " + ((ExpansionIndexItem)another).getTitle() + " DOES NOT: 1");
                 return 1;
             }
 
-            //Log.d("COMPARE", "COMPARING DATE OF " + title + " TO DATE OF " + ((ExpansionIndexItem)another).getTitle() + ": " + dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated()));
+            //Timber.d("COMPARING DATE OF " + title + " TO DATE OF " + ((ExpansionIndexItem)another).getTitle() + ": " + dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated()));
             return dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated());
 
         } else {
-            //Log.d("COMPARE", title + " HAS NO POINT OF COMPARISON: 0");
+            //Timber.d(title + " HAS NO POINT OF COMPARISON: 0");
             return 0; // otherwise don't care
         }
     }

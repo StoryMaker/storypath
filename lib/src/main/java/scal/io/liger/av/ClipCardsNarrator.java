@@ -1,5 +1,7 @@
 package scal.io.liger.av;
 
+import timber.log.Timber;
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -74,7 +76,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         public void handleMessage (Message msg) {
             ClipCardsNarrator narrator = mWeakNarrator.get();
             if (narrator == null) {
-                Log.w(getClass().getSimpleName(), "ClipCardsNarrator.handleMessage: narrator is null!");
+                Timber.w("ClipCardsNarrator.handleMessage: narrator is null!");
                 return;
             }
 
@@ -160,7 +162,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         if (mRecorder.startRecording()) {
             Toast.makeText(mContext, mContext.getString(R.string.recording_narration), Toast.LENGTH_SHORT).show();
         } else {
-            Log.e(TAG, "startRecording failed");
+            Timber.e("startRecording failed");
             Toast.makeText(mContext, mContext.getString(R.string.could_not_start_narration), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -206,7 +208,7 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
 
             mListener.onNarrationFinished(audioClip, mf);
         } else {
-            Log.w(TAG, "Narration recorded without a NarrationListener set. Narration data will be lost");
+            Timber.w("Narration recorded without a NarrationListener set. Narration data will be lost");
         }
         if (stopPlayback) _stopPlayback();
     }

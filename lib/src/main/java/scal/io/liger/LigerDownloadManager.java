@@ -1,5 +1,7 @@
 package scal.io.liger;
 
+import timber.log.Timber;
+
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Notification;
@@ -136,9 +138,9 @@ public class LigerDownloadManager implements Runnable {
         String filePath = ZipHelper.getExpansionZipDirectory(context, mainOrPatch, version);
 
         if (checkQueue()) {
-            Log.d("DOWNLOAD", "ANOTHER PROCESS IS ALREADY DOWNLOADING " + fileName + ", WILL NOT START DOWNLOAD");
+            Timber.d("ANOTHER PROCESS IS ALREADY DOWNLOADING " + fileName + ", WILL NOT START DOWNLOAD");
         } else {
-            Log.d("DOWNLOAD", "NO OTHER PROCESS IS DOWNLOADING " + fileName + ", CHECKING FOR FILES");
+            Timber.d("NO OTHER PROCESS IS DOWNLOADING " + fileName + ", CHECKING FOR FILES");
 
             // force subsequent file check
             downloadRequired = true;
@@ -154,14 +156,14 @@ public class LigerDownloadManager implements Runnable {
                 try {
                     FileUtils.moveFile(tempFile, actualFile);
                     FileUtils.deleteQuietly(tempFile);
-                    Log.d("DOWNLOAD", "MOVED TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
+                    Timber.d("MOVED TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
                 } catch (IOException ioe) {
-                    Log.e("DOWNLOAD", "FAILED TO MOVE TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
+                    Timber.e("FAILED TO MOVE TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
                     ioe.printStackTrace();
                     FileUtils.deleteQuietly(tempFile); // cleanup
                 }
             } else {
-                Log.d("DOWNLOAD", tempFile.getPath() + " DOES NOT EXIST");
+                Timber.d(tempFile.getPath() + " DOES NOT EXIST");
             }
         }
 
@@ -174,24 +176,24 @@ public class LigerDownloadManager implements Runnable {
             if (actualFile.exists() && (actualFile.length() > 0)) {
 
                 if ((Constants.MAIN.equals(mainOrPatch)) && (Constants.MAIN_SIZE > 0) && (Constants.MAIN_SIZE > actualFile.length())) {
-                    Log.e("DOWNLOAD", actualFile.getPath() + " FOUND, BUT IS TOO SMALL (" + actualFile.length() + "/" + Constants.MAIN_SIZE + ")");
+                    Timber.e(actualFile.getPath() + " FOUND, BUT IS TOO SMALL (" + actualFile.length() + "/" + Constants.MAIN_SIZE + ")");
                     // delete incomplete/corrupt file
                     FileUtils.deleteQuietly(actualFile);
                 } else if ((Constants.PATCH.equals(mainOrPatch)) && (Constants.PATCH_SIZE > 0) && (Constants.PATCH_SIZE > actualFile.length())) {
-                    Log.e("DOWNLOAD", actualFile.getPath() + " FOUND, BUT IS TOO SMALL (" + actualFile.length() + "/" + Constants.PATCH_SIZE + ")");
+                    Timber.e(actualFile.getPath() + " FOUND, BUT IS TOO SMALL (" + actualFile.length() + "/" + Constants.PATCH_SIZE + ")");
                     // delete incomplete/corrupt file
                     FileUtils.deleteQuietly(actualFile);
                 } else {
-                    Log.d("DOWNLOAD", actualFile.getPath() + " FOUND, DO NOT DOWNLOAD AGAIN");
+                    Timber.d(actualFile.getPath() + " FOUND, DO NOT DOWNLOAD AGAIN");
                     downloadRequired = false;
                 }
             }
         }
 
         if (downloadRequired) {
-            Log.d("DOWNLOAD", fileName + " MUST BE DOWNLOADED");
+            Timber.d(fileName + " MUST BE DOWNLOADED");
         } else {
-            Log.d("DOWNLOAD", fileName + " WILL NOT BE DOWNLOADED");
+            Timber.d(fileName + " WILL NOT BE DOWNLOADED");
             return;
         }
 
@@ -206,7 +208,7 @@ public class LigerDownloadManager implements Runnable {
         } catch (Exception e) {
             // need to catch exception thrown if publisher key is invalid
             // default to downloading from our servers
-            Log.d("DOWNLOAD", "LICENSE CHECK EXCEPTION THROWN: " + e.getClass().getName() + ", DOWNLOADING FROM LIGER SERVER");
+            Timber.d("LICENSE CHECK EXCEPTION THROWN: " + e.getClass().getName() + ", DOWNLOADING FROM LIGER SERVER");
             downloadFromLigerServer();
             return;
         }
@@ -218,11 +220,11 @@ public class LigerDownloadManager implements Runnable {
 
         // not sure what the best way to compare versions is (too many decimal points to convert to a number)
         if (!deviceVersion.startsWith("5.")) {
-            Log.d("DOWNLOAD", "ABOUT TO CHECK ACCESS ON ANDROID VERSION " + deviceVersion);
+            Timber.d("ABOUT TO CHECK ACCESS ON ANDROID VERSION " + deviceVersion);
             ligerChecker.checkAccess(ligerCallback);
-            Log.d("DOWNLOAD", "ACCESS CHECK WAS INITIATED");
+            Timber.d("ACCESS CHECK WAS INITIATED");
         } else {
-            Log.d("DOWNLOAD", "CANNOT CHECK ACCESS ON ANDROID VERSION " + deviceVersion + ", DOWNLOADING FROM LIGER SERVER");
+            Timber.d("CANNOT CHECK ACCESS ON ANDROID VERSION " + deviceVersion + ", DOWNLOADING FROM LIGER SERVER");
             downloadFromLigerServer();
             return;
         }
@@ -241,7 +243,7 @@ public class LigerDownloadManager implements Runnable {
 
         //for (Long queueId : queueMap.keySet()) {
 
-            //Log.d("QUEUE", "QUEUE ITEM IS " + queueMap.get(queueId).getQueueFile() + " LOOKING FOR " + checkFile.getName());
+            //Timber.d("QUEUE ITEM IS " + queueMap.get(queueId).getQueueFile() + " LOOKING FOR " + checkFile.getName());
 
             //if (checkFile.getName().equals(queueMap.get(queueId).getQueueFile())) {
 
@@ -262,12 +264,12 @@ public class LigerDownloadManager implements Runnable {
 
                     if (checkFileProgress()) {
 
-                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD PROGRESS OBSERVED, LEAVING " + queueId.toString() + " IN QUEUE ");
+                        Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD PROGRESS OBSERVED, LEAVING " + queueId.toString() + " IN QUEUE ");
                         foundInQueue = true;
 
                     } else {
 
-                        Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NO DOWNLOAD PROGRESS OBSERVED, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                        Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NO DOWNLOAD PROGRESS OBSERVED, REMOVING " + queueId.toString() + " FROM QUEUE ");
                         QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                     }
@@ -287,38 +289,38 @@ public class LigerDownloadManager implements Runnable {
                             int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
                             if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
 
-                                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                                Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS FAILED, REMOVING " + queueId.toString() + " FROM QUEUE ");
                                 QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                             } else if (DownloadManager.STATUS_PAUSED == c.getInt(columnIndex)) {
 
-                                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
+                                Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PAUSED, LEAVING " + queueId.toString() + " IN QUEUE ");
                                 foundInQueue = true;
 
                             } else if (DownloadManager.STATUS_PENDING == c.getInt(columnIndex)) {
 
-                                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                                Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS PENDING, LEAVING " + queueId.toString() + " IN QUEUE ");
                                 foundInQueue = true;
 
                             } else if (DownloadManager.STATUS_RUNNING == c.getInt(columnIndex)) {
 
-                                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
+                                Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " AND DOWNLOAD STATUS IS RUNNING, LEAVING " + queueId.toString() + " IN QUEUE ");
                                 foundInQueue = true;
 
                             } else if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
 
-                                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                                Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS SUCCESSFUL, REMOVING " + queueId.toString() + " FROM QUEUE ");
                                 QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                             } else {
 
-                                Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                                Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT DOWNLOAD STATUS IS UNKNOWN, REMOVING " + queueId.toString() + " FROM QUEUE ");
                                 QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                             }
                         } else {
 
-                            Log.d("QUEUE", "QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
+                            Timber.d("QUEUE ITEM FOUND FOR " + checkFile.getName() + " BUT NOTHING FOUND IN DOWNLOAD MANAGER, REMOVING " + queueId.toString() + " FROM QUEUE ");
                             QueueManager.removeFromQueue(context, Long.valueOf(queueId));
 
                         }
@@ -341,15 +343,15 @@ public class LigerDownloadManager implements Runnable {
                 long queuedTime = queueMap.get(queueId).getQueueTime();
                 if ((currentTime.getTime() - queueMap.get(queueId).getQueueTime()) > QueueManager.queueTimeout) {
 
-                    Log.d("QUEUE", "TIMEOUT EXCEEDED, REMOVING " + queueId.toString() + " FROM DOWNLOAD MANAGER.");
+                    Timber.d("TIMEOUT EXCEEDED, REMOVING " + queueId.toString() + " FROM DOWNLOAD MANAGER.");
                     int numberRemoved = manager.remove(queueId);
 
                     if (numberRemoved == 1) {
-                        Log.d("QUEUE", "REMOVED FROM DOWNLOAD MANAGER, RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        Timber.d("REMOVED FROM DOWNLOAD MANAGER, RE-QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
                         QueueManager.removeFromQueue(context, Long.valueOf(queueId));
                         foundInQueue = false;
                     } else {
-                        Log.d("QUEUE", "FAILED TO REMOVE FROM DOWNLOAD MANAGER, NOT QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
+                        Timber.d("FAILED TO REMOVE FROM DOWNLOAD MANAGER, NOT QUEUEING: " + queueId.toString() + " -> " + uriFile.toString());
                     }
                 }
             }
@@ -383,16 +385,16 @@ public class LigerDownloadManager implements Runnable {
             long secondSize = checkFile.length();
 
             if (secondSize > firstSize) {
-                Log.d("DOWNLOAD", "DOWNLOAD IN PROGRESS FOR " + checkFile.getPath() + "(" + firstSize + " -> " + secondSize + ")");
+                Timber.d("DOWNLOAD IN PROGRESS FOR " + checkFile.getPath() + "(" + firstSize + " -> " + secondSize + ")");
 
                 return true;
             } else {
-                Log.d("DOWNLOAD", "NO DOWNLOAD PROGRESS FOR " + checkFile.getPath() + "(" + firstSize + " -> " + secondSize + ")");
+                Timber.d("NO DOWNLOAD PROGRESS FOR " + checkFile.getPath() + "(" + firstSize + " -> " + secondSize + ")");
 
                 return false;
             }
         } else {
-            Log.d("DOWNLOAD", "NO FILE FOUND FOR " + checkFile.getPath());
+            Timber.d("NO FILE FOUND FOR " + checkFile.getPath());
 
             return false;
         }
@@ -408,7 +410,7 @@ public class LigerDownloadManager implements Runnable {
             // if we're using the google play api, download only to the obb folder
             File ligerPath = new File(ZipHelper.getFileFolderName(context));
 
-            Log.d("DOWNLOAD", "DOWNLOADING " + ligerObb + " FROM " + ligerUrl + " TO " + ligerPath);
+            Timber.d("DOWNLOADING " + ligerObb + " FROM " + ligerUrl + " TO " + ligerPath);
 
             String nameFilter = "";
 
@@ -420,14 +422,14 @@ public class LigerDownloadManager implements Runnable {
             }
 
             if (nameFilter.length() == 0) {
-                Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
+                Timber.d("CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
             } else {
-                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + ligerPath.getPath());
+                Timber.d("CLEANUP: DELETING " + nameFilter + " FROM " + ligerPath.getPath());
             }
 
             WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
             for (File oldFile : FileUtils.listFiles(ligerPath, oldFileFilter, null)) {
-                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(oldFile);
             }
 
@@ -450,7 +452,7 @@ public class LigerDownloadManager implements Runnable {
 
                 //if (checkTor(useTor, context)) {
                 if (useTor && useManager) {
-                    Log.e("DOWNLOAD", "ANDROID DOWNLOAD MANAGER IS NOT COMPATABLE WITH TOR");
+                    Timber.e("ANDROID DOWNLOAD MANAGER IS NOT COMPATABLE WITH TOR");
 
                     if (context instanceof Activity) {
                         Utility.toastOnUiThread((Activity) context, "Check settings, can't use download manager and tor", true); // FIXME move to strings
@@ -465,7 +467,7 @@ public class LigerDownloadManager implements Runnable {
                 }
 
             } else {
-                Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + ligerUrl + ligerObb + " -> " + targetFile.getPath());
+                Timber.d("NO CONNECTION, NOT QUEUEING DOWNLOAD: " + ligerUrl + ligerObb + " -> " + targetFile.getPath());
 
                 if (context instanceof Activity) {
                     Utility.toastOnUiThread((Activity) context, "Check settings, no connection, can't start download", true); // FIXME move to strings
@@ -476,7 +478,7 @@ public class LigerDownloadManager implements Runnable {
             }
 
         } catch (Exception e) {
-            Log.e("DOWNLOAD", "DOWNLOAD ERROR: " + ligerUrl + ligerObb + " -> " + e.getMessage());
+            Timber.e("DOWNLOAD ERROR: " + ligerUrl + ligerObb + " -> " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -485,10 +487,10 @@ public class LigerDownloadManager implements Runnable {
         OrbotHelper orbotHelper = new OrbotHelper(mContext);
 
         if(orbotHelper.isOrbotRunning()) {
-            Log.d("DOWNLOAD/TOR", "ORBOT RUNNING, USE TOR");
+            Timber.d("ORBOT RUNNING, USE TOR");
             return true;
         } else {
-            Log.d("DOWNLOAD/TOR", "ORBOT NOT RUNNING, DON'T USE TOR");
+            Timber.d("ORBOT NOT RUNNING, DON'T USE TOR");
             return false;
         }
     }
@@ -510,11 +512,11 @@ public class LigerDownloadManager implements Runnable {
         if (useTor) {
             if (checkTor(context)) {
 
-                Log.d("DOWNLOAD/TOR", "DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
+                Timber.d("DOWNLOAD WITH TOR PROXY: " + Constants.TOR_PROXY_HOST + "/" + Constants.TOR_PROXY_PORT);
 
                 httpClient.useProxy(true, "http", Constants.TOR_PROXY_HOST, Constants.TOR_PROXY_PORT); // CLASS DOES NOT APPEAR TO REGISTER A SCHEME FOR SOCKS, ORBOT DOES NOT APPEAR TO HAVE AN HTTPS PORT
             } else {
-                Log.e("DOWNLOAD/TOR", "CANNOT DOWNLOAD WITH TOR, TOR IS NOT ACTIVE");
+                Timber.e("CANNOT DOWNLOAD WITH TOR, TOR IS NOT ACTIVE");
 
                 if (context instanceof Activity) {
                     Utility.toastOnUiThread((Activity) context, "Check settings, can't use tor if orbot isn't running", true); // FIXME move to strings
@@ -537,7 +539,7 @@ public class LigerDownloadManager implements Runnable {
 
         httpClient.setParams(params);
 
-        Log.d("DOWNLOAD/TOR", "CHECKING URI: " + uri.toString());
+        Timber.d("CHECKING URI: " + uri.toString());
 
         try {
 
@@ -552,7 +554,7 @@ public class LigerDownloadManager implements Runnable {
 
             if (statusCode == 200) {
 
-                Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, STATUS CODE: " + statusCode);
+                Timber.d("DOWNLOAD SUCCEEDED, STATUS CODE: " + statusCode);
 
                 // queue item here, "download" doesn't start until after we get a status code
 
@@ -563,7 +565,7 @@ public class LigerDownloadManager implements Runnable {
 
                 targetFile.getParentFile().mkdirs();
 
-                Log.d("DOWNLOAD/TOR", "DOWNLOAD SUCCEEDED, GETTING ENTITY...");
+                Timber.d("DOWNLOAD SUCCEEDED, GETTING ENTITY...");
 
                 BufferedInputStream responseInput = new BufferedInputStream(response.getEntity().getContent());
 
@@ -590,20 +592,20 @@ public class LigerDownloadManager implements Runnable {
 
                     /*
                     if (!handleFile(targetFile)) {
-                        Log.d("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING");
+                        Timber.d("ERROR DURING FILE PROCESSING");
                         return;
                     }
                     */
 
-                    Log.d("DOWNLOAD/TOR", "SAVED DOWNLOAD TO " + targetFile);
+                    Timber.d("SAVED DOWNLOAD TO " + targetFile);
                 } catch (ConnectTimeoutException cte) {
-                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + fileName + " (CONNECTION EXCEPTION)");
+                    Timber.e("FAILED TO SAVE DOWNLOAD TO " + fileName + " (CONNECTION EXCEPTION)");
                     cte.printStackTrace();
                 } catch (SocketTimeoutException ste) {
-                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + fileName + " (SOCKET EXCEPTION)");
+                    Timber.e("FAILED TO SAVE DOWNLOAD TO " + fileName + " (SOCKET EXCEPTION)");
                     ste.printStackTrace();
                 } catch (IOException ioe) {
-                    Log.e("DOWNLOAD/TOR", "FAILED TO SAVE DOWNLOAD TO " + fileName + " (IO EXCEPTION)");
+                    Timber.e("FAILED TO SAVE DOWNLOAD TO " + fileName + " (IO EXCEPTION)");
                     ioe.printStackTrace();
                 }
 
@@ -616,10 +618,10 @@ public class LigerDownloadManager implements Runnable {
                 // handle file here, regardless of success
                 // (assumes .tmp file will exist if download is interrupted)
                 if (!handleFile(targetFile)) {
-                    Log.e("DOWNLOAD/TOR", "ERROR DURING FILE PROCESSING FOR " + fileName);
+                    Timber.e("ERROR DURING FILE PROCESSING FOR " + fileName);
                 }
             } else {
-                Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + fileName + ", STATUS CODE: " + statusCode);
+                Timber.e("DOWNLOAD FAILED FOR " + fileName + ", STATUS CODE: " + statusCode);
 
                 QueueManager.checkQueueFinished(context, targetFile.getName());
             }
@@ -630,7 +632,7 @@ public class LigerDownloadManager implements Runnable {
             request.releaseConnection();
 
         } catch (IOException ioe) {
-            Log.e("DOWNLOAD/TOR", "DOWNLOAD FAILED FOR " + fileName + ", EXCEPTION THROWN");
+            Timber.e("DOWNLOAD FAILED FOR " + fileName + ", EXCEPTION THROWN");
             ioe.printStackTrace();
 
             QueueManager.checkQueueFinished(context, targetFile.getName());
@@ -648,7 +650,7 @@ public class LigerDownloadManager implements Runnable {
     private void downloadWithManager(Uri uri, String title, String desc, Uri uriFile) {
         initDownloadManager();
 
-        Log.d("DOWNLOAD", "QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
+        Timber.d("QUEUEING DOWNLOAD: " + uri.toString() + " -> " + uriFile.toString());
 
         initReceivers();
 
@@ -720,30 +722,30 @@ public class LigerDownloadManager implements Runnable {
                             String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
                             File savedFile = new File(Uri.parse(uriString).getPath());
-                            Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
+                            Timber.d("PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
                             File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
                             if (fileReceived) {
-                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
+                                Timber.d("GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
                                 return;
                             } else if (!fileCheck.getName().equals(fileFilter)) {
-                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                                Timber.d("GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
                                 return;
                             } else {
-                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                                Timber.d("GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
                                 fileReceived = true;
                             }
 
                             QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
 
-                            Log.d("QUEUE", "DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
+                            Timber.d("DOWNLOAD COMPLETE, REMOVING FROM QUEUE: " + downloadId);
 
                             if (!handleFile(savedFile)) {
-                                Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
+                                Timber.e("ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
 
                             } else {
-                                Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
+                                Timber.e("FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
                             }
                         } else {
 
@@ -755,18 +757,18 @@ public class LigerDownloadManager implements Runnable {
                             String filePath = ZipHelper.getExpansionZipDirectory(context, mainOrPatch, version);
 
                             File savedFile = new File(filePath, uriName + ".tmp");
-                            Log.d("DOWNLOAD", "PROCESSING DOWNLOADED FILE " + savedFile.getPath());
+                            Timber.d("PROCESSING DOWNLOADED FILE " + savedFile.getPath());
 
                             File fileCheck = new File(savedFile.getPath().substring(0, savedFile.getPath().lastIndexOf(".")));
 
                             if (fileReceived) {
-                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
+                                Timber.d("GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER HAS ALREADY PROCESSED A FILE");
                                 return;
                             } else if (!fileCheck.getName().equals(fileFilter)) {
-                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
+                                Timber.d("GOT FILE " + fileCheck.getName() + " BUT THIS RECEIVER IS FOR " + fileFilter);
                                 return;
                             } else {
-                                Log.d("DOWNLOAD", "GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
+                                Timber.d("GOT FILE " + fileCheck.getName() + " AND THIS RECEIVER IS FOR " + fileFilter + ", PROCESSING...");
                                 fileReceived = true;
                             }
 
@@ -788,26 +790,26 @@ public class LigerDownloadManager implements Runnable {
                                 willResume = false;
                             }
 
-                            Log.e("DOWNLOAD", "MANAGER FAILED AT STATUS CHECK, STATUS IS " + status);
+                            Timber.e("MANAGER FAILED AT STATUS CHECK, STATUS IS " + status);
 
                             if (willResume) {
-                                Log.e("DOWNLOAD", "STATUS IS " + status + ", LEAVING QUEUE/FILES AS-IS FOR MANAGER TO HANDLE");
+                                Timber.e("STATUS IS " + status + ", LEAVING QUEUE/FILES AS-IS FOR MANAGER TO HANDLE");
                             } else {
-                                Log.e("DOWNLOAD", "STATUS IS " + status + ", CLEANING UP QUEUE/FILES, MANAGER WILL NOT RESUME");
+                                Timber.e("STATUS IS " + status + ", CLEANING UP QUEUE/FILES, MANAGER WILL NOT RESUME");
 
-                                Log.d("QUEUE", "DOWNLOAD STOPPED, REMOVING FROM QUEUE: " + downloadId);
+                                Timber.d("DOWNLOAD STOPPED, REMOVING FROM QUEUE: " + downloadId);
 
                                 QueueManager.removeFromQueue(context, Long.valueOf(downloadId));
 
                                 if (!handleFile(savedFile)) {
-                                    Log.e("DOWNLOAD", "ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
+                                    Timber.e("ERROR DURING FILE PROCESSING FOR " + fileCheck.getName());
                                 } else {
-                                    Log.e("DOWNLOAD", "FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
+                                    Timber.e("FILE PROCESSING COMPLETE FOR " + fileCheck.getName());
                                 }
                             }
                         }
                     } else {
-                        Log.e("DOWNLOAD", "MANAGER FAILED AT QUERY");
+                        Timber.e("MANAGER FAILED AT QUERY");
                     }
                 } finally {
                     if (c != null) {
@@ -815,7 +817,7 @@ public class LigerDownloadManager implements Runnable {
                     }
                 }
             } else {
-                Log.e("DOWNLOAD", "MANAGER FAILED AT COMPLETION CHECK");
+                Timber.e("MANAGER FAILED AT COMPLETION CHECK");
             }
 
             // once this has done its job, make it go away
@@ -826,18 +828,18 @@ public class LigerDownloadManager implements Runnable {
     private boolean handleFile (File tempFile) {
 
         File actualFile = new File(tempFile.getPath().substring(0, tempFile.getPath().lastIndexOf(".")));
-        Log.d("DOWNLOAD", "ACTUAL FILE: " + actualFile.getAbsolutePath());
+        Timber.d("ACTUAL FILE: " + actualFile.getAbsolutePath());
 
         // additional error checking
         if (tempFile.exists()) {
             if (tempFile.length() == 0) {
-                Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT IS A ZERO BYTE FILE");
+                Timber.e("FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT IS A ZERO BYTE FILE");
                 return false;
             } else {
-                Log.d("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " AND FILE LOOKS OK");
+                Timber.d("FINISHED DOWNLOAD OF " + tempFile.getPath() + " AND FILE LOOKS OK");
             }
         } else {
-            Log.e("DOWNLOAD", "FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT DOES NOT EXIST");
+            Timber.e("FINISHED DOWNLOAD OF " + tempFile.getPath() + " BUT IT DOES NOT EXIST");
             return false;
         }
 
@@ -854,22 +856,22 @@ public class LigerDownloadManager implements Runnable {
             }
 
             if (nameFilter.length() == 0) {
-                Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + actualFile.getName());
+                Timber.d("CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + actualFile.getName());
             } else {
-                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
+                Timber.d("CLEANUP: DELETING " + nameFilter + " FROM " + directory.getPath());
             }
 
             WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
             for (File oldFile : FileUtils.listFiles(directory, oldFileFilter, null)) {
-                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(oldFile);
             }
 
             FileUtils.moveFile(tempFile, actualFile); // moved to commons-io from using exec and mv because we were getting 0kb obb files on some devices
             FileUtils.deleteQuietly(tempFile); // for some reason I was getting an 0kb .tmp file lingereing
-            Log.d("DOWNLOAD", "MOVED TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
+            Timber.d("MOVED TEMP FILE " + tempFile.getPath() + " TO " + actualFile.getPath());
         } catch (IOException ioe) {
-            Log.e("DOWNLOAD", "ERROR DURING CLEANUP/MOVING TEMP FILE: " + ioe.getMessage());
+            Timber.e("ERROR DURING CLEANUP/MOVING TEMP FILE: " + ioe.getMessage());
             return false;
         }
 
@@ -883,7 +885,7 @@ public class LigerDownloadManager implements Runnable {
 
         @Override
         public void allow(int reason) {
-            Log.d("DOWNLOAD", "LICENSE CHECK ALLOWED, DOWNLOADING FROM GOOGLE PLAY");
+            Timber.d("LICENSE CHECK ALLOWED, DOWNLOADING FROM GOOGLE PLAY");
 
             String ligerUrl = null;
             String ligerObb = null;
@@ -891,7 +893,7 @@ public class LigerDownloadManager implements Runnable {
             int count = ligerPolicy.getExpansionURLCount();
             if (mainOrPatch.equals(Constants.MAIN)) {
                 if (count < 1) {
-                    Log.e("DOWNLOAD", "LOOKING FOR MAIN FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
+                    Timber.e("LOOKING FOR MAIN FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
                     downloadFromLigerServer();
                     return;
                 } else {
@@ -901,7 +903,7 @@ public class LigerDownloadManager implements Runnable {
             }
             if (mainOrPatch.equals(Constants.PATCH)) {
                 if (count < 2) {
-                    Log.e("DOWNLOAD", "LOOKING FOR PATCH FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
+                    Timber.e("LOOKING FOR PATCH FILE BUT URL COUNT IS " + count + ", DOWNLOADING FROM LIGER SERVER");
                     downloadFromLigerServer();
                     return;
                 } else {
@@ -914,9 +916,9 @@ public class LigerDownloadManager implements Runnable {
             // if we're using the google play api, download only to the obb folder
             File targetFolder = new File(ZipHelper.getObbFolderName(context));
 
-            Log.d("DOWNLOAD", "TARGET FOLDER: " + targetFolder.getPath());
+            Timber.d("TARGET FOLDER: " + targetFolder.getPath());
 
-            Log.d("DOWNLOAD", "TARGET URL: " + ligerUrl);
+            Timber.d("TARGET URL: " + ligerUrl);
 
             // clean up old tmps before downloading
 
@@ -929,14 +931,14 @@ public class LigerDownloadManager implements Runnable {
             }
 
             if (nameFilter.length() == 0) {
-                Log.d("DOWNLOAD", "CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
+                Timber.d("CLEANUP: DON'T KNOW HOW TO BUILD WILDCARD FILTER BASED ON " + ligerObb);
             } else {
-                Log.d("DOWNLOAD", "CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
+                Timber.d("CLEANUP: DELETING " + nameFilter + " FROM " + targetFolder.getPath());
             }
 
             WildcardFileFilter oldFileFilter = new WildcardFileFilter(nameFilter);
             for (File oldFile : FileUtils.listFiles(targetFolder, oldFileFilter, null)) {
-                Log.d("DOWNLOAD", "CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
+                Timber.d("CLEANUP: FOUND " + oldFile.getPath() + ", DELETING");
                 FileUtils.deleteQuietly(oldFile);
             }
 
@@ -961,7 +963,7 @@ public class LigerDownloadManager implements Runnable {
 
                 //if (checkTor(useTor, context)) {
                 if (useTor && useManager) {
-                    Log.e("DOWNLOAD", "ANDROID DOWNLOAD MANAGER IS NOT COMPATABLE WITH TOR");
+                    Timber.e("ANDROID DOWNLOAD MANAGER IS NOT COMPATABLE WITH TOR");
 
                     if (context instanceof Activity) {
                         Utility.toastOnUiThread((Activity) context, "Check settings, can't use download manager and tor", true); // FIXME move to strings
@@ -974,13 +976,13 @@ public class LigerDownloadManager implements Runnable {
                 }
 
             } else {
-                Log.d("DOWNLOAD", "NO CONNECTION, NOT QUEUEING DOWNLOAD: " + ligerUrl + ligerObb + " -> " + targetFile.getPath());
+                Timber.d("NO CONNECTION, NOT QUEUEING DOWNLOAD: " + ligerUrl + ligerObb + " -> " + targetFile.getPath());
             }
         }
 
         @Override
         public void dontAllow(int reason) {
-            Log.d("DOWNLOAD", "LICENSE CHECK NOT ALLOWED, DOWNLOADING FROM LIGER SERVER");
+            Timber.d("LICENSE CHECK NOT ALLOWED, DOWNLOADING FROM LIGER SERVER");
             downloadFromLigerServer();
         }
 
@@ -988,7 +990,7 @@ public class LigerDownloadManager implements Runnable {
         public void applicationError(int errorCode) {
             // if your app or version is not managed by google play the result appears
             // to be an application error (code 3?) rather than "do not allow"
-            Log.d("DOWNLOAD", "LICENSE CHECK ERROR CODE " + errorCode + ", DOWNLOADING FROM LIGER SERVER");
+            Timber.d("LICENSE CHECK ERROR CODE " + errorCode + ", DOWNLOADING FROM LIGER SERVER");
             downloadFromLigerServer();
         }
     }

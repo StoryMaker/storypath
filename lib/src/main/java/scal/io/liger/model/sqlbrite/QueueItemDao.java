@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import timber.log.Timber;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
@@ -60,7 +62,7 @@ public class QueueItemDao extends Dao {
 
     public Observable<Long> addQueueItem(long id, String queueFile, long queueTime, boolean replace) {
 
-        Log.d("DB_ADD", "ADDING ROW FOR " + queueFile + ", REPLACE? " + replace);
+        Timber.d("ADDING ROW FOR " + queueFile + ", REPLACE? " + replace);
 
         Observable<Long> rowId = null;
 
@@ -77,7 +79,7 @@ public class QueueItemDao extends Dao {
                 rowId = insert(QueueItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_IGNORE);
             }
         } catch (SQLiteConstraintException sce) {
-            Log.d("RX_DB", "INSERT FAILED: " + sce.getMessage());
+            Timber.d("INSERT FAILED: " + sce.getMessage());
         }
 
         return rowId;
@@ -101,7 +103,7 @@ public class QueueItemDao extends Dao {
 
         // remove an existing record with a matching key
 
-        Log.d("DB_REMOVE", "REMOVE ROW FOR " + key);
+        Timber.d("REMOVE ROW FOR " + key);
 
         return delete(QueueItem.TABLE_NAME,
                 QueueItem.COLUMN_QUEUEFILE + " = ? ",
