@@ -415,44 +415,44 @@ public class AvailableIndexItemDao extends Dao {
                 });
     }
 
-    public Observable<List<AvailableIndexItem>> getAvailableIndexItemByContentType(String content_type) {
-
-        // check current state of an existing record with a matching key
-
-        return query(SELECT(AvailableIndexItem.COLUMN_ID,
-                AvailableIndexItem.COLUMN_TITLE,
-                AvailableIndexItem.COLUMN_DESCRIPTION,
-                AvailableIndexItem.COLUMN_THUMBNAILPATH,
-                AvailableIndexItem.COLUMN_PACKAGENAME,
-                AvailableIndexItem.COLUMN_EXPANSIONID,
-                AvailableIndexItem.COLUMN_PATCHORDER,
-                AvailableIndexItem.COLUMN_CONTENTTYPE,
-                AvailableIndexItem.COLUMN_EXPANSIONFILEURL,
-                AvailableIndexItem.COLUMN_EXPANSIONFILEPATH,
-                AvailableIndexItem.COLUMN_EXPANSIONFILEVERSION,
-                AvailableIndexItem.COLUMN_EXPANSIONFILESIZE,
-                AvailableIndexItem.COLUMN_EXPANSIONFILECHECKSUM,
-                AvailableIndexItem.COLUMN_PATCHFILEVERSION,
-                AvailableIndexItem.COLUMN_PATCHFILESIZE,
-                AvailableIndexItem.COLUMN_PATCHFILECHECKSUM,
-                AvailableIndexItem.COLUMN_AUTHOR,
-                AvailableIndexItem.COLUMN_WEBSITE,
-                AvailableIndexItem.COLUMN_DATEUPDATED,
-                AvailableIndexItem.COLUMN_LANGUAGES,
-                AvailableIndexItem.COLUMN_TAGS,
-                AvailableIndexItem.COLUMN_INSTALLEDFLAG,
-                AvailableIndexItem.COLUMN_MAINDOWNLOADFLAG,
-                AvailableIndexItem.COLUMN_PATCHDOWNLOADFLAG)
-                .FROM(AvailableIndexItem.TABLE_NAME)
-                .WHERE(AvailableIndexItem.COLUMN_CONTENTTYPE + " = ? "), content_type)
-                .map(new Func1<SqlBrite.Query, List<AvailableIndexItem>>() {
-
-                    @Override
-                    public List<AvailableIndexItem> call(SqlBrite.Query query) {
-                        Cursor cursor = query.run();
-                        return AvailableIndexItemMapper.list(cursor);
-                    }
-                });
-    }
+//    public Observable<List<AvailableIndexItem>> getAvailableIndexItemByContentType(String content_type) {
+//
+//        // check current state of an existing record with a matching key
+//
+//        return query(SELECT(AvailableIndexItem.COLUMN_ID,
+//                AvailableIndexItem.COLUMN_TITLE,
+//                AvailableIndexItem.COLUMN_DESCRIPTION,
+//                AvailableIndexItem.COLUMN_THUMBNAILPATH,
+//                AvailableIndexItem.COLUMN_PACKAGENAME,
+//                AvailableIndexItem.COLUMN_EXPANSIONID,
+//                AvailableIndexItem.COLUMN_PATCHORDER,
+//                AvailableIndexItem.COLUMN_CONTENTTYPE,
+//                AvailableIndexItem.COLUMN_EXPANSIONFILEURL,
+//                AvailableIndexItem.COLUMN_EXPANSIONFILEPATH,
+//                AvailableIndexItem.COLUMN_EXPANSIONFILEVERSION,
+//                AvailableIndexItem.COLUMN_EXPANSIONFILESIZE,
+//                AvailableIndexItem.COLUMN_EXPANSIONFILECHECKSUM,
+//                AvailableIndexItem.COLUMN_PATCHFILEVERSION,
+//                AvailableIndexItem.COLUMN_PATCHFILESIZE,
+//                AvailableIndexItem.COLUMN_PATCHFILECHECKSUM,
+//                AvailableIndexItem.COLUMN_AUTHOR,
+//                AvailableIndexItem.COLUMN_WEBSITE,
+//                AvailableIndexItem.COLUMN_DATEUPDATED,
+//                AvailableIndexItem.COLUMN_LANGUAGES,
+//                AvailableIndexItem.COLUMN_TAGS,
+//                AvailableIndexItem.COLUMN_INSTALLEDFLAG,
+//                AvailableIndexItem.COLUMN_MAINDOWNLOADFLAG,
+//                AvailableIndexItem.COLUMN_PATCHDOWNLOADFLAG)
+//                .FROM(AvailableIndexItem.TABLE_NAME)
+//                .WHERE(AvailableIndexItem.COLUMN_CONTENTTYPE + " = ? "), content_type)
+//                .map(new Func1<SqlBrite.Query, List<AvailableIndexItem>>() {
+//
+//                    @Override
+//                    public List<AvailableIndexItem> call(SqlBrite.Query query) {
+//                        Cursor cursor = query.run();
+//                        return AvailableIndexItemMapper.list(cursor);
+//                    }
+//                });
+//    }
 
 }
