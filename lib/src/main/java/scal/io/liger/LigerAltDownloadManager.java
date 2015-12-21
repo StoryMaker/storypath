@@ -49,8 +49,8 @@ import ch.boye.httpclientandroidlib.impl.client.DefaultHttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
-import info.guardianproject.onionkit.trust.StrongHttpsClient;
-import info.guardianproject.onionkit.ui.OrbotHelper;
+import info.guardianproject.netcipher.client.StrongHttpsClient;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 import scal.io.liger.model.ExpansionIndexItem;
 import scal.io.liger.model.QueueItem;
 
@@ -72,7 +72,7 @@ public class LigerAltDownloadManager implements Runnable {
     private NotificationManager nManager;
     private long lastDownload = -1L;
 
-    StrongHttpsClient mClient = null;
+    //StrongHttpsClient mClient = null;
 
     //boolean useManager = true;
     //boolean useTor = true; // CURRENTLY SET TO TRUE, WILL USE TOR IF ORBOT IS RUNNING
@@ -528,9 +528,8 @@ public class LigerAltDownloadManager implements Runnable {
     }
 
     public static boolean checkTor(Context mContext) {
-        OrbotHelper orbotHelper = new OrbotHelper(mContext);
 
-        if(orbotHelper.isOrbotRunning()) {
+        if(OrbotHelper.isOrbotRunning(mContext)) {
             Timber.d("ORBOT RUNNING, USE TOR");
             return true;
         } else {

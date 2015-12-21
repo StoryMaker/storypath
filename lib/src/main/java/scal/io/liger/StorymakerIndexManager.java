@@ -493,13 +493,14 @@ public class StorymakerIndexManager {
             InstanceIndexItem item = indexList.get(key);
             File checkFile = new File(item.getInstanceFilePath());
             if (!checkFile.exists()) {
-                Timber.d("REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
+                // Timber.d("REMOVING INDEX ITEM FOR MISSING INSTANCE FILE " + item.getInstanceFilePath());
                 keys.add(key);
             }
         }
 
         for (String key: keys) {
-            indexList.remove(key);
+            // NO!  (need to determine how to deal with iocipher virtual files)
+            // indexList.remove(key);
         }
 
         // check for changes
@@ -529,7 +530,7 @@ public class StorymakerIndexManager {
                 newItem.setInstanceFilePath(f.getAbsolutePath());
                 newItem.setStoryCreationDate(date.getTime());
 
-                String jsonString = JsonHelper.loadJSON(f, "en"); // FIXME don't hardcode "en"
+                String jsonString = JsonHelper.loadJSON(f.getPath(), context, "en"); // FIXME don't hardcode "en"
 
                 // if no string was loaded, cannot continue
                 if (jsonString == null) {

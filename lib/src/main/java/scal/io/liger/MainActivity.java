@@ -33,7 +33,7 @@ import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
-import scal.io.liger.model.InstanceIndexItem;
+//import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -44,7 +44,7 @@ import scal.io.liger.model.sqlbrite.QueueItemDao;
 import scal.io.liger.view.ScrollLockRecyclerView;
 
 
-public class MainActivity extends Activity implements StoryPathLibrary.StoryPathLibraryListener{
+public class MainActivity extends LockableActivity implements StoryPathLibrary.StoryPathLibraryListener{
     private static final String TAG = "MainActivity";
 
     public static final String INTENT_KEY_WINDOW_TITLE = "window_title";
@@ -64,7 +64,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
     private String mAppTitle;
 
     // new, store info to minimize file access
-    public HashMap<String, InstanceIndexItem> instanceIndex;
+    public HashMap<String, scal.io.liger.model.sqlbrite.InstanceIndexItem> instanceIndex;
 
     // new stuff
     private InstanceIndexItemDao instanceIndexItemDao;
@@ -85,6 +85,14 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
         daoManager = new DaoManager(MainActivity.this, "Storymaker.db", dbVersion, instanceIndexItemDao, availableIndexItemDao, installedIndexItemDao, queueItemDao);
         daoManager.setLogging(false);
 
+    }
+
+    public InstanceIndexItemDao getInstanceIndexItemDao () {
+        return instanceIndexItemDao;
+    }
+
+    public AvailableIndexItemDao getAvailableIndexItemDao () {
+        return availableIndexItemDao;
     }
 
     public InstalledIndexItemDao getInstalledIndexItemDao () {
@@ -154,8 +162,8 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             // NEW: load instance index
             //      only fill on startup to minimize disk access
-            instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
-            instanceIndex = IndexManager.fillInstanceIndex(MainActivity.this, instanceIndex, language);
+            instanceIndex = StorymakerIndexManager.loadInstanceIndex(MainActivity.this, instanceIndexItemDao);
+            instanceIndex = StorymakerIndexManager.fillInstanceIndex(MainActivity.this, instanceIndex, language, instanceIndexItemDao);
 
             // TEMP
             if (instanceIndex.size() > 0) {
@@ -188,7 +196,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
                 json = JsonHelper.loadJSONFromZip(jsonFilePath, this, language);
             } else if (i.hasExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH)) {
                 jsonFilePath = i.getStringExtra(INTENT_KEY_STORYPATH_INSTANCE_PATH);
-                json = JsonHelper.loadJSON(new File(jsonFilePath), language);
+                json = JsonHelper.loadJSON(jsonFilePath, MainActivity.this, language);
             }
 
             if (json != null) {
@@ -200,7 +208,7 @@ public class MainActivity extends Activity implements StoryPathLibrary.StoryPath
 
             // NEW: load instance index
             //      if there is no file, this should be an empty hash map
-            instanceIndex = IndexManager.loadInstanceIndex(MainActivity.this);
+            instanceIndex = StorymakerIndexManager.loadInstanceIndex(MainActivity.this, instanceIndexItemDao);
 
             // TEMP
             if (instanceIndex.size() > 0) {

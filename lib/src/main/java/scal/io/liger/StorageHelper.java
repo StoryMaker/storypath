@@ -10,10 +10,15 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import info.guardianproject.iocipher.VirtualFileSystem;
 
 /**
  * Created by mnbogner on 8/6/15.
@@ -211,5 +216,175 @@ public class StorageHelper {
         }
 
         return true;
+    }
+
+    // new iocipher mount/unmount methods
+
+    private final static String DEFAULT_PATH = "storymaker_vfs.db";
+
+    public static boolean isStorageMounted() {
+        return VirtualFileSystem.get().isMounted();
+    }
+
+    public static boolean mountStorage(Context context, String storagePath, byte[] passphrase) {
+        File vfsFile = null;
+
+        if (storagePath == null) {
+            vfsFile = new File(context.getDir("vfs", Context.MODE_PRIVATE), DEFAULT_PATH);
+            // PROBABLY SHOULD BE -> dbFile = new File(getActualStorageDirectory(context), DEFAULT_PATH);
+        } else {
+            vfsFile = new File(storagePath);
+        }
+
+        vfsFile.getParentFile().mkdirs();
+
+        Timber.d("VFS FILE IS " + vfsFile.getAbsolutePath());
+
+        if (!vfsFile.exists()) {
+            VirtualFileSystem.get().createNewContainer(vfsFile.getAbsolutePath(), passphrase);
+            Timber.d("CREATED NEW VFS FILE");
+        } else {
+            Timber.d("USING EXISTING VFS FILE");
+        }
+
+        if (!VirtualFileSystem.get().isMounted()) {
+            VirtualFileSystem.get().mount(vfsFile.getAbsolutePath(), passphrase);
+            Timber.d("MOUNTED VIRTUAL FILE SYSTEM");
+        } else {
+            Timber.d("VIRTUAL FILE SYSTEM ALREADY MOUNTED");
+        }
+
+        return true;
+    }
+
+    public static boolean unmountStorage() {
+        try {
+            VirtualFileSystem.get().unmount();
+            Timber.d("UNMOUNTED VIRTUAL FILE SYSTEM");
+            return true;
+        } catch (IllegalStateException ise) {
+            Timber.e("EXCEPTION WHILE UNMOUNTING VIRTUAL SYSTEM: " + ise.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean saveVirtualFile() {
+return false;
+    }
+
+    public static void migrateToIOCipher(Context context) {
+        ArrayList<File> filesToMigrate = getActualFiles(context);
+
+        for (File sourceFile : filesToMigrate) {
+            try {
+                info.guardianproject.iocipher.File targetFile = new info.guardianproject.iocipher.File(sourceFile.getPath());
+                if (targetFile.exists()) {
+                    targetFile.delete();
+                }
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+                FileInputStream fis = new FileInputStream(sourceFile);
+                info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(targetFile);
+                byte[] buffer = new byte[4096];
+                int len;
+                while ((len = fis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fis.close();
+                fos.close();
+                Timber.d("MIGRATED ACTUAL FILE " + sourceFile.getPath());
+                sourceFile.delete();
+                Timber.d("DELETED ACTUAL FILE " + sourceFile.getPath());
+            } catch (FileNotFoundException fnfe) {
+                Timber.e("EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
+            } catch (IOException ioe) {
+                Timber.e("EXCEPTION WHILE MIGRATING ACTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
+            }
+        }
+    }
+
+    public static void migrateFromIOCipher(Context context) {
+        ArrayList<info.guardianproject.iocipher.File> filesToMigrate = getVirtualFiles(context);
+
+        for (info.guardianproject.iocipher.File sourceFile : filesToMigrate) {
+            try {
+                File targetFile = new File(sourceFile.getPath());
+                if (targetFile.exists()) {
+                    targetFile.delete();
+                }
+                targetFile.getParentFile().mkdirs();
+                targetFile.createNewFile();
+                info.guardianproject.iocipher.FileInputStream fis = new info.guardianproject.iocipher.FileInputStream(sourceFile);
+                FileOutputStream fos = new FileOutputStream(targetFile);
+                byte[] buffer = new byte[4096];
+                int len;
+                while ((len = fis.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                fis.close();
+                fos.close();
+                Timber.d("MIGRATED VIRTUAL FILE " + sourceFile.getPath());
+                sourceFile.delete();
+                Timber.d("DELETED VIRTUAL FILE " + sourceFile.getPath());
+            } catch (FileNotFoundException fnfe) {
+                Timber.e("EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + fnfe.getMessage());
+            } catch (IOException ioe) {
+                Timber.e("EXCEPTION WHILE MIGRATING VIRTUAL FILE " + sourceFile.getPath() + ": " + ioe.getMessage());
+            }
+        }
+    }
+
+    public static ArrayList<File> getActualFiles(Context context) {
+        ArrayList<File> results = new ArrayList<File>();
+
+        File instanceFolder = StorageHelper.getActualStorageDirectory(context);
+        if (instanceFolder == null) {
+            Timber.d("getActualStorageDirectory() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
+            return results;
+        } else if (instanceFolder.listFiles() == null) {
+            Timber.d("listFiles() RETURNED NULL, CANNOT GATHER ACTUAL INSTANCE FILES");
+            return results;
+        } else {
+            for (File instanceFile : instanceFolder.listFiles()) {
+                if (instanceFile.getName().contains("-instance") &&
+                        instanceFile.getName().endsWith(".json") &&
+                        !instanceFile.isDirectory()) {
+                    Timber.d("FOUND ACTUAL INSTANCE FILE: " + instanceFile.getName());
+                    File foundFile = new File(instanceFile.getPath());
+                    results.add(foundFile);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public static ArrayList<info.guardianproject.iocipher.File> getVirtualFiles(Context context) {
+        ArrayList<info.guardianproject.iocipher.File> results = new ArrayList<info.guardianproject.iocipher.File>();
+
+        File actualFolder = StorageHelper.getActualStorageDirectory(context);
+        if (actualFolder == null) {
+            Timber.d("getActualStorageDirectory() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
+            return results;
+        }
+
+        info.guardianproject.iocipher.File instanceFolder = new info.guardianproject.iocipher.File(actualFolder.getPath());
+
+        if (instanceFolder.listFiles() == null) {
+            Timber.d("listFiles() RETURNED NULL, CANNOT GATHER VIRTUAL INSTANCE FILES");
+            return results;
+        } else {
+            for (info.guardianproject.iocipher.File instanceFile : instanceFolder.listFiles()) {
+                if (instanceFile.getName().contains("-instance") &&
+                        instanceFile.getName().endsWith(".json") &&
+                        !instanceFile.isDirectory()) {
+                    Timber.d("FOUND VIRTUAL INSTANCE FILE: " + instanceFile.getName());
+                    info.guardianproject.iocipher.File foundFile = new info.guardianproject.iocipher.File(instanceFile.getPath());
+                    results.add(foundFile);
+                }
+            }
+        }
+
+        return results;
     }
 }

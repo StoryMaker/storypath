@@ -21,7 +21,7 @@ import com.google.android.vending.expansion.downloader.IStub;
 /**
  * Created by mnbogner on 11/11/14.
  */
-public class LigerDownloadActivity extends Activity implements IDownloaderClient {
+public class LigerDownloadActivity extends LockableActivity implements IDownloaderClient {
 
     IStub mDownloaderClientStub = null;
     IDownloaderService mRemoteService = null;

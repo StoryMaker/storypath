@@ -31,8 +31,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.URI;
+import java.security.KeyStore;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Queue;
@@ -48,8 +50,8 @@ import ch.boye.httpclientandroidlib.impl.client.DefaultHttpRequestRetryHandler;
 import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
-import info.guardianproject.onionkit.trust.StrongHttpsClient;
-import info.guardianproject.onionkit.ui.OrbotHelper;
+import info.guardianproject.netcipher.client.StrongHttpsClient;
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 import scal.io.liger.model.QueueItem;
 
 /**
@@ -484,9 +486,8 @@ public class LigerDownloadManager implements Runnable {
     }
 
     public static boolean checkTor(Context mContext) {
-        OrbotHelper orbotHelper = new OrbotHelper(mContext);
 
-        if(orbotHelper.isOrbotRunning()) {
+        if(OrbotHelper.isOrbotRunning(mContext)) {
             Timber.d("ORBOT RUNNING, USE TOR");
             return true;
         } else {
@@ -641,7 +642,15 @@ public class LigerDownloadManager implements Runnable {
 
     private synchronized StrongHttpsClient getHttpClientInstance() {
         if (mClient == null) {
-            mClient = new StrongHttpsClient(context);
+            try {
+
+                mClient = new StrongHttpsClient(context,R.raw.debiancacerts,null);
+
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         return mClient;
