@@ -52,7 +52,8 @@
         android:textColor="@color/storymaker_highlight"
         android:drawablePadding="@dimen/padding_small"
         android:paddingTop="@dimen/padding_xsmall"
-        android:text="@string/narrate" />
+        android:text="@string/narrate"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_publish"
