@@ -1,12 +1,9 @@
 package scal.io.liger.view;
 
-import timber.log.Timber;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +30,7 @@ import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.ReviewCard;
 import scal.io.liger.popup.NarrationPopup;
 import scal.io.liger.popup.OrderMediaPopup;
+import timber.log.Timber;
 
 /**
  * ReviewCardView allows the user to review the order of clips
@@ -66,6 +64,8 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
             return null;
         }
 
+        mMedium = mCardModel.getStoryPath().getMedium();
+
         View view = LayoutInflater.from(context).inflate(R.layout.card_review, null);
         FrameLayout flPlayer = (FrameLayout) view.findViewById(R.id.card_player);
 
@@ -79,6 +79,12 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
         Button btnOrder = ((Button) view.findViewById(R.id.btn_order));
         Button btnNarrate = ((Button) view.findViewById(R.id.btn_narrate));
         Button btnPublish = ((Button) view.findViewById(R.id.btn_publish));
+
+        if (mMedium != null && mMedium.equals("video")) {
+            btnNarrate.setVisibility(View.VISIBLE);
+        } else {
+            btnNarrate.setVisibility(View.GONE);
+        }
 
         //prepare drawable
         final int drawableSizeDp = 30;
