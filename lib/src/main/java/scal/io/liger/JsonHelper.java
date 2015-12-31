@@ -1,7 +1,5 @@
 package scal.io.liger;
 
-import timber.log.Timber;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -31,6 +29,7 @@ import scal.io.liger.model.Card;
 import scal.io.liger.model.Dependency;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
+import timber.log.Timber;
 
 /**
  * @author Matt Bogner
@@ -532,6 +531,30 @@ public class JsonHelper {
         return results;
     }
     */
+
+    @NonNull
+    public static ArrayList<File> getLibraryInstalledFiles(Context context) {
+
+        ArrayList<File> results = new ArrayList<File>();
+
+        File obbFolder = new File(getSdLigerFilePath(context));
+        // check for nulls (uncertain as to cause of nulls)
+        if ((obbFolder != null) && (obbFolder.listFiles() != null)) {
+            for (File obbFile : obbFolder.listFiles()) {
+                if (obbFile.getName().endsWith(".obb") &&
+                        !obbFile.isDirectory()) {
+                    Timber.d("FOUND LIBRARY INSTALLED FILE: " + obbFile.getName());
+                    File localFile = new File(obbFile.getPath());
+                    results.add(localFile);
+                }
+            }
+        } else {
+            Timber.d(getSdLigerFilePath(context) + " WAS NULL OR listFiles() RETURNED NULL, CANNOT GATHER INSTANCE FILES");
+        }
+
+        return results;
+    }
+
 
     @NonNull
     public static ArrayList<File> getLibraryInstanceFiles(Context context) {

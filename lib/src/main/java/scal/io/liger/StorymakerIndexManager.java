@@ -1,7 +1,5 @@
 package scal.io.liger;
 
-import timber.log.Timber;
-
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
@@ -32,6 +30,7 @@ import scal.io.liger.model.sqlbrite.InstalledIndexItem;
 import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
 import scal.io.liger.model.sqlbrite.InstanceIndexItem;
 import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
+import timber.log.Timber;
 
 /**
  * Created by mnbogner on 8/28/15.
@@ -475,7 +474,54 @@ public class StorymakerIndexManager {
         }
     }
 
-    // REMOVED CONTENT METHODS AS THEY ARE NOT DATABASE RELATED
+
+    public static boolean fillInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> installedIndexList, HashMap<String, ExpansionIndexItem> availableIndexList, String language, Dao dao) {
+
+        ArrayList<File> files = JsonHelper.getLibraryInstalledFiles(context);
+
+        boolean fileAddedFlag = false;
+
+        for (File file : files) {
+
+            String key = file.getName();
+
+            if (!installedIndexList.containsKey(key)) {
+                //Log.d("StorymakerIndexManager", "file not installed " + file.getName());
+
+                if (availableIndexList.containsKey(key)) {
+
+                    fileAddedFlag = true;
+
+                    Log.d("StorymakerIndexManager", "file is not installed and is available to be installed " + file.getName());
+
+
+                    //pseudo-code for installing found item
+                    //
+                    //available item = available list.get(found file)
+                    //installed item = new InstalledIndexItem(available item)
+                    //installed item.set installed flag
+                    //installed item dao.add installed item(installed item)
+                    //installed list.add(item)
+
+                    ExpansionIndexItem availableItem = availableIndexList.get(key);
+                    InstalledIndexItem installedItem = new InstalledIndexItem(availableItem);
+                    installedItem.setInstalledFlag(true);
+                    installedIndexAdd(context, installedItem, dao);
+
+                } else {
+                    //Log.d("StorymakerIndexManager", "file is not available " + file.getName());
+                }
+
+            } else {
+                //Log.d("StorymakerIndexManager", "file installed " + file.getName());
+            }
+
+        }
+
+        return fileAddedFlag;
+    }
+
+        // REMOVED CONTENT METHODS AS THEY ARE NOT DATABASE RELATED
 
     public static HashMap<String, InstanceIndexItem> fillInstanceIndex(Context context, HashMap<String, InstanceIndexItem> indexList, String language, Dao dao) {
 
