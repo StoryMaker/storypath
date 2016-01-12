@@ -784,6 +784,15 @@ public class StorymakerIndexManager {
 
     }
 
+    public static void instanceIndexRemoveFromDB(Context context, InstanceIndexItem removeItem, Dao dao) {
+        // need to actually delete item from db (saving updated list will not remove it)
+        if (dao instanceof InstanceIndexItemDao) {
+            InstanceIndexItemDao instanceDao = (InstanceIndexItemDao) dao;
+            instanceDao.removeInstanceIndexItem(removeItem);
+            Timber.d("UN-INSTALLED INSTANCE " + removeItem.getInstanceFilePath() + " FROM INDEX");
+        }
+    }
+
     public static void instanceIndexRemove(Context context, InstanceIndexItem removeItem, HashMap<String, InstanceIndexItem> indexList, boolean deleteFiles, boolean deleteMedia, Dao dao) {
 
         indexList.remove(removeItem.getInstanceFilePath());

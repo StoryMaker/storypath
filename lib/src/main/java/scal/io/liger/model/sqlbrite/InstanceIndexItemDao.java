@@ -1,12 +1,9 @@
 package scal.io.liger.model.sqlbrite;
 
-import timber.log.Timber;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.hannesdorfmann.sqlbrite.dao.Dao;
 import com.squareup.sqlbrite.SqlBrite;
@@ -16,6 +13,7 @@ import java.util.Random;
 
 import rx.Observable;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * Created by mnbogner on 8/20/15.
@@ -150,4 +148,18 @@ public class InstanceIndexItemDao extends Dao {
                 item.getStoryCompletionDate(),
                 replace);
     }
+
+    public Observable<Integer> removeInstanceIndexItem(InstanceIndexItem item) {
+        // remove an existing record
+        return removeInstanceIndexItemByKey(item.getInstanceFilePath());
+    }
+
+    public Observable<Integer> removeInstanceIndexItemByKey(String key) {
+        // remove an existing record with a matching key
+        Timber.d("REMOVE ROW FOR " + key);
+        return delete(InstanceIndexItem.TABLE_NAME,
+                InstanceIndexItem.COLUMN_INSTANCEFILEPATH + " = ? ",
+                key);
+    }
+
 }
