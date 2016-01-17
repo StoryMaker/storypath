@@ -210,10 +210,12 @@ public class InstanceIndexItem extends BaseIndexItem {
 
     @Override
     public int compareTo(Object another) {
-        if (another instanceof  ExpansionIndexItem) {
-            return 1; // should always appear above expansion index items
-        } else if (another instanceof InstanceIndexItem) {
+        if (another instanceof InstanceIndexItem) {
             return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
+        } else if (another instanceof AvailableIndexItem) {
+            return 1; // should always appear above available index items
+        } else if (another instanceof InstalledIndexItem) {
+            return 1; // should always appear above installed index items
         } else {
             return 0; // otherwise don't care
         }

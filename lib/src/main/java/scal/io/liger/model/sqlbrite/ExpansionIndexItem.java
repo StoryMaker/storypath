@@ -1,11 +1,21 @@
 package scal.io.liger.model.sqlbrite;
 
+import scal.io.liger.MainActivity;
+import scal.io.liger.StorageHelper;
 import timber.log.Timber;
 
+import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import scal.io.liger.Constants;
 
@@ -368,35 +378,48 @@ public class ExpansionIndexItem extends BaseIndexItem {
         this.tags = tags;
     }
 
-    @Override
-    public int compareTo(Object another) {
-        if (another instanceof InstanceIndexItem) {
-            //Timber.d(title + " COMPARED TO INSTANCE ITEM: -1");
-            return -1; // should always appear below instance index items
-        } else if (another instanceof ExpansionIndexItem){
+    public long getLastModifiedTime() {
 
-            // if this date is later or null, appear below
-            // -1
+        // questionable solution to the lack of context
 
-            // if that date is later or null, appear above
-            // 1
+        Application app = null;
 
-            if (dateUpdated == null) {
-                //Timber.d(title + " HAS NO DATE: -1");
-                return -1;
-            }
-
-            if (((ExpansionIndexItem)another).getDateUpdated() == null) {
-                //Timber.d(title + " HAS A DATE BUT " + ((ExpansionIndexItem)another).getTitle() + " DOES NOT: 1");
-                return 1;
-            }
-
-            //Timber.d("COMPARING DATE OF " + title + " TO DATE OF " + ((ExpansionIndexItem)another).getTitle() + ": " + dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated()));
-            return dateUpdated.compareTo(((ExpansionIndexItem)another).getDateUpdated());
-
-        } else {
-            //Timber.d(title + " HAS NO POINT OF COMPARISON: 0");
-            return 0; // otherwise don't care
+        try {
+            app =  (Application) Class.forName("android.app.ActivityThread").getMethod("currentApplication").invoke(null, (Object[]) null);
+        } catch (IllegalAccessException e) {
+            Timber.e("compare - illegal access");
+        } catch (InvocationTargetException e) {
+            Timber.e("compare - invocation target");
+        } catch (NoSuchMethodException e) {
+            Timber.e("compare - no such method");
+        } catch (ClassNotFoundException e) {
+            Timber.e("compare - class not found");
         }
+
+        if (app != null) {
+            String filePath = StorageHelper.getActualStorageDirectory(app.getApplicationContext()).getPath();
+            if (filePath != null) {
+                String fileName = getExpansionId() + "." + scal.io.liger.Constants.MAIN + "." + getExpansionFileVersion() + ".obb";
+                File expansionFile = new File(filePath + File.separator + fileName);
+                if (expansionFile.exists()) {
+                    // Timber.d("compare - got date for file: " + expansionFile.getPath());
+                    return expansionFile.lastModified();
+                } else {
+                    // Timber.e("compare - file doesn't exist: " + expansionFile.getPath());
+                }
+            } else {
+                Timber.e("compare - file path is null");
+            }
+        } else {
+            Timber.e("compare - application context is null");
+        }
+
+        return 0;
+    }
+
+    // move comparison down into specific classes
+    @Override
+    public int compareTo(@NonNull Object another) {
+        return super.compareTo(another);
     }
 }

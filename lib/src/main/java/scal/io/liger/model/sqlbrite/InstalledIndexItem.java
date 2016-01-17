@@ -4,6 +4,8 @@ import timber.log.Timber;
 
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
+import java.util.Date;
+
 /**
  * Created by mnbogner on 8/20/15.
  */
@@ -70,5 +72,18 @@ public class InstalledIndexItem extends ExpansionIndexItem {
                 installedFlag,
                 mainDownloadFlag,
                 patchDownloadFlag);
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        if (another instanceof InstalledIndexItem) {
+            return new Date(getLastModifiedTime()).compareTo(new Date(((InstalledIndexItem)another).getLastModifiedTime())); // compare file dates for other installed index items
+        } else if (another instanceof AvailableIndexItem) {
+            return 1; // should always appear above available index items
+        } else if (another instanceof InstanceIndexItem) {
+            return -1; // should always appear below instance index items
+        } else {
+            return 0; // otherwise don't care
+        }
     }
 }
