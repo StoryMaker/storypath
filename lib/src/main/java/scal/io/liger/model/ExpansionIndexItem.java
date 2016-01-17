@@ -1,14 +1,8 @@
 package scal.io.liger.model;
 
-import timber.log.Timber;
-
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -24,6 +18,13 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     String expansionFileVersion;
     String expansionFilePath; // relative to Environment.getExternalStorageDirectory() <- need to shift to user-specified directory
     String expansionFileUrl;
+
+    //db v2 stuff
+    int autoincrementingId;
+    java.util.Date creationDate;
+    java.util.Date lastModifiedDate;
+    java.util.Date lastOpenedDate;
+    int sortOrder;
 
     // not optional, but need to handle nulls
     long expansionFileSize;
@@ -50,6 +51,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     public ExpansionIndexItem(scal.io.liger.model.sqlbrite.ExpansionIndexItem eii) {
         this.packageName = eii.packageName;
         this.expansionId = eii.expansionId;
+        this.sortOrder = eii.sortOrder;
         this.patchOrder = eii.patchOrder;
         this.contentType = eii.contentType;
         this.expansionFileVersion = eii.expansionFileVersion;
@@ -57,9 +59,10 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
         this.expansionFileUrl = eii.expansionFileUrl;
     }
 
-    public ExpansionIndexItem(String packageName, String expansionId, String patchOrder, String contentType, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
+    public ExpansionIndexItem(String packageName, String expansionId, int sortOrder, String patchOrder, String contentType, String expansionFileVersion, String expansionFilePath, String expansionFileUrl, String expansionThumbnail) {
         this.packageName = packageName;
         this.expansionId = expansionId;
+        this.sortOrder = sortOrder;
         this.patchOrder = patchOrder;
         this.contentType = contentType;
         // this.expansionFileName = expansionFileName;
@@ -84,6 +87,24 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
     public void setExpansionId(String expansionId) {
         this.expansionId = expansionId;
     }
+
+    public int getAutoincrementingId() { return autoincrementingId; }
+
+    public java.util.Date getCreationDate() { return creationDate; }
+
+    public void setCreationDate(java.util.Date creationDate) { this.creationDate = creationDate; }
+
+    public java.util.Date getLastModifiedDate() { return lastModifiedDate; }
+
+    public void setLastModifiedDate(java.util.Date lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
+
+    public java.util.Date getLastOpenedDate() { return lastOpenedDate; }
+
+    public void setLastOpenedDate(java.util.Date lastOpenedDate) { this.lastOpenedDate = lastOpenedDate; }
+
+    public int getSortOrder() { return sortOrder; }
+
+    public void setSortOrder(int sortOrder) { this.sortOrder = sortOrder; }
 
     public String getPatchOrder() {
         return patchOrder;

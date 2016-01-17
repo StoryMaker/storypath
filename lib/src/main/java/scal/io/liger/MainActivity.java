@@ -1,9 +1,6 @@
 package scal.io.liger;
 
-import timber.log.Timber;
-
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +12,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -33,7 +29,6 @@ import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.Dependency;
-//import scal.io.liger.model.InstanceIndexItem;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPath;
 import scal.io.liger.model.StoryPathLibrary;
@@ -42,6 +37,9 @@ import scal.io.liger.model.sqlbrite.InstalledIndexItemDao;
 import scal.io.liger.model.sqlbrite.InstanceIndexItemDao;
 import scal.io.liger.model.sqlbrite.QueueItemDao;
 import scal.io.liger.view.ScrollLockRecyclerView;
+import timber.log.Timber;
+
+//import scal.io.liger.model.InstanceIndexItem;
 
 
 public class MainActivity extends LockableActivity implements StoryPathLibrary.StoryPathLibraryListener{
@@ -72,7 +70,7 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
     private InstalledIndexItemDao installedIndexItemDao;
     private QueueItemDao queueItemDao;
     private DaoManager daoManager;
-    private int dbVersion = 1;
+    private int dbVersion = 2;
 
     // must set dao stuff in constructor?
     public MainActivity() {

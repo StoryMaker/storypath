@@ -1,12 +1,9 @@
 package scal.io.liger.model.sqlbrite;
 
-import timber.log.Timber;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.hannesdorfmann.sqlbrite.dao.Dao;
 import com.squareup.sqlbrite.SqlBrite;
@@ -16,6 +13,7 @@ import java.util.Random;
 
 import rx.Observable;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * Created by mnbogner on 8/20/15.
@@ -34,6 +32,11 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_THUMBNAILPATH + " TEXT",
                 AvailableIndexItem.COLUMN_PACKAGENAME + " TEXT",
                 AvailableIndexItem.COLUMN_EXPANSIONID + " TEXT PRIMARY KEY NOT NULL",
+                AvailableIndexItem.COLUMN_AUTOINCREMENTINGID + " INTEGER",
+                AvailableIndexItem.COLUMN_CREATIONDATE + " TEXT",
+                AvailableIndexItem.COLUMN_LASTMODIFIEDDATE + " TEXT",
+                AvailableIndexItem.COLUMN_LASTOPENEDDATE + " TEXT",
+                AvailableIndexItem.COLUMN_SORTORDER + " INTEGER",
                 AvailableIndexItem.COLUMN_PATCHORDER + " TEXT",
                 AvailableIndexItem.COLUMN_CONTENTTYPE + " TEXT",
                 AvailableIndexItem.COLUMN_EXPANSIONFILEURL + " TEXT",
@@ -57,9 +60,33 @@ public class AvailableIndexItemDao extends Dao {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         // foo
+
+        if (oldVersion == 1 && newVersion == 2){
+            ALTER_TABLE(AvailableIndexItem.TABLE_NAME)
+                    .ADD_COLUMN(AvailableIndexItem.COLUMN_AUTOINCREMENTINGID + " INTEGER")
+                    .execute(db);
+            ALTER_TABLE(AvailableIndexItem.TABLE_NAME)
+                    .ADD_COLUMN(AvailableIndexItem.COLUMN_CREATIONDATE + " TEXT")
+                    .execute(db);
+            ALTER_TABLE(AvailableIndexItem.TABLE_NAME)
+                    .ADD_COLUMN(AvailableIndexItem.COLUMN_LASTMODIFIEDDATE + " TEXT")
+                    .execute(db);
+            ALTER_TABLE(AvailableIndexItem.TABLE_NAME)
+                    .ADD_COLUMN(AvailableIndexItem.COLUMN_LASTOPENEDDATE + " TEXT")
+                    .execute(db);
+            ALTER_TABLE(AvailableIndexItem.TABLE_NAME)
+                    .ADD_COLUMN(AvailableIndexItem.COLUMN_SORTORDER + " INTEGER")
+                    .execute(db);
+        }
+
+    }
+
+    public int getNextAutoincrementingId() {
+
+        return -1;
 
     }
 
@@ -73,6 +100,11 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_THUMBNAILPATH,
                 AvailableIndexItem.COLUMN_PACKAGENAME,
                 AvailableIndexItem.COLUMN_EXPANSIONID,
+                AvailableIndexItem.COLUMN_AUTOINCREMENTINGID,
+                AvailableIndexItem.COLUMN_CREATIONDATE,
+                AvailableIndexItem.COLUMN_LASTMODIFIEDDATE,
+                AvailableIndexItem.COLUMN_LASTOPENEDDATE,
+                AvailableIndexItem.COLUMN_SORTORDER,
                 AvailableIndexItem.COLUMN_PATCHORDER,
                 AvailableIndexItem.COLUMN_CONTENTTYPE,
                 AvailableIndexItem.COLUMN_EXPANSIONFILEURL,
@@ -118,6 +150,11 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_THUMBNAILPATH,
                 AvailableIndexItem.COLUMN_PACKAGENAME,
                 AvailableIndexItem.COLUMN_EXPANSIONID,
+                AvailableIndexItem.COLUMN_AUTOINCREMENTINGID,
+                AvailableIndexItem.COLUMN_CREATIONDATE,
+                AvailableIndexItem.COLUMN_LASTMODIFIEDDATE,
+                AvailableIndexItem.COLUMN_LASTOPENEDDATE,
+                AvailableIndexItem.COLUMN_SORTORDER,
                 AvailableIndexItem.COLUMN_PATCHORDER,
                 AvailableIndexItem.COLUMN_CONTENTTYPE,
                 AvailableIndexItem.COLUMN_EXPANSIONFILEURL,
@@ -166,6 +203,11 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_THUMBNAILPATH,
                 AvailableIndexItem.COLUMN_PACKAGENAME,
                 AvailableIndexItem.COLUMN_EXPANSIONID,
+                AvailableIndexItem.COLUMN_AUTOINCREMENTINGID,
+                AvailableIndexItem.COLUMN_CREATIONDATE,
+                AvailableIndexItem.COLUMN_LASTMODIFIEDDATE,
+                AvailableIndexItem.COLUMN_LASTOPENEDDATE,
+                AvailableIndexItem.COLUMN_SORTORDER,
                 AvailableIndexItem.COLUMN_PATCHORDER,
                 AvailableIndexItem.COLUMN_CONTENTTYPE,
                 AvailableIndexItem.COLUMN_EXPANSIONFILEURL,
@@ -206,6 +248,11 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_THUMBNAILPATH,
                 AvailableIndexItem.COLUMN_PACKAGENAME,
                 AvailableIndexItem.COLUMN_EXPANSIONID,
+                AvailableIndexItem.COLUMN_AUTOINCREMENTINGID,
+                AvailableIndexItem.COLUMN_CREATIONDATE,
+                AvailableIndexItem.COLUMN_LASTMODIFIEDDATE,
+                AvailableIndexItem.COLUMN_LASTOPENEDDATE,
+                AvailableIndexItem.COLUMN_SORTORDER,
                 AvailableIndexItem.COLUMN_PATCHORDER,
                 AvailableIndexItem.COLUMN_CONTENTTYPE,
                 AvailableIndexItem.COLUMN_EXPANSIONFILEURL,
@@ -236,11 +283,14 @@ public class AvailableIndexItemDao extends Dao {
                 });
     }
 
-    public Observable<Long> addAvailableIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag, boolean replace) {
+    public Observable<Long> addAvailableIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, int autoincrementingId, java.util.Date creationDate, java.util.Date lastModifiedDate, java.util.Date lastOpenedDate, int sortOrder, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag, boolean replace) {
 
         Timber.d("ADDING ROW FOR " + expansionId + "(MAIN " + mainDownloadFlag + ", PATCH " + patchDownloadFlag + ", REPLACE? " + replace + ")");
 
         Observable<Long> rowId = null;
+
+        int autoincrementingId_local = getNextAutoincrementingId();
+        java.util.Date creationDate_local = new java.util.Date();
 
         ContentValues values = AvailableIndexItemMapper.contentValues()
                 .id(r.nextLong())
@@ -249,6 +299,11 @@ public class AvailableIndexItemDao extends Dao {
                 .thumbnailPath(thumbnailPath)
                 .packageName(packageName)
                 .expansionId(expansionId)
+                .autoincrementingId(autoincrementingId_local)
+                .creationDate(creationDate_local)
+                .lastModifiedDate(creationDate_local)
+                .lastOpenedDate(creationDate_local)
+                .sortOrder(sortOrder)
                 .patchOrder(patchOrder)
                 .contentType(contentType)
                 .expansionFileUrl(expansionFileUrl)
@@ -302,6 +357,11 @@ public class AvailableIndexItemDao extends Dao {
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
+                item.getAutoincrementingId(),
+                item.getCreationDate(),
+                item.getLastModifiedDate(),
+                item.getLastOpenedDate(),
+                item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
                 item.getExpansionFileUrl(),
@@ -331,6 +391,11 @@ public class AvailableIndexItemDao extends Dao {
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
+                item.getAutoincrementingId(),
+                item.getCreationDate(),
+                item.getLastModifiedDate(),
+                item.getLastOpenedDate(),
+                item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
                 item.getExpansionFileUrl(),
@@ -387,6 +452,11 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_THUMBNAILPATH,
                 AvailableIndexItem.COLUMN_PACKAGENAME,
                 AvailableIndexItem.COLUMN_EXPANSIONID,
+                AvailableIndexItem.COLUMN_AUTOINCREMENTINGID,
+                AvailableIndexItem.COLUMN_CREATIONDATE,
+                AvailableIndexItem.COLUMN_LASTMODIFIEDDATE,
+                AvailableIndexItem.COLUMN_LASTOPENEDDATE,
+                AvailableIndexItem.COLUMN_SORTORDER,
                 AvailableIndexItem.COLUMN_PATCHORDER,
                 AvailableIndexItem.COLUMN_CONTENTTYPE,
                 AvailableIndexItem.COLUMN_EXPANSIONFILEURL,

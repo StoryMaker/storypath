@@ -1,7 +1,5 @@
 package scal.io.liger.model.sqlbrite;
 
-import timber.log.Timber;
-
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
 /**
@@ -25,6 +23,11 @@ public class AvailableIndexItem extends ExpansionIndexItem {
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
+                item.getAutoincrementingId(),
+                item.getCreationDate(),
+                item.getLastModifiedDate(),
+                item.getLastOpenedDate(),
+                item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
                 item.getExpansionFileUrl(),
@@ -45,13 +48,18 @@ public class AvailableIndexItem extends ExpansionIndexItem {
                 item.getPatchDownloadFlag());
     }
 
-    public AvailableIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag) {
+    public AvailableIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, int autoincrementingId, java.util.Date creationDate, java.util.Date lastModifiedDate, java.util.Date lastOpenedDate, int sortOrder, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag) {
         super(id,
                 title,
                 description,
                 thumbnailPath,
                 packageName,
                 expansionId,
+                autoincrementingId,
+                creationDate,
+                lastModifiedDate,
+                lastOpenedDate,
+                sortOrder,
                 patchOrder,
                 contentType,
                 expansionFileUrl,

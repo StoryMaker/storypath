@@ -1,13 +1,7 @@
 package scal.io.liger.model;
 
-import timber.log.Timber;
-
 import android.content.Context;
-import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
-
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
+import timber.log.Timber;
 
 /**
  * Created by mnbogner on 12/8/14.
@@ -38,6 +33,13 @@ public class InstanceIndexItem extends BaseIndexItem {
     private ArrayList<String> storyPathPrerequisites;
     long storyCompletionDate;
 
+    //db v2 stuff
+    int autoincrementingId;
+    java.util.Date creationDate;
+    java.util.Date lastModifiedDate;
+    java.util.Date lastOpenedDate;
+    int sortOrder;
+
     public InstanceIndexItem() {
 
     }
@@ -54,6 +56,24 @@ public class InstanceIndexItem extends BaseIndexItem {
     public void setInstanceFilePath(String instanceFilePath) {
         this.instanceFilePath = instanceFilePath;
     }
+
+    public int getAutoincrementingId() { return autoincrementingId; }
+
+    public java.util.Date getCreationDate() { return creationDate; }
+
+    public void setCreationDate(java.util.Date creationDate) { this.creationDate = creationDate; }
+
+    public java.util.Date getLastModifiedDate() { return lastModifiedDate; }
+
+    public void setLastModifiedDate(java.util.Date lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
+
+    public java.util.Date getLastOpenedDate() { return lastOpenedDate; }
+
+    public void setLastOpenedDate(java.util.Date lastOpenedDate) { this.lastOpenedDate = lastOpenedDate; }
+
+    public int getSortOrder() { return sortOrder; }
+
+    public void setSortOrder(int sortOrder) { this.sortOrder = sortOrder; }
 
     public String getStoryType() {
         return storyType;
