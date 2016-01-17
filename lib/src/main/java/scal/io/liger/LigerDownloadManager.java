@@ -219,9 +219,10 @@ public class LigerDownloadManager implements Runnable {
         LigerCallback ligerCallback = new LigerCallback();
 
         String deviceVersion = Build.VERSION.RELEASE;
+        int major = Integer.parseInt(deviceVersion.split("\\.")[0]);
 
         // not sure what the best way to compare versions is (too many decimal points to convert to a number)
-        if (!deviceVersion.startsWith("5.")) {
+        if (major < 5) {
             Timber.d("ABOUT TO CHECK ACCESS ON ANDROID VERSION " + deviceVersion);
             ligerChecker.checkAccess(ligerCallback);
             Timber.d("ACCESS CHECK WAS INITIATED");
