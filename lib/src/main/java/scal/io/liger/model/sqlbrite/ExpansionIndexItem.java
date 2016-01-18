@@ -1,13 +1,10 @@
 package scal.io.liger.model.sqlbrite;
 
-import timber.log.Timber;
-
-import android.util.Log;
-
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
 import scal.io.liger.Constants;
+import timber.log.Timber;
 
 /**
  * Created by mnbogner on 8/20/15.
@@ -18,6 +15,11 @@ public class ExpansionIndexItem extends BaseIndexItem {
 
     public static final String COLUMN_PACKAGENAME = "packageName";
     public static final String COLUMN_EXPANSIONID = "expansionId";
+    public static final String COLUMN_AUTOINCREMENTINGID = "autoincrementingId";
+    public static final String COLUMN_CREATIONDATE = "creationDate";
+    public static final String COLUMN_LASTMODIFIEDDATE = "lastModifiedDate";
+    public static final String COLUMN_LASTOPENEDDATE = "lastOpenedDate";
+    public static final String COLUMN_SORTORDER = "sortOrder";
     public static final String COLUMN_PATCHORDER = "patchOrder";
     public static final String COLUMN_CONTENTTYPE = "contentType";
     public static final String COLUMN_EXPANSIONFILEURL = "expansionFileUrl";
@@ -70,16 +72,27 @@ public class ExpansionIndexItem extends BaseIndexItem {
     @Column(COLUMN_MAINDOWNLOADFLAG) public int mainDownloadFlag;
     @Column(COLUMN_PATCHDOWNLOADFLAG) public int patchDownloadFlag;
 
+    //db version 2 stuff
+    @Column(COLUMN_AUTOINCREMENTINGID) public int autoincrementingId;
+    @Column(COLUMN_CREATIONDATE) public java.util.Date creationDate;
+    @Column(COLUMN_LASTMODIFIEDDATE) public java.util.Date lastModifiedDate;
+    @Column(COLUMN_LASTOPENEDDATE) public java.util.Date lastOpenedDate;
+    @Column(COLUMN_SORTORDER) public int sortOrder;
 
     public ExpansionIndexItem() {
         super();
 
     }
 
-    public ExpansionIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag) {
+    public ExpansionIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, int autoincrementingId, java.util.Date creationDate, java.util.Date lastModifiedDate, java.util.Date lastOpenedDate, int sortOrder, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag) {
         super(id, title, description, thumbnailPath);
         this.packageName = packageName;
         this.expansionId = expansionId;
+        this.autoincrementingId = autoincrementingId;
+        this.creationDate = creationDate;
+        this.lastModifiedDate = lastModifiedDate;
+        this.lastOpenedDate = lastOpenedDate;
+        this.sortOrder = sortOrder;
         this.patchOrder = patchOrder;
         this.contentType = contentType;
         this.expansionFileUrl = expansionFileUrl;
@@ -106,6 +119,20 @@ public class ExpansionIndexItem extends BaseIndexItem {
 
     public String getExpansionId() {
         return expansionId;
+    }
+
+    public int getAutoincrementingId() { return autoincrementingId; }
+
+    public java.util.Date getCreationDate() { return creationDate; }
+
+    public java.util.Date getLastModifiedDate() { return lastModifiedDate; }
+
+    public java.util.Date getLastOpenedDate() {
+        return lastOpenedDate;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
     }
 
     public String getPatchOrder() {
@@ -266,6 +293,11 @@ public class ExpansionIndexItem extends BaseIndexItem {
         this.thumbnailPath = item.getThumbnailPath();
         this.packageName = item.getPackageName();
         this.expansionId = item.getExpansionId();
+        this.autoincrementingId = item.getAutoincrementingId();
+        this.creationDate = item.getCreationDate();
+        this.lastModifiedDate = item.getLastModifiedDate();
+        this.lastOpenedDate = item.getLastOpenedDate();
+        this.sortOrder = item.getSortOrder();
         this.patchOrder = item.getPatchOrder();
         this.contentType = item.getContentType();
         this.expansionFileUrl = item.getExpansionFileUrl();
@@ -306,6 +338,26 @@ public class ExpansionIndexItem extends BaseIndexItem {
 
     public void setExpansionId(String expansionId) {
         this.expansionId = expansionId;
+    }
+
+    public void setAutoincrementingId(int autoincrementingId) {
+        this.autoincrementingId = autoincrementingId;
+    }
+
+    public void setCreationDate(java.util.Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setLastModifiedDate(java.util.Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public void setLastOpenedDate(java.util.Date lastOpenedDate) {
+        this.lastOpenedDate = lastOpenedDate;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public void setPatchOrder(String patchOrder) {

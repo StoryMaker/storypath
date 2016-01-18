@@ -1,10 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
-import timber.log.Timber;
-
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
@@ -18,6 +15,7 @@ import java.util.HashMap;
 import scal.io.liger.JsonHelper;
 import scal.io.liger.model.MediaFile;
 import scal.io.liger.model.StoryPathLibrary;
+import timber.log.Timber;
 
 /**
  * Created by mnbogner on 8/20/15.
@@ -35,6 +33,11 @@ public class InstanceIndexItem extends BaseIndexItem {
     public static final String COLUMN_STORYPATHID = "storyPathId";
     public static final String COLUMN_STORYPATHPREREQUISITES = "storyPathPrerequisites";
     public static final String COLUMN_STORYCOMPLETIONDATE = "storyCompletionDate";
+    public static final String COLUMN_AUTOINCREMENTINGID = "autoincrementingId";
+    public static final String COLUMN_CREATIONDATE = "creationDate";
+    public static final String COLUMN_LASTMODIFIEDDATE = "lastModifiedDate";
+    public static final String COLUMN_LASTOPENEDDATE = "lastOpenedDate";
+    public static final String COLUMN_SORTORDER = "sortOrder";
 
     @Column(COLUMN_INSTANCEFILEPATH) public String instanceFilePath;
     @Column(COLUMN_STORYCREATIONDATE) public long storyCreationDate;
@@ -47,14 +50,26 @@ public class InstanceIndexItem extends BaseIndexItem {
     @Column(COLUMN_STORYPATHPREREQUISITES) public String storyPathPrerequisites; // comma-delimited list, need access methods that will construct an ArrayList<String>
     @Column(COLUMN_STORYCOMPLETIONDATE) public long storyCompletionDate;
 
+    //db version 2 stuff
+    @Column(COLUMN_AUTOINCREMENTINGID) public int autoincrementingId;
+    @Column(COLUMN_CREATIONDATE) public java.util.Date creationDate;
+    @Column(COLUMN_LASTMODIFIEDDATE) public java.util.Date lastModifiedDate;
+    @Column(COLUMN_LASTOPENEDDATE) public java.util.Date lastOpenedDate;
+    @Column(COLUMN_SORTORDER) public int sortOrder;
+
     public InstanceIndexItem() {
         super();
 
     }
 
-    public InstanceIndexItem(long id, String title, String description, String thumbnailPath, String instanceFilePath, long storyCreationDate, long storySaveDate, String storyType, String language, String storyPathId, String storyPathPrerequisites, long storyCompletionDate) {
+    public InstanceIndexItem(long id, String title, String description, String thumbnailPath, String instanceFilePath, int autoincrementingId, java.util.Date creationDate, java.util.Date lastModifiedDate, java.util.Date lastOpenedDate, int sortOrder, long storyCreationDate, long storySaveDate, String storyType, String language, String storyPathId, String storyPathPrerequisites, long storyCompletionDate) {
         super(id, title, description, thumbnailPath);
         this.instanceFilePath = instanceFilePath;
+        this.autoincrementingId = autoincrementingId;
+        this.creationDate = creationDate;
+        this.lastModifiedDate = lastModifiedDate;
+        this.lastOpenedDate = lastOpenedDate;
+        this.sortOrder = sortOrder;
         this.storyCreationDate = storyCreationDate;
         this.storySaveDate = storySaveDate;
         this.storyType = storyType;
@@ -72,6 +87,20 @@ public class InstanceIndexItem extends BaseIndexItem {
 
     public String getInstanceFilePath() {
         return instanceFilePath;
+    }
+
+    public int getAutoincrementingId() { return autoincrementingId; }
+
+    public java.util.Date getCreationDate() { return creationDate; }
+
+    public java.util.Date getLastModifiedDate() { return lastModifiedDate; }
+
+    public java.util.Date getLastOpenedDate() {
+        return lastOpenedDate;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
     }
 
     public long getStoryCreationDate() {
