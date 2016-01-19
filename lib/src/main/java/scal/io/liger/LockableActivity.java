@@ -29,9 +29,10 @@ import info.guardianproject.iocipher.VirtualFileSystem;
 public class LockableActivity extends Activity implements ICacheWordSubscriber {
 
     protected CacheWordHandler mCacheWordHandler;
-    public String CACHEWORD_UNSET;
-    public String CACHEWORD_FIRST_LOCK;
-    public String CACHEWORD_SET;
+    public static final String CACHEWORD_UNSET = "unset";
+    public static final String CACHEWORD_FIRST_LOCK = "first_lock";
+    public static final String CACHEWORD_SET = "set";
+    public static final String CACHEWORD_TIMEOUT = "300";
 
     // protected VirtualFileSystem vfs;
 
@@ -39,14 +40,9 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CACHEWORD_UNSET = getText(R.string.cacheword_state_unset).toString();
-        CACHEWORD_FIRST_LOCK = getText(R.string.cacheword_state_first_lock).toString();
-        CACHEWORD_SET = getText(R.string.cacheword_state_set).toString();
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        int timeout = Integer.parseInt(settings.getString("pcachewordtimeout", "600"));
-        mCacheWordHandler = new CacheWordHandler(this, timeout); // TODO: timeout of -1 represents no timeout (revisit)
-
+        int timeout = Integer.parseInt(settings.getString("pcachewordtimeout", CACHEWORD_TIMEOUT));
+        mCacheWordHandler = new CacheWordHandler(this, timeout);
 
         // TEST
 
@@ -72,7 +68,6 @@ public class LockableActivity extends Activity implements ICacheWordSubscriber {
         */
 
         //TEST
-
 
         /*
         vfs = VirtualFileSystem.get();
