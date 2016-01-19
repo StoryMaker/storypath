@@ -1,5 +1,7 @@
 package scal.io.liger.model.sqlbrite;
 
+import android.util.Log;
+
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
 /**
@@ -79,4 +81,26 @@ public class InstalledIndexItem extends ExpansionIndexItem {
                 mainDownloadFlag,
                 patchDownloadFlag);
     }
+
+    @Override
+    public int compareTo(Object another) {
+            if (another instanceof InstalledIndexItem) {
+                    //return new Integer(getSortOrder()).compareTo(new Integer(((AvailableIndexItem) another).getSortOrder()));
+
+
+
+                    java.util.Date thisDate = getCreationDate();
+                    java.util.Date thatDate = ((InstalledIndexItem) another).getCreationDate();
+                    Log.d("InstalledIndexItem", "compareTo "+thisDate.toString()+" "+thatDate.toString());
+                    return thisDate.compareTo(thatDate);
+
+            } else if (another instanceof AvailableIndexItem) {
+                    return -1; // should always appear below installed index items
+            } else if (another instanceof InstanceIndexItem) {
+                    return -1; // should always appear below instance index items
+            } else {
+                    return 0; // otherwise don't care
+            }
+    }
+
 }

@@ -357,16 +357,19 @@ public class InstalledIndexItemDao extends Dao {
             flag = 1;
         }
 
+        int autoincrementingId_local = getNextAutoincrementingId();
+        java.util.Date creationDate_local = new java.util.Date();
+
         return addInstalledIndexItem(r.nextLong(),
                 item.getTitle(),
                 item.getDescription(),
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
-                item.getAutoincrementingId(),
-                item.getCreationDate(),
-                item.getLastModifiedDate(),
-                item.getLastOpenedDate(),
+                autoincrementingId_local,
+                creationDate_local,
+                creationDate_local,
+                creationDate_local,
                 item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
@@ -391,16 +394,19 @@ public class InstalledIndexItemDao extends Dao {
 
     public Observable<Long> addInstalledIndexItem(InstalledIndexItem item, boolean replace) {
 
+        int autoincrementingId_local = getNextAutoincrementingId();
+        java.util.Date creationDate_local = new java.util.Date();
+
         return addInstalledIndexItem(item.getId(),
                 item.getTitle(),
                 item.getDescription(),
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
-                item.getAutoincrementingId(),
-                item.getCreationDate(),
-                item.getLastModifiedDate(),
-                item.getLastOpenedDate(),
+                autoincrementingId_local,
+                creationDate_local,
+                creationDate_local,
+                creationDate_local,
                 item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),

@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
@@ -139,16 +138,16 @@ public class InstanceIndexItem extends BaseIndexItem {
         this.storyCompletionDate = storyCompletionDate;
     }
 
-    @Override
-    public int compareTo(Object another) {
-        if (another instanceof  ExpansionIndexItem) {
-            return 1; // should always appear above expansion index items
-        } else if (another instanceof InstanceIndexItem) {
-            return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
-        } else {
-            return 0; // otherwise don't care
-        }
-    }
+//    @Override
+//    public int compareTo(Object another) {
+//        if (another instanceof  ExpansionIndexItem) {
+//            return 1; // should always appear above expansion index items
+//        } else if (another instanceof InstanceIndexItem) {
+//            return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
+//        } else {
+//            return 0; // otherwise don't care
+//        }
+//    }
 
     public void deleteAssociatedFiles(Context context, boolean deleteMedia) {
 
