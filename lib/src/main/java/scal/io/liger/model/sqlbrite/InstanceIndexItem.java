@@ -9,7 +9,6 @@ import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 
 import scal.io.liger.JsonHelper;
@@ -93,11 +92,17 @@ public class InstanceIndexItem extends BaseIndexItem {
 
     public java.util.Date getCreationDate() { return creationDate; }
 
+    public void setCreationDate(java.util.Date creationDate) { this.creationDate = creationDate; }
+
     public java.util.Date getLastModifiedDate() { return lastModifiedDate; }
 
-    public java.util.Date getLastOpenedDate() {
-        return lastOpenedDate;
-    }
+    public void setLastModifiedDate(java.util.Date lastModifiedDate) { this.lastModifiedDate = lastModifiedDate; }
+
+    public java.util.Date getLastOpenedDate() { return lastOpenedDate; }
+
+    public void setLastOpenedDate(java.util.Date lastOpenedDate) { this.lastOpenedDate = lastOpenedDate; }
+
+    public void setSortOrder(int sortOrder) { this.sortOrder = sortOrder; }
 
     public int getSortOrder() {
         return sortOrder;
@@ -239,12 +244,30 @@ public class InstanceIndexItem extends BaseIndexItem {
 
     @Override
     public int compareTo(Object another) {
-        if (another instanceof  ExpansionIndexItem) {
-            return 1; // should always appear above expansion index items
-        } else if (another instanceof InstanceIndexItem) {
-            return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
+
+//        if (another instanceof  ExpansionIndexItem) {
+//            return 1; // should always appear above expansion index items
+//        } else if (another instanceof InstanceIndexItem) {
+//            return new Date(getLastModifiedTime()).compareTo(new Date(((InstanceIndexItem)another).getLastModifiedTime())); // compare file dates for other instance index items
+//        } else {
+//            return 0; // otherwise don't care
+//        }
+
+        if (another instanceof InstanceIndexItem) {
+            java.util.Date thisDate = getLastOpenedDate();
+            java.util.Date thatDate = ((InstanceIndexItem)another).getLastOpenedDate();
+            if (thisDate != null && thatDate != null) {
+                return thisDate.compareTo(thatDate); // compare file dates for other instance index items
+            } else {
+                return 0;
+            }
+        } else if (another instanceof AvailableIndexItem) {
+            return 1; // should always appear above available index items
+        } else if (another instanceof InstalledIndexItem) {
+            return 1; // should always appear above installed index items
         } else {
             return 0; // otherwise don't care
         }
+
     }
 }

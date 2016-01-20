@@ -83,6 +83,7 @@ public class AvailableIndexItem extends ExpansionIndexItem {
     @Override
     public int compareTo(Object another) {
         if (another instanceof AvailableIndexItem) {
+
                 return new Integer(getSortOrder()).compareTo(new Integer(((AvailableIndexItem) another).getSortOrder()));
                 //return new Date(getLastModifiedTime()).compareTo(new Date(((AvailableIndexItem) another).getLastModifiedTime())); // compare file dates for other available index items
         } else if (another instanceof InstalledIndexItem) {

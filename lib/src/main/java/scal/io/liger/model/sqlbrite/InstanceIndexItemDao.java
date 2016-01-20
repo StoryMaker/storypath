@@ -214,4 +214,74 @@ public class InstanceIndexItemDao extends Dao {
                 key);
     }
 
+    public Observable<Integer> updateInstanceItemLastOpenedDate(InstanceIndexItem item, java.util.Date openedDate) {
+
+        Observable<Integer> numUpdatedRows = null;
+
+//        ContentValues values = InstanceIndexItemMapper.contentValues()
+//                .id(item.getId())
+//                .title(item.getTitle())
+//                .description(item.getDescription())
+//                .thumbnailPath(item.getThumbnailPath())
+//                .instanceFilePath(item.getInstanceFilePath())
+//                .autoincrementingId(item.getAutoincrementingId())
+//                .creationDate(item.getCreationDate())
+//                .lastModifiedDate(item.getLastModifiedDate())
+//                .lastOpenedDate(openedDate)
+//                .sortOrder(item.getSortOrder())
+//                .storyCreationDate(item.getStoryCreationDate())
+//                .storySaveDate(item.getStorySaveDate())
+//                .storyType(item.getStoryType())
+//                .language(item.getLanguage())
+//                .storyPathId(item.getStoryPathId())
+//                .storyPathPrerequisites(item.getStoryPathPrerequisites())
+//                .storyCompletionDate(item.getStoryCompletionDate())
+//                .build();
+        ContentValues values = InstanceIndexItemMapper.contentValues()
+                .lastOpenedDate(openedDate)
+                .build();
+
+        try {
+            numUpdatedRows = update(InstanceIndexItem.TABLE_NAME, values, InstanceIndexItem.COLUMN_INSTANCEFILEPATH + " = ? ",
+                    item.getInstanceFilePath());
+        } catch (SQLiteConstraintException sce) {
+            Timber.d("UPDATE FAILED: " + sce.getMessage());
+        }
+
+        return numUpdatedRows;
+    }
+
+    public Observable<List<InstanceIndexItem>> getInstanceIndexItemByKey(String key) {
+
+        // check current state of an existing record with a matching key
+
+        return query(SELECT(InstanceIndexItem.COLUMN_ID,
+                InstanceIndexItem.COLUMN_TITLE,
+                InstanceIndexItem.COLUMN_DESCRIPTION,
+                InstanceIndexItem.COLUMN_THUMBNAILPATH,
+                InstanceIndexItem.COLUMN_INSTANCEFILEPATH,
+                InstanceIndexItem.COLUMN_AUTOINCREMENTINGID,
+                InstanceIndexItem.COLUMN_CREATIONDATE,
+                InstanceIndexItem.COLUMN_LASTMODIFIEDDATE,
+                InstanceIndexItem.COLUMN_LASTOPENEDDATE,
+                InstanceIndexItem.COLUMN_SORTORDER,
+                InstanceIndexItem.COLUMN_STORYCREATIONDATE,
+                InstanceIndexItem.COLUMN_STORYSAVEDATE,
+                InstanceIndexItem.COLUMN_STORYTYPE,
+                InstanceIndexItem.COLUMN_LANGUAGE,
+                InstanceIndexItem.COLUMN_STORYPATHID,
+                InstanceIndexItem.COLUMN_STORYPATHPREREQUISITES,
+                InstanceIndexItem.COLUMN_STORYCOMPLETIONDATE)
+                .FROM(InstanceIndexItem.TABLE_NAME)
+                .WHERE(InstanceIndexItem.COLUMN_INSTANCEFILEPATH + " = ? "), key)
+                .map(new Func1<SqlBrite.Query, List<InstanceIndexItem>>() {
+
+                    @Override
+                    public List<InstanceIndexItem> call(SqlBrite.Query query) {
+                        Cursor cursor = query.run();
+                        return InstanceIndexItemMapper.list(cursor);
+                    }
+                });
+    }
+
 }
