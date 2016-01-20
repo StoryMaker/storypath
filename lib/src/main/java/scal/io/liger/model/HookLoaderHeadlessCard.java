@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
 import java.util.Observable;
 
 /**
@@ -13,6 +14,18 @@ import java.util.Observable;
  * @author Josh Steiner
  */
 public class HookLoaderHeadlessCard extends HeadlessCard {
+
+    /*
+     * IMPORTANT!
+     *
+     * in its current form this class will support any quiz where the intended outcome
+     * is to select a story path file from storyPathTemplateFiles with a key of format
+     *   <referenced choice a>_<referenced choice b>_<referenced choice c>_etc
+     * there are hard-coded exceptions to handle the default library, which constructs
+     * keys differently depending on certain referenced choices.
+     *
+     */
+
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -58,9 +71,31 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
                 stateVisiblity = true;
 
                 if (action.equals("LOAD")) {
-                    Timber.d("LOADING FILE: " + target);
-//                    ArrayList<String> refs = getReferences();
 
+                    // trying something new...
+                    ArrayList<String> refs = getReferences();
+
+                    target = "";
+
+                    for (String ref : refs) {
+
+                        // normally we won't end up here with nulls due to the initial check
+                        // this is intended to accomodate the default library
+                        String targetPart = getStoryPath().getReferencedValue(ref);
+                        if (targetPart == null) {
+                            Timber.d("HOOK - NOTHING TO ADD FOR " + ref);
+                        } else {
+                            Timber.d("HOOK - ADDING CHOICE: " + targetPart);
+
+                            if (target.length() > 0) {
+                                target = target + "_";
+                            }
+
+                            target = target + targetPart;
+                        }
+                    }
+
+                    /*
                     String topic = getStoryPath().getReferencedValue("default_library::quiz_card_topic::choice");
                     String format = getStoryPath().getReferencedValue("default_library::quiz_card_format::choice");
                     String medium = getStoryPath().getReferencedValue("default_library::quiz_card_medium::choice");
@@ -74,6 +109,9 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
                     if (clipQuestion != null && !clipQuestion.equals("")) {
                         target += "_" + clipQuestion;
                     }
+                    */
+
+                    Timber.d("LOADING FILE: " + target);
 
                     loadStoryPath(target);
                 } else {
@@ -88,12 +126,36 @@ public class HookLoaderHeadlessCard extends HeadlessCard {
         // need to accomodate and/or logic
         boolean result = true;
 
+        // trying something new...
+        ArrayList<String> refs = getReferences();
+
+        for (String ref : refs) {
+            // these are handled below, they must be omitted here
+            if (ref.equals("default_library::quiz_card_cliptype::choice")) {
+                Timber.d("HOOK - SKIPPING CHECK FOR " + ref);
+            } else if (ref.equals("default_library::quiz_card_clipquestion::choice")) {
+                Timber.d("HOOK - SKIPPING CHECK FOR " + ref);
+            } else {
+                if (!checkReferencedValueMatches(ref)) {
+                    Timber.d("HOOK - " + ref + " HAS NO VALUE");
+                    result = false;
+                } else {
+                    Timber.d("HOOK - " + ref + " HAS A VALUE");
+                }
+            }
+        }
+
         // already hard coded in update(), so hard coding them here for simplicity
+        /*
         if ((!checkReferencedValueMatches("default_library::quiz_card_topic::choice")) ||
             (!checkReferencedValueMatches("default_library::quiz_card_format::choice")) ||
             (!checkReferencedValueMatches("default_library::quiz_card_medium::choice"))) {
             result = false;
         }
+        */
+
+        // i think it's safe to leave this here
+        // for a library with no "format" option it will just be ignored
 
         // cards 4 and 5 appear under specific conditions
         // if the conditions are met but the cards have no values, the check fails
