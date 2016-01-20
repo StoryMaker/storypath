@@ -16,7 +16,7 @@ import java.util.Observable;
 public class HookLoaderHeadlessCard extends HeadlessCard {
 
     /*
-     * IMPORTANT!
+     * FIXME: IMPORTANT! 
      *
      * in its current form this class will support any quiz where the intended outcome
      * is to select a story path file from storyPathTemplateFiles with a key of format
