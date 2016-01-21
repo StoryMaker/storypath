@@ -84,12 +84,21 @@ public class AvailableIndexItem extends ExpansionIndexItem {
     public int compareTo(Object another) {
         if (another instanceof AvailableIndexItem) {
 
-                return new Integer(getSortOrder()).compareTo(new Integer(((AvailableIndexItem) another).getSortOrder()));
+
+            //Log.d("ExpansionIndexItem", "compare 3 available " + getExpansionId() + " " + ((AvailableIndexItem) another).getExpansionId());
+
+
+            return new Integer(getSortOrder()).compareTo(new Integer(((AvailableIndexItem) another).getSortOrder()));
                 //return new Date(getLastModifiedTime()).compareTo(new Date(((AvailableIndexItem) another).getLastModifiedTime())); // compare file dates for other available index items
         } else if (another instanceof InstalledIndexItem) {
-                return -1; // should always appear below installed index items
+            //Log.d("AvailableIndexItem", "compare installed " + getExpansionId() + " " + ((InstalledIndexItem) another).getExpansionId());
+
+
+            return -1; // should always appear below installed index items
         } else if (another instanceof InstanceIndexItem) {
-                return -1; // should always appear below instance index items
+            //Log.d("AvailableIndexItem", "compare instance " + getExpansionId() + " " + ((InstanceIndexItem) another).getInstanceFilePath());
+
+            return -1; // should always appear below instance index items
         } else {
                 return 0; // otherwise don't care
         }

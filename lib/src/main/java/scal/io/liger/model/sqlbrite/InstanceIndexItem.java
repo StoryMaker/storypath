@@ -252,8 +252,8 @@ public class InstanceIndexItem extends BaseIndexItem {
 //        } else {
 //            return 0; // otherwise don't care
 //        }
-
         if (another instanceof InstanceIndexItem) {
+
             java.util.Date thisDate = getLastOpenedDate();
             java.util.Date thatDate = ((InstanceIndexItem)another).getLastOpenedDate();
             if (thisDate != null && thatDate != null) {

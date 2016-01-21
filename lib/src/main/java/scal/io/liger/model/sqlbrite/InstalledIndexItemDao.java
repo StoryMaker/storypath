@@ -4,14 +4,17 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.hannesdorfmann.sqlbrite.dao.Dao;
 import com.squareup.sqlbrite.SqlBrite;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import timber.log.Timber;
 
@@ -94,6 +97,8 @@ public class InstalledIndexItemDao extends Dao {
 
         // select all rows
 
+        Log.d("InstalledIndexItem", "getInstalledItems 1");
+
         return query(SELECT(InstalledIndexItem.COLUMN_ID,
                 InstalledIndexItem.COLUMN_TITLE,
                 InstalledIndexItem.COLUMN_DESCRIPTION,
@@ -123,7 +128,8 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_INSTALLEDFLAG,
                 InstalledIndexItem.COLUMN_MAINDOWNLOADFLAG,
                 InstalledIndexItem.COLUMN_PATCHDOWNLOADFLAG)
-                .FROM(InstalledIndexItem.TABLE_NAME))
+                .FROM(InstalledIndexItem.TABLE_NAME)
+                .ORDER_BY(InstanceIndexItem.COLUMN_CREATIONDATE))
                 .map(new Func1<SqlBrite.Query, List<InstalledIndexItem>>() {
 
                     @Override
@@ -141,6 +147,8 @@ public class InstalledIndexItemDao extends Dao {
         if (installedFlag) {
             installedInt = 1;
         }
+
+        Log.d("InstalledIndexItem", "getInstalledItems 2");
 
         // select all rows with matching download flag
 
@@ -197,6 +205,8 @@ public class InstalledIndexItemDao extends Dao {
 
         // select all rows with matching download flag
 
+        Log.d("InstalledIndexItem", "getInstalledItems 3");
+
         return query(SELECT(InstalledIndexItem.COLUMN_ID,
                 InstalledIndexItem.COLUMN_TITLE,
                 InstalledIndexItem.COLUMN_DESCRIPTION,
@@ -241,6 +251,7 @@ public class InstalledIndexItemDao extends Dao {
     public Observable<List<InstalledIndexItem>> getInstalledIndexItemsByType(String contentType) {
 
         // select all rows with matching content type
+        Log.d("InstalledIndexItem", "getInstalledItems 4");
 
         return query(SELECT(InstalledIndexItem.COLUMN_ID,
                 InstalledIndexItem.COLUMN_TITLE,
@@ -272,7 +283,8 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_MAINDOWNLOADFLAG,
                 InstalledIndexItem.COLUMN_PATCHDOWNLOADFLAG)
                 .FROM(InstalledIndexItem.TABLE_NAME)
-                .WHERE(InstalledIndexItem.COLUMN_CONTENTTYPE + " = ? "), contentType)
+                .WHERE(InstalledIndexItem.COLUMN_CONTENTTYPE + " = ? ")
+                .ORDER_BY(InstalledIndexItem.COLUMN_CREATIONDATE),contentType)
                 .map(new Func1<SqlBrite.Query, List<InstalledIndexItem>>() {
 
                     @Override
@@ -283,7 +295,7 @@ public class InstalledIndexItemDao extends Dao {
                 });
     }
 
-    public Observable<Long> addInstalledIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, int autoincrementingId, java.util.Date creationDate, java.util.Date lastModifiedDate, java.util.Date lastOpenedDate, int sortOrder, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag, boolean replace) {
+    public Observable<Long> addInstalledIndexItem(long id, String title, String description, String thumbnailPath, String packageName, String expansionId, int autoincrementingId, java.util.Date lastModifiedDate, java.util.Date lastOpenedDate, int sortOrder, String patchOrder, String contentType, String expansionFileUrl, String expansionFilePath, String expansionFileVersion, long expansionFileSize, String expansionFileChecksum, String patchFileVersion, long patchFileSize, String patchFileChecksum, String author, String website, String dateUpdated, String languages, String tags, int installedFlag, int mainDownloadFlag, int patchDownloadFlag, boolean replace) {
 
         Timber.d("ADDING ROW FOR " + expansionId + "(MAIN " + mainDownloadFlag + ", PATCH " + patchDownloadFlag + ", REPLACE? " + replace + ")");
 
@@ -291,6 +303,21 @@ public class InstalledIndexItemDao extends Dao {
 
         int autoincrementingId_local = getNextAutoincrementingId();
         java.util.Date creationDate_local = new java.util.Date();
+        java.util.Date existingDate = getInstalledIndexItemCreationDateByKey(expansionId);
+        if (existingDate != null) {
+
+            Log.d("InstalledIndexItem", "existing date is "+existingDate.toString()+" "+expansionId);
+            creationDate_local = existingDate;
+        } else {
+            Log.d("InstalledIndexItem", "existing date is null "+expansionId);
+        }
+
+//
+//        if (installedIndexItemExists(expansionId)) {
+//            Log.d("InstalledIndexItem", "item exists "+expansionId);
+//        } else {
+//            Log.d("InstalledIndexItem", "item does not exist "+expansionId);
+//        }
 
         ContentValues values = InstalledIndexItemMapper.contentValues()
                 .id(r.nextLong())
@@ -326,8 +353,11 @@ public class InstalledIndexItemDao extends Dao {
 
         try {
             if (replace) {
+
+                Log.d("InstalledIndexItem", "insert 1 replace "+expansionId+" "+creationDate_local.toString());
                 rowId = insert(InstalledIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
             } else {
+                Log.d("InstalledIndexItem", "insert 1 ignore "+expansionId+" "+creationDate_local.toString());
                 rowId = insert(InstalledIndexItem.TABLE_NAME, values, SQLiteDatabase.CONFLICT_IGNORE);
             }
         } catch (SQLiteConstraintException sce) {
@@ -369,7 +399,6 @@ public class InstalledIndexItemDao extends Dao {
                 autoincrementingId_local,
                 creationDate_local,
                 creationDate_local,
-                creationDate_local,
                 item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
@@ -404,7 +433,6 @@ public class InstalledIndexItemDao extends Dao {
                 item.getPackageName(),
                 item.getExpansionId(),
                 autoincrementingId_local,
-                creationDate_local,
                 creationDate_local,
                 creationDate_local,
                 item.getSortOrder(),
@@ -452,6 +480,34 @@ public class InstalledIndexItemDao extends Dao {
         // check current state of an existing record
 
         return getInstalledIndexItemByKey(item.getExpansionId());
+    }
+
+    public java.util.Date getInstalledIndexItemCreationDateByKey (String key) {
+
+        final ArrayList<java.util.Date> returnVals = new ArrayList<java.util.Date>();
+
+        getInstalledIndexItemByKey(key).take(1).subscribe(new Action1<List<InstalledIndexItem>>() {
+
+            @Override
+            public void call(List<InstalledIndexItem> expansionIndexItems) {
+
+                // only one item expected
+
+                if (expansionIndexItems.size() == 1) {
+
+                    InstalledIndexItem installedItem = expansionIndexItems.get(0);
+
+                    returnVals.add(installedItem.getCreationDate());
+                }
+            }
+        });
+
+        if (returnVals.size() > 0) {
+            return returnVals.get(0);
+        } else {
+            return null;
+        }
+
     }
 
     public Observable<List<InstalledIndexItem>> getInstalledIndexItemByKey(String key) {

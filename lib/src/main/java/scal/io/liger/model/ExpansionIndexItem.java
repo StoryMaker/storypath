@@ -1,6 +1,7 @@
 package scal.io.liger.model;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -275,6 +276,9 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     @Override
     public int compareTo(@NonNull Object another) {
+
+        Log.d("ExpansionIndexItem", "compare 1");
+
         if (another instanceof InstanceIndexItem) {
             //Timber.d(title + " COMPARED TO INSTANCE ITEM: -1");
             return -1; // should always appear below instance index items

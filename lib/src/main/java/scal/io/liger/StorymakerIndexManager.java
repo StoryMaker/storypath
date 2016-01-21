@@ -330,6 +330,23 @@ public class StorymakerIndexManager {
         return indexMap;
     }
 
+    public static ArrayList<String> loadInstalledIdIndexList(Context context, Dao dao) {
+
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
+
+        ArrayList<String> idList = new ArrayList<String>();
+
+        //HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+
+        for (ExpansionIndexItem item : indexList) {
+            //indexMap.put(item.getExpansionId(), item);
+            idList.add(item.getExpansionId());
+        }
+
+        return idList;
+    }
+
+
     // supressing messages for less text during polling
 
     /**
@@ -474,7 +491,8 @@ public class StorymakerIndexManager {
         }
     }
 
-
+    //this is code that looks through files in the directory and adds them to the index if they don't already exist
+    //to help with sideloading
     public static boolean fillInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> installedIndexList, HashMap<String, ExpansionIndexItem> availableIndexList, String language, Dao dao) {
 
         ArrayList<File> files = JsonHelper.getLibraryInstalledFiles(context);
