@@ -1,22 +1,73 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="action_settings">Настройки</string>
+  <string name="lbl_level">Уровень:</string>
+  <string name="lbl_time">Время:</string>
+  <string name="lbl_continue">Продолжить</string>
   <string name="lbl_next">Следующий </string>
+  <string name="lbl_congrats_or">--- или ---</string>
+  <string name="cliptype_character">Герой</string>
+  <string name="cliptype_action">Сюжет</string>
+  <string name="cliptype_result">Результат</string>
+  <string name="cliptype_place">Место</string>
+  <string name="choose_medium">Выбрать средство</string>
   <string name="lbl_video">Видео</string>
   <string name="lbl_audio">Аудио</string>
   <string name="lbl_photo">Фото</string>
+  <string name="lbl_record">Записать клип</string>
+  <string name="lbl_order_media_desc">Теперь разместите ваши клипы по порядку, чтобы ясно представить начало, середину и конец.</string>
+  <string name="lbl_card_tap">Нажмите для выбора другого клипа</string>
+  <string name="lbl_import">Импорт</string>
+  <string name="menu_done">Сделано</string>
+  <string name="clip_order">Порядок клипов</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">НАЧАТЬ ЗАПИСЬ</string>
+  <string name="dialog_done">СДЕЛАНО</string>
+  <string name="dialog_pause">ПАУЗА</string>
+  <string name="dialog_resume">ВОЗОБНОВИТЬ</string>
+  <string name="dialog_stop">ОСТАНОВИТЬ ЗАПИСЬ</string>
+  <string name="dialog_redo">ПОВТОРИТЬ ДЕЙСТВИЕ</string>
+  <string name="edit_card">Редактировать Карточку</string>
+  <string name="change_goal">Изменить Цель</string>
+  <string name="duplicate_card">Дублировать Карточку</string>
+  <string name="duplicate_clip">Дублировать Клип</string>
+  <string name="remove_card">Удалить Карточку</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_complete">Загрузка завершена</string>
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download failed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_failed">Ошибка при загрузке</string>
+  <string name="state_unknown">Начало...\"</string>
+  <string name="state_idle">Ожидание начала загрузки</string>
+  <string name="state_fetching_url">Поиск ресурсов для загрузки</string>
+  <string name="state_connecting">Соединение с сервером загрузок</string>
+  <string name="state_downloading">Загрузка ресурсов</string>
+  <string name="state_completed">Загрузка окончена</string>
+  <string name="state_paused_network_unavailable">Загрузка остановлена, т.к. недоступна сеть</string>
+  <string name="state_paused_network_setup_failure">Загрузка остановлена. Проверьте веб-сайт в браузере</string>
+  <string name="state_paused_by_request">Загрузка остановлена</string>
+  <string name="state_paused_wifi_unavailable">Загрузка остановлена, т.к. недоступен wi-fi</string>
+  <string name="state_paused_wifi_disabled">Загрузка остановлена, т.к. отключен wi-fi</string>
+  <string name="state_paused_sdcard_unavailable">Загрузка остановлена, т.к. недоступен внешний накопитель</string>
+  <string name="state_failed_unlicensed">Загрузка не удалась, т.к. вы, возможно, не приобрели данное приложение</string>
+  <string name="state_failed_fetching_url">Загрузка не удалась, т.к. ресурсы не могут быть найдены</string>
+  <string name="state_failed_sdcard_full">Загрузка не удалась, т.к. внешний накопитель переполнен</string>
+  <string name="state_failed_cancelled">Загрузка отменена</string>
+  <string name="state_failed">Загрузка не удалась</string>
+  <string name="kilobytes_per_second">%1$s KБ/с</string>
+  <string name="time_remaining">Осталось времени: %1$s</string>
+  <string name="time_remaining_notification">%1$s осталось</string>
+  <string name="add_clips_before_narrating">Добавьте несколько клипов перед добавлением рассказа</string>
+  <string name="add_clips_before_reordering">Добавьте клипы перед изменением их порядка</string>
+  <string name="add_clips_generic">Сначала добавьте клипы</string>
   <string name="title_section3">Раздел 3</string>
   <string name="title_section2">Раздел 2</string>
   <string name="title_section1">Раздел 1</string>
@@ -31,7 +82,7 @@
   <!--label shown when there is not enough space to record something-->
   <string name="storage_is_full">Нет свободного места</string>
   <!--label shown when the recording has reached maximum allowed file size-->
-  <string name="max_length_reached">Максимальная длительность</string>
+  <string name="max_length_reached">Максимальная длительность достигнута</string>
   <!--label shown when there is no sd card available to record to-->
   <string name="insert_sd_card">Требуется SD-карта</string>
   <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
@@ -77,8 +128,13 @@
   <string name="sd_card_not_available">SD-карта недоступна</string>
   <string name="open_file_explorer">Открыть файл</string>
   <string name="alert_message_delete_record">Вы хотите удалить выделенную запись?</string>
+  <string name="recording_narration">Запись Рассказа</string>
+  <string name="could_not_start_narration">Невозможно начать рассказ!</string>
   <string name="order">Порядок</string>
   <string name="publish">Опубликовать</string>
   <string name="cancel">Отмена</string>
+  <string name="trim_clip">Обрезать клип</string>
+  <string name="narration">Рассказ</string>
+  <string name="this_story_has_no_clips_to_publish">В этом сюжете нет клипов для публикации!</string>
   <!--add for libra end-->
 </resources>

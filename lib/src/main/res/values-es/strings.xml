@@ -6,24 +6,31 @@
   <string name="lbl_continue">Continuar</string>
   <string name="lbl_next">Siguiente</string>
   <string name="lbl_congrats_or">--- o ---</string>
+  <string name="cliptype_character">Personaje</string>
+  <string name="cliptype_action">Acción</string>
+  <string name="cliptype_result">Resultado</string>
+  <string name="cliptype_place">Lugar</string>
+  <string name="cliptype_signature">Firma</string>
   <string name="choose_medium">Escoja el medio</string>
   <string name="lbl_video">Vídeo</string>
   <string name="lbl_audio">Audio</string>
   <string name="lbl_photo">Fotografía</string>
   <string name="lbl_record">Grabar corte de vídeo</string>
-  <string name="lbl_order_media_desc">Ahora ponga sus cortes de vídeo en orden para presentar un principio, parte intermedia, y final claros.</string>
-  <string name="lbl_card_tap">Pulse para seleccionar un corte de vídeo diferente.</string>
+  <string name="lbl_order_media_desc">Ahora ponga sus cortes de vídeo en orden para presentar un principio, desarrollo, y final claros.</string>
+  <string name="lbl_card_tap">Pulse para seleccionar un corte de vídeo distinto.</string>
   <string name="lbl_import">Importar</string>
   <string name="lbl_capture">Capturar</string>
   <string name="menu_done">Hecho</string>
-  <string name="clip_order">Orden de los cortes</string>
+  <string name="clip_order">Orden de los cortes de vídeo</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">INICIAR GRABACIÓN</string>
   <string name="dialog_done">HECHO</string>
   <string name="dialog_pause">PAUSA</string>
   <string name="dialog_resume">REANUDAR</string>
+  <string name="dialog_stop">DETENER GRABACIÓN</string>
   <string name="dialog_redo">REHACER</string>
   <string name="edit_card">Editar carta</string>
-  <string name="change_goal">Cambiar objetivo</string>
+  <string name="change_goal">Cambiar propósito</string>
   <string name="duplicate_card">Duplicar carta</string>
   <string name="duplicate_clip">Duplicar corte de vídeo</string>
   <string name="remove_card">Eliminar carta</string>
@@ -53,16 +60,17 @@
   <string name="state_paused_wifi_disabled">Descarga en pausa porque el wifi está deshabilitado</string>
   <string name="state_paused_roaming">Descarga en pausa porque usted está conectado por roaming</string>
   <string name="state_paused_sdcard_unavailable">Descarga en pausa porque el almacenamiento externo no está disponible</string>
-  <string name="state_failed_unlicensed">La descarga falló porque puede que no haya comprado esta aplicación</string>
+  <string name="state_failed_unlicensed">La descarga falló porque no puede haber comprado esta aplicación</string>
   <string name="state_failed_fetching_url">La descarga falló porque no se pudieron encontrar los recursos</string>
   <string name="state_failed_sdcard_full">La descarga falló porque el almacenamiento externo está lleno</string>
   <string name="state_failed_cancelled">Descarga cancelada</string>
-  <string name="state_failed">Descarga fallida</string>
+  <string name="state_failed">Fallo al descargar</string>
   <string name="kilobytes_per_second">%1$s KB/s</string>
   <string name="time_remaining">Tiempo restante: %1$s</string>
   <string name="time_remaining_notification">falta %1$s</string>
   <string name="add_clips_before_narrating">Añada algunos cortes de vídeo antes de añadir la narración</string>
   <string name="add_clips_before_reordering">Añada los cortes de vídeo antes de cambiar su orden</string>
+  <string name="add_clips_generic">Añada primero cortes de vídeo</string>
   <string name="title_section3">Sección 3</string>
   <string name="title_section2">Sección 2</string>
   <string name="title_section1">Sección 1</string>
@@ -75,11 +83,11 @@
   <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
   <string name="recording_stopped">Grabación detenida</string>
   <!--label shown when there is not enough space to record something-->
-  <string name="storage_is_full">El almacenamiento esta lleno</string>
+  <string name="storage_is_full">El almacenamiento está lleno</string>
   <!--label shown when the recording has reached maximum allowed file size-->
-  <string name="max_length_reached">Longitud máxima alcanzada</string>
+  <string name="max_length_reached">Tamaño máximo alcanzado</string>
   <!--label shown when there is no sd card available to record to-->
-  <string name="insert_sd_card">Tarjeta SD se requiere</string>
+  <string name="insert_sd_card">Se requiere una tarjeta SD</string>
   <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
   <!--label shown when there is less than 1 minute of space left to record-->
   <!--button to accept the current recording and return it to the caller-->
@@ -97,35 +105,43 @@
   <string name="audio_db_playlist_name">Mis grabaciones</string>
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
   <string name="error_sdcard_access">
-No se puede acceder al almacenamiento externo o interno</string>
+No se pudo acceder al almacenamiento externo o interno</string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
   <string name="error_app_internal">Error interno de la aplicación</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
-  <string name="error_mediadb_new_record">No se puede guardar el audio grabado</string>
+  <string name="error_mediadb_new_record">No se pudo guardar el audio grabado</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
   <string name="error_storage_space" formatted="false">Uups, estamos sin espacio. Por favor, ¡libere aproximadamente %.2f%nMB e inténtelo de nuevo!</string>
   <!--add for libra begin-->
-  <string name="default_record_name">Registro sin título</string>
-  <string name="menu_view_record_list">Ver lista de registros</string>
+  <string name="default_record_name">grabación sin título</string>
+  <string name="menu_view_record_list">Ver lista de grabaciones</string>
   <string name="menu_setting">Configuración</string>
-  <string name="delete_dialog_title">¿Quieres eliminar el registro actual?</string>
-  <string name="overwrite_dialog_title">% s ya existe. ¿Desea re-escribirlo?</string>
+  <string name="delete_dialog_title">¿Quieres eliminar la grabación actual?</string>
+  <string name="overwrite_dialog_title">%s ya existe. ¿Desea reescribirla?</string>
   <string name="preferences_title">Configuración</string>
-  <string name="pref_title_record_type"> Modelo de Registro del archivo</string>
-  <string name="prefDialogTitle_recordType">Por favor seleccione el tipo de archivo</string>
+  <string name="pref_title_record_type">Tipo de fichero de la grabación</string>
+  <string name="prefDialogTitle_recordType">Por favor, seleccione el tipo de fichero</string>
   <string name="prefDefault_recordType">audio/3gpp</string>
-  <string name="pref_title_enable_high_quality">Activar alta calidad</string>
-  <string name="pref_summary_enable_high_quality">El archivo de audio con alta calidad puede ser mayor</string>
-  <string name="pref_title_enable_sound_effect">Activar efecto de sonido</string>
+  <string name="pref_title_enable_high_quality">Habilitar alta calidad</string>
+  <string name="pref_summary_enable_high_quality">El fichero de audio con alta calidad puede ser más grande</string>
+  <string name="pref_title_enable_sound_effect">Habilitar efecto de sonido</string>
   <string name="pref_summary_enable_sound_effect">Reproducir efecto de sonido cuando se cambia el estado</string>
-  <string name="notification_recording">Grabando</string>
+  <string name="notification_recording">Grabando...</string>
   <string name="notification_stopped">Grabación detenida</string>
-  <string name="notification_warning">Almacenamiento bajo (menos de% d minutos) ...</string>
-  <string name="sd_card_not_available">Tarjeta SD no está disponible</string>
-  <string name="open_file_explorer">Abra el explorador de archivos</string>
-  <string name="alert_message_delete_record">¿Quieres eliminar el registro actual?</string>
+  <string name="notification_warning">Almacenamiento escaso (menos de %d minutos)...</string>
+  <string name="sd_card_not_available">Tarjeta SD no disponible</string>
+  <string name="open_file_explorer">Abrir explorador de ficheros</string>
+  <string name="alert_message_delete_record">¿Quiere eliminar la grabación seleccionada?</string>
+  <string name="recording_narration">Narración de la grabación</string>
+  <string name="could_not_start_narration">¡No se pudo comenzar la narración!</string>
+  <string name="jumble">Desorden</string>
   <string name="order">Orden</string>
+  <string name="narrate">Narrar</string>
   <string name="publish">Publicar</string>
+  <string name="total">Total</string>
   <string name="cancel">Cancelar</string>
+  <string name="trim_clip">Recortar corte de vídeo</string>
+  <string name="narration">Narración</string>
+  <string name="this_story_has_no_clips_to_publish">¡Esta historia no tiene cortes de vídeo que publicar!</string>
   <!--add for libra end-->
 </resources>

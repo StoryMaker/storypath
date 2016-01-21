@@ -10,7 +10,7 @@
   <string name="cliptype_action">Hành động</string>
   <string name="cliptype_result">Kết quả</string>
   <string name="cliptype_place">Địa điểm</string>
-  <string name="cliptype_signature">Chữ ký</string>
+  <string name="cliptype_signature">Dấu ấn</string>
   <string name="choose_medium">Chọn Phương Tiện</string>
   <string name="lbl_video">Video</string>
   <string name="lbl_audio">Âm Thanh</string>
