@@ -296,7 +296,7 @@ public class ExpansionIndexItem extends BaseIndexItem {
         this.packageName = item.getPackageName();
         this.expansionId = item.getExpansionId();
         this.autoincrementingId = item.getAutoincrementingId();
-        this.creationDate = item.getCreationDate();
+        //this.creationDate = item.getCreationDate();
         this.lastModifiedDate = item.getLastModifiedDate();
         this.lastOpenedDate = item.getLastOpenedDate();
         this.sortOrder = item.getSortOrder();

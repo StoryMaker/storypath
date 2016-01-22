@@ -304,47 +304,123 @@ public class StorymakerIndexManager {
         return indexMap;
     }
 
-    public static HashMap<String, ExpansionIndexItem> loadAvailableIdIndex(Context context, Dao dao) {
+//    public final class IndexKeyMap {
+//        private final HashMap<String, ExpansionIndexItem> indexMap;
+//        private final ArrayList<String> indexKeys;
+//
+//        public IndexKeyMap(HashMap<String, ExpansionIndexItem> indexMap, ArrayList<String> indexKeys) {
+//            this.indexMap = indexMap;
+//            this.indexKeys = indexKeys;
+//        }
+//
+//        public HashMap<String, ExpansionIndexItem> getIndexMap() {
+//            return indexMap;
+//        }
+//
+//        public ArrayList<String> getIndexKeys() {
+//            return indexKeys;
+//        }
+//
+////        public void setIndexMap(HashMap<String, ExpansionIndexItem> indexMap) {
+////            this.indexMap = indexMap;
+////        }
+////
+////        public void setIndexKeys(ArrayList<String> indexKeys) {
+////            this.indexKeys = indexKeys;
+////        }
+//
+//    }
+
+    public static class IndexKeyMap {
+        HashMap<String, ExpansionIndexItem> indexMap;
+        ArrayList<String> indexKeys;
+
+        public HashMap<String, ExpansionIndexItem> getIndexMap() {
+            return indexMap;
+        }
+
+        public ArrayList<String> getIndexKeys() {
+            return indexKeys;
+        }
+    }
+
+    public static IndexKeyMap loadAvailableIdIndexKeyMap(Context context, Dao dao) {
+
+        final IndexKeyMap indexKeyMap = new IndexKeyMap();
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName(), dao);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        ArrayList<String> indexKeys = new ArrayList<String>();
 
         for (ExpansionIndexItem item : indexList) {
             indexMap.put(item.getExpansionId(), item);
+            indexKeys.add(item.getExpansionId());
         }
 
-        return indexMap;
-    }
+        indexKeyMap.indexKeys = indexKeys;
+        indexKeyMap.indexMap = indexMap;
 
-    public static HashMap<String, ExpansionIndexItem> loadInstalledIdIndex(Context context, Dao dao) {
+        return indexKeyMap;
+    }
+    public static IndexKeyMap loadInstalledIdIndexKeyMap(Context context, Dao dao) {
+
+        final IndexKeyMap indexKeyMap = new IndexKeyMap();
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        ArrayList<String> indexKeys = new ArrayList<String>();
 
         for (ExpansionIndexItem item : indexList) {
             indexMap.put(item.getExpansionId(), item);
+            indexKeys.add(item.getExpansionId());
         }
 
+        indexKeyMap.indexKeys = indexKeys;
+        indexKeyMap.indexMap = indexMap;
+
+        return indexKeyMap;
+    }
+
+    public static HashMap<String, ExpansionIndexItem> loadAvailableIdIndex(Context context, Dao dao) {
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName(), dao);
+        HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        for (ExpansionIndexItem item : indexList) {
+            indexMap.put(item.getExpansionId(), item);
+        }
+        return indexMap;
+    }
+    public static HashMap<String, ExpansionIndexItem> loadInstalledIdIndex(Context context, Dao dao) {
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
+        HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        for (ExpansionIndexItem item : indexList) {
+            indexMap.put(item.getExpansionId(), item);
+        }
         return indexMap;
     }
 
-    public static ArrayList<String> loadInstalledIdIndexList(Context context, Dao dao) {
 
-        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
 
-        ArrayList<String> idList = new ArrayList<String>();
+//    public static ArrayList<String> loadInstalledIdIndexList(Context context, Dao dao) {
+//
+//        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
+//
+//        ArrayList<String> idList = new ArrayList<String>();
+//
+//        //HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+//
+//        for (ExpansionIndexItem item : indexList) {
+//            //indexMap.put(item.getExpansionId(), item);
+//
+//            Log.d("InstalledIndexItem", "load index "+item.getExpansionId()+" "+item.getCreationDate().toString());
+//
+//            idList.add(item.getExpansionId());
+//        }
+//
+//        return idList;
+//    }
 
-        //HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
-
-        for (ExpansionIndexItem item : indexList) {
-            //indexMap.put(item.getExpansionId(), item);
-            idList.add(item.getExpansionId());
-        }
-
-        return idList;
-    }
 
 
     // supressing messages for less text during polling
@@ -417,6 +493,59 @@ public class StorymakerIndexManager {
 
         //Timber.d(String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return returnList;
+    }
+
+    private static ArrayList<ExpansionIndexItem> loadIndexWithoutCache(Context context, final String jsonFileName, Dao dao) {
+
+        final ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+
+
+        if (jsonFileName.contains(Constants.AVAILABLE)) {
+            if (dao instanceof AvailableIndexItemDao) {
+
+                AvailableIndexItemDao availableDao = (AvailableIndexItemDao)dao;
+
+                availableDao.getAvailableIndexItems().subscribe(new Action1<List<AvailableIndexItem>>() {
+
+                    @Override
+                    public void call(List<AvailableIndexItem> availableIndexItems) {
+
+                        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+
+                        for (AvailableIndexItem item : availableIndexItems) {
+                            indexList.add(item);
+                        }
+
+                    }
+                });
+            } else {
+                //error
+            }
+        } else if (jsonFileName.contains(Constants.INSTALLED)) {
+            if (dao instanceof InstalledIndexItemDao) {
+
+                InstalledIndexItemDao installedDao = (InstalledIndexItemDao)dao;
+
+                installedDao.getInstalledIndexItems().subscribe(new Action1<List<InstalledIndexItem>>() {
+
+                    @Override
+                    public void call(List<InstalledIndexItem> installedIndexItems) {
+
+                        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
+
+                        for (InstalledIndexItem item : installedIndexItems) {
+                            indexList.add(item);
+                        }
+                    }
+                });
+            } else {
+                //error
+            }
+        } else {
+            //error
+        }
+
+        return indexList;
     }
 
     // only one key option for instance index

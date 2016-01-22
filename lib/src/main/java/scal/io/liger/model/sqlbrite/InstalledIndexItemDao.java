@@ -36,9 +36,9 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_PACKAGENAME + " TEXT",
                 InstalledIndexItem.COLUMN_EXPANSIONID + " TEXT PRIMARY KEY NOT NULL",
                 InstalledIndexItem.COLUMN_AUTOINCREMENTINGID + " INTEGER",
-                InstalledIndexItem.COLUMN_CREATIONDATE + " TEXT",
-                InstalledIndexItem.COLUMN_LASTMODIFIEDDATE + " TEXT",
-                InstalledIndexItem.COLUMN_LASTOPENEDDATE + " TEXT",
+                InstalledIndexItem.COLUMN_CREATIONDATE + " INTEGER",
+                InstalledIndexItem.COLUMN_LASTMODIFIEDDATE + " INTEGER",
+                InstalledIndexItem.COLUMN_LASTOPENEDDATE + " INTEGER",
                 InstalledIndexItem.COLUMN_SORTORDER + " INTEGER",
                 InstalledIndexItem.COLUMN_PATCHORDER + " TEXT",
                 InstalledIndexItem.COLUMN_CONTENTTYPE + " TEXT",
@@ -97,7 +97,7 @@ public class InstalledIndexItemDao extends Dao {
 
         // select all rows
 
-        Log.d("InstalledIndexItem", "getInstalledItems 1");
+        Log.d("InstalledIndexItem", "getInstalledItems 1 "+InstalledIndexItem.TABLE_NAME);
 
         return query(SELECT(InstalledIndexItem.COLUMN_ID,
                 InstalledIndexItem.COLUMN_TITLE,
@@ -129,7 +129,7 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_MAINDOWNLOADFLAG,
                 InstalledIndexItem.COLUMN_PATCHDOWNLOADFLAG)
                 .FROM(InstalledIndexItem.TABLE_NAME)
-                .ORDER_BY(InstanceIndexItem.COLUMN_CREATIONDATE))
+                .ORDER_BY(InstanceIndexItem.COLUMN_CREATIONDATE+" DESC"))
                 .map(new Func1<SqlBrite.Query, List<InstalledIndexItem>>() {
 
                     @Override
@@ -283,8 +283,8 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_MAINDOWNLOADFLAG,
                 InstalledIndexItem.COLUMN_PATCHDOWNLOADFLAG)
                 .FROM(InstalledIndexItem.TABLE_NAME)
-                .WHERE(InstalledIndexItem.COLUMN_CONTENTTYPE + " = ? ")
-                .ORDER_BY(InstalledIndexItem.COLUMN_CREATIONDATE),contentType)
+                .WHERE(InstalledIndexItem.COLUMN_CONTENTTYPE + " = ? "),contentType)
+                //.ORDER_BY(InstalledIndexItem.COLUMN_CREATIONDATE),contentType)
                 .map(new Func1<SqlBrite.Query, List<InstalledIndexItem>>() {
 
                     @Override

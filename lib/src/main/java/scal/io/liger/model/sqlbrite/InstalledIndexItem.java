@@ -13,6 +13,13 @@ public class InstalledIndexItem extends ExpansionIndexItem {
 
     public static final String TABLE_NAME = "InstalledIndexItem";
 
+
+    @Override
+    public java.util.Date getCreationDate() { return creationDate; }
+
+    public void setCreationDate(java.util.Date creationDate) { this.creationDate = creationDate; }
+
+
     public InstalledIndexItem() {
         super();
 
@@ -80,6 +87,9 @@ public class InstalledIndexItem extends ExpansionIndexItem {
                 installedFlag,
                 mainDownloadFlag,
                 patchDownloadFlag);
+
+        this.creationDate = creationDate;
+
     }
 
     @Override
@@ -89,8 +99,10 @@ public class InstalledIndexItem extends ExpansionIndexItem {
 
 
 
-                    java.util.Date thisDate = new java.util.Date(creationDate.toString());
-                    java.util.Date thatDate = new java.util.Date(((InstalledIndexItem) another).getCreationDate().toString());
+                    //java.util.Date thisDate = new java.util.Date(creationDate.toString());
+                    //java.util.Date thatDate = new java.util.Date(((InstalledIndexItem) another).getCreationDate().toString());
+                    java.util.Date thisDate = getCreationDate();
+                    java.util.Date thatDate = ((InstalledIndexItem) another).getCreationDate();
                     Log.d("InstalledIndexItem", "compareTo " + getExpansionId() + " " + thisDate.toString() + " " + ((InstalledIndexItem) another).getExpansionId() + " " + thatDate.toString());
                     return thisDate.compareTo(thatDate);
 
