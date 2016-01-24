@@ -85,9 +85,6 @@ public class AvailableIndexItem extends ExpansionIndexItem {
         if (another instanceof AvailableIndexItem) {
 
 
-            //Log.d("ExpansionIndexItem", "compare 3 available " + getExpansionId() + " " + ((AvailableIndexItem) another).getExpansionId());
-
-
             return new Integer(getSortOrder()).compareTo(new Integer(((AvailableIndexItem) another).getSortOrder()));
                 //return new Date(getLastModifiedTime()).compareTo(new Date(((AvailableIndexItem) another).getLastModifiedTime())); // compare file dates for other available index items
         } else if (another instanceof InstalledIndexItem) {

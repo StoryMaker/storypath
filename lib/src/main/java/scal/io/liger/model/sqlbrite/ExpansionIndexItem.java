@@ -1,7 +1,5 @@
 package scal.io.liger.model.sqlbrite;
 
-import android.util.Log;
-
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
@@ -424,8 +422,6 @@ public class ExpansionIndexItem extends BaseIndexItem {
 
     @Override
     public int compareTo(Object another) {
-
-        Log.d("ExpansionIndexItem", "compare 2");
 
         if (another instanceof InstanceIndexItem) {
             //Timber.d(title + " COMPARED TO INSTANCE ITEM: -1");
