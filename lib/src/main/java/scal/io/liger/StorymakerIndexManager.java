@@ -402,25 +402,6 @@ public class StorymakerIndexManager {
 
 
 
-//    public static ArrayList<String> loadInstalledIdIndexList(Context context, Dao dao) {
-//
-//        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
-//
-//        ArrayList<String> idList = new ArrayList<String>();
-//
-//        //HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
-//
-//        for (ExpansionIndexItem item : indexList) {
-//            //indexMap.put(item.getExpansionId(), item);
-//
-//            Log.d("InstalledIndexItem", "load index "+item.getExpansionId()+" "+item.getCreationDate().toString());
-//
-//            idList.add(item.getExpansionId());
-//        }
-//
-//        return idList;
-//    }
-
 
 
     // supressing messages for less text during polling
@@ -493,59 +474,6 @@ public class StorymakerIndexManager {
 
         //Timber.d(String.format("%d index items loaded for %s in %d ms", indexList.size(), jsonFileName, System.currentTimeMillis() - startTime));
         return returnList;
-    }
-
-    private static ArrayList<ExpansionIndexItem> loadIndexWithoutCache(Context context, final String jsonFileName, Dao dao) {
-
-        final ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
-
-
-        if (jsonFileName.contains(Constants.AVAILABLE)) {
-            if (dao instanceof AvailableIndexItemDao) {
-
-                AvailableIndexItemDao availableDao = (AvailableIndexItemDao)dao;
-
-                availableDao.getAvailableIndexItems().subscribe(new Action1<List<AvailableIndexItem>>() {
-
-                    @Override
-                    public void call(List<AvailableIndexItem> availableIndexItems) {
-
-                        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
-
-                        for (AvailableIndexItem item : availableIndexItems) {
-                            indexList.add(item);
-                        }
-
-                    }
-                });
-            } else {
-                //error
-            }
-        } else if (jsonFileName.contains(Constants.INSTALLED)) {
-            if (dao instanceof InstalledIndexItemDao) {
-
-                InstalledIndexItemDao installedDao = (InstalledIndexItemDao)dao;
-
-                installedDao.getInstalledIndexItems().subscribe(new Action1<List<InstalledIndexItem>>() {
-
-                    @Override
-                    public void call(List<InstalledIndexItem> installedIndexItems) {
-
-                        ArrayList<ExpansionIndexItem> indexList = new ArrayList<ExpansionIndexItem>();
-
-                        for (InstalledIndexItem item : installedIndexItems) {
-                            indexList.add(item);
-                        }
-                    }
-                });
-            } else {
-                //error
-            }
-        } else {
-            //error
-        }
-
-        return indexList;
     }
 
     // only one key option for instance index
