@@ -8,10 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import com.hannesdorfmann.sqlbrite.dao.Dao;
 import com.squareup.sqlbrite.SqlBrite;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import timber.log.Timber;
 
@@ -124,6 +126,7 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_MAINDOWNLOADFLAG,
                 InstalledIndexItem.COLUMN_PATCHDOWNLOADFLAG)
                 .FROM(InstalledIndexItem.TABLE_NAME))
+                //.ORDER_BY(InstanceIndexItem.COLUMN_CREATIONDATE + " DESC")
                 .map(new Func1<SqlBrite.Query, List<InstalledIndexItem>>() {
 
                     @Override
@@ -241,7 +244,6 @@ public class InstalledIndexItemDao extends Dao {
     public Observable<List<InstalledIndexItem>> getInstalledIndexItemsByType(String contentType) {
 
         // select all rows with matching content type
-
         return query(SELECT(InstalledIndexItem.COLUMN_ID,
                 InstalledIndexItem.COLUMN_TITLE,
                 InstalledIndexItem.COLUMN_DESCRIPTION,
@@ -273,6 +275,8 @@ public class InstalledIndexItemDao extends Dao {
                 InstalledIndexItem.COLUMN_PATCHDOWNLOADFLAG)
                 .FROM(InstalledIndexItem.TABLE_NAME)
                 .WHERE(InstalledIndexItem.COLUMN_CONTENTTYPE + " = ? "), contentType)
+                //.WHERE(InstalledIndexItem.COLUMN_CONTENTTYPE + " = ? ")
+                //.ORDER_BY(InstalledIndexItem.COLUMN_CREATIONDATE + " DESC"), contentType)
                 .map(new Func1<SqlBrite.Query, List<InstalledIndexItem>>() {
 
                     @Override
@@ -290,7 +294,6 @@ public class InstalledIndexItemDao extends Dao {
         Observable<Long> rowId = null;
 
         int autoincrementingId_local = getNextAutoincrementingId();
-        java.util.Date creationDate_local = new java.util.Date();
 
         ContentValues values = InstalledIndexItemMapper.contentValues()
                 .id(r.nextLong())
@@ -299,10 +302,10 @@ public class InstalledIndexItemDao extends Dao {
                 .thumbnailPath(thumbnailPath)
                 .packageName(packageName)
                 .expansionId(expansionId)
-                .autoincrementingId(autoincrementingId_local)
-                .creationDate(creationDate_local)
-                .lastModifiedDate(creationDate_local)
-                .lastOpenedDate(creationDate_local)
+                .autoincrementingId(autoincrementingId)
+                .creationDate(creationDate)
+                .lastModifiedDate(lastModifiedDate)
+                .lastOpenedDate(lastOpenedDate)
                 .sortOrder(sortOrder)
                 .patchOrder(patchOrder)
                 .contentType(contentType)
@@ -357,19 +360,16 @@ public class InstalledIndexItemDao extends Dao {
             flag = 1;
         }
 
-        int autoincrementingId_local = getNextAutoincrementingId();
-        java.util.Date creationDate_local = new java.util.Date();
-
         return addInstalledIndexItem(r.nextLong(),
                 item.getTitle(),
                 item.getDescription(),
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
-                autoincrementingId_local,
-                creationDate_local,
-                creationDate_local,
-                creationDate_local,
+                item.getAutoincrementingId(),
+                item.getCreationDate(),
+                item.getLastModifiedDate(),
+                item.getLastOpenedDate(),
                 item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
@@ -394,19 +394,16 @@ public class InstalledIndexItemDao extends Dao {
 
     public Observable<Long> addInstalledIndexItem(InstalledIndexItem item, boolean replace) {
 
-        int autoincrementingId_local = getNextAutoincrementingId();
-        java.util.Date creationDate_local = new java.util.Date();
-
         return addInstalledIndexItem(item.getId(),
                 item.getTitle(),
                 item.getDescription(),
                 item.getThumbnailPath(),
                 item.getPackageName(),
                 item.getExpansionId(),
-                autoincrementingId_local,
-                creationDate_local,
-                creationDate_local,
-                creationDate_local,
+                item.getAutoincrementingId(),
+                item.getCreationDate(),
+                item.getLastModifiedDate(),
+                item.getLastOpenedDate(),
                 item.getSortOrder(),
                 item.getPatchOrder(),
                 item.getContentType(),
@@ -452,6 +449,34 @@ public class InstalledIndexItemDao extends Dao {
         // check current state of an existing record
 
         return getInstalledIndexItemByKey(item.getExpansionId());
+    }
+
+    public java.util.Date getInstalledIndexItemCreationDateByKey (String key) {
+
+        final ArrayList<java.util.Date> returnVals = new ArrayList<java.util.Date>();
+
+        getInstalledIndexItemByKey(key).take(1).subscribe(new Action1<List<InstalledIndexItem>>() {
+
+            @Override
+            public void call(List<InstalledIndexItem> expansionIndexItems) {
+
+                // only one item expected
+
+                if (expansionIndexItems.size() == 1) {
+
+                    InstalledIndexItem installedItem = expansionIndexItems.get(0);
+
+                    returnVals.add(installedItem.getCreationDate());
+                }
+            }
+        });
+
+        if (returnVals.size() > 0) {
+            return returnVals.get(0);
+        } else {
+            return null;
+        }
+
     }
 
     public Observable<List<InstalledIndexItem>> getInstalledIndexItemByKey(String key) {

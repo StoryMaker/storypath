@@ -422,6 +422,7 @@ public class ExpansionIndexItem extends BaseIndexItem {
 
     @Override
     public int compareTo(Object another) {
+
         if (another instanceof InstanceIndexItem) {
             //Timber.d(title + " COMPARED TO INSTANCE ITEM: -1");
             return -1; // should always appear below instance index items

@@ -275,6 +275,7 @@ public class ExpansionIndexItem extends BaseIndexItem implements Comparable {
 
     @Override
     public int compareTo(@NonNull Object another) {
+        
         if (another instanceof InstanceIndexItem) {
             //Timber.d(title + " COMPARED TO INSTANCE ITEM: -1");
             return -1; // should always appear below instance index items

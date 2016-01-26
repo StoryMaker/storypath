@@ -123,7 +123,8 @@ public class AvailableIndexItemDao extends Dao {
                 AvailableIndexItem.COLUMN_INSTALLEDFLAG,
                 AvailableIndexItem.COLUMN_MAINDOWNLOADFLAG,
                 AvailableIndexItem.COLUMN_PATCHDOWNLOADFLAG)
-                .FROM(AvailableIndexItem.TABLE_NAME))
+                .FROM(AvailableIndexItem.TABLE_NAME)
+                .ORDER_BY(AvailableIndexItem.COLUMN_SORTORDER))
                 .map(new Func1<SqlBrite.Query, List<AvailableIndexItem>>() {
 
                     @Override

@@ -1,7 +1,5 @@
 package scal.io.liger.model.sqlbrite;
 
-import android.util.Log;
-
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 
 /**
@@ -12,6 +10,13 @@ import com.hannesdorfmann.sqlbrite.objectmapper.annotation.ObjectMappable;
 public class InstalledIndexItem extends ExpansionIndexItem {
 
     public static final String TABLE_NAME = "InstalledIndexItem";
+
+
+    @Override
+    public java.util.Date getCreationDate() { return creationDate; }
+
+    public void setCreationDate(java.util.Date creationDate) { this.creationDate = creationDate; }
+
 
     public InstalledIndexItem() {
         super();
@@ -80,18 +85,15 @@ public class InstalledIndexItem extends ExpansionIndexItem {
                 installedFlag,
                 mainDownloadFlag,
                 patchDownloadFlag);
+
     }
 
     @Override
     public int compareTo(Object another) {
             if (another instanceof InstalledIndexItem) {
                     //return new Integer(getSortOrder()).compareTo(new Integer(((AvailableIndexItem) another).getSortOrder()));
-
-
-
                     java.util.Date thisDate = getCreationDate();
                     java.util.Date thatDate = ((InstalledIndexItem) another).getCreationDate();
-                    Log.d("InstalledIndexItem", "compareTo "+thisDate.toString()+" "+thatDate.toString());
                     return thisDate.compareTo(thatDate);
 
             } else if (another instanceof AvailableIndexItem) {

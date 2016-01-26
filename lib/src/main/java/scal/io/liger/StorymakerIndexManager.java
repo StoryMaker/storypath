@@ -304,31 +304,105 @@ public class StorymakerIndexManager {
         return indexMap;
     }
 
-    public static HashMap<String, ExpansionIndexItem> loadAvailableIdIndex(Context context, Dao dao) {
+//    public final class IndexKeyMap {
+//        private final HashMap<String, ExpansionIndexItem> indexMap;
+//        private final ArrayList<String> indexKeys;
+//
+//        public IndexKeyMap(HashMap<String, ExpansionIndexItem> indexMap, ArrayList<String> indexKeys) {
+//            this.indexMap = indexMap;
+//            this.indexKeys = indexKeys;
+//        }
+//
+//        public HashMap<String, ExpansionIndexItem> getIndexMap() {
+//            return indexMap;
+//        }
+//
+//        public ArrayList<String> getIndexKeys() {
+//            return indexKeys;
+//        }
+//
+////        public void setIndexMap(HashMap<String, ExpansionIndexItem> indexMap) {
+////            this.indexMap = indexMap;
+////        }
+////
+////        public void setIndexKeys(ArrayList<String> indexKeys) {
+////            this.indexKeys = indexKeys;
+////        }
+//
+//    }
+
+    public static class IndexKeyMap {
+        HashMap<String, ExpansionIndexItem> indexMap;
+        ArrayList<String> indexKeys;
+
+        public HashMap<String, ExpansionIndexItem> getIndexMap() {
+            return indexMap;
+        }
+
+        public ArrayList<String> getIndexKeys() {
+            return indexKeys;
+        }
+    }
+
+    public static IndexKeyMap loadAvailableIdIndexKeyMap(Context context, Dao dao) {
+
+        final IndexKeyMap indexKeyMap = new IndexKeyMap();
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName(), dao);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        ArrayList<String> indexKeys = new ArrayList<String>();
 
         for (ExpansionIndexItem item : indexList) {
             indexMap.put(item.getExpansionId(), item);
+            indexKeys.add(item.getExpansionId());
         }
 
-        return indexMap;
-    }
+        indexKeyMap.indexKeys = indexKeys;
+        indexKeyMap.indexMap = indexMap;
 
-    public static HashMap<String, ExpansionIndexItem> loadInstalledIdIndex(Context context, Dao dao) {
+        return indexKeyMap;
+    }
+    public static IndexKeyMap loadInstalledIdIndexKeyMap(Context context, Dao dao) {
+
+        final IndexKeyMap indexKeyMap = new IndexKeyMap();
 
         ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
 
         HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        ArrayList<String> indexKeys = new ArrayList<String>();
 
         for (ExpansionIndexItem item : indexList) {
             indexMap.put(item.getExpansionId(), item);
+            indexKeys.add(item.getExpansionId());
         }
 
+        indexKeyMap.indexKeys = indexKeys;
+        indexKeyMap.indexMap = indexMap;
+
+        return indexKeyMap;
+    }
+
+    public static HashMap<String, ExpansionIndexItem> loadAvailableIdIndex(Context context, Dao dao) {
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, getAvailableVersionName(), dao);
+        HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        for (ExpansionIndexItem item : indexList) {
+            indexMap.put(item.getExpansionId(), item);
+        }
         return indexMap;
     }
+    public static HashMap<String, ExpansionIndexItem> loadInstalledIdIndex(Context context, Dao dao) {
+        ArrayList<ExpansionIndexItem> indexList = loadIndex(context, installedIndexName, dao);
+        HashMap<String, ExpansionIndexItem> indexMap = new HashMap<String, ExpansionIndexItem>();
+        for (ExpansionIndexItem item : indexList) {
+            indexMap.put(item.getExpansionId(), item);
+        }
+        return indexMap;
+    }
+
+
+
+
 
     // supressing messages for less text during polling
 
@@ -474,7 +548,8 @@ public class StorymakerIndexManager {
         }
     }
 
-
+    //this is code that looks through files in the directory and adds them to the index if they don't already exist
+    //to help with sideloading
     public static boolean fillInstalledIndex(Context context, HashMap<String, ExpansionIndexItem> installedIndexList, HashMap<String, ExpansionIndexItem> availableIndexList, String language, Dao dao) {
 
         ArrayList<File> files = JsonHelper.getLibraryInstalledFiles(context);

@@ -1,7 +1,5 @@
 package scal.io.liger.model.sqlbrite;
 
-import timber.log.Timber;
-
 import android.support.annotation.NonNull;
 
 import com.hannesdorfmann.sqlbrite.objectmapper.annotation.Column;
