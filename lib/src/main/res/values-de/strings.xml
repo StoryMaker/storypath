@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="action_settings">Einstellungen</string>
+  <string name="lbl_level">Level:</string>
   <string name="lbl_congrats_or">--- oder ---</string>
   <string name="cliptype_signature">Signatur</string>
   <string name="lbl_video">Video</string>
@@ -50,11 +51,13 @@
   <!--all recordings will show up in the media database in a playlist with this name-->
   <string name="audio_db_playlist_name">Meine Aufnahmen</string>
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Kann nicht auf den Externen oder Internen Speicher zugreifen</string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
   <string name="error_app_internal">Interner Anwendungsfehler.</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
   <string name="error_mediadb_new_record">Konnte Audio-Aufnahme nicht speichern.</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Whoops, kein Speicher mehr vorhanden. Bitte versuche mindestens %.2f%nMB freizumachen und versuche es erneut!</string>
   <!--add for libra begin-->
   <string name="default_record_name">Unbenannte Aufnahme</string>
   <string name="menu_view_record_list">Aufnahmeliste anzeigen</string>
@@ -66,6 +69,7 @@
   <string name="prefDialogTitle_recordType">Bitte wählen Sie einen Dateityp.</string>
   <string name="prefDefault_recordType">audio/3gp</string>
   <string name="pref_title_enable_high_quality">Hohe Qualität aktivieren</string>
+  <string name="pref_summary_enable_high_quality">Eine Audio Datei mit besserer Qualität kann größer sein</string>
   <string name="pref_title_enable_sound_effect">Sound-Effekte aktivieren</string>
   <string name="pref_summary_enable_sound_effect">Spiele Sound-Effekt beim Statuswechsel</string>
   <string name="notification_recording">Aufnahme...</string>

@@ -23,9 +23,11 @@
   <string name="menu_done">Fait</string>
   <string name="clip_order">Mettre en Ordre les clips</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">Commencer l\'Enregistrement</string>
   <string name="dialog_done">FAIT</string>
   <string name="dialog_pause">PAUSE</string>
   <string name="dialog_resume">REPRENDRE</string>
+  <string name="dialog_stop">Arrêter l\'Enregistrement</string>
   <string name="dialog_redo">REFAIRE</string>
   <string name="edit_card">Editer la Carte</string>
   <string name="change_goal">Changer de But</string>
@@ -68,6 +70,7 @@
   <string name="time_remaining_notification">Reste %1$s</string>
   <string name="add_clips_before_narrating">Ajouter quelques Clips avant d\'ajouter une narration</string>
   <string name="add_clips_before_reordering">Ajouter quelques clips avant de changer leur ordre</string>
+  <string name="add_clips_generic">Ajouter des Clips d\'abord</string>
   <string name="title_section3">Section 3</string>
   <string name="title_section2">Section 2</string>
   <string name="title_section1">Section 1</string>
@@ -129,10 +132,15 @@
   <string name="open_file_explorer">Ouvrir l\'explorateur de fichier</string>
   <string name="alert_message_delete_record">Voulez-vous supprimer l\'enregistrement sélectionné?</string>
   <string name="recording_narration">Enregistrement de la narration</string>
+  <string name="could_not_start_narration">Impossible de démarrer la narration!</string>
+  <string name="jumble">Désordre</string>
   <string name="order">Mettre en ordre</string>
+  <string name="narrate">Narrer </string>
   <string name="publish">Publier</string>
+  <string name="total">Total</string>
   <string name="cancel">Annuler</string>
   <string name="trim_clip">Couper le Clip</string>
   <string name="narration">Narration</string>
+  <string name="this_story_has_no_clips_to_publish">Cette histoire n\'a aucun clip à publier!</string>
   <!--add for libra end-->
 </resources>
