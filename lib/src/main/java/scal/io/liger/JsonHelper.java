@@ -169,6 +169,7 @@ public class JsonHelper {
         String jsonString = null;
         String sdCardState = Environment.getExternalStorageState();
 
+        // FIXME break out into localizing file path method to use in available index localizer
         String localizedFilePath = jsonFilePath;
 
         // check language setting and insert country code if necessary
