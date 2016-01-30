@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -29,7 +30,7 @@ public class StorageHelper {
 
     @Nullable
     public static File getActualStorageDirectory(Context context) {
-
+        // FIXME this shouldn't be nullable, it should either return internal or external!
         // locate actual external storage path if available
 
         File returnValue = null;
@@ -46,7 +47,9 @@ public class StorageHelper {
 
             storageState = 1;
 
-            returnValue = context.getExternalFilesDir(null);
+            // FIXME we should be detecting sd state and reacting appropriately.  if the user has selected SD and its currently diconnectes, perhaps the best action is to popup a message saying "hey, your sd is busy.  either free it up or switch to internal storage (and and stories stored on external should vanish)
+            //      getExternalStorageState
+            returnValue = context.getExternalFilesDir(null); // FIXME this is nullable, we should check it and use getFilesDir instead?
 
         } else {
             // use new method to get all directories, only the first directory should be internal storage

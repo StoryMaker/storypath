@@ -56,15 +56,22 @@ public class ZipHelper {
         return root.toString() + "/Android/obb/" + packageName + "/";
     }
 
+    @Nullable
     public static String getFileFolderName(Context ctx) {
         // TODO Why doesn't this use ctx.getExternalFilesDir(null) (like JsonHelper)?
 
         // String packageName = ctx.getPackageName();
         // File root = Environment.getExternalStorageDirectory();
         // return root.toString() + "/Android/data/" + packageName + "/files/";
-        return StorageHelper.getActualStorageDirectory(ctx).getPath() + "/";
+        File file = StorageHelper.getActualStorageDirectory(ctx);
+        String path = null;
+        if (file != null) {
+            path = file.getPath() + "/";
+        }
+        return path;
     }
 
+    @Nullable
     public static String getFileFolderName(Context context, String fileName) {
 
         // need to account for patch files
@@ -82,7 +89,12 @@ public class ZipHelper {
         // TODO - switching to the new storage method ignores the value set in the expansion index item
         // File root = Environment.getExternalStorageDirectory();
         // return root.toString() + File.separator + expansionIndexItem.getExpansionFilePath();
-        return StorageHelper.getActualStorageDirectory(context).getPath() + "/";
+        File file = StorageHelper.getActualStorageDirectory(context);
+        if (file != null) {
+            return file.getPath() + "/";
+        } else {
+            return null;
+        }
     }
 
     public static String getFileFolderName(Context context, String fileName, ExpansionIndexItem item) {
