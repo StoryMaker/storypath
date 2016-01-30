@@ -69,7 +69,7 @@ public class ZipHelper {
 
         // need to account for patch files
         if (fileName.contains(Constants.PATCH)) {
-            fileName.replace(Constants.PATCH, Constants.MAIN);
+            fileName = fileName.replace(Constants.PATCH, Constants.MAIN);
         }
 
         ExpansionIndexItem expansionIndexItem = IndexManager.loadInstalledFileIndex(context).get(fileName);
