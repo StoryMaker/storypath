@@ -122,24 +122,26 @@ public class ReorderableRecyclerView extends RecyclerView {
 
                 int pointerIndex = event.findPointerIndex(mActivePointerId);
 
-                mLastEventY = (int) event.getY(pointerIndex);
-                int deltaY = mLastEventY - mDownY;
+                if (pointerIndex >= 0) {
+                    mLastEventY = (int) event.getY(pointerIndex);
+                    int deltaY = mLastEventY - mDownY;
 
-                if (mCellIsMobile && mHoverCell != null) {
-                    mHoverCellCurrentBounds.offsetTo(mHoverCellOriginalBounds.left,
-                            mHoverCellOriginalBounds.top + deltaY + mTotalOffset);
-                    mHoverCell.setBounds(mHoverCellCurrentBounds);
-                    invalidate();
+                    if (mCellIsMobile && mHoverCell != null) {
+                        mHoverCellCurrentBounds.offsetTo(mHoverCellOriginalBounds.left,
+                                mHoverCellOriginalBounds.top + deltaY + mTotalOffset);
+                        mHoverCell.setBounds(mHoverCellCurrentBounds);
+                        invalidate();
 
-                    handleCellSwitch();
+                        handleCellSwitch();
 
-                    mIsMobileScrolling = false;
-                    handleMobileCellScroll();
+                        mIsMobileScrolling = false;
+                        handleMobileCellScroll();
 
-                    return false;
-                } else if (mHoverCell == null && mMobileItemId != INVALID_ID) {
-                    for(int x = 0; x < getChildCount(); x++) {
-                        getChildAt(x).setVisibility(VISIBLE);
+                        return false;
+                    } else if (mHoverCell == null && mMobileItemId != INVALID_ID) {
+                        for (int x = 0; x < getChildCount(); x++) {
+                            getChildAt(x).setVisibility(VISIBLE);
+                        }
                     }
                 }
                 break;
