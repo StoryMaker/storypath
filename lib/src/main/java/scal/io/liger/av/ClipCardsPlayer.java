@@ -408,14 +408,14 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
         if (mTimer != null) mTimer.cancel(); // should never happen but JIC
         mTimer = new Timer("mplayer");
         mTimer.schedule(
-            new TimerTask() {
+                new TimerTask() {
                     @Override
                     public void run() {
                         onTimerTick();
                     }
-            },
-            50,                   // Initial delay ms
-            TIMER_INTERVAL_MS);   // Repeat interval ms
+                },
+                50,                   // Initial delay ms
+                TIMER_INTERVAL_MS);   // Repeat interval ms
     }
 
     private void onTimerTick() {
@@ -577,13 +577,17 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 media = Uri.parse(mCurrentlyPlayingCard.getSelectedMediaFile().getPath());
                 try {
                     // Don't set isPlaying false. We're only 'stopping' to switch media sources
-                    player.stop();
+                    if (player.isPlaying()) {
+                        player.stop();
+                    }
                     Log.i(TAG, "Setting player data source " + media.toString());
                     prepareMediaPlayer(player, mCurrentlyPlayingCard, isVideo);
                     //player.setSurface(mSurface);
                     mAdvancingClips = false;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); // FIXME log these via timber
+                } catch (IllegalStateException e) {
+                    e.printStackTrace(); // FIXME log these via timber
                 }
                 break;
 
