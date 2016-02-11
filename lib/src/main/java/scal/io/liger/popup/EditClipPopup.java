@@ -70,6 +70,8 @@ public class EditClipPopup {
         final RangeBar rangeBar = (RangeBar) v.findViewById(R.id.rangeSeekbar);
         final SeekBar playbackBar = (SeekBar) v.findViewById(R.id.playbackProgress);
         final SeekBar volumeSeek = (SeekBar) v.findViewById(R.id.volumeSeekbar);
+        final TextView volumeDisplay = (TextView) v.findViewById(R.id.volumeDisplay);
+
         final int tickCount = mContext.getResources().getInteger(R.integer.trim_bar_tick_count);
 
         /** initialize Right-to-left states **/
@@ -93,16 +95,19 @@ public class EditClipPopup {
         /** Setup initial values that don't require media loaded */
         clipStart.setText(Util.makeTimeString(mSelectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(mSelectedClip.getStopTime()));
-        volumeSeek.setProgress((int) (mSelectedClip.getVolume() * volumeSeek.getMax()));
+        volumeSeek.setProgress((int) (mSelectedClip.getVolume() * 100f));
+        volumeDisplay.setText(volumeSeek.getProgress() + "%");
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", mSelectedClip.getStartTime(), mSelectedClip.getStopTime()));
 
         volumeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float newVolume = progress / (float) seekBar.getMax();
+                volumeDisplay.setText(progress + "%");
+                float newVolume = ((float)progress) / 100f;
                 mSelectedClip.setVolume(newVolume);
-                player.setVolume(newVolume, newVolume);
+                float playerVolume = Math.max(1f,newVolume);
+                player.setVolume(playerVolume,playerVolume);
                 Timber.d("SAVING UPDATED VOLUME");
                 mStoryPath.getStoryPathLibrary().save(true);
             }
