@@ -18,28 +18,42 @@
         android:layout_alignParentTop="true"
         android:scaleType="fitCenter" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/volumeTools"
+        android:layout_below="@id/textureView"
+
+        >
     <ImageView
         android:id="@+id/volumeIcon"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginTop="7dp"
-        android:src="@drawable/speaker"
-        android:layout_below="@id/textureView"/>
+        android:src="@drawable/speaker"/>
 
     <SeekBar
         android:id="@+id/volumeSeekbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textureView"
-        android:layout_toEndOf="@id/volumeIcon"
-        android:layout_toRightOf="@id/volumeIcon"/>
-
+        android:max="200"
+        android:layout_weight="1"
+        />
+    <TextView
+        android:id="@+id/volumeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:textSize="@dimen/text_small"
+        android:text="100%"
+        android:fontFamily="sans-serif-light"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/clipLength"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding_small"
-        android:layout_below="@id/volumeSeekbar"
+        android:layout_below="@id/volumeTools"
         android:textSize="@dimen/text_large"
         android:text="Total 1:25"
         android:fontFamily="sans-serif-light"/>
