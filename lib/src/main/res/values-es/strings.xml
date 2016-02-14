@@ -140,8 +140,11 @@ No se pudo acceder al almacenamiento externo o interno</string>
   <string name="publish">Publicar</string>
   <string name="total">Total</string>
   <string name="cancel">Cancelar</string>
-  <string name="trim_clip">Recortar corte de vídeo</string>
+  <string name="trim_clip">Recortar clip</string>
   <string name="narration">Narración</string>
   <string name="this_story_has_no_clips_to_publish">¡Esta historia no tiene cortes de vídeo que publicar!</string>
+  <string name="clip_with_no_duration">¡No se puede publicar! El corte %1$s tiene una duración de 0. ¿Está en blanco o es una imagen?</string>
+  <string name="clips_with_no_duration">¡No se pudo publicar! Los cortes %1$s tienen una duración de 0. ¿Están en blanco o son imágenes?</string>
+  <string name="clip_audio_tracks">Recortar pistas de audio</string>
   <!--add for libra end-->
 </resources>
