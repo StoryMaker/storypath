@@ -27,6 +27,7 @@ import com.edmodo.rangebar.RangeBar;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,6 +50,8 @@ public class EditClipPopup {
     StoryPath mStoryPath;
 
     private static final String TAG = "EditClipPopup";
+    NumberFormat percentFormatter = NumberFormat.getPercentInstance();
+
 
     public EditClipPopup(Context context, StoryPath storyPath, ClipMetadata selectedClip, MediaFile mediaFile) {
         mContext = context;
@@ -96,16 +99,17 @@ public class EditClipPopup {
         clipStart.setText(Util.makeTimeString(mSelectedClip.getStartTime()));
         clipEnd.setText(Util.makeTimeString(mSelectedClip.getStopTime()));
         volumeSeek.setProgress((int) (mSelectedClip.getVolume() * 100f));
-        volumeDisplay.setText(volumeSeek.getProgress() + "%");
+        volumeDisplay.setText(percentFormatter.format(mSelectedClip.getVolume()));
 
         Log.i(TAG, String.format("Showing clip trim dialog with intial start: %d stop: %d", mSelectedClip.getStartTime(), mSelectedClip.getStopTime()));
 
         volumeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                volumeDisplay.setText(progress + "%");
                 float newVolume = ((float)progress) / 100f;
                 mSelectedClip.setVolume(newVolume);
+                volumeDisplay.setText(percentFormatter.format(mSelectedClip.getVolume()));
+
                 float playerVolume = Math.max(1f,newVolume);
                 player.setVolume(playerVolume,playerVolume);
                 Timber.d("SAVING UPDATED VOLUME");
@@ -155,6 +159,7 @@ public class EditClipPopup {
                 // unused
             }
         });
+
 
         // Save / Restore MediaPlayer position before / after trim adjustment
         // This is necessary because we must seek the MediaPlayer position during trim adjustment
@@ -410,4 +415,5 @@ public class EditClipPopup {
         Log.i(TAG, String.format("Converted %d ms to rangebar position %d", positionMs, idx));
         return idx;
     }
+
 }
