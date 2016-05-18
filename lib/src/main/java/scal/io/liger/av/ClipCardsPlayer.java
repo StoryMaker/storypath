@@ -582,7 +582,11 @@ public class ClipCardsPlayer implements TextureView.SurfaceTextureListener {
                 try {
                     // Don't set isPlaying false. We're only 'stopping' to switch media sources
                     if (player.isPlaying()) {
-                        player.stop();
+                        try {
+                            player.stop();
+                        } catch (IllegalStateException e) {
+                            Timber.e(e, "Galaxy SIII likes to throw this here, ignoring it");
+                        }
                     }
                     Log.i(TAG, "Setting player data source " + media.toString());
                     prepareMediaPlayer(player, mCurrentlyPlayingCard, isVideo);

@@ -142,5 +142,8 @@
   <string name="trim_clip">قطع الفيديو</string>
   <string name="narration">التعليق</string>
   <string name="this_story_has_no_clips_to_publish">هذه القصة لا تحتوي على مقاطع فيديو لنشرها!</string>
+  <string name="clip_with_no_duration">تعذر النشر!  الفيديو %1$s مدته 0. هل فيه محتوى أو هل هو صورة؟</string>
+  <string name="clips_with_no_duration">تعذر النشر!  المقاطع %1$s مدتهم 0. هل فيهم محتوى أو هل هم صور؟</string>
+  <string name="clip_audio_tracks">مقطع مسارات صوتية</string>
   <!--add for libra end-->
 </resources>
