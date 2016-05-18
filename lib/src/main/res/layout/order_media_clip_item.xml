@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/padding_small"
     android:paddingBottom="@dimen/padding_small"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/container"
+    >
 
     <ImageView
         android:id="@+id/thumbnail"
