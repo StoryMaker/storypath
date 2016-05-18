@@ -273,7 +273,7 @@ public class ZipHelper {
         return null;
     }
 
-    private static ArrayList<String> expansionPaths;
+   // private static ArrayList<String> expansionPaths;
 
     /**
      * @return an absolute path to an expansion file with the given expansionId, or null if no
@@ -295,7 +295,7 @@ public class ZipHelper {
     */
 
     public static void clearCache() {
-        expansionPaths = null;
+       // expansionPaths = null;
     }
 
     /**
@@ -303,8 +303,9 @@ public class ZipHelper {
      */
     @NonNull
     private static ArrayList<String> getExpansionPaths(@NonNull Context context) {
-        if (expansionPaths == null) {
-            expansionPaths = new ArrayList<>();
+        //if (expansionPaths == null) {
+
+              ArrayList<String> expansionPaths = new ArrayList<>();
 
             File mainFile = new File(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
             if (mainFile.exists() && (mainFile.length() > 0)) {
@@ -388,7 +389,7 @@ public class ZipHelper {
                     }
                 }
             }
-        }
+
         return expansionPaths;
     }
 
