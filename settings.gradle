@@ -1,1 +1,1 @@
-include ':lib', ':sample', ':android-iconify'
+include ':lib',':android-iconify'
