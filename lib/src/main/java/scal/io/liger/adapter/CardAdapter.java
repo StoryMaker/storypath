@@ -103,6 +103,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             notifyItemChanged(cardIndex);
     }
 
+
     public void swapCards(Card cardOne, Card cardTwo) {
         int indexOne = mCardIdToPosition.get(cardOne.getId());
         int indexTwo = mCardIdToPosition.get(cardTwo.getId());

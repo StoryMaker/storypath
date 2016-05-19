@@ -24,6 +24,7 @@ import java.io.File;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import scal.io.liger.adapter.CardAdapter;
 import scal.io.liger.model.Card;
@@ -895,6 +896,20 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
         Log.i(TAG, "Card removed " + removedCard.getId());
         mCardAdapter.removeCard(removedCard);
     }
+
+    @Override
+    public void onCardsReordered(List<Card> cardList) {
+        int scrollY = mRecyclerView.getScrollY();
+
+        Log.i(TAG, "Card reordered " + cardList.size());
+        mCardAdapter = new CardAdapter(cardList);
+        mRecyclerView.setAdapter(mCardAdapter);
+
+
+        mRecyclerView.setScrollY(scrollY);
+
+    }
+
 
     @Override
     public void onStoryPathLoaded() {
