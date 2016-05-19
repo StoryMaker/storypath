@@ -47,12 +47,19 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
     private OnReorderListener mReorderListener;
 
+    private boolean mChanged = false;
+
     public interface OnReorderListener {
         /**
          * The item at firstIndex switched places with the item
          * at secondIndex
          */
         public void onReorder(int firstIndex, int secondIndex);
+    }
+
+    public boolean didChange ()
+    {
+        return mChanged;
     }
 
     /**
@@ -71,17 +78,18 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
     public void onMoveItem(int fromPosition, int toPosition) {
         Log.d(TAG, "onMoveItem(fromPosition = " + fromPosition + ", toPosition = " + toPosition + ")");
 
-        if (fromPosition == toPosition) {
-            return;
-        }
-
-        ClipCard itemFrom = mClipCards.get(fromPosition);
-        mClipCards.remove(fromPosition);
-        mClipCards.add(toPosition, itemFrom);
-
+        //first notify the model
         if (mReorderListener != null) mReorderListener.onReorder(fromPosition, toPosition);
 
+        //then update the local view
+        ClipCard itemFrom = mClipCards.remove(fromPosition);
+        mClipCards.add(toPosition, itemFrom);
+
+        mChanged = true;
+
+
         notifyItemMoved(fromPosition, toPosition);
+
     }
 
     public static class ViewHolder extends AbstractDraggableItemViewHolder {
@@ -104,7 +112,7 @@ public class OrderMediaAdapter extends RecyclerView.Adapter<OrderMediaAdapter.Vi
 
         mClipCards = cards;
         mMedium = medium;
-        long id = 0;
+        long id = 1000;
         for (ClipCard card : mClipCards) {
             mCardToStableId.put(card, id++);
         }

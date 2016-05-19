@@ -41,7 +41,6 @@ public class OrderMediaPopup {
 
     private static RecyclerViewDragDropManager mRecyclerViewDragDropManager;
     private static RecyclerView.Adapter mWrappedAdapter;
-
     /**
      * Show a PopupWindow allowing you to re-order the clips. Assumes activity has an ActionBar
      * that will be used to present an ActionMode.
@@ -52,12 +51,10 @@ public class OrderMediaPopup {
      */
     public static void show(@NonNull final Activity activity,
                             @NonNull final String medium,
-                            @NonNull final List<ClipCard> cards,
+                            @NonNull final List<ClipCard> mediaCards,
                             @Nullable final OrderMediaAdapter.OnReorderListener listener) {
 
-      //  final AtomicInteger swapFrom = new AtomicInteger(0);
-       // final AtomicInteger swapTo = new AtomicInteger(0);
-       // final AtomicBoolean didReorder = new AtomicBoolean(false);
+
         final View decorView = activity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override
@@ -71,7 +68,7 @@ public class OrderMediaPopup {
 
                 mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
 
-                OrderMediaAdapter adapter = new OrderMediaAdapter(cards, medium);
+                final OrderMediaAdapter adapter = new OrderMediaAdapter(mediaCards, medium);
 
                 mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(adapter);      // wrap for dragging
 
@@ -90,33 +87,29 @@ public class OrderMediaPopup {
                 window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
                 int statusBarHeight = rectangle.top;
 
-
                 final PopupWindow popUp = new PopupWindow(popUpView, ViewGroup.LayoutParams.MATCH_PARENT, height - actionBarHeight - statusBarHeight, true);
                 popUp.setFocusable(false);
                 popUp.showAtLocation(decorView, Gravity.BOTTOM, 0, 0);
                 popUp.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                     //   if (didReorder.get() && listener != null)
-                     //       listener.onReorder(swapFrom.get(), swapTo.get());
+                        if (adapter.didChange() && listener != null)
+                               listener.onReorder(-1,-1); //the card index doesn't matter in this point, and also many cards order may have changed!
                     }
                 });
 
-                final StoryPath storyPath = cards.get(0).getStoryPath();
+                final StoryPath storyPath = mediaCards.get(0).getStoryPath();
 
                 /** Callback from OrderMediaAdapter to handle clip re-order events */
                 OrderMediaAdapter.OnReorderListener onReorderListener = new OrderMediaAdapter.OnReorderListener() {
                     @Override
-                    public void onReorder(int firstIndex, int secondIndex) {
-                        Card currentCard = cards.get(firstIndex);
-                        int currentCardIndex = storyPath.getCardIndex(currentCard);
-                        int newCardIndex = storyPath.getCardIndex(cards.get(secondIndex));
-                        storyPath.swapCards(currentCardIndex, newCardIndex);
-                     //   didReorder.set(true);
-                     //   swapFrom.set(firstIndex);
-                     //   swapTo.set(secondIndex);
-                        // For performance reasons we notify the listener of re-order
-                        // after the popup is dismissed
+                    public void onReorder(int fromIndex, int toIndex) {
+
+                        int currentCardIndex = storyPath.getCardIndex(mediaCards.get(fromIndex));
+                        int newCardIndex = storyPath.getCardIndex(mediaCards.get(toIndex));
+
+                        storyPath.rearrangeCards(currentCardIndex, newCardIndex);
+
                     }
                 };
                 adapter.setOnReorderListener(onReorderListener);

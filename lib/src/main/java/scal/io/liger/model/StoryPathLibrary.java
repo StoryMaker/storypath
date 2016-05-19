@@ -71,6 +71,7 @@ public class StoryPathLibrary extends StoryPath {
         public void onCardChanged(Card changedCard);
         public void onCardsSwapped(Card cardOne, Card cardTwo);
         public void onCardRemoved(Card removedCard);
+        public void onCardsReordered(List<Card> cards);
         public void onStoryPathLoaded();
 
         /** Called when scrolling or seeking through the StoryPath content should be prohibited.
