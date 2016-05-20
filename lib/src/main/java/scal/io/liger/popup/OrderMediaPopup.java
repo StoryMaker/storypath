@@ -41,6 +41,7 @@ public class OrderMediaPopup {
 
     private static RecyclerViewDragDropManager mRecyclerViewDragDropManager;
     private static RecyclerView.Adapter mWrappedAdapter;
+
     /**
      * Show a PopupWindow allowing you to re-order the clips. Assumes activity has an ActionBar
      * that will be used to present an ActionMode.
@@ -53,7 +54,6 @@ public class OrderMediaPopup {
                             @NonNull final String medium,
                             @NonNull final List<ClipCard> mediaCards,
                             @Nullable final OrderMediaAdapter.OnReorderListener listener) {
-
 
         final View decorView = activity.getWindow().getDecorView();
         decorView.post(new Runnable() {
