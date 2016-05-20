@@ -116,7 +116,9 @@ public class ClipCardsNarrator extends ClipCardsPlayer {
         mHandler = new ClipCardsNarratorHandler(this);
         _changeRecordNarrationState(RecordNarrationState.READY);
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory(mContext));
+
+        String fileNameNarration = "narration-" + new java.util.Date().getTime();
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory(mContext),fileNameNarration);
     }
 
     private void _changeRecordNarrationState(RecordNarrationState newState) {

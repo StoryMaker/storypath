@@ -83,7 +83,8 @@ public class AudioRecorder {
     }
 
     private void init() throws IOException {
-        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory(mContext));
+        String fileName = new java.util.Date().getTime()+""; //just use the current time
+        mRecorder = new MediaRecorderWrapper(mContext, MediaHelper.getAudioDirectory(mContext), fileName);
         inflateViews(mContainer);
     }
 
