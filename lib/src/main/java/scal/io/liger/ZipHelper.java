@@ -273,7 +273,8 @@ public class ZipHelper {
         return null;
     }
 
-   // private static ArrayList<String> expansionPaths;
+    private static ArrayList<String> expansionPaths;
+    private static boolean mReloadExpansionPaths = true;
 
     /**
      * @return an absolute path to an expansion file with the given expansionId, or null if no
@@ -295,17 +296,19 @@ public class ZipHelper {
     */
 
     public static void clearCache() {
-       // expansionPaths = null;
+        mReloadExpansionPaths = true;
     }
 
     /**
      * @return a list of absolute paths to all available expansion files.
      */
     @NonNull
-    private static ArrayList<String> getExpansionPaths(@NonNull Context context) {
-        //if (expansionPaths == null) {
+    private static synchronized ArrayList<String> getExpansionPaths(@NonNull Context context) {
+        if (mReloadExpansionPaths) {
 
-              ArrayList<String> expansionPaths = new ArrayList<>();
+            mReloadExpansionPaths = false;
+
+            expansionPaths = new ArrayList<>();
 
             File mainFile = new File(getExpansionFileFolder(context, Constants.MAIN, Constants.MAIN_VERSION) + getExpansionZipFilename(context, Constants.MAIN, Constants.MAIN_VERSION));
             if (mainFile.exists() && (mainFile.length() > 0)) {
@@ -325,7 +328,7 @@ public class ZipHelper {
                     File patchFile = new File(getExpansionFileFolder(context, Constants.PATCH, Constants.PATCH_VERSION) + getExpansionZipFilename(context, Constants.PATCH, Constants.PATCH_VERSION));
                     if (patchFile.exists() && (patchFile.length() > 0)) {
                         expansionPaths.add(patchFile.getPath());
-                    }else {
+                    } else {
                         Timber.e(patchFile.getPath() + " IS MISSING OR EMPTY, EXCLUDING FROM ZIP RESOURCE");
                     }
                 }
@@ -336,7 +339,7 @@ public class ZipHelper {
             InstalledIndexItemDao dao = null;
 
             if (context instanceof MainActivity) {
-                dao = ((MainActivity)context).getInstalledIndexItemDao(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
+                dao = ((MainActivity) context).getInstalledIndexItemDao(); // FIXME this isn't a safe cast as context can sometimes not be an activity (getApplicationContext())
             } else {
                 Timber.e("NO DAO IN getExpansionPaths");
             }
@@ -389,6 +392,7 @@ public class ZipHelper {
                     }
                 }
             }
+        }
 
         return expansionPaths;
     }
