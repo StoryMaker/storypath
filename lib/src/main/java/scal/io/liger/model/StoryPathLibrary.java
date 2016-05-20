@@ -195,13 +195,14 @@ public class StoryPathLibrary extends StoryPath {
             return;
         }
 
-        int firstIdx = clipCards.indexOf(firstCard);
         if (audioClip.getClipSpan() == 1) {
             deleteAudioClip(audioClip.getUuid());
             return; // So we don't risk invoking save() twice
         }
 
-        for (int idx = firstIdx; idx < audioClip.getClipSpan(); idx++) {
+        int firstIdx = clipCards.indexOf(firstCard);
+
+        for (int idx = firstIdx; idx < clipCards.size(); idx++) {
             if (clipCards.get(idx).getId().equals(clipCard.getId())) {
                 Timber.d("Found ClipCard to remove from AudioClip with uuid " + audioClip.getUuid());
                 // We found the ClipCard to remove from this AudioClip
