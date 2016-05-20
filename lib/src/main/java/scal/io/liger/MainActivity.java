@@ -899,14 +899,13 @@ public class MainActivity extends LockableActivity implements StoryPathLibrary.S
 
     @Override
     public void onCardsReordered(List<Card> cardList) {
-        int scrollY = mRecyclerView.getScrollY();
 
         Log.i(TAG, "Card reordered " + cardList.size());
-        mCardAdapter = new CardAdapter(cardList);
-        mRecyclerView.setAdapter(mCardAdapter);
 
+        //mCardAdapter = new CardAdapter(cardList);
+        //mRecyclerView.setAdapter(mCardAdapter);
+        mCardAdapter.reorderCards(cardList);
 
-        mRecyclerView.setScrollY(scrollY);
 
     }
 

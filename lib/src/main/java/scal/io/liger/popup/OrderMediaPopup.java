@@ -94,14 +94,14 @@ public class OrderMediaPopup {
                     @Override
                     public void onDismiss() {
                         if (adapter.didChange() && listener != null)
-                               listener.onReorder(-1,-1); //the card index doesn't matter in this point, and also many cards order may have changed!
+                               listener.onReorder(-1,-1);
                     }
                 });
 
                 final StoryPath storyPath = mediaCards.get(0).getStoryPath();
 
                 /** Callback from OrderMediaAdapter to handle clip re-order events */
-                OrderMediaAdapter.OnReorderListener onReorderListener = new OrderMediaAdapter.OnReorderListener() {
+                adapter.setOnReorderListener(new OrderMediaAdapter.OnReorderListener() {
                     @Override
                     public void onReorder(int fromIndex, int toIndex) {
 
@@ -111,8 +111,7 @@ public class OrderMediaPopup {
                         storyPath.rearrangeCards(currentCardIndex, newCardIndex);
 
                     }
-                };
-                adapter.setOnReorderListener(onReorderListener);
+                });
 
 
                 /** ActionMode Callback */
