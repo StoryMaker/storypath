@@ -40,7 +40,7 @@ public class MediaRecorderWrapper {
     private final String TAG = getClass().getSimpleName();
     private static final boolean VERBOSE = false;
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yy.mm.dd-HH.mm.ss");
+   // private static SimpleDateFormat sdf = new SimpleDateFormat("yy.mm.dd-HH.mm.ss");
 
     private final Context mContext;
     private File mOutDirectory;
@@ -50,8 +50,9 @@ public class MediaRecorderWrapper {
     private boolean mRecording;
 
     public MediaRecorderWrapper(@NonNull Context context,
-                                @NonNull File outputDirectory) {
+                                @NonNull File outputDirectory, @NonNull String fileName) {
         mOutDirectory = outputDirectory;
+        mOutFile = new File(mOutDirectory, fileName);
         mContext = context;
         init();
     }
@@ -62,7 +63,6 @@ public class MediaRecorderWrapper {
             return false;
         }
         try {
-            mOutFile = new File(mOutDirectory, sdf.format(new Date()) + ".mp4");
             if (!mOutFile.createNewFile()) throw new IOException("Failed to create " + mOutFile.getAbsolutePath());
             mRecorder.setOutputFile(mOutFile.getAbsolutePath());
             mRecorder.prepare();

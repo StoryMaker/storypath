@@ -138,6 +138,7 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
                 if (mMediaCards.size() > 0) {
                     NarrationPopup narrationPopup = new NarrationPopup((MainActivity) mCardModel.getStoryPath().getContext());
+                    mCardModel.getStoryPath().getId();
                     narrationPopup.show(mMediaCards, mAudioClips, ReviewCardView.this);
                     if (mCardsPlayer != null && mCardsPlayer.isPlaying()) mCardsPlayer.stopPlayback();
                 } else
