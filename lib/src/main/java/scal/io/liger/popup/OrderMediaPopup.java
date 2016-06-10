@@ -30,11 +30,17 @@ import scal.io.liger.adapter.OrderMediaAdapter;
 import scal.io.liger.model.Card;
 import scal.io.liger.model.ClipCard;
 import scal.io.liger.model.StoryPath;
-import scal.io.liger.view.ReorderableRecyclerView;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 
 public class OrderMediaPopup {
 
+    private static RecyclerViewDragDropManager mRecyclerViewDragDropManager;
+    private static RecyclerView.Adapter mWrappedAdapter;
     /**
      * Show a PopupWindow allowing you to re-order the clips. Assumes activity has an ActionBar
      * that will be used to present an ActionMode.
@@ -45,22 +51,28 @@ public class OrderMediaPopup {
      */
     public static void show(@NonNull final Activity activity,
                             @NonNull final String medium,
-                            @NonNull final List<ClipCard> cards,
+                            @NonNull final List<ClipCard> mediaCards,
                             @Nullable final OrderMediaAdapter.OnReorderListener listener) {
 
-        final AtomicInteger swapFrom = new AtomicInteger(0);
-        final AtomicInteger swapTo = new AtomicInteger(0);
-        final AtomicBoolean didReorder = new AtomicBoolean(false);
         final View decorView = activity.getWindow().getDecorView();
         decorView.post(new Runnable() {
             @Override
             public void run() {
                 // Create a PopupWindow that occupies the entire screen except the status and action bar
                 final View popUpView = LayoutInflater.from(activity).inflate(R.layout.popup_order_media, (ViewGroup) decorView, false);
-                ReorderableRecyclerView recyclerView = (ReorderableRecyclerView) popUpView.findViewById(R.id.recyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                OrderMediaAdapter adapter = new OrderMediaAdapter(recyclerView, cards, medium);
-                recyclerView.setReordableAdapter(adapter);
+                RecyclerView recyclerView = (RecyclerView) popUpView.findViewById(R.id.recyclerView);
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(layoutManager);
+
+                mRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+
+                final OrderMediaAdapter adapter = new OrderMediaAdapter(mediaCards, medium);
+
+                mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(adapter);      // wrap for dragging
+
+                recyclerView.setAdapter(mWrappedAdapter);
+                mRecyclerViewDragDropManager.attachRecyclerView(recyclerView);
 
                 Display display = activity.getWindowManager().getDefaultDisplay();
                 Point size = new Point();
@@ -74,36 +86,31 @@ public class OrderMediaPopup {
                 window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
                 int statusBarHeight = rectangle.top;
 
-
                 final PopupWindow popUp = new PopupWindow(popUpView, ViewGroup.LayoutParams.MATCH_PARENT, height - actionBarHeight - statusBarHeight, true);
                 popUp.setFocusable(false);
                 popUp.showAtLocation(decorView, Gravity.BOTTOM, 0, 0);
                 popUp.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        if (didReorder.get() && listener != null)
-                            listener.onReorder(swapFrom.get(), swapTo.get());
+                        if (adapter.didChange() && listener != null)
+                               listener.onReorder(-1,-1);
                     }
                 });
 
-                final StoryPath storyPath = cards.get(0).getStoryPath();
+                final StoryPath storyPath = mediaCards.get(0).getStoryPath();
 
                 /** Callback from OrderMediaAdapter to handle clip re-order events */
-                OrderMediaAdapter.OnReorderListener onReorderListener = new OrderMediaAdapter.OnReorderListener() {
+                adapter.setOnReorderListener(new OrderMediaAdapter.OnReorderListener() {
                     @Override
-                    public void onReorder(int firstIndex, int secondIndex) {
-                        Card currentCard = cards.get(firstIndex);
-                        int currentCardIndex = storyPath.getCardIndex(currentCard);
-                        int newCardIndex = storyPath.getCardIndex(cards.get(secondIndex));
-                        storyPath.swapCards(currentCardIndex, newCardIndex);
-                        didReorder.set(true);
-                        swapFrom.set(firstIndex);
-                        swapTo.set(secondIndex);
-                        // For performance reasons we notify the listener of re-order
-                        // after the popup is dismissed
+                    public void onReorder(int fromIndex, int toIndex) {
+
+                        int currentCardIndex = storyPath.getCardIndex(mediaCards.get(fromIndex));
+                        int newCardIndex = storyPath.getCardIndex(mediaCards.get(toIndex));
+
+                        storyPath.rearrangeCards(currentCardIndex, newCardIndex);
+
                     }
-                };
-                adapter.setOnReorderListener(onReorderListener);
+                });
 
 
                 /** ActionMode Callback */

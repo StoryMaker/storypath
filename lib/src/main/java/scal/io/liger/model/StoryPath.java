@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import scal.io.liger.Constants;
 import scal.io.liger.JsonHelper;
@@ -561,6 +562,11 @@ public class StoryPath {
         }
     }
 
+    public void notifyCardsReordered (List<Card> cards)
+    {
+        storyPathLibrary.mListener.onCardsReordered(cards);
+    }
+
     /**
      * This method tracks swapping events between two cards
      * currently in this StoryPath
@@ -686,14 +692,11 @@ public class StoryPath {
     }
 
     public void rearrangeCards(int currentIndex, int newIndex) {
-        Card card = cards.remove(currentIndex);
-        cards.add(newIndex, card);
 
-        // Timber.d("MOVED " + card.getId() + " FROM " + currentIndex + " TO " + newIndex);
+        Card tempCard = cards.remove(currentIndex);
+        cards.add(newIndex, tempCard);
 
-        notifyCardChanged(card);
-        // We should also notify the other affected card, right?
-        // e.g: The one that was at newIndex when the op started?
+        notifyCardsReordered(cards);
     }
 
     /**

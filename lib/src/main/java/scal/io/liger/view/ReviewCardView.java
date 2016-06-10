@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 
@@ -188,7 +189,9 @@ public class ReviewCardView extends ExampleCardView implements ClipCardsNarrator
 
     @Override
     public void onReorder(int firstIndex, int secondIndex) {
+
         mCardModel.getStoryPath().getStoryPathLibrary().save(true);
         mCardModel.getStoryPath().notifyCardChanged(mCardModel);
+
     }
 }
