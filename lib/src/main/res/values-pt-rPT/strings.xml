@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Definições</string>
+  <string name="lbl_next">Seguinte</string>
+  <string name="lbl_video">Video</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Fotografia</string>
+  <!--Record Narration Dialog-->
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="title_section3">Secção 3</string>
+  <string name="title_section2">Secção 2</string>
+  <string name="title_section1">Secção 1</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Gravação</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Gravação parada</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">O armazenamento está cheio</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Atingido o tamanho máximo</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">É necessário um cartão SD</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">CONFIRMAR</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">As suas gravações</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Gravações de Áudio</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Minhas Gravações</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <!--add for libra begin-->
+  <string name="menu_setting">Definições</string>
+  <string name="delete_dialog_title">Deseja apagar a gravação atual?</string>
+  <string name="overwrite_dialog_title">O %s já exist. Deseja substituí-lo?</string>
+  <string name="preferences_title">Definições</string>
+  <string name="pref_title_record_type">Tipo de ficheiro de gravar</string>
+  <string name="prefDialogTitle_recordType">Por favor, selecione o tipo de ficheiro</string>
+  <string name="prefDefault_recordType">áudio/3gpp</string>
+  <string name="pref_title_enable_high_quality">Ative a qualidade alta</string>
+  <string name="notification_recording">A gravar ...</string>
+  <string name="notification_stopped">A gravação está parada</string>
+  <string name="notification_warning">Pouco espaço (menos de %d minutos) ...</string>
+  <string name="sd_card_not_available">O cartão SD não está disponível</string>
+  <string name="open_file_explorer">Abrir explorador do ficheiro</string>
+  <string name="alert_message_delete_record">Deseja apagar a gravação selecionada?</string>
+  <string name="publish">Publicar</string>
+  <!--add for libra end-->
+</resources>

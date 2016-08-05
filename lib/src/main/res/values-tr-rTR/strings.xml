@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Ayarlar</string>
+  <string name="lbl_level">Seviye:</string>
+  <string name="lbl_time">Zaman:</string>
+  <string name="lbl_continue">Devam Et</string>
+  <string name="lbl_next">Sonraki</string>
+  <string name="lbl_congrats_or">--- ya da ---</string>
+  <string name="cliptype_character">Karakter</string>
+  <string name="cliptype_action">Eylem</string>
+  <string name="cliptype_result">Sonuç</string>
+  <string name="cliptype_place">Yer</string>
+  <string name="cliptype_signature">İmza</string>
+  <string name="lbl_video">Video</string>
+  <string name="lbl_audio">Ses</string>
+  <string name="lbl_photo">Fotoğraf</string>
+  <string name="lbl_record">Klip Kaydet</string>
+  <string name="lbl_import">İçe Aktar</string>
+  <string name="menu_done">Bitti</string>
+  <string name="clip_order">Klip Sırası</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">KAYDA BAŞLA</string>
+  <string name="dialog_done">BİTTİ</string>
+  <string name="dialog_pause">DURAKLAT</string>
+  <string name="dialog_resume">DEVAM ET</string>
+  <string name="dialog_stop">KAYDI SONLANDIR</string>
+  <string name="edit_card">Kart Düzenle</string>
+  <string name="change_goal">Hedef Değiştir</string>
+  <string name="duplicate_card">Kartın Kopyasını Oluştur</string>
+  <string name="duplicate_clip">Klibin Kopyasını Oluştır</string>
+  <string name="remove_card">Kartı Kaldır</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">İndirme başarılı</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">İndirme tamamlanamadı</string>
+  <string name="state_unknown">Başlıyor...\"</string>
+  <string name="state_idle">Başlamak için indirmeyi bekliyor</string>
+  <string name="state_fetching_url">İndirmek için dosyalar kontrol ediliyor</string>
+  <string name="state_connecting">İndirmek için sunucuya bağlanıyor</string>
+  <string name="state_downloading">Dosyalar indiriliyor</string>
+  <string name="state_completed">İndirme tamamlandı</string>
+  <string name="state_paused_network_unavailable">İndirme duraklatıldı, bağlantı mevcut değil</string>
+  <string name="state_paused_network_setup_failure">İndirme duraklatıldı. Tarayıcıda bir sayfayı test edin</string>
+  <string name="state_paused_by_request">İndirme duraklatıldı</string>
+  <string name="state_paused_wifi_unavailable">İndirme duraklatıldı, kablosuz ağ kullanılamıyor</string>
+  <string name="state_paused_wifi_disabled">İndirme duraklatıldı, kablosuz ağ aktif değil</string>
+  <string name="state_paused_sdcard_unavailable">İndirme duraklatıldı, harici diske erişilemiyor</string>
+  <string name="state_failed_unlicensed">İndirme başarısız, bu uygulamayı indirme yetkiniz olmayabilir</string>
+  <string name="state_failed_fetching_url">İndirme başarısız, dosyalar bulunamadı</string>
+  <string name="state_failed_sdcard_full">İndirme başarısız, harici disk dolu</string>
+  <string name="state_failed_cancelled">İndirme iptal edildi</string>
+  <string name="state_failed">İndirme başarısız</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Kalan süre: %1$s</string>
+  <string name="time_remaining_notification">%1$s kaldı</string>
+  <string name="add_clips_before_reordering">Sıralarını değiştirmeden önce bir klip ekleyin</string>
+  <string name="add_clips_generic">Öncelikle klip ekleyin</string>
+  <string name="title_section3">Bölüm 3</string>
+  <string name="title_section2">Bölüm 2</string>
+  <string name="title_section1">Bölüm 1</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Kaydediliyor</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Kayıt durduruldu</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Disk dolu</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">İzin verilen en fazla uzunluğa erişildi</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">SD kart gerekli</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">TAMAM</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Kayıtlarınız</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Ses kayıtları</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Kayıtlarım</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Harici ve dahili diske erişim başarısız</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <!--add for libra begin-->
+  <string name="menu_setting">Ayarlar</string>
+  <string name="delete_dialog_title">Mevcut kaydı silmek istiyor musunuz?</string>
+  <string name="preferences_title">Ayarlar</string>
+  <string name="pref_title_enable_sound_effect">Ses efektlerini aktif et</string>
+  <string name="notification_recording">Kaydediliyor...</string>
+  <string name="notification_stopped">Kayıt durduruldu</string>
+  <string name="cancel">Iptal et</string>
+  <!--add for libra end-->
+</resources>

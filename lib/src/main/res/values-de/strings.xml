@@ -2,6 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="action_settings">Einstellungen</string>
   <string name="lbl_level">Level:</string>
+  <string name="lbl_next">Weiter</string>
   <string name="lbl_congrats_or">--- oder ---</string>
   <string name="cliptype_signature">Signatur</string>
   <string name="lbl_video">Video</string>
@@ -22,6 +23,7 @@
   <string name="title_section3">Bereich 3</string>
   <string name="title_section2">Bereich 2</string>
   <string name="title_section1">Bereich 1</string>
+  <string name="title_activity_test_drag">TestZiehen</string>
   <!--Screen title before and during recording-->
   <!--Screen title after recording-->
   <!--Screen title while playing back a recording-->
