@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Configurações</string>
+  <string name="lbl_level">Nível:</string>
+  <string name="lbl_time">Tempo:</string>
+  <string name="lbl_continue">Continuar</string>
+  <string name="lbl_next">Proximo</string>
+  <string name="lbl_congrats_or">--- ou ---</string>
+  <string name="cliptype_character">Personagem</string>
+  <string name="cliptype_action">Ação</string>
+  <string name="cliptype_result">Resultado</string>
+  <string name="cliptype_place">Lugar</string>
+  <string name="cliptype_signature">Assinatura</string>
+  <string name="choose_medium">Escolha médio</string>
+  <string name="lbl_video">Video</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Foto</string>
+  <string name="lbl_record">Gravar clipe</string>
+  <string name="lbl_order_media_desc">Agora coloque seus clipes em ordem, a fim de apresentar um claro inicio, meio e fim.</string>
+  <string name="lbl_card_tap">Toque para selecionar um clipe diferente</string>
+  <string name="lbl_import">Importar</string>
+  <string name="lbl_capture">Capturar</string>
+  <string name="menu_done">Feito</string>
+  <string name="clip_order">Ordem de clipe</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">COMEÇAR GRAVAÇÃO</string>
+  <string name="dialog_done">FEITO</string>
+  <string name="dialog_pause">PAUSA</string>
+  <string name="dialog_resume">RETOMAR</string>
+  <string name="dialog_stop">PARAR GRAVAÇÃO</string>
+  <string name="dialog_redo">REFAZER</string>
+  <string name="edit_card">Editar cartão</string>
+  <string name="change_goal">Trocar a meta</string>
+  <string name="duplicate_card">Duplicar cartão</string>
+  <string name="duplicate_clip">Duplicar clipe</string>
+  <string name="remove_card">Remover cartão</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Download completo</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Falha no download</string>
+  <string name="state_unknown">Começando...\"</string>
+  <string name="state_idle">Espere o download começar</string>
+  <string name="state_fetching_url">Procurando por recursos para download</string>
+  <string name="state_connecting">Conectando ao servidor de download</string>
+  <string name="state_downloading">Baixando recursos</string>
+  <string name="state_completed">Download completo</string>
+  <string name="state_paused_network_unavailable">Download pausado pois a rede não esta disponivel.</string>
+  <string name="state_paused_network_setup_failure">Download pausado. Teste um site no navegador</string>
+  <string name="state_paused_by_request">Download pausado</string>
+  <string name="state_paused_wifi_unavailable">Download pausado pois o wifi não esta disponivel</string>
+  <string name="state_paused_wifi_disabled">Download pausado pois o wifi está desabilitado</string>
+  <string name="state_paused_roaming">Download pausado por que você está em roaming</string>
+  <string name="state_paused_sdcard_unavailable">Download pausado pois o armazenamento externo está indisponível</string>
+  <string name="state_failed_unlicensed">O download falhou por que você pode não ter comprado este app</string>
+  <string name="state_failed_fetching_url">O download falhou pois os recursos não foram encontrados</string>
+  <string name="state_failed_sdcard_full">O download falhou pois o armazenamento externo está cheio</string>
+  <string name="state_failed_cancelled">Download cancelado</string>
+  <string name="state_failed">Falha no download</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Tempo restante: %1$s</string>
+  <string name="time_remaining_notification">%1$s esquerda</string>
+  <string name="add_clips_before_narrating">Adicione alguns clipes antes de adicionar a narração</string>
+  <string name="add_clips_before_reordering">Adicione os clipes antes de mudar sua ordem</string>
+  <string name="add_clips_generic">Adicione os clipes primeiro</string>
+  <string name="title_section3">Seção 3</string>
+  <string name="title_section2">Seção 2</string>
+  <string name="title_section1">Seção 1</string>
+  <string name="title_activity_test_drag">TestarArraste</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Gravando</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Gravação parada</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Armazenamento está cheio</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Largura máxima atingida</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Cartão SD é requerido</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Suas gravações</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Gravações de Áudio</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Minhas Gravações</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Incapaz de acessar armazenamento interno ou externo</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Erro de aplicação interna</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Incapaz de salvar o áudio gravado</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Whoops, estamos sem espaço. Por favor disponibilize aproximadamente %.2f%nMB e tente de novo!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">gravação sem título</string>
+  <string name="menu_view_record_list">Ver lista de gravações</string>
+  <string name="menu_setting">Configurações</string>
+  <string name="delete_dialog_title">Você quer excluir a gravação atual?</string>
+  <string name="overwrite_dialog_title">%s já existe. Você quer sobrescrevê-lo?</string>
+  <string name="preferences_title">Configurações</string>
+  <string name="pref_title_record_type">Tipo de arquivo de gravação</string>
+  <string name="prefDialogTitle_recordType">Por favor selecione o tipo de arquivo</string>
+  <string name="prefDefault_recordType">audio/3gpp</string>
+  <string name="pref_title_enable_high_quality">Ativar alta qualidade</string>
+  <string name="pref_summary_enable_high_quality">O arquivo de áudio com alta qualidade pode ser muito grande</string>
+  <string name="pref_title_enable_sound_effect">Ativar efeitos de som</string>
+  <string name="pref_summary_enable_sound_effect">Efeito sonoro quando o estado é alterado</string>
+  <string name="notification_recording">Gravando...</string>
+  <string name="notification_stopped">Gravação parada</string>
+  <string name="notification_warning">Capacidade de armazenamento (menos de %d minutos)</string>
+  <string name="sd_card_not_available">Cartão SD indisponível</string>
+  <string name="open_file_explorer">Abrir explorador de arquivos</string>
+  <string name="alert_message_delete_record">Deseja excluir a gravação selecionada?</string>
+  <string name="recording_narration">Gravando narração</string>
+  <string name="could_not_start_narration">Não foi possível iniciar a narração!</string>
+  <string name="jumble">Misturar</string>
+  <string name="order">Ordem</string>
+  <string name="narrate">Narrar</string>
+  <string name="publish">Publicar</string>
+  <string name="total">Total</string>
+  <string name="cancel">Cancelar</string>
+  <string name="trim_clip">Cortar Clipe</string>
+  <string name="narration">Narração</string>
+  <string name="this_story_has_no_clips_to_publish">Esta história não tem clipes para publicar!</string>
+  <string name="clip_with_no_duration">Incapaz de publicar! Clipe %1$s tem a duração de 0. Está em branco ou é uma imagem?</string>
+  <string name="clips_with_no_duration">Incapaz de publicar! Clipe %1$s tem a duração de 0. Está em branco ou é uma imagem?</string>
+  <string name="clip_audio_tracks">Cortar Faixas de Audio</string>
+  <!--add for libra end-->
+</resources>

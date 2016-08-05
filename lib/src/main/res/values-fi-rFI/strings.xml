@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Asetukset</string>
+  <string name="lbl_level">Taso: </string>
+  <string name="lbl_time">Aika: </string>
+  <string name="lbl_continue">Jatka</string>
+  <string name="lbl_next">Seuraava</string>
+  <string name="lbl_congrats_or">--- tai ---</string>
+  <string name="cliptype_action">Toiminto</string>
+  <string name="cliptype_result">Tulos</string>
+  <string name="cliptype_place">Paikka</string>
+  <string name="cliptype_signature">Allekirjoitus</string>
+  <string name="lbl_video">Video</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Valokuvaus</string>
+  <string name="lbl_import">Tuo</string>
+  <string name="menu_done">Valmis</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">ALOITA ÄÄNITYS</string>
+  <string name="dialog_done">VALMIS</string>
+  <string name="dialog_pause">TAUKO</string>
+  <string name="dialog_resume">JATKA</string>
+  <string name="dialog_stop">PYSÄYTÄ ÄÄNITYS</string>
+  <string name="dialog_redo">TOISTA</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Lataus valmis</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Lataus epäonnistui</string>
+  <string name="state_idle">Odotetaan latauksen käynnistymistä</string>
+  <string name="state_connecting">Yhdistetään latauspalvelimelle</string>
+  <string name="state_completed">Lataus päättyi</string>
+  <string name="state_paused_by_request">Lataus taukosi</string>
+  <string name="state_paused_wifi_disabled">Lataus taukosi, koska langaton verkko on poissa käytöstä</string>
+  <string name="state_failed_sdcard_full">Lataus epäonnistui, koska ulkoinen muisti on täynnä</string>
+  <string name="state_failed_cancelled">Lataus peruttu</string>
+  <string name="state_failed">Lataus epäonnistui</string>
+  <string name="time_remaining">Aikaa jäljellä: %1$s</string>
+  <string name="time_remaining_notification">%1$s jäljellä</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Muisti on täynnä</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <!--label shown when there is no sd card available to record to-->
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">Valmis</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Sisäinen sovellusvirhe</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <!--add for libra begin-->
+  <string name="menu_setting">Asetukset</string>
+  <string name="preferences_title">Asetukset</string>
+  <string name="prefDialogTitle_recordType">Valitse tiedostotyyppi</string>
+  <string name="sd_card_not_available">SD-kortti ei ole saatavilla</string>
+  <string name="open_file_explorer">Avaa tiedostoselaimessa</string>
+  <string name="publish">Julkaise</string>
+  <string name="total">Yhteensä</string>
+  <string name="cancel">Peru</string>
+  <!--add for libra end-->
+</resources>

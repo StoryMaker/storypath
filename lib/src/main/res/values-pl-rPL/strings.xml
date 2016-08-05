@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Ustawienia</string>
+  <string name="lbl_level">Poziom:</string>
+  <string name="lbl_time">Czas:</string>
+  <string name="lbl_continue">Kontynuuj</string>
+  <string name="lbl_next">Następny</string>
+  <string name="lbl_congrats_or">--- lub ---</string>
+  <string name="cliptype_character">Postać</string>
+  <string name="cliptype_action">Akcja</string>
+  <string name="cliptype_result">Resultat</string>
+  <string name="cliptype_place">Miejsce</string>
+  <string name="cliptype_signature">Podpis</string>
+  <string name="choose_medium">Wybierz nośnik</string>
+  <string name="lbl_video">Wideo</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Zdjęcie</string>
+  <string name="lbl_record">Nagraj klip</string>
+  <string name="lbl_order_media_desc">Posegreguj klipy aby zaznaczyć początek, środek i zakończenie.</string>
+  <string name="lbl_card_tap">Dotknij aby wybrać inny klip</string>
+  <string name="lbl_import">Importuj</string>
+  <string name="lbl_capture">Przechwyć</string>
+  <string name="menu_done">Ukończono</string>
+  <string name="clip_order">Kolejność klipów</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">ROZPOCZNIJ NAGRYWANIE</string>
+  <string name="dialog_done">UKOŃCZONO</string>
+  <string name="dialog_pause">PAUSA</string>
+  <string name="dialog_resume">WZNÓW</string>
+  <string name="dialog_stop">ZAKOŃCZ NAGRYWANIE</string>
+  <string name="dialog_redo">COFNIJ</string>
+  <string name="change_goal">Zmień cel</string>
+  <string name="duplicate_clip">Duplikuj klip</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Pobieranie ukończone</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Pobieranie nieudane</string>
+  <string name="state_unknown">Rozpoczynam...\"</string>
+  <string name="state_idle">Czekam na rozpoczęcie pobierania</string>
+  <string name="state_fetching_url">Szukam zasobów do pobrania</string>
+  <string name="state_connecting">Łączę z serwerem plików</string>
+  <string name="state_downloading">Pobieram zasoby</string>
+  <string name="state_completed">Pobieranie ukończone</string>
+  <string name="state_paused_network_unavailable">Pobieranie wstrzymane - brak połączenia z siecią</string>
+  <string name="state_paused_network_setup_failure">Pobieranie wstrzymane. Sprawdź stronę w przeglądarce.</string>
+  <string name="state_paused_by_request">Pobieranie wstrzymane</string>
+  <string name="state_paused_wifi_unavailable">Pobieranie wstrzymane - WiFi niedostepne</string>
+  <string name="state_paused_wifi_disabled">Pobieranie wstrzymane - WiFi wyłączone</string>
+  <string name="state_paused_roaming">Pobieranie wstrzymane - włączony roaming</string>
+  <string name="state_paused_sdcard_unavailable">Pobieranie wstrzymane - pamięć zewnętrzna niedostępna</string>
+  <string name="state_failed_unlicensed">Pobieranie nieudane - nie zakupiono aplikacji</string>
+  <string name="state_failed_fetching_url">Pobieranie nieudane - nie znaleziono zasobu</string>
+  <string name="state_failed_sdcard_full">Pobieranie nieudane - pamięć zewnętrzna pełna</string>
+  <string name="state_failed_cancelled">Pobieranie anulowane</string>
+  <string name="state_failed">Pobieranie nieudane</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Pozostało: %1$s</string>
+  <string name="add_clips_before_narrating">Dodaj klip przed dodaniem narracji</string>
+  <string name="add_clips_before_reordering">Dodaj klipy przed zmianą ich kolejności</string>
+  <string name="add_clips_generic">Najpierw dodaj klip</string>
+  <string name="title_section3">Sekcja 3</string>
+  <string name="title_section2">Sekcja 2</string>
+  <string name="title_section1">Sekcja 1</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Nagrywam</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Nagrywanie zakończone</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Pamięć urządzenia jest pełna</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Osiągnięto maksymalną długość</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Wymagana karta pamięci</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Twoje nagrania</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Nagrania audio</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Moje nagrania</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Brak dostępu do pamięci wewnętrzenej lub zewnętrznej</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Wewnętrzny błąd aplikacji</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Nie można zapisać nagranego pliku audio</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Ups, zabrakło miejsca. Zwolnij co najmniej %.2f%nMB i spróbuj ponownie!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">nienazwane nagranie</string>
+  <string name="menu_view_record_list">Wyświetl listę nagrań</string>
+  <string name="menu_setting">Ustawienia</string>
+  <string name="delete_dialog_title">Czy chcesz skasować wybrany wpis?</string>
+  <string name="overwrite_dialog_title">%s już istnieje. Chcesz go zastąpić?</string>
+  <string name="preferences_title">Ustawienia</string>
+  <string name="pref_title_record_type">Typ pliku nagrania</string>
+  <string name="prefDialogTitle_recordType">Wybierz typ pliku</string>
+  <string name="prefDefault_recordType">audio/3gp</string>
+  <string name="pref_title_enable_high_quality">Włącz wysoką jakość</string>
+  <string name="pref_summary_enable_high_quality">Plik audio w wysokiej rozdzielczości zajmie więcej miejsca</string>
+  <string name="pref_title_enable_sound_effect">Włącz efekty dźwiękowe</string>
+  <string name="pref_summary_enable_sound_effect">Odtwórz efekt dźwiękowy po zmianie stanu</string>
+  <string name="notification_recording">Nagrywam...</string>
+  <string name="notification_stopped">Nagrywanie zakończone</string>
+  <string name="notification_warning">Mało pamięci(pozostało mniej niż %d minut)...</string>
+  <string name="sd_card_not_available">Karta SD niedostępna</string>
+  <string name="open_file_explorer">Otwórz menedźera plików</string>
+  <string name="alert_message_delete_record">Usunąć wybrane nagrania?</string>
+  <string name="recording_narration">Nagrywam narrację</string>
+  <string name="could_not_start_narration">Nie udało się rozpocząć narracji!</string>
+  <string name="jumble">Miszmasz</string>
+  <string name="order">Kolejnosć</string>
+  <string name="narrate">Narracja</string>
+  <string name="publish">Publikuj</string>
+  <string name="total">Suma</string>
+  <string name="cancel">Anuluj</string>
+  <string name="trim_clip">Przytnij klip</string>
+  <string name="narration">Narracja</string>
+  <string name="this_story_has_no_clips_to_publish">Reportaż nie ma klipów do publikacji!</string>
+  <!--add for libra end-->
+</resources>

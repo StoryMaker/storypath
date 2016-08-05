@@ -142,5 +142,7 @@
   <string name="trim_clip">برش کلیپ</string>
   <string name="narration">گویندگی</string>
   <string name="this_story_has_no_clips_to_publish">این گزارش هیچ کلیپی برای انتشار ندارد!</string>
+  <string name="clip_with_no_duration">قابل انتشار نیست. کلیپ %1$s طول زمان ندارد، آیا خالی است یا یک عکس است؟</string>
+  <string name="clip_audio_tracks">کلیپ‌های صوتی</string>
   <!--add for libra end-->
 </resources>

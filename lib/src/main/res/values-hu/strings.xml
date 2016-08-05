@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Beállítások</string>
+  <string name="lbl_level">Szint:</string>
+  <string name="lbl_time">Idő:</string>
+  <string name="lbl_continue">Folytatás</string>
+  <string name="lbl_next">Következő</string>
+  <string name="lbl_congrats_or">--- vagy ---</string>
+  <string name="cliptype_character">Karakter</string>
+  <string name="cliptype_result">Eredmény</string>
+  <string name="cliptype_place">Hely</string>
+  <string name="cliptype_signature">Aláírás</string>
+  <string name="choose_medium">Média választása</string>
+  <string name="lbl_video">Videó</string>
+  <string name="lbl_audio">Hangfelvétel</string>
+  <string name="lbl_photo">Fénykép</string>
+  <string name="lbl_record">Klip felvétele</string>
+  <string name="lbl_card_tap">Érintsd meg más klip kiválasztásához</string>
+  <string name="lbl_import">Importálás</string>
+  <string name="lbl_capture">Rögzít</string>
+  <string name="menu_done">Kész</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">FELVÉTEL INDÍTÁSA</string>
+  <string name="dialog_done">KÉSZ</string>
+  <string name="dialog_pause">SZÜNET</string>
+  <string name="dialog_resume">FOLYTATÁS</string>
+  <string name="dialog_stop">FELVÉTEL MEGÁLLÍTÁSA</string>
+  <string name="dialog_redo">ÚJRA</string>
+  <string name="edit_card">Kártya szerkesztése</string>
+  <string name="change_goal">Cél megváltoztatása</string>
+  <string name="duplicate_card">Kártya duplikálása</string>
+  <string name="remove_card">Kártya eltávolítása</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Letöltés kész</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Letöltés sikertelen</string>
+  <string name="state_fetching_url">Erőforrások keresése a letöltéshez</string>
+  <string name="state_connecting">Csatlakozás a letöltési kiszolgálóhoz</string>
+  <string name="state_downloading">Erőforrások letöltése</string>
+  <string name="state_completed">Letöltés befejezve</string>
+  <string name="state_paused_network_unavailable">Letöltés szüneteltetve, mert nincs elérhető hálózat</string>
+  <string name="state_paused_network_setup_failure">Letöltés szüneteltetve. Ellenőrizd a weboldalt böngészőben</string>
+  <string name="state_paused_by_request">Letöltés szüneteltetve</string>
+  <string name="state_paused_wifi_unavailable">Letöltés szüneteltetve, mert a wifi nem elérhető</string>
+  <string name="state_paused_wifi_disabled">Letöltés szüneteltetve, mert a wifi letiltva</string>
+  <string name="state_paused_roaming">Letöltés szüneteltetve, mert roamingolsz</string>
+  <string name="state_paused_sdcard_unavailable">Letöltés szüneteltetve, mert a külső tároló nem elérhető</string>
+  <string name="state_failed_unlicensed">Letöltés sikertelen, mert lehet, hogy nem vetted meg ezt az alkalmazást</string>
+  <string name="state_failed_fetching_url">Letöltés sikertelen, mert az erőforrások nem találhatók</string>
+  <string name="state_failed_sdcard_full">Letöltés sikertelen, mert a külső tároló megtelt</string>
+  <string name="state_failed_cancelled">Letöltés megszakítva</string>
+  <string name="state_failed">Letöltés sikertelen</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Hátralévő idő: %1$s</string>
+  <string name="time_remaining_notification">%1$s van hátra</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Felvétel</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Felvétel megállítva</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Tároló tele van</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Maximum hossz elérve</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">SD kártya szükséges</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Felvételeid</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Hangfelvételek</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Felvételeim</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Nem lehet elérni a külső vagy belső tárolót</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Nem lehet menteni a felvett hangot</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Hoppá, kifogytunk a helyből. Kérlek tegyél körülbelül %.2f%nMB -ot elérhetővé és próbáld újra!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">névtelen felvétel</string>
+  <string name="menu_view_record_list">Felvétel lista megtekintése</string>
+  <string name="menu_setting">Beállítások</string>
+  <string name="delete_dialog_title">Törölni akarod a jelenlegi felvételt?</string>
+  <string name="overwrite_dialog_title">%s már létezik. Felül akarod írni?</string>
+  <string name="preferences_title">Beállítások</string>
+  <string name="prefDialogTitle_recordType">Kérlek válassz fájltípust</string>
+  <string name="pref_title_enable_high_quality">Magas minőség engedélyezése</string>
+  <string name="pref_summary_enable_high_quality">A magas minőségű hangfájl nagyobb lehet</string>
+  <string name="pref_title_enable_sound_effect">Hangeffekt engedélyezése</string>
+  <string name="notification_recording">Felvétel...</string>
+  <string name="notification_stopped">Felvétel megállt</string>
+  <string name="sd_card_not_available">SD kártya nem elérhető</string>
+  <string name="alert_message_delete_record">Törölni akarod a kiválasztott felvételt?</string>
+  <!--add for libra end-->
+</resources>

@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Instellingen</string>
+  <string name="lbl_level">Niveau:</string>
+  <string name="lbl_time">Tijd:</string>
+  <string name="lbl_continue">Vervolg</string>
+  <string name="lbl_next">Volgende</string>
+  <string name="lbl_congrats_or">--- of ---</string>
+  <string name="cliptype_character">Personage</string>
+  <string name="cliptype_action">Actie</string>
+  <string name="cliptype_result">Resultaat</string>
+  <string name="cliptype_place">Plaats</string>
+  <string name="cliptype_signature">Signatuur</string>
+  <string name="choose_medium">Kies Medium</string>
+  <string name="lbl_video">Beeld</string>
+  <string name="lbl_audio">Geluid</string>
+  <string name="lbl_photo">Foto</string>
+  <string name="lbl_record">Neem fragment op</string>
+  <string name="lbl_order_media_desc">Plaats nu je fragmenten in een volgorde met duidelijk begin, midden en einde.</string>
+  <string name="lbl_card_tap">Tap voor een ander fragment</string>
+  <string name="lbl_import">Importeer</string>
+  <string name="lbl_capture">Leg vast</string>
+  <string name="menu_done">Klaar</string>
+  <string name="clip_order">Volgorde van fragmenten</string>
+  <!--Record Narration Dialog-->
+  <string name="dialog_record">START OPNEMEN</string>
+  <string name="dialog_done">KLAAR</string>
+  <string name="dialog_pause">PAUSE</string>
+  <string name="dialog_resume">VERVOLG</string>
+  <string name="dialog_stop">STOP OPNEMEN</string>
+  <string name="dialog_redo">OPNIEUW</string>
+  <string name="edit_card">Pas Kaart Aan</string>
+  <string name="change_goal">Wijzig Doel</string>
+  <string name="duplicate_card">Kopieer Kaart</string>
+  <string name="duplicate_clip">Kopieer Fragment</string>
+  <string name="remove_card">Verwijder Kaart</string>
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_complete">Downloaden geslaagt</string>
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="notification_download_failed">Downloaden mislukt</string>
+  <string name="state_unknown">Starten...\"</string>
+  <string name="state_idle">Wachten om het downloaden te starten</string>
+  <string name="state_fetching_url">Zoeken naar bronnen voor het downloaden</string>
+  <string name="state_connecting">Verbinden met de download server</string>
+  <string name="state_downloading">Bronnen downloaden</string>
+  <string name="state_completed">Klaar met downloaden </string>
+  <string name="state_paused_network_unavailable">Downloaden gepauseerd, geen netwerk gevonden</string>
+  <string name="state_paused_network_setup_failure">Downloaden gepauseerd, test een website in de browser</string>
+  <string name="state_paused_by_request">Downloaden gepauseerd</string>
+  <string name="state_paused_wifi_unavailable">Downloaden gepauseerd, geen wifi beschikbaar</string>
+  <string name="state_paused_wifi_disabled">Downloaden gepauseerd, wifi is uitgeschakeld</string>
+  <string name="state_paused_roaming">Downloaden gepauseerd, je bent aan het roamen</string>
+  <string name="state_paused_sdcard_unavailable">Downloaden gepauseerd, geen externe opslag beschikbaar</string>
+  <string name="state_failed_unlicensed">Downloaden mislukt, je hebt deze app wellicht niet gekocht</string>
+  <string name="state_failed_fetching_url">Downloaden mislukt, bronnen werden niet gevonden</string>
+  <string name="state_failed_sdcard_full">Downloaden mislukt, externe opslag is vol</string>
+  <string name="state_failed_cancelled">Downloaden afgebroken</string>
+  <string name="state_failed">Downloaden mislukt</string>
+  <string name="kilobytes_per_second">%1$s KB/sec</string>
+  <string name="time_remaining">Overige tijd: %1$s</string>
+  <string name="time_remaining_notification">%1$s over</string>
+  <string name="add_clips_before_narrating">Voeg wat fragmenten toe nog voor je de narratie toevoegt</string>
+  <string name="add_clips_before_reordering">Voeg fragmenten toe voordat je de volgorde veranderd</string>
+  <string name="add_clips_generic">Voeg eerst fragmenten toe</string>
+  <string name="title_section3">Deel 3</string>
+  <string name="title_section2">Deel 2</string>
+  <string name="title_section1">Deel 1</string>
+  <string name="title_activity_test_drag">TestSlepen</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Opnemen</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Opnemen gestopt</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Opslag is vol</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Maximale lengte</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">SD kaart vereist</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">Oke</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Je opnames</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Geluidsopnames</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Mijn opnames</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Niet geslaagt om interne of externe opslag te vinden</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Interne software error</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Niet geslaagt om geluidsopname op te slaan</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Oeps, er is geen plaats meer. Maak %.2f%nMB vrij en probeer dan opnieuw!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">Naamloze opname</string>
+  <string name="menu_view_record_list">Bekijk opnamelijst</string>
+  <string name="menu_setting">Instellingen</string>
+  <string name="delete_dialog_title">Wil je deze opname verwijderen?</string>
+  <string name="overwrite_dialog_title">%s bestaat al. Weet je zeker dat je deze wilt overschrijven?</string>
+  <string name="preferences_title">Instellingen</string>
+  <string name="pref_title_record_type">Bestandstype v.d. opname</string>
+  <string name="prefDialogTitle_recordType">Kies een bestandstype</string>
+  <string name="prefDefault_recordType">geluid/3gpp</string>
+  <string name="pref_title_enable_high_quality">Schakel high quality in</string>
+  <string name="pref_summary_enable_high_quality">Een geluidsbestand in high quality (hoge kwaliteit) kan groter zijn</string>
+  <string name="pref_title_enable_sound_effect">Schakel geluidseffecten in</string>
+  <string name="pref_summary_enable_sound_effect">Speel een geluidseffect af wanneer de staat is veranderd</string>
+  <string name="notification_recording">Opnemen...</string>
+  <string name="notification_stopped">Opname is gestopt</string>
+  <string name="notification_warning">Weinig opslag (minder dan %d minuten)...</string>
+  <string name="sd_card_not_available">SD kaart niet beschikbaar</string>
+  <string name="open_file_explorer">Open verkenner</string>
+  <string name="alert_message_delete_record">Wil je de geselecteerde opname zeker verwijderen?</string>
+  <string name="recording_narration">Narratie Opnemen</string>
+  <string name="could_not_start_narration">Kan de narratie niet starten!</string>
+  <string name="jumble">Schud</string>
+  <string name="order">Volgorde</string>
+  <string name="narrate">Narratie</string>
+  <string name="publish">Publiceer</string>
+  <string name="total">Totaal</string>
+  <string name="cancel">Annuleer</string>
+  <string name="trim_clip">Knip Fragment Bij</string>
+  <string name="narration">Narratie</string>
+  <string name="this_story_has_no_clips_to_publish">Dit verhaal heeft geen fragmenten om te publiceren!</string>
+  <string name="clip_with_no_duration">Niet in staat om te publiceren! Clip %1$s heeft een duur van 0. Is het leeg of een afbeelding?</string>
+  <string name="clips_with_no_duration">Niet in staat om te publiceren! Clip %1$s heeft een duur van 0. Is het leeg of een afbeelding?</string>
+  <string name="clip_audio_tracks">Clip Audio Tracks</string>
+  <!--add for libra end-->
+</resources>
