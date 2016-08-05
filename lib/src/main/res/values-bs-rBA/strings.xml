@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Postavke</string>
+  <string name="lbl_video">Video</string>
+  <string name="lbl_audio">Audio</string>
+  <string name="lbl_photo">Foto</string>
+  <!--Record Narration Dialog-->
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="title_section3">Odjeljak 3</string>
+  <string name="title_section2">Odjeljak 2</string>
+  <string name="title_section1">Odjeljak 1</string>
+  <string name="title_activity_test_drag">Testno povlačenje</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">Snimanje</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Snimanje zaustavljeno</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Memorija je puna</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Dostignuta maksimalna dužina</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Zahtijeva se SD kartica</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Vaši zapisi</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Audio zapisi</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Moji zapisi</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Nije moguć pristup eksternoj ili internoj memoriji</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Greška interne aplikacije</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Nije moguće spasiti audio zapis</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Ups, ostali smo bez slobodnog prostora. Molimo oslobodite otprilike %.2f%nMB i pokušajte ponovo!</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">zapis bez naziva</string>
+  <string name="menu_view_record_list">Pogledaj listu zapisa</string>
+  <string name="menu_setting">Postavke</string>
+  <string name="delete_dialog_title">Da li želite izbrisati trenutni zapis?</string>
+  <string name="overwrite_dialog_title">%s je već postojao. Želite li pisati preko njega?</string>
+  <string name="preferences_title">Postavke</string>
+  <string name="pref_title_record_type">Vrsta datoteke zapisa</string>
+  <string name="prefDialogTitle_recordType">Molimo odaberite vrstu datoteke</string>
+  <string name="prefDefault_recordType">audio/3gpp </string>
+  <string name="pref_title_enable_high_quality">Omogučiti visoku kvalitetu</string>
+  <string name="pref_summary_enable_high_quality">Audio datoteka sa visokom kvalitetom može biti veća</string>
+  <string name="pref_title_enable_sound_effect">Omogućiti zvučni efekt</string>
+  <string name="pref_summary_enable_sound_effect">Reprodukcija zvučnog efekta kada se stanje mijenja</string>
+  <string name="notification_recording">Snimanje...</string>
+  <string name="notification_stopped">Snimanje je zaustavljeno</string>
+  <string name="notification_warning">Mala memorija(manje od %d minuta)...</string>
+  <string name="sd_card_not_available">SD kartica nije dostupna</string>
+  <string name="open_file_explorer">Otvori file explorer</string>
+  <string name="alert_message_delete_record">Želite li obrisati odabrani zapis?</string>
+  <string name="publish">Objaviti</string>
+  <string name="cancel">Otkazati</string>
+  <!--add for libra end-->
+</resources>

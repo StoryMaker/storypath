@@ -6,11 +6,12 @@
   <string name="lbl_continue">Продолжить</string>
   <string name="lbl_next">Следующий </string>
   <string name="lbl_congrats_or">--- или ---</string>
-  <string name="cliptype_character">Герой</string>
-  <string name="cliptype_action">Сюжет</string>
+  <string name="cliptype_character">Персонаж</string>
+  <string name="cliptype_action">Действие</string>
   <string name="cliptype_result">Результат</string>
   <string name="cliptype_place">Место</string>
-  <string name="choose_medium">Выбрать средство</string>
+  <string name="cliptype_signature">Подпись</string>
+  <string name="choose_medium">Выбрать средство повествования</string>
   <string name="lbl_video">Видео</string>
   <string name="lbl_audio">Аудио</string>
   <string name="lbl_photo">Фото</string>
@@ -18,6 +19,7 @@
   <string name="lbl_order_media_desc">Теперь разместите ваши клипы по порядку, чтобы ясно представить начало, середину и конец.</string>
   <string name="lbl_card_tap">Нажмите для выбора другого клипа</string>
   <string name="lbl_import">Импорт</string>
+  <string name="lbl_capture">Захват видео</string>
   <string name="menu_done">Сделано</string>
   <string name="clip_order">Порядок клипов</string>
   <!--Record Narration Dialog-->
@@ -27,11 +29,11 @@
   <string name="dialog_resume">ВОЗОБНОВИТЬ</string>
   <string name="dialog_stop">ОСТАНОВИТЬ ЗАПИСЬ</string>
   <string name="dialog_redo">ПОВТОРИТЬ ДЕЙСТВИЕ</string>
-  <string name="edit_card">Редактировать Карточку</string>
+  <string name="edit_card">Редактировать Карту</string>
   <string name="change_goal">Изменить Цель</string>
-  <string name="duplicate_card">Дублировать Карточку</string>
+  <string name="duplicate_card">Дублировать Карту</string>
   <string name="duplicate_clip">Дублировать Клип</string>
-  <string name="remove_card">Удалить Карточку</string>
+  <string name="remove_card">Удалить Карту</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
@@ -56,6 +58,7 @@
   <string name="state_paused_by_request">Загрузка остановлена</string>
   <string name="state_paused_wifi_unavailable">Загрузка остановлена, т.к. недоступен wi-fi</string>
   <string name="state_paused_wifi_disabled">Загрузка остановлена, т.к. отключен wi-fi</string>
+  <string name="state_paused_roaming">Загрузка остановлена, т.к. вы находитесь в роуминге</string>
   <string name="state_paused_sdcard_unavailable">Загрузка остановлена, т.к. недоступен внешний накопитель</string>
   <string name="state_failed_unlicensed">Загрузка не удалась, т.к. вы, возможно, не приобрели данное приложение</string>
   <string name="state_failed_fetching_url">Загрузка не удалась, т.к. ресурсы не могут быть найдены</string>
@@ -71,7 +74,7 @@
   <string name="title_section3">Раздел 3</string>
   <string name="title_section2">Раздел 2</string>
   <string name="title_section1">Раздел 1</string>
-  <string name="title_activity_test_drag">TestDrag</string>
+  <string name="title_activity_test_drag">Тестирование помех</string>
   <!--Screen title before and during recording-->
   <!--Screen title after recording-->
   <!--Screen title while playing back a recording-->
@@ -80,7 +83,7 @@
   <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
   <string name="recording_stopped">Запись остановлена</string>
   <!--label shown when there is not enough space to record something-->
-  <string name="storage_is_full">Нет свободного места</string>
+  <string name="storage_is_full">Память заполнена</string>
   <!--label shown when the recording has reached maximum allowed file size-->
   <string name="max_length_reached">Максимальная длительность достигнута</string>
   <!--label shown when there is no sd card available to record to-->
@@ -119,7 +122,7 @@
   <string name="prefDialogTitle_recordType">Пожалуйста, выберите тип файла</string>
   <string name="prefDefault_recordType">аудио/3gpp</string>
   <string name="pref_title_enable_high_quality">Включить высокое качество</string>
-  <string name="pref_summary_enable_high_quality">Аудио-файл с высоким качеством может быть больше</string>
+  <string name="pref_summary_enable_high_quality">Аудио-файл с высоким качеством может быть большего размера</string>
   <string name="pref_title_enable_sound_effect">Включить звуковые эффекты</string>
   <string name="pref_summary_enable_sound_effect">Проигрывать звуковой эффект при перемене состояния</string>
   <string name="notification_recording">Запись...</string>
@@ -128,13 +131,19 @@
   <string name="sd_card_not_available">SD-карта недоступна</string>
   <string name="open_file_explorer">Открыть файл</string>
   <string name="alert_message_delete_record">Вы хотите удалить выделенную запись?</string>
-  <string name="recording_narration">Запись Рассказа</string>
-  <string name="could_not_start_narration">Невозможно начать рассказ!</string>
+  <string name="recording_narration">Запись повествования</string>
+  <string name="could_not_start_narration">Невозможно начать повествование!</string>
+  <string name="jumble">Перемешать</string>
   <string name="order">Порядок</string>
+  <string name="narrate">Рассказать</string>
   <string name="publish">Опубликовать</string>
+  <string name="total">Всего</string>
   <string name="cancel">Отмена</string>
   <string name="trim_clip">Обрезать клип</string>
-  <string name="narration">Рассказ</string>
+  <string name="narration">Повествование</string>
   <string name="this_story_has_no_clips_to_publish">В этом сюжете нет клипов для публикации!</string>
+  <string name="clip_with_no_duration">Ошибка при публикации! Клип %1$s имеет продолжительность в 0 сек. Это пустой файл или изображение?</string>
+  <string name="clips_with_no_duration">Ошибка при публикации! Клипы %1$s имеют продолжительность в 0 сек. Это пустые файлы или изображения?</string>
+  <string name="clip_audio_tracks">Обрезать аудиодорожку</string>
   <!--add for libra end-->
 </resources>

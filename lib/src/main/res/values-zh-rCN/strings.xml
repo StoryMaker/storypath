@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">设置</string>
+  <string name="lbl_next">下一项</string>
+  <!--Record Narration Dialog-->
+  <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download successfully completed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <!--When a download completes, a notification is displayed, and this
+        string is used to indicate that the download failed.
+        Note that such a download could have been initiated by a variety of
+        applications, including (but not limited to) the browser, an email
+        application, a content marketplace.-->
+  <string name="title_section3">第3节</string>
+  <string name="title_section2">第2节</string>
+  <string name="title_section1">第1节</string>
+  <!--Screen title before and during recording-->
+  <!--Screen title after recording-->
+  <!--Screen title while playing back a recording-->
+  <!--Label shown during recording-->
+  <string name="recording">正在录像</string>
+  <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">录像已经中止</string>
+  <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">存储已满</string>
+  <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">已超过录像最长长度</string>
+  <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">请插入SD卡</string>
+  <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
+  <!--label shown when there is less than 1 minute of space left to record-->
+  <!--button to accept the current recording and return it to the caller-->
+  <!--button to discard the current recording and return to the caller-->
+  <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">确定</string>
+  <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
+  <!--label shown before the user has recorded anything-->
+  <!--the name under which recordings will be visible in the media database is formatted like this-->
+  <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">你的录像</string>
+  <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">音频记录</string>
+  <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">我的录像</string>
+  <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">不能读取存储卡或内存</string>
+  <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">程序内部错误</string>
+  <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">保存音频记录失败</string>
+  <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">很遗憾。存储空间不够了。请清出约%.2f%nMB空间后再试一次。</string>
+  <!--add for libra begin-->
+  <string name="default_record_name">未标题的录像</string>
+  <string name="menu_view_record_list">查看录像列表</string>
+  <string name="menu_setting">设置</string>
+  <string name="delete_dialog_title">你想删除当前记录吗？</string>
+  <string name="overwrite_dialog_title">%s已经存在，你希望覆盖这个文件吗？</string>
+  <string name="preferences_title">设置</string>
+  <string name="pref_title_record_type">记录文件类型</string>
+  <string name="prefDialogTitle_recordType">请选择文件类型</string>
+  <string name="prefDefault_recordType">音频/3gpp</string>
+  <string name="pref_title_enable_high_quality">开启高品质模式</string>
+  <string name="pref_summary_enable_high_quality">高品质音频可能增加文件大小</string>
+  <string name="pref_title_enable_sound_effect">开启声音效果</string>
+  <string name="pref_summary_enable_sound_effect">状态改变时给出音效</string>
+  <string name="notification_recording">正在记录</string>
+  <string name="notification_stopped">记录被中止。</string>
+  <string name="notification_warning">存储不足（不足 %d 分钟）</string>
+  <string name="sd_card_not_available">记忆卡不能使用</string>
+  <string name="open_file_explorer">打开文件夹进行搜索</string>
+  <string name="alert_message_delete_record">你希望删除所选的记录吗？</string>
+  <string name="publish">发布</string>
+  <!--add for libra end-->
+</resources>
