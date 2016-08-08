@@ -3,6 +3,7 @@ apply plugin: 'com.android.library'
 // required for sqlbrite/apt
 buildscript {
     repositories {
+
         mavenCentral()
 
     }
@@ -61,6 +62,7 @@ dependencies {
 //    compile 'com.commonsware.cwac:anddown:0.2.+'
     //32-bit version built from here: https://github.com/guardianproject/cwac-anddown
     compile 'com.commonsware.cwac:anddown:0.2.+@aar'
+   // compile(name:'anddown-release', ext:'aar')
 
     compile 'com.google.code.gson:gson:2.3'
     compile 'commons-io:commons-io:2.4'

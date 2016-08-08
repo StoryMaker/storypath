@@ -4,9 +4,10 @@ buildscript {
     repositories {
         jcenter()
         repositories {
+            /**
             maven {
                 url "https://s3.amazonaws.com/repo.commonsware.com"
-            }
+            }**/
         }
 
     }
@@ -20,10 +21,14 @@ buildscript {
 
 allprojects {
     repositories {
+        flatDir {
+            dirs 'libs' //this way we can find the .aar file in libs folder
+        }
         jcenter()
+        /**
         maven {
             url "https://s3.amazonaws.com/repo.commonsware.com"
-        }
+        }**/
 
         maven { url "https://jitpack.io" }
 
