@@ -3,16 +3,31 @@ apply plugin: 'com.android.library'
 // required for sqlbrite/apt
 buildscript {
     repositories {
+        maven { url "https://jitpack.io" }
 
         mavenCentral()
-
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.0.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.7'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
     }
 }
+
+
+
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url "https://raw.githubusercontent.com/guardianproject/gpmaven/master" }
+
+    }
+}
+
+
+
 
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.jakewharton.hugo'
@@ -59,11 +74,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.android.support:cardview-v7:23.1.0'
 
-//    compile 'com.commonsware.cwac:anddown:0.2.+'
-    //32-bit version built from here: https://github.com/guardianproject/cwac-anddown
-    compile 'com.commonsware.cwac:anddown:0.2.+@aar'
-   // compile(name:'anddown-release', ext:'aar')
-
     compile 'com.google.code.gson:gson:2.3'
     compile 'commons-io:commons-io:2.4'
 
@@ -75,6 +85,9 @@ dependencies {
     compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.9.1@aar'){
         transitive=true
     }
+
+    // compile 'com.commonsware.cwac:anddown:0.2.+'
+    compile 'info.guardianproject:anddown:0.2.4' //32-bit only fork
 
     // new db stuff
     compile 'com.hannesdorfmann.sqlbrite:dao:0.2.2'
