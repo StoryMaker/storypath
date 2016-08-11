@@ -62,7 +62,9 @@ android {
 
 dependencies {
 
-    androidTestCompile files('libs/espresso-1.1-bundled.jar')
+   // androidTestCompile files('libs/espresso-1.1-bundled.jar')
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test:runner:0.5'
 
     compile 'com.github.n8fr8:NetCipher:n8fr8-dev-release'
 
