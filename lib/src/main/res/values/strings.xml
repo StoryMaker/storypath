@@ -165,6 +165,9 @@
     <string name="clip_with_no_duration">Unable to publish! Clip %1$s has a duration of 0. Is it blank or an image?</string>
     <string name="clips_with_no_duration">Unable to publish! Clips %1$s have a duration of 0. Are they blank or images?</string>
     <string name="clip_audio_tracks">Clip Audio Tracks</string>
+ <!-- "In the Services & APIs page, locate the Licensing & In-App Billing section. Your public key for licensing is given in the Your License Key For This Application field."  -->
+    <string name="base64_public_key">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuIQL8sBFjqJo1Nwl/l5YyAdSpcwAjQEtwxI2mZ43nEDc6BCwZeuxk5n3dqvnL6eXxyACmzMIA2/8jeWOz/AEBZBv1ROp2zBooWyD6BGqF2Sdn75DXQJnYkD5Zk+YZ19ylIHBdkF8x9xPDFhz7kfd1nUTI/CaOzFUd9phMBU7VfyAEJSfBKQhoknYIpS9/TCzyNQZaDDQhT7tzJxClFFDeRmuvaTFNIRtr6aqlf4aOIG6NGd53YjlnX/T/c3gMjWfQuAplFG7gyrOBTwK/36JEADb6CrCkv5k6BQnT4CF0SfbQx36ebgBN2RCH7rSpl8Sd7st9gFOr27QZcUcVri8ywIDAQAB</string>
+    <string name="liger_salt">foo</string>
 
     <!-- add for libra end -->
 </resources>

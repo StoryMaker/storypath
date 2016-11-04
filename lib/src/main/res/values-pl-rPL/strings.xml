@@ -29,8 +29,11 @@
   <string name="dialog_resume">WZNÓW</string>
   <string name="dialog_stop">ZAKOŃCZ NAGRYWANIE</string>
   <string name="dialog_redo">COFNIJ</string>
+  <string name="edit_card">Edytuj kartę</string>
   <string name="change_goal">Zmień cel</string>
+  <string name="duplicate_card">Duplikuj kartę</string>
   <string name="duplicate_clip">Duplikuj klip</string>
+  <string name="remove_card">Usuń kartę</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
@@ -64,6 +67,7 @@
   <string name="state_failed">Pobieranie nieudane</string>
   <string name="kilobytes_per_second">%1$s KB/s</string>
   <string name="time_remaining">Pozostało: %1$s</string>
+  <string name="time_remaining_notification">pozostało %1$s</string>
   <string name="add_clips_before_narrating">Dodaj klip przed dodaniem narracji</string>
   <string name="add_clips_before_reordering">Dodaj klipy przed zmianą ich kolejności</string>
   <string name="add_clips_generic">Najpierw dodaj klip</string>
@@ -137,5 +141,7 @@
   <string name="trim_clip">Przytnij klip</string>
   <string name="narration">Narracja</string>
   <string name="this_story_has_no_clips_to_publish">Reportaż nie ma klipów do publikacji!</string>
+  <string name="clip_with_no_duration">Nie można opublikować! Klip %1$s ma długość 0. Jest pusty czy to obraz?</string>
+  <string name="clips_with_no_duration">Nie można opublikować! Klipy %1$s mają długość 0. Są puste czy to obrazy?</string>
   <!--add for libra end-->
 </resources>

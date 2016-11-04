@@ -11,11 +11,14 @@
   <string name="cliptype_result">Sonuç</string>
   <string name="cliptype_place">Yer</string>
   <string name="cliptype_signature">İmza</string>
+  <string name="choose_medium">Araç Seçin</string>
   <string name="lbl_video">Video</string>
   <string name="lbl_audio">Ses</string>
   <string name="lbl_photo">Fotoğraf</string>
   <string name="lbl_record">Klip Kaydet</string>
+  <string name="lbl_card_tap">Farklı bir klip seçmek için dokunun</string>
   <string name="lbl_import">İçe Aktar</string>
+  <string name="lbl_capture">Yakala</string>
   <string name="menu_done">Bitti</string>
   <string name="clip_order">Klip Sırası</string>
   <!--Record Narration Dialog-->
@@ -24,6 +27,7 @@
   <string name="dialog_pause">DURAKLAT</string>
   <string name="dialog_resume">DEVAM ET</string>
   <string name="dialog_stop">KAYDI SONLANDIR</string>
+  <string name="dialog_redo">Yeniden yap</string>
   <string name="edit_card">Kart Düzenle</string>
   <string name="change_goal">Hedef Değiştir</string>
   <string name="duplicate_card">Kartın Kopyasını Oluştur</string>
@@ -53,6 +57,7 @@
   <string name="state_paused_by_request">İndirme duraklatıldı</string>
   <string name="state_paused_wifi_unavailable">İndirme duraklatıldı, kablosuz ağ kullanılamıyor</string>
   <string name="state_paused_wifi_disabled">İndirme duraklatıldı, kablosuz ağ aktif değil</string>
+  <string name="state_paused_roaming">Dolaşımda olduğunuz için indirme durduruldu.</string>
   <string name="state_paused_sdcard_unavailable">İndirme duraklatıldı, harici diske erişilemiyor</string>
   <string name="state_failed_unlicensed">İndirme başarısız, bu uygulamayı indirme yetkiniz olmayabilir</string>
   <string name="state_failed_fetching_url">İndirme başarısız, dosyalar bulunamadı</string>
@@ -62,6 +67,7 @@
   <string name="kilobytes_per_second">%1$s KB/s</string>
   <string name="time_remaining">Kalan süre: %1$s</string>
   <string name="time_remaining_notification">%1$s kaldı</string>
+  <string name="add_clips_before_narrating">Hikaye eklemeden önce birkaç klip ekleyin</string>
   <string name="add_clips_before_reordering">Sıralarını değiştirmeden önce bir klip ekleyin</string>
   <string name="add_clips_generic">Öncelikle klip ekleyin</string>
   <string name="title_section3">Bölüm 3</string>
@@ -98,15 +104,38 @@
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
   <string name="error_sdcard_access">Harici ve dahili diske erişim başarısız</string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">İç uygulama hatası</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Ses dosyası kayıt edilemiyor.</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Eyvah,yeterli boş alan yok.Lütfen yaklaşık %.2f%nMB boş alan oluşturup tekrar deneyin.</string>
   <!--add for libra begin-->
+  <string name="default_record_name">adsız kayıt</string>
+  <string name="menu_view_record_list">Kayıt listesini gör</string>
   <string name="menu_setting">Ayarlar</string>
   <string name="delete_dialog_title">Mevcut kaydı silmek istiyor musunuz?</string>
   <string name="preferences_title">Ayarlar</string>
+  <string name="pref_title_record_type">Kayıt dosya türü</string>
+  <string name="prefDialogTitle_recordType">Lütfen dosya tipini seçiniz</string>
+  <string name="prefDefault_recordType">audio/3gpp formatı</string>
+  <string name="pref_title_enable_high_quality">Yüksek kaliteyi aç</string>
+  <string name="pref_summary_enable_high_quality">Yüksek kalitedeki ses dosyası daha çok yer kaplar</string>
   <string name="pref_title_enable_sound_effect">Ses efektlerini aktif et</string>
   <string name="notification_recording">Kaydediliyor...</string>
   <string name="notification_stopped">Kayıt durduruldu</string>
+  <string name="notification_warning">Yetersiz depolama alanı yok(%d dakikadan az)...</string>
+  <string name="sd_card_not_available">Sd karta erişilemiyor</string>
+  <string name="open_file_explorer">Dosya yöneticisini aç</string>
+  <string name="alert_message_delete_record">Seçilen kaydı silmek istiyor musunuz?</string>
+  <string name="recording_narration">Hikaye kaydediliyor</string>
+  <string name="could_not_start_narration">Hikaye başlatılamıyor</string>
+  <string name="jumble">Karışıklık</string>
+  <string name="order">Sıralamak</string>
+  <string name="narrate">Hikaye</string>
+  <string name="publish">Yayınla</string>
+  <string name="total">Toplam</string>
   <string name="cancel">Iptal et</string>
+  <string name="narration">Hikayeleme</string>
+  <string name="clip_audio_tracks">Müzik parçalarını kırp</string>
   <!--add for libra end-->
 </resources>
