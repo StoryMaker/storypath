@@ -10,7 +10,7 @@
   <string name="cliptype_action">操作</string>
   <string name="cliptype_result">結果</string>
   <string name="cliptype_place">場所</string>
-  <string name="cliptype_signature">テーマ音楽</string>
+  <string name="cliptype_signature">テーマ</string>
   <string name="choose_medium">メディアを選択</string>
   <string name="lbl_video">ビデオ</string>
   <string name="lbl_audio">オーディオ</string>

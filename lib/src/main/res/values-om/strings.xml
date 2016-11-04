@@ -1,40 +1,149 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">Sirreeffama</string>
+  <string name="lbl_level">Sadarkaa:</string>
+  <string name="lbl_time">Yeroo:</string>
+  <string name="lbl_continue">Itti fufi</string>
+  <string name="lbl_next">Itti aanee</string>
+  <string name="lbl_congrats_or">--- yookaan ---</string>
+  <string name="cliptype_character">Taatee</string>
+  <string name="cliptype_action">Gocha</string>
+  <string name="cliptype_result">Bu\'aa</string>
+  <string name="cliptype_place">Bakka</string>
+  <string name="cliptype_signature">Mallattoo</string>
+  <string name="choose_medium">Kan Fayyadamtu Filadhu</string>
+  <string name="lbl_video">Suur-sagalee</string>
+  <string name="lbl_audio">Sagalee</string>
+  <string name="lbl_photo">Suuraa</string>
+  <string name="lbl_record">Muraa Waraabi</string>
+  <string name="lbl_order_media_desc">Duraa duuba jalqaba, gidduu, fi xumura akka dhiyeessutti muraakee kaa\'i.</string>
+  <string name="lbl_card_tap">Muraa biroo filachuuf tuqi</string>
+  <string name="lbl_import">Alaarguu</string>
+  <string name="lbl_capture">kaasi</string>
+  <string name="menu_done">Xumurame</string>
+  <string name="clip_order">duraa duuba muraa</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">WARAABUU JALQABI</string>
+  <string name="dialog_done">Xumurame</string>
+  <string name="dialog_pause">Afurfannoo</string>
+  <string name="dialog_resume">Ittifufi</string>
+  <string name="dialog_stop">WARAABUU DHAABI</string>
+  <string name="dialog_redo">IRRA DEEBI\'I</string>
+  <string name="edit_card">Kaardii Gulaali</string>
+  <string name="change_goal">Galma Jijjiiri</string>
+  <string name="duplicate_card">Kaardii Baayyisi</string>
+  <string name="duplicate_clip">Muraa Baayyisi</string>
+  <string name="remove_card">Kaardii Haqi</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_complete">Naqachuun Xumurame</string>
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download failed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_failed">Naqachuun fiixa hin baane</string>
+  <string name="state_unknown">Jalqabaa jira...\"</string>
+  <string name="state_idle">Jalqaba naqachuu eegaa jira</string>
+  <string name="state_fetching_url">Qabeenya naqu barbaadaa jira</string>
+  <string name="state_connecting">Kaadimaa naqaa irratti waliindhii gochaa jira</string>
+  <string name="state_downloading">Qabeenya naqaa jira</string>
+  <string name="state_completed">Naquun xumureera</string>
+  <string name="state_paused_network_unavailable">Cimdaan sababa dhibeef naquun afurfateera</string>
+  <string name="state_paused_network_setup_failure">Naquun afurfateera. Iddoolicha iyya\'aa irratti yaali</string>
+  <string name="state_paused_by_request">Naquun afurfateera</string>
+  <string name="state_paused_wifi_unavailable">Sababa wifi\'n hin jirreef naquun afurfateera</string>
+  <string name="state_paused_wifi_disabled">Sababa wifi\'n cufameef naquun afurfateera</string>
+  <string name="state_paused_roaming">Sababa biyya biraarraa fudhachaa jirtuuf naquun afurfateera</string>
+  <string name="state_paused_sdcard_unavailable">Sababa kuusaan alaaa hin jirreef naquun afurfateera</string>
+  <string name="state_failed_unlicensed">Sababa fayyadamicha hin bitanneef naquun afurfateera</string>
+  <string name="state_failed_fetching_url">Sababa qabeenyicha argachuu dadhabeef naquun afurfateera</string>
+  <string name="state_failed_sdcard_full">Sababa kuusaan alaa guuteef naquun afurfateera</string>
+  <string name="state_failed_cancelled">Naquun dhiisameera</string>
+  <string name="state_failed">Naquun kufeera</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">Yeroon hafe: %1$s</string>
+  <string name="time_remaining_notification">%1$s tu hafe</string>
+  <string name="add_clips_before_narrating">Seenessuu dabaluukeen dura muraalee dabali</string>
+  <string name="add_clips_before_reordering">Tartiibasaa jijjiiruun dura muraalee dabali</string>
+  <string name="add_clips_generic">Dursa Muraa dabali</string>
+  <string name="title_section3">Kutaa 3</string>
+  <string name="title_section2">Kutaa 2</string>
+  <string name="title_section1">Kutaa 1</string>
+  <string name="title_activity_test_drag">TestDrag</string>
   <!--Screen title before and during recording-->
   <!--Screen title after recording-->
   <!--Screen title while playing back a recording-->
   <!--Label shown during recording-->
+  <string name="recording">Waraabaa jira</string>
   <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">Waraabbiin dhaabbate</string>
   <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">Kuusaan guutuudha</string>
   <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">Dheerina dhumaarra ga\'eera</string>
   <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">Kaardiin SD barbaachisaadha</string>
   <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
   <!--label shown when there is less than 1 minute of space left to record-->
   <!--button to accept the current recording and return it to the caller-->
   <!--button to discard the current recording and return to the caller-->
   <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">Tole</string>
   <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
   <!--label shown before the user has recorded anything-->
   <!--the name under which recordings will be visible in the media database is formatted like this-->
   <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">Waraabbiinkee</string>
   <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">Waraabbii sagalee</string>
   <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">Waraabbiikoo</string>
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">Kuusaa keessaa yookaan alaa argachuu hin dandeenye</string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">Dogoggora fayyadama keessaa</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">Sagalee waraabame olkaa\'uu hin dandeenye</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">Whoops, bakkaa ala taane. Maaloo tilmaamaan bakka %.2f%nMB qopheessiitii deebi\'ii yaali!</string>
   <!--add for libra begin-->
+  <string name="default_record_name">waraabbii maqaa hin qabne</string>
+  <string name="menu_view_record_list">Tarreeffama galmee ilali</string>
+  <string name="menu_setting">Qindaa\'ina</string>
+  <string name="delete_dialog_title">Waraabbii ammaa haquu barbaaddaa?</string>
+  <string name="overwrite_dialog_title">%s duraanuu tureerea. Irraba gochuu barbaaddaa?</string>
+  <string name="preferences_title">Qindaa\'ina</string>
+  <string name="pref_title_record_type">Gosa faayilii galmeessi</string>
+  <string name="prefDialogTitle_recordType">Maaloo gosa faayilii filadhu</string>
+  <string name="prefDefault_recordType">audio/3gpp</string>
+  <string name="pref_title_enable_high_quality">Qulqullina olka\'aa bani</string>
+  <string name="pref_summary_enable_high_quality">Faayilli sagalee qulqullina olka\'aa guddaa ta\'uu danda\'a</string>
+  <string name="pref_title_enable_sound_effect">Dhiibbaa sagalee hojjisiisi</string>
+  <string name="pref_summary_enable_sound_effect">Yeroo haalli jijjiiramutti sagalicha taphachuu</string>
+  <string name="notification_recording">Waraabaa jira...</string>
+  <string name="notification_stopped">Waraabbiin dhaabate</string>
+  <string name="notification_warning">Kuusaa xiqqoo(daqiiqaa %d gadi)...</string>
+  <string name="sd_card_not_available">Kaardiin SD hin jiru</string>
+  <string name="open_file_explorer">Aloolaa faayilii bani</string>
+  <string name="alert_message_delete_record">Waraabbii filame haquu barbaaddaa?</string>
+  <string name="recording_narration">Seenessuu Waraabaa jira</string>
+  <string name="could_not_start_narration">Seeneessuu Jalqabuu hin dandeenye!</string>
+  <string name="jumble">Waliin makuu</string>
+  <string name="order">Duraa duuba</string>
+  <string name="narrate">Ibsi</string>
+  <string name="publish">Maxxansi</string>
+  <string name="total">Dimshaasha</string>
+  <string name="cancel">Dhiisi</string>
+  <string name="trim_clip">Muraa kuti</string>
+  <string name="narration">Seenessuu</string>
+  <string name="this_story_has_no_clips_to_publish">Seenaan kun muraa maxxansu hin qabu!</string>
+  <string name="clip_with_no_duration">Maxxansuu hin dandeenye! Muraan %1$s dheerina yeroo 0 qaba. Duwwaa yookaan fakkiidhaa?</string>
+  <string name="clips_with_no_duration">Maxxansuu hin dandeenye! Muraan %1$s dheerina yeroo 0 qaba. Duwwaa yookaan fakkiiwwanii?</string>
+  <string name="clip_audio_tracks">Muraa Waraabbii Sagalee</string>
   <!--add for libra end-->
 </resources>

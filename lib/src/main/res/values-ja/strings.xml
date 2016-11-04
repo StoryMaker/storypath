@@ -1,40 +1,149 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="action_settings">設定</string>
+  <string name="lbl_level">レベル:</string>
+  <string name="lbl_time">時間:</string>
+  <string name="lbl_continue">続行</string>
+  <string name="lbl_next">次へ</string>
+  <string name="lbl_congrats_or">--- または ---</string>
+  <string name="cliptype_character">人物</string>
+  <string name="cliptype_action">操作</string>
+  <string name="cliptype_result">結果</string>
+  <string name="cliptype_place">場所</string>
+  <string name="cliptype_signature">テーマ</string>
+  <string name="choose_medium">メディアを選択</string>
+  <string name="lbl_video">ビデオ</string>
+  <string name="lbl_audio">オーディオ</string>
+  <string name="lbl_photo">写真</string>
+  <string name="lbl_record">クリップを録音</string>
+  <string name="lbl_order_media_desc">はっきりと開始、中間、終了を示すために、クリップを置きましょう。</string>
+  <string name="lbl_card_tap">タップして別のクリップを選択します</string>
+  <string name="lbl_import">インポート</string>
+  <string name="lbl_capture">キャプチャ</string>
+  <string name="menu_done">完了</string>
+  <string name="clip_order">クリップ順序</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">録音開始</string>
+  <string name="dialog_done">完了</string>
+  <string name="dialog_pause">一時停止</string>
+  <string name="dialog_resume">再開</string>
+  <string name="dialog_stop">録音停止</string>
+  <string name="dialog_redo">繰り返し</string>
+  <string name="edit_card">カードを編集</string>
+  <string name="change_goal">ゴールを変更</string>
+  <string name="duplicate_card">カードを複製</string>
+  <string name="duplicate_clip">クリップを複製</string>
+  <string name="remove_card">カードを削除</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_complete">ダウンロードが完了しました</string>
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download failed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_failed">ダウンロードに失敗しました</string>
+  <string name="state_unknown">開始中...\"</string>
+  <string name="state_idle">ダウンロードの開始を待機中</string>
+  <string name="state_fetching_url">ダウンロードするリソースを検索中</string>
+  <string name="state_connecting">ダウンロードサーバーに接続中</string>
+  <string name="state_downloading">リソースをダウンロード中</string>
+  <string name="state_completed">ダウンロードを終了しました</string>
+  <string name="state_paused_network_unavailable">ネットワークが利用できないため、ダウンロードを一時停止しました</string>
+  <string name="state_paused_network_setup_failure">ダウンロードを一時停止しました。ブラウザでWebサイトをテストしてください</string>
+  <string name="state_paused_by_request">ダウンロードを一時停止しました</string>
+  <string name="state_paused_wifi_unavailable">WiFiが利用できないため、ダウンロードを一時停止しました</string>
+  <string name="state_paused_wifi_disabled">WiFiが無効になっているため、ダウンロードを一時停止しました</string>
+  <string name="state_paused_roaming">ローミング中のため、ダウンロードを一時停止しました</string>
+  <string name="state_paused_sdcard_unavailable">外部ストレージが使用できないため、ダウンロードを一時停止しました</string>
+  <string name="state_failed_unlicensed">このアプリを購入していないため、ダウンロードに失敗しました</string>
+  <string name="state_failed_fetching_url">リソースが見つからなかったため、ダウンロードに失敗しました</string>
+  <string name="state_failed_sdcard_full">外部ストレージがいっぱいのため、ダウンロードに失敗しました</string>
+  <string name="state_failed_cancelled">ダウンロードをキャンセルしました</string>
+  <string name="state_failed">ダウンロードに失敗しました</string>
+  <string name="kilobytes_per_second">%1$s KB/s</string>
+  <string name="time_remaining">残り時間: %1$s</string>
+  <string name="time_remaining_notification">残り %1$s</string>
+  <string name="add_clips_before_narrating">ナレーションを追加する前にクリップを追加してください</string>
+  <string name="add_clips_before_reordering">順序を変更する前にクリップを追加してください</string>
+  <string name="add_clips_generic">はじめにクリップを追加してください</string>
+  <string name="title_section3">セクション 3</string>
+  <string name="title_section2">セクション 2</string>
+  <string name="title_section1">セクション 1</string>
+  <string name="title_activity_test_drag">テストドラッグ</string>
   <!--Screen title before and during recording-->
   <!--Screen title after recording-->
   <!--Screen title while playing back a recording-->
   <!--Label shown during recording-->
+  <string name="recording">記録中</string>
   <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">記録を停止しました</string>
   <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">ストレージがいっぱいです</string>
   <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">最大長に達しました</string>
   <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">SD カードが必要です</string>
   <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
   <!--label shown when there is less than 1 minute of space left to record-->
   <!--button to accept the current recording and return it to the caller-->
   <!--button to discard the current recording and return to the caller-->
   <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">OK</string>
   <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
   <!--label shown before the user has recorded anything-->
   <!--the name under which recordings will be visible in the media database is formatted like this-->
   <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">あなたの録音</string>
   <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">オーディオ録音中</string>
   <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">マイ録音</string>
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">外部または内部ストレージにアクセスできません</string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">内部アプリケーションエラー</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">録音したオーディオを保存できません</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">残念ながら空き容量がありません。約 %.2f%nMB 利用できるようにして、もう一度実行してください!</string>
   <!--add for libra begin-->
+  <string name="default_record_name">無題の録音</string>
+  <string name="menu_view_record_list">録音リストを表示</string>
+  <string name="menu_setting">設定</string>
+  <string name="delete_dialog_title">現在の録音を削除しますか?</string>
+  <string name="overwrite_dialog_title">%s は既に存在します。上書きしますか?</string>
+  <string name="preferences_title">設定</string>
+  <string name="pref_title_record_type">録音ファイル形式</string>
+  <string name="prefDialogTitle_recordType">ファイル形式を選択してください</string>
+  <string name="prefDefault_recordType">オーディオ/3gpp</string>
+  <string name="pref_title_enable_high_quality">高品質を有効にする</string>
+  <string name="pref_summary_enable_high_quality">高品質の音声ファイルはサイズが大きくなります</string>
+  <string name="pref_title_enable_sound_effect">効果音を有効にする</string>
+  <string name="pref_summary_enable_sound_effect">状態が変化したとき効果音を再生する</string>
+  <string name="notification_recording">録音中...</string>
+  <string name="notification_stopped">録音が停止しました</string>
+  <string name="notification_warning">ストレージが足りません(%d 分未満)...</string>
+  <string name="sd_card_not_available">SD カードが利用できません</string>
+  <string name="open_file_explorer">ファイルエクスプローラーを開く</string>
+  <string name="alert_message_delete_record">選択した録音を削除しますか?</string>
+  <string name="recording_narration">ナレーションを録音</string>
+  <string name="could_not_start_narration">ナレーションを開始できませんでした!</string>
+  <string name="jumble">ランダム</string>
+  <string name="order">順序</string>
+  <string name="narrate">ﾅﾚｰｼｮﾝを入れる</string>
+  <string name="publish">公開</string>
+  <string name="total">合計</string>
+  <string name="cancel">キャンセル</string>
+  <string name="trim_clip">クリップをトリム</string>
+  <string name="narration">ナレーション</string>
+  <string name="this_story_has_no_clips_to_publish">このストーリーに公開するクリップはありません!</string>
+  <string name="clip_with_no_duration">公開できません! クリップ %1$s は時間が 0 です。空または画像ですか?</string>
+  <string name="clips_with_no_duration">公開できません! クリップ %1$s は時間が 0 です。空または画像ですか?</string>
+  <string name="clip_audio_tracks">オーディオトラックをクリップ</string>
   <!--add for libra end-->
 </resources>

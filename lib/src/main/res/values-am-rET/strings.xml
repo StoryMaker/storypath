@@ -1,44 +1,149 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="lbl_next">ቀጥል</string>
+  <string name="action_settings">መዋቅሮች</string>
+  <string name="lbl_level">ደረጃ：</string>
+  <string name="lbl_time">ግዜ：</string>
+  <string name="lbl_continue">ቀጥል</string>
+  <string name="lbl_next">ቀጣይ</string>
+  <string name="lbl_congrats_or">--- ወይም ---</string>
+  <string name="cliptype_character">ገጸ ባህሪ</string>
+  <string name="cliptype_action">ተግባር</string>
+  <string name="cliptype_result">ውጤት</string>
+  <string name="cliptype_place">ቦታ</string>
+  <string name="cliptype_signature">ፊርማ</string>
+  <string name="choose_medium">የመገናኛ መንገድ ምረጥ</string>
   <string name="lbl_video">ቪድዮ </string>
   <string name="lbl_audio">ድምጽ</string>
   <string name="lbl_photo">ፎቶ </string>
+  <string name="lbl_record">አጭር ቪዲዮ ይቅረጹ</string>
+  <string name="lbl_order_media_desc">አሁን አጭር ቪዲዮዎችዎን መግቢያ፣ መሃል እና መጨረሻ ለመፍጠር በሚያስችል መልኩ ይደርድሩ</string>
+  <string name="lbl_card_tap">ሌላ አጭር ቪዲዮ ለመምረጥ ይጫኑ</string>
+  <string name="lbl_import">ከሌላ ቦታ አምጣ</string>
+  <string name="lbl_capture">ይዘህ አስቀር</string>
+  <string name="menu_done">ተስርቷል</string>
+  <string name="clip_order">የአጭር ቪዲዮ ቅደም ተከተል</string>
   <!--Record Narration Dialog-->
+  <string name="dialog_record">መቅረጽ ጀምር</string>
+  <string name="dialog_done">ተስርቷል</string>
+  <string name="dialog_pause">ለፋታ አቁም</string>
+  <string name="dialog_resume">ቀጥል</string>
+  <string name="dialog_stop">መቅረጽ አቁም</string>
+  <string name="dialog_redo">መልሰህ ስራ</string>
+  <string name="edit_card">የኢዲት ካርድ</string>
+  <string name="change_goal">አላማ ቀይር</string>
+  <string name="duplicate_card">ካርድ አባዛ</string>
+  <string name="duplicate_clip">አጭር ቪዲዮ አባዛ</string>
+  <string name="remove_card">ካርድ አውጣ</string>
   <!--THE FOLLOWING IS MERGED FROM /android-studio/sdk/extras/google/play_apk_expansion/downloader_library/res/values-->
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download successfully completed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_complete">አውርዶ ጨርሷል</string>
   <!--When a download completes, a notification is displayed, and this
         string is used to indicate that the download failed.
         Note that such a download could have been initiated by a variety of
         applications, including (but not limited to) the browser, an email
         application, a content marketplace.-->
+  <string name="notification_download_failed">ማውረደ አልተሳካም</string>
+  <string name="state_unknown">በመጀመር ላይ...\"</string>
+  <string name="state_idle">ማውረድ ለመጀመር እየጠበቀ ነው</string>
+  <string name="state_fetching_url"> የሚወርዱ ግብዓቶች በመፈለግ ላይ ነው</string>
+  <string name="state_connecting">ከማውረጃ አገልጋዩ ጋር በመገናኘት ላይ ነው</string>
+  <string name="state_downloading">ግብዓቶችን በማውረድ ላይ ነው</string>
+  <string name="state_completed">ማውረድ ጨርሷል</string>
+  <string name="state_paused_network_unavailable">ኔትወርክ ስለሌለ ማውረድ ቆሟል</string>
+  <string name="state_paused_network_setup_failure">ማውረድ ለአፍታ ቆሟል። ማሰሻው ላይ ድረገጽ ይሞክሩ</string>
+  <string name="state_paused_by_request">ማውረድ ለአፍታ ቆሟል</string>
+  <string name="state_paused_wifi_unavailable">ገመድ አልባ ኢንተርኔት ስለሌለ ማውረድ ለአፍታ ቆሟል</string>
+  <string name="state_paused_wifi_disabled">የገመድ አልባ ኢንተርኔቱ ሰለቦዘነ ማውረድ ለአፍታ ቆሟል</string>
+  <string name="state_paused_roaming">የሮሚንግ አገልግሎት እየተጠቀሙ ስለሆነ ማውረድ ለአፍታ ቆሟል</string>
+  <string name="state_paused_sdcard_unavailable">የውጪ ማጠራቀሚያ ስለሌለ ማውረድ ለአፍታ ቆሟል</string>
+  <string name="state_failed_unlicensed">ይህንን የተግበሪያ ምናልባት ያአልገዙት ስለሆነ ማውረዱ ከሽፏል</string>
+  <string name="state_failed_fetching_url">የሚወርደው ግብአት ስላልተገኘ ማውረዱ ከሽፏል</string>
+  <string name="state_failed_sdcard_full">የውጭ ማጠራቀሚያው ስለሞላ ማውረዱ ከሽፏል</string>
+  <string name="state_failed_cancelled">ማውረዱ ተሰርዟል</string>
+  <string name="state_failed">ማውረዱ ከሽፏል</string>
+  <string name="kilobytes_per_second">%1$s ኪሎ ባይት በሰከንድ</string>
+  <string name="time_remaining">የሚቀረው ሰአት፡- %1$s</string>
+  <string name="time_remaining_notification"> %1$s ቀርቷል</string>
+  <string name="add_clips_before_narrating">ትረካውን ከመጨመሮዎ በፊት የተወሰኑ አጭር ቪዲዮዎችን ይጨምሩ</string>
+  <string name="add_clips_before_reordering">ቀደም ተከተላቸውን ከመቀየርዎ በፊት የተወሰኑ አጭር ቪዲዮዎችን ይጨምሩ</string>
+  <string name="add_clips_generic">በመጀመሪያ አጭር ቪዲዮዎችን ይጨምሩ</string>
+  <string name="title_section3"> ክፍል 3</string>
+  <string name="title_section2"> ክፍል 2</string>
+  <string name="title_section1"> ክፍል 1</string>
+  <string name="title_activity_test_drag">TestDrag</string>
   <!--Screen title before and during recording-->
   <!--Screen title after recording-->
   <!--Screen title while playing back a recording-->
   <!--Label shown during recording-->
+  <string name="recording">በመቅረጽ ላይ ነው</string>
   <!--Label shown when the recording is stopped for a reason other than the user stopping it (e.g. the sd card was removed)-->
+  <string name="recording_stopped">መቅረጽ አቁሟል </string>
   <!--label shown when there is not enough space to record something-->
+  <string name="storage_is_full">ማጠራቀሚያው ሞልቷል</string>
   <!--label shown when the recording has reached maximum allowed file size-->
+  <string name="max_length_reached">የመጨረሻ ከፍተኛው ርዝመት ላይ ደርሷል</string>
   <!--label shown when there is no sd card available to record to-->
+  <string name="insert_sd_card">SD ካርድ ያስፈልጋል</string>
   <!--label shown when there is more than 1 minute but less than 9 minutes of space left to record-->
   <!--label shown when there is less than 1 minute of space left to record-->
   <!--button to accept the current recording and return it to the caller-->
   <!--button to discard the current recording and return to the caller-->
   <!--acknowlegement button in a number of dialogs-->
+  <string name="button_ok">እሺ </string>
   <!--Do not translate. Format of the timer that shows how much has been recorded so far-->
   <!--label shown before the user has recorded anything-->
   <!--the name under which recordings will be visible in the media database is formatted like this-->
   <!--all recordings will show up in the media database with this 'artist' name-->
+  <string name="audio_db_artist_name">የርስዎ ቀረጻዎች</string>
   <!--all recordings will show up in the media database with this 'album' name-->
+  <string name="audio_db_album_name">የድምጽ ቀረጻዎች </string>
   <!--all recordings will show up in the media database in a playlist with this name-->
+  <string name="audio_db_playlist_name">የኔ ቀረጻዎች </string>
   <!--shown as the message in a dialog when an error occured because of an error accessing the sd card-->
+  <string name="error_sdcard_access">የውጪ ወይም የውስጥ ማጠራቀሚያዎ ማግኘት አልተቻለም </string>
   <!--shown as the message in a dialog when the app encountered an unspecified internal error-->
+  <string name="error_app_internal">ውስጣዊ የመተግበሪያ ስህተት</string>
   <!--shown as the message in a dialog when the recording could not be added to the media database-->
+  <string name="error_mediadb_new_record">የተቀረጹ ድምጾችን ማስቀመጥ አልተቻለም</string>
   <!--shown as the message in a dialog when an export will tak up too much space-->
+  <string name="error_storage_space" formatted="false">ውይ በቂ ቦታ የለንም። እባክዎት በግምት %.2f%nMB ያክል ቦታ ያዘገጁ እና እንደገና ይሞክሩ!</string>
   <!--add for libra begin-->
+  <string name="default_record_name">ርእስ አልባ ቀረጻ </string>
+  <string name="menu_view_record_list">የቀረጻ ዝርዝር ይመልከቱ</string>
+  <string name="menu_setting">አወቃቀሮች</string>
+  <string name="delete_dialog_title">አሁን ያለውን ቀረጻ ማጥፋት ይፈልጋሉ? </string>
+  <string name="overwrite_dialog_title">%s ቀድሞ ነበረ። መልሰው በላዩ ላይ መቅዳት ይፈልገሉ?</string>
+  <string name="preferences_title">አወቃቀሮች</string>
+  <string name="pref_title_record_type">የቀረጻ ፋይል አይነት </string>
+  <string name="prefDialogTitle_recordType">እባክዎን የፋይሉን አይነት ይምረጡ</string>
+  <string name="prefDefault_recordType">ድምጽ/3gpp</string>
+  <string name="pref_title_enable_high_quality">ከፍ ያለ ጥራት አስችል </string>
+  <string name="pref_summary_enable_high_quality">ከፍ ያለ ጥራት ያለው የድምጽ ፋይል መጠኑ ተለቅ ያለ ሊሆን ይችላል</string>
+  <string name="pref_title_enable_sound_effect">የድምጽ ኢፌክትን አንቃ</string>
+  <string name="pref_summary_enable_sound_effect">ሁኔታው ሲቀየር የድምጽ ኢፌክትን ማጫወት</string>
+  <string name="notification_recording">በመቅረጽ ላይ ...</string>
+  <string name="notification_stopped">ቀረጻው አቁሟል </string>
+  <string name="notification_warning">አነስተኛ የማጠራቀሚያ ቦታ(ከ%d ደቂቃዎች ያነሰ)...</string>
+  <string name="sd_card_not_available">SD ካርድ የለም</string>
+  <string name="open_file_explorer">የፋይል መፈለጊያውን ክፈት</string>
+  <string name="alert_message_delete_record">የተመረጠውን ቀረጻ ማጥፋት ይፈልጋሉ? </string>
+  <string name="recording_narration">ትረካን መቅረጽ </string>
+  <string name="could_not_start_narration">ትረካን መጀመር አልተቻለም!</string>
+  <string name="jumble">ማደበላለቅ</string>
+  <string name="order">ስርአት </string>
+  <string name="narrate">ተርክ</string>
+  <string name="publish">አትም</string>
+  <string name="total">አጠቃላይ</string>
+  <string name="cancel">ሰርዝ</string>
+  <string name="trim_clip">አጭር ቪዲዮ ቆርጠህ አስተካክል</string>
+  <string name="narration">ትረካ</string>
+  <string name="this_story_has_no_clips_to_publish">ይህ ታሪክ ምንም የሚታተም አጭር ቪዲዮ የለውም!</string>
+  <string name="clip_with_no_duration">ማተም አልተቻለም!  %1$s የሚለው አጭር ቪዲዮ ቆይታ 0 ነው። ባዶ ነው ወይስ ምስል ነው?</string>
+  <string name="clips_with_no_duration">ማተም አልተቻለም!  %1$s የሚሉት አጭር ቪዲዮዎች ቆይታ 0 ነው። ባዶ ናቸው ወይስ ምስል ናቸው?</string>
+  <string name="clip_audio_tracks">የድምጽ ፋይሎችን ቁረጥ</string>
   <!--add for libra end-->
 </resources>
