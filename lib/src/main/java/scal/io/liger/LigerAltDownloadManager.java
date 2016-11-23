@@ -654,9 +654,19 @@ public class LigerAltDownloadManager implements Runnable {
                             // need to cut back on notification traffic
                         } else {
                             oldPercent = nPercent;
+
+                            String locTitle = indexItem.getTitle();
+
+                            if (indexItem instanceof scal.io.liger.model.ExpansionIndexItem) {
+                                int resId = context.getResources().getIdentifier(indexItem.getExpansionId().replace('-','_')+"_title", "string", context.getPackageName());
+
+                                if (context.getString(resId) != null)
+                                    locTitle = context.getString(resId);
+                            }
+
                             Notification nProgress = new Notification.Builder(context)
-                                    .setContentTitle(mAppTitle + " content download")
-                                    .setContentText(indexItem.getTitle() + " - " + (nPercent / 10.0) + "%") // assignment file names are meaningless uuids
+                                    .setContentTitle(mAppTitle)
+                                    .setContentText(locTitle + " " + (nPercent / 10.0) + "%") // assignment file names are meaningless uuids
                                     .setSmallIcon(android.R.drawable.arrow_down_float)
                                     .setProgress(100, (nPercent / 10), false)
                                     .setWhen(startTime.getTime())
