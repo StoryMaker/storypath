@@ -680,7 +680,7 @@ public class DownloadHelper {
                     final LigerAltDownloadManager expansionDownload = new LigerAltDownloadManager(patchName, installedItem, context);
                     Thread expansionDownloadThread = new Thread(expansionDownload);
 
-                    Toast.makeText(context, "Starting download of expansion file patch.", Toast.LENGTH_LONG).show(); // FIXME move to strings
+                    //Toast.makeText(context, "Starting download of expansion file patch.", Toast.LENGTH_LONG).show(); // FIXME move to strings
 
                     expansionDownloadThread.start();
 

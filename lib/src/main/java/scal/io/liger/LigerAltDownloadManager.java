@@ -486,7 +486,7 @@ public class LigerAltDownloadManager implements Runnable {
             if ((ni != null) && (ni.isConnectedOrConnecting())) {
 
                 if (context instanceof Activity) {
-                    Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getTitle() + ".", false); // FIXME move to strings
+                 //   Utility.toastOnUiThread((Activity) context, "Starting download of " + indexItem.getTitle() + ".", false); // FIXME move to strings
                 }
 
                 // check preferences.  will also need to check whether tor is active within method
@@ -947,7 +947,7 @@ public class LigerAltDownloadManager implements Runnable {
                 Timber.d("FINISHED DOWNLOAD OF " + tempFile.getPath() + " AND FILE LOOKS OK");
 
                 // show notification
-                Utility.toastOnUiThread((Activity) context, "Finished downloading " + indexItem.getTitle() + ".", false); // FIXME move to strings
+             //   Utility.toastOnUiThread((Activity) context, "Finished downloading " + indexItem.getTitle() + ".", false); // FIXME move to strings
 
             }
         } else {
