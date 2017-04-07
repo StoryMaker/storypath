@@ -94,7 +94,7 @@ public class Constants {
     public static final String MAIN_CHECKSUM = "4248a1dd806071d9fa837c6c7cd25be07d1d76aacef9d4801ec42e37c9c9c6c3";
     public static final String PATCH_CHECKSUM = "1114d9db9c1dded087bd8ced87ed86c34528fb62d069f26638d5ac2f23320623";
 
-    public static final int AVAILABLE_INDEX_VERSION = 27; //25 previously?
+    public static final int AVAILABLE_INDEX_VERSION = 28; //25 previously?
 
     public final static String TOR_PROXY_HOST = "localhost"; // FIXME these Orbot host/ports should be pulled from Netcipher instead of hard coded
     public final static int TOR_PROXY_PORT = 8118;
