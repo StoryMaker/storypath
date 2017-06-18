@@ -142,5 +142,8 @@
   <string name="trim_clip">Couper le Clip</string>
   <string name="narration">Narration</string>
   <string name="this_story_has_no_clips_to_publish">Cette histoire n\'a aucun clip à publier!</string>
+  <string name="clip_with_no_duration">Impossible de publier le clip! %1$s a une durée de 0. Est-ce vide ou une image?</string>
+  <string name="clips_with_no_duration">Impossible de publier les clips! %1$s ont une durée de 0. Sont-ils vide ou des images?</string>
+  <string name="clip_audio_tracks">Piste audio du clip</string>
   <!--add for libra end-->
 </resources>
